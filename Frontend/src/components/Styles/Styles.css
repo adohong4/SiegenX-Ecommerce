@@ -457,3 +457,185 @@
     }
   
   }
+
+
+
+
+  /* CSS cho phần Footer */
+
+  .footer {
+    background-color: #0A9A79;
+    color: #fff;
+}
+
+.footer-services ul,
+.footer-support ul,
+.footer-links ul{
+    padding: 0;
+}
+.footer-links ul li a{
+    color: #fff;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.footer-content {
+    display: block;
+    padding: 50px 200px;
+}
+
+.footer-content .top-tittle-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.footer-content .top-tittle-footer .top-title-right .container {
+    background-color: white;
+    border-radius: 50px;
+    padding: 5px;
+    justify-content: space-around;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+.footer-content .top-tittle-footer .top-title-right input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #fff;
+    border-radius: 50px;
+    width: 250px;
+    margin-right: 10px;
+    outline: none;
+}
+
+.footer-content .top-tittle-footer .top-title-right button {
+    padding: 12px 30px;
+    background-color: #0A9A79;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    margin-top: 0;
+    font-weight: bold;
+    cursor: pointer;
+}
+.footer-chinhsach{
+    display: flex ;
+    justify-content: space-around;
+    width: 65%;
+}
+
+.footer-content .top-tittle-footer .top-title-right button:hover {
+    background-color: #009c8b;
+}
+
+.footer-content .top-tittle-footer .top-title-r input::placeholder {
+    color: #bbb;
+}
+
+.footer-content .top-tittle-footer h1 {
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
+.footer-content .body-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body-footer h4,
+.footer-support h4,
+.footer-links h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.body-footer ul li,
+.footer-support ul li,
+.footer-links ul li {
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+.body-footer h4,
+.footer-support h4,
+.footer-links h4 {
+    margin-top: 0;
+}
+.body-footer .footer-info {
+    width: 35%;
+    text-align: center;
+    line-height: 30px;
+}
+.body-footer .footer-info h3{
+    color: #fff;
+}
+
+.footer-copy{
+    display: none;
+}
+
+@media only screen and (max-width: 48em){
+    .footer {
+        padding: 20px;
+        width: 100vw;
+    }
+    .top-title-left p{
+        text-align: center;
+    }
+    .footer-content {
+        padding: 0;
+    }
+    .footer-content .top-tittle-footer {
+        display: block;
+    }
+    .footer-content .top-tittle-footer .top-title-right input {
+        width: 278px;
+    }
+    .footer-content .top-tittle-footer .top-title-right button {
+        margin-top: 0px;
+    }
+    .top-title-right .container {
+        margin-top: 10px;
+    }
+    .top-tittle-footer .top-title-left{
+        text-align: center;
+        padding-top: 15px;
+    }
+    .footer-content .body-footer {
+        display: block;
+    }
+    .body-footer .footer-info {
+        width: 100%;
+        text-align: center;
+        line-height: 30px;
+    }
+        
+    .body-footer .footer-info p{
+        text-align: center;
+    }
+    .footer-chinhsach{
+        width: 100%;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+    }
+    .footer-copy{
+        display: block;
+        text-align: center;
+        font-style: italic;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #bbb;
+    }
+    .footer-copy p{
+        text-align: center;
+        font-weight: lighter;
+        font-style: italic;
+    }
+    .footer-content .top-tittle-footer .top-title-right .container {
+        width: 100vw;
+        justify-content: space-between;
+    }
+}

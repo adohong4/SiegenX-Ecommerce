@@ -1,7 +1,7 @@
-import logo from './Navbar_img/logo.png'
-
+import logo from './logo.png'
+import logo_footer from './logo_footer.png'
 
 
 export const assets = {
-    logo,
+    logo, logo_footer
 }

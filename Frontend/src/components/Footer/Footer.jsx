@@ -30,13 +30,13 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className='body-footer'>
-                        <div className="footer-info col-xxl-4">
+                        <div className="footer-info col-4">
                             <img src={assets.logo_footer} alt="" />
                             <h3>CÔNG TY CỔ PHẦN GIẢI PHÁP CÔNG NGHỆ SIEGENX</h3>
                             <p>Địa chỉ: D11-39 Khu đô thị Glaximeco, đường Lê Trọng Tấn, Q. Hà Đông, Tp. Hà Nội</p>
                         </div>
 
-                        <div className='footer-chinhsach'>
+                        <div className='footer-chinhsach col-7 '>
                             <div className="footer-services">
                                 <h4>DỊCH VỤ</h4>
                                 <ul>

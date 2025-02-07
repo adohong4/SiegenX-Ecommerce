@@ -34,7 +34,7 @@ const Navbar = () => {
         <header id='header' className="nav-header">
             <div className="container">
                 {/* Desktop Navbar */}
-                <div className="pc-display">
+                <div className="pc-display col-12">
                     <div className="top-row-header">
                         <div
                             className="navbar-brand header-logo"
@@ -203,7 +203,7 @@ const Navbar = () => {
                         )}
                     </div>
                 )}
-                <div className="notification-container">
+                <div className="notification-container col-12">
                     <p className="notification-text"><em>SIEGENX MEMBER DAYS!</em> - Ngày hội thành viên Siegenx - Ưu đãi lên đến 50%</p>
                     <button className="cta-button">XEM NGAY</button>
                 </div>

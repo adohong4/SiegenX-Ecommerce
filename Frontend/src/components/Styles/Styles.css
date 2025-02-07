@@ -3,14 +3,18 @@
 /* CSS cho phần header */
 
 #header {
-    position: fixed;
+    /* position: fixed; */
     z-index: 999;
     background-color: #fff;
-    width: 100%;
+    width: 100vw;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     top: 0;
   }
-  
+  #header .container{
+    margin: 0;
+    padding: 0;
+    max-width: 100vw !important;
+  }
   .pc-display {
     display: flex;
     align-items: center;
@@ -472,6 +476,7 @@
     font-size: 14px;
     color: #333;
     margin-right: 20px;
+    margin-bottom: 0px;
   }
   
   .notification-text em {
@@ -515,8 +520,12 @@
   .footer {
     background-color: #0A9A79;
     color: #fff;
+    width: 100vw;
 }
-
+.footer-container{
+  margin: 0;
+  max-width: 100vw;
+}
 .footer-services ul,
 .footer-support ul,
 .footer-links ul{

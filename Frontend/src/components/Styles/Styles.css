@@ -458,8 +458,57 @@
   
   }
 
-
-
+  /* CSS cho phần notìications */
+  .notification-container {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* margin-top: 123px; */
+    background-color: #EFEFEF;
+  }
+  
+  .notification-text {
+    font-size: 14px;
+    color: #333;
+    margin-right: 20px;
+  }
+  
+  .notification-text em {
+    font-style: italic;
+    font-weight: 700;
+  }
+  
+  .cta-button {
+    background-color: #EC1313;
+    color: white;
+    padding: 5px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+  
+  }
+  
+  .cta-button:hover {
+    background-color: darkred;
+  }
+  @media only screen and (max-width: 48em) {
+    .notification-container {
+      display: block;
+      height: fit-content;
+      background-color: #EFEFEF;
+      text-align: center;
+      padding: 10px 0px;
+    }
+    .notification-text {
+      text-align: center;
+      margin-right: 0;
+  }
+  .banner-main .home-banner-btn {
+    display: none;
+  }
+  }
 
   /* CSS cho phần Footer */
 

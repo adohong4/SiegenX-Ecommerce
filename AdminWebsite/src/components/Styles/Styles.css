@@ -1,0 +1,165 @@
+/* CSS cho phần sidebar */
+.sidebar {
+    width: 10vw;
+    height: 100vh;
+    border-top: 0;
+    font-size: 0.9em;
+    position: fixed;
+    z-index: 999;
+    background-color: #1d2327;
+    top: 0;
+}
+.sidebar-left{
+    background-color: #1d2327;
+}
+.sidebar-right{
+    margin-left: 10vw;
+}
+
+.sidebar .sidebar-options .sidebar-option i,
+.sidebar .sidebar-options .sidebar-option p {
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 0px !important;
+    transition: color 0.3s ease;
+    font-size: 0.8em;
+    text-transform: capitalize;
+    margin-top: 0;
+}
+
+.sidebar .sidebar-options .sidebar-option.active i,
+.sidebar .sidebar-options .sidebar-option.active p {
+    color: #fff;
+}
+
+.sidebar-options {
+    /* padding: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* gap: 20px; */
+    justify-content: flex-start;
+    /* Căn giữa các mục trong sidebar */
+    align-items: center;
+    height: 100%;
+}
+
+.sidebar-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: #fff !important;
+    cursor: pointer;
+    opacity: 1;
+    gap:10px;
+    justify-content: flex-start;
+    text-align: left;
+    width: 150px;
+    transition: all 0.1s ease-in-out;
+}
+
+
+.sidebar-option:hover {
+    color: #fff !important;
+    text-decoration: none;
+    border-left: 5px solid #2271b1 !important ;
+}
+
+a.sidebar-option.active {
+    background-color: #2271b1;
+    color: #fff !important ;
+    opacity: 1;
+    text-decoration: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.btn-confirm,
+.btn-cancel {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn-confirm {
+    background-color: #f24405;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #ccc;
+}
+
+.swal2-title,
+swal2-html-container {
+    font-family: 'bootstrap-icons';
+}
+
+.logo-sidebar {
+    text-align: center;
+}
+.logo-sidebar img{
+    width: 70%;
+    padding: 20px;
+}
+.Logout {
+    width: 10vw;
+    position: fixed;
+    bottom: 25px;
+}
+
+.Logout .sidebar-option {
+    border-style: double;
+    border-radius: 50px;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.Logout .sidebar-option:hover {
+    background-color: #ccc;
+    transform: scale(1.05);
+}
+.log-out-btn{
+    position: absolute;
+    bottom: 0px;
+}
+.sidebar-option-logout{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #fff;
+    width: 10vw;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+.sidebar-option-logout svg{
+    margin-left: 10px;
+}
+.sidebar-option-logout:hover{
+    background-color: #2271b1;
+    color: #fff;
+}
+@media(max-width:1050px) {
+    .sidebar-option p {
+        display: none;
+    }
+}

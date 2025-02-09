@@ -1,0 +1,187 @@
+/* CSS cho phần Add Product */
+
+.admin-container{
+    display: flex;
+}
+
+/* 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+.admin-container .sidebar-right ul.nav-tabs{
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 0;
+}
+
+.tab-content{
+    border: 2px solid #00B98E;
+    border-radius: 20px;
+}
+.addprd{
+    max-width: 83%;
+    margin: 20px auto;
+    margin-right: 0;
+}
+.admin-container .sidebar-right ul.nav-tabs li button{
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border: none ;
+    color: #fff;
+    background-color: #00B98E;
+    transition: all 0.3s ease-in-out;
+    transform: translateY(0px);
+}
+.admin-container .sidebar-right ul.nav-tabs li button:hover{
+    scale: 1.1;
+    background-color: #00A07B;
+}
+.admin-container .sidebar-right ul.nav-tabs li button.active {
+    background-color: #008F6A; 
+    border: none ;
+}
+
+.add-tab {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f6f9; 
+}
+
+.card {
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #00A07B;
+    outline: none;
+    background-color: #fff;
+}
+
+.form-group img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px dashed #ddd;
+    transition: border-color 0.3s ease;
+}
+
+.form-group img:hover {
+    border-color: #00B98E;
+}
+
+.form-group input[type="file"] {
+    display: none;
+}
+
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+}
+
+.form-group.col-md-6 {
+    flex: 1 1 calc(50% - 20px);
+}
+
+
+button[type="submit"] {
+    padding: 12px 24px;
+    background-color: #00B98E;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top:20px;
+    transition: all 0.3s ease-in-out;
+}
+.text-center{
+    text-align: center;
+}
+button[type="submit"]:hover {
+    background-color: #008F6A;
+}
+
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.add-tab .tab-content{
+    padding: 40px ;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .form-group.col-md-6 {
+        flex: 1 1 100%;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}
+

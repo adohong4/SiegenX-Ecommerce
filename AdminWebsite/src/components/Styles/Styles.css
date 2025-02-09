@@ -14,6 +14,7 @@
 }
 .sidebar-right{
     margin-left: 10vw;
+    width: 90vw;
 }
 
 .sidebar .sidebar-options .sidebar-option i,
@@ -150,6 +151,10 @@ swal2-html-container {
     width: 10vw;
     color: #fff;
     transition: all 0.3s ease-in-out;
+}
+.sidebar-option-logout p{
+    margin-bottom: 0;
+    padding: 15px;
 }
 .sidebar-option-logout svg{
     margin-left: 10px;

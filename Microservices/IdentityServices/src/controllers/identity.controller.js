@@ -12,9 +12,13 @@ class IdentityController {
 
     register = async () => {
         try {
-
+            const result = await IdentityService.register(req.body)
+            new CREATED({
+                message: 'Đăng ký thành công',
+                metadata: result.metadata
+            }).send(res);
         } catch (error) {
-
+            next(error);
         }
     }
 

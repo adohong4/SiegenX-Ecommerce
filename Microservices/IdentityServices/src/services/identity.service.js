@@ -37,9 +37,44 @@ class IdentityService {
 
     static register = async () => {
         try {
+            //checking is user already exists
+            const exists = await userModel.findOne({ email });
+            if (exists) {
+                throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác')
+            }
 
+            //validating email format & strong password
+            if (!validator.isEmail(email)) {
+                throw new BadRequestError('Không đúng định dạng email')
+            }
+
+            if (password.length < 8) {
+                throw new BadRequestError('Mật khẩu quá yếu, cần ít nhất 8 ký tự')
+            }
+
+            //hashing user password
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            //return db
+            const newUser = await userModel.create({
+                username: username,
+                email: email,
+                password: hashedPassword
+            })
+            const token = createToken(newUser._id)
+
+            if (newUser) {
+                return {
+                    metadata: {
+                        user: getInfoData({ fileds: ['_id', 'username', 'email'], object: newUser }),
+                        token
+                    }
+                }
+            }
+            return null;
         } catch (error) {
-
+            throw error;
         }
     }
 

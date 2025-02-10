@@ -9,6 +9,7 @@ const router = express.Router()
 
 //signUp && Sign in
 router.post('/identity/login', asyncHandler(identityController.login))
+router.post('/identity/register', asyncHandler(identityController.register))
 
 //Google login
 

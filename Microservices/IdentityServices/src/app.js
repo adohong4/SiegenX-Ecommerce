@@ -15,7 +15,7 @@ connectDB();
 // Serve static files
 
 // Init router
-// app.use('', require('./routes'));
+app.use('', require('./routes'));
 
 // Handling errors
 app.use((req, res, next) => {

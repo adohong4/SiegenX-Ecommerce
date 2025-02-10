@@ -8,37 +8,11 @@ const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError 
 const { createToken } = require("../middleware/authUtils")
 
 class IdentityService {
-    static login = async () => {
-        try {
-            const user = await identityModel.findOne({ email });
 
-            if (!user) {
-                throw new BadRequestError("Tài khoản không tồn tại");
-            }
-
-            const isMath = await bcrypt.compare(password, user.password);
-
-            if (!isMath) {
-                throw new BadRequestError("Mật khẩu không chính xác");
-            }
-
-            const token = createToken(user._id);
-            return {
-                user: {
-                    id: user._id,
-                    email: user.email,
-                },
-                token,
-            };
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    static register = async () => {
+    static register = async (req, { username, email, password, role }) => {
         try {
             //checking is user already exists
-            const exists = await userModel.findOne({ email });
+            const exists = await identityModel.findOne({ email });
             if (exists) {
                 throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác')
             }
@@ -57,22 +31,59 @@ class IdentityService {
             const hashedPassword = await bcrypt.hash(password, salt);
 
             //return db
-            const newUser = await userModel.create({
+            const newUser = await identityModel.create({
                 username: username,
                 email: email,
-                password: hashedPassword
+                password: hashedPassword,
+                role: 'USER'
             })
-            const token = createToken(newUser._id)
+            const token = createToken(newUser._id, req.res);
 
             if (newUser) {
                 return {
                     metadata: {
-                        user: getInfoData({ fileds: ['_id', 'username', 'email'], object: newUser }),
+                        user: getInfoData({ fileds: ['_id', 'username', 'email', 'role'], object: newUser }),
                         token
                     }
                 }
             }
             return null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static login = async (req, { email, password, role }) => {
+        try {
+            const user = await identityModel.findOne({ email });
+
+            if (!user) {
+                throw new BadRequestError("Tài khoản không tồn tại");
+            }
+
+            const isMath = await bcrypt.compare(password, user.password);
+
+            if (!isMath) {
+                throw new BadRequestError("Mật khẩu không chính xác");
+            }
+
+            const token = createToken(user._id, req.res);
+            return {
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    role: user.role,
+                },
+                token,
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static logout = async (res) => {
+        try {
+            res.cookie("jwt", "", { maxAge: 0 });
         } catch (error) {
             throw error;
         }

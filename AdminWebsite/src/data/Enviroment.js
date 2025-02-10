@@ -1,5 +1,5 @@
 
-
+// Fake data của Product
 export const fakeProducts = [
     {
         _id: "1",
@@ -113,4 +113,38 @@ export const fakeProducts = [
         quantity: 7,
         images: ["3d1.jpg"],
     },
+];
+
+
+
+// Fake data của Contact
+
+export const fakeContacts = [
+    {
+        _id: "1",
+        username: "Nguyễn Văn A",
+        email: "nguyenvana@example.com",
+        phone: "0987654321",
+        content: "Tôi muốn biết thêm thông tin về sản phẩm.",
+        date: "2025-02-09",
+        viewed: false
+    },
+    {
+        _id: "2",
+        username: "Trần Thị B",
+        email: "tranthib@example.com",
+        phone: "0912345678",
+        content: "Xin tư vấn lắp đặt màn hình LED.",
+        date: "2025-02-08",
+        viewed: true
+    },
+    {
+        _id: "3",
+        username: "Lê Văn C",
+        email: "levanc@example.com",
+        phone: "0909123456",
+        content: "Giá sản phẩm là bao nhiêu?",
+        date: "2025-02-07",
+        viewed: false
+    }
 ];

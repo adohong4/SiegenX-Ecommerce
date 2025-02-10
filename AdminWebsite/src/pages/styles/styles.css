@@ -554,3 +554,309 @@ textarea {
         margin: 10px 0;
     }
 }
+
+
+
+/* CSS cho Contact */
+.table-row.viewed {
+    opacity: 0.2; /* Làm mờ hàng */
+  }
+  
+  .btn-eye {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    scale: 1.1;
+  }
+
+  .contact-list-container{
+    font-size: 14px;
+  }
+  .contact-list-container .contact-tittle{
+    text-align: center;
+    margin-top: 25px;
+  }
+  .contact-list-container .contact-tittle p{
+    font-size: 2rem;
+    font-weight: bold;
+  }
+.contact-list-table .table-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1.5fr 1fr 0.5fr 1fr; 
+    background-color: #333;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center !important; 
+}
+
+
+.contact-list-table .table-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1.5fr 1fr 0.5fr 1fr; 
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center !important; 
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+
+.contact-list-table .table-row:hover {
+    background-color: #f9f9f9;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* .user-list-container {
+    max-width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+} */
+
+
+/* .user-list-container p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+} */
+.search {
+    display: flex;
+    justify-content: flex-end; 
+    /* margin-bottom: 20px; */
+}
+
+.search-CSKH {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+    border: 1px solid #00A07B;
+    border-radius: 50px;
+    padding: 5px;
+    width: 300px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    margin-right: 10px;
+    margin: 0;
+    outline: none; 
+}
+.search-input:focus {
+    border-color: #ccc; 
+    background-color: transparent;
+    box-shadow: none; 
+}
+.btn-search {
+    padding: 10px 20px;
+    background-color: #00B98E;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #00A07B;
+}
+
+/* .user-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+} */
+
+
+.table-header {
+    color: #fff;
+    text-align: left;
+}
+
+.table-header th {
+    padding: 12px 15px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+
+
+/* .table-row {
+    border-bottom: 1px solid #ddd;
+    transition: all 0.2s ease;
+} */
+
+.table-row:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-row:hover {
+    background-color: #f1f1f1;
+}
+
+.table-row td {
+    padding: 10px 15px;
+    color: #333;
+}
+.contact-list-table .table-row div {
+    white-space: nowrap;         
+    overflow: hidden;            
+    text-overflow: ellipsis;     
+    width: 100%;                
+  }
+  
+
+.contact-list-table .col-actions {
+    display: flex;
+    justify-content: space-around;
+}
+.contact-list-table .btn-info{
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.contact-list-table .btn-delete {
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #a71d2a;
+}
+
+
+
+.popup-overlay {
+    position: fixed;
+    top: -80px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+
+.popup-content-cskh {
+    background: #fff;
+    width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.popup-content-cskh  .popup-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.popup-content-cskh .popup-header h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #333;
+}
+
+.popup-content-cskh  .popup-body .popup-info p{
+    text-align: left;
+}   
+.popup-content-cskh  .popup-body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.popup-content-cskh  .popup-info {
+    margin-bottom: 10px;
+}
+
+.popup-content-cskh .popup-info label {
+    font-weight: bold;
+}
+
+.popup-content-cskh  .popup-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+
+.popup-content-cskh  .popup-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+
+.popup-content-cskh .close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.popup-content-cskh  .close-popup:hover {
+    color: #ff4d4f;
+}
+
+
+.popup-content-cskh .popup-close-btn {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+.popup-content-cskh  .popup-close-btn:hover {
+    background: #0056b3;
+}
+
+
+.table-row:hover {
+    cursor: pointer;
+    background-color: #f9f9f9;
+}

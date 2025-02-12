@@ -36,8 +36,19 @@ class ContactService {
         }
     }
 
-
-
+    static GetDetailContact = async (id) => {
+        try {
+            const contacts = await contactModel.findById(id);
+            if (!contacts) {
+                throw new BadRequestError('Không tìm thấy id contact.');
+            }
+            return {
+                contacts
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 

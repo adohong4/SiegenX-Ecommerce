@@ -27,6 +27,18 @@ class ContactController {
             next(error);
         }
     }
+
+    getDetailContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.GetDetailContact(req.params.id);
+            new OK({
+                message: 'Contact OK',
+                metadata: result.contacts
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 

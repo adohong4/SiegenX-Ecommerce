@@ -10,6 +10,7 @@ const router = express.Router()
 //Profile
 router.get('/profile/getProfile', checkTokenCookie, asyncHandler(profileController.getProfile))
 router.post('/profile/upload', checkTokenCookie, upload.single("profile"), asyncHandler(profileController.uploadImageProfile)) //Upload image profile
+router.put('/profile/update', checkTokenCookie, asyncHandler(profileController.updateProfile)) //Update profile
 
 
 

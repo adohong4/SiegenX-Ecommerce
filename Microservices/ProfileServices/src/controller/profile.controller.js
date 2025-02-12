@@ -30,6 +30,20 @@ class ProfileController {
         }
     }
 
+    updateProfile = async (req, res, next) => {
+        try {
+            const userId = req.user._id;
+            const { password, fullName, dateOfBirth, numberPhone, gender } = req.body;
+            const result = await ProfileService.updateProfile({ userId, password, fullName, dateOfBirth, numberPhone, gender });
+            new SuccessResponse({
+                message: 'Cập nhật thông tin profile thành công',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new ProfileController();

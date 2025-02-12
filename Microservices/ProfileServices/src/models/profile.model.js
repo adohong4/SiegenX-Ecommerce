@@ -23,7 +23,7 @@ const UserSchema = new Schema({
     fullName: { type: String },
     dateOfBirth: { type: Date },
     profilePic: { type: String },
-    numberPhone: { type: Number },
+    numberPhone: { type: String },
     gender: { type: String },
     address: [AddressSchema],
     cartData: { type: Object, default: {} }

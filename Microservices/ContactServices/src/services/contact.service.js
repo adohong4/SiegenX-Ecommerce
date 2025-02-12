@@ -50,6 +50,21 @@ class ContactService {
         }
     }
 
+    static updateIsCheck = async (contactId, isCheckValue) => {
+        try {
+            // Tìm và cập nhật trường isCheck
+            const updatedContact = await contactModel.findByIdAndUpdate(
+                contactId,
+                { isCheck: isCheckValue },
+                { new: true, runValidators: true } // Trả về tài liệu đã cập nhật
+            );
+
+            return updatedContact;
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 
 module.exports = ContactService;  // xuất class

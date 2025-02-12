@@ -9,5 +9,6 @@ const router = express.Router()
 router.post('/contact/add', asyncHandler(ContactController.addContact))
 router.get('/contact/list', asyncHandler(ContactController.getListContact))
 router.get('/contact/list/:id', asyncHandler(ContactController.getDetailContact))
+router.put('/contact/updateCheck/:id', asyncHandler(ContactController.updateContactIsCheck))
 
 module.exports = router; 

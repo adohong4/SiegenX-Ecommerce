@@ -39,6 +39,24 @@ class ContactController {
             next(error);
         }
     }
+
+    updateContactIsCheck = async (req, res, next) => {
+        try {
+            const { id } = req.params; // ID của liên hệ từ URL
+            const { isCheck } = req.body; // Giá trị mới cho isCheck từ body
+
+            const updatedContact = await ContactService.updateIsCheck(id, isCheck);
+
+            res.status(200).json({
+                message: "Cập nhật trạng thái isCheck thành công",
+                metadata: updatedContact
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
 }
 
 

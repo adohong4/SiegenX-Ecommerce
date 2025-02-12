@@ -7,10 +7,11 @@ const { authMiddleware, checkTokenCookie } = require('../../middleware/checkAuth
 const upload = require('../../config/upload.config')
 const router = express.Router()
 
-//signUp && Sign in
+//Profile
+router.get('/profile/getProfile', checkTokenCookie, asyncHandler(profileController.getProfile))
 router.post('/profile/upload', checkTokenCookie, upload.single("profile"), asyncHandler(profileController.uploadImageProfile)) //Upload image profile
 
 
-//Google login
+
 
 module.exports = router;

@@ -3,8 +3,23 @@
 const profileModel = require("../models/profile.model");
 const cloudinary = require('../config/cloudinary.config');
 const fs = require('fs');
+const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../core/error.response")
 
 class ProfileService {
+
+    static getProfile = async (userId) => {
+        try {
+            const profile = await profileModel.findById(userId);
+
+            if (!profile) {
+                throw new BadRequestError("Tài khoản không tồn tại");
+            }
+
+            return profile;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     static uploadImageProfile = async (req, res, next) => {
         try {
@@ -16,7 +31,6 @@ class ProfileService {
             }
 
             const userId = req.user._id;
-            console.log("userId ", userId);
 
             // Upload lên Cloudinary
             const uploadResponse = await cloudinary.uploader.upload(image_filename, {

@@ -25,6 +25,19 @@ class ContactService {
         }
     }
 
+    static getListContact = async () => {
+        try {
+            const contacts = await contactModel.find({});
+            return {
+                contacts
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+
 
 }
 

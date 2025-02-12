@@ -15,6 +15,20 @@ class ContactController {
             next(error);
         }
     }
+
+    getListContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.getListContact();
+            new OK({
+                message: 'Contact OK',
+                metadata: result.contacts
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
+
+
 
 module.exports = new ContactController();

@@ -16,5 +16,7 @@ router.put('/profile/update', checkTokenCookie, asyncHandler(profileController.u
 
 //Address
 router.post('/profile/address/create', checkTokenCookie, asyncHandler(addressController.createAddress))
+router.get('/profile/address/getList', checkTokenCookie, asyncHandler(addressController.getListAddress))
+router.delete('/profile/address/delete/:addressId', checkTokenCookie, asyncHandler(addressController.deleteAddress))
 
 module.exports = router;

@@ -5,7 +5,7 @@ const orderModel = require('../../models/order.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 const { CREATED } = require("../../core/success.response")
 
-class CODService {
+class CODController {
     CODplaceOrder = async (req, res) => {
         try {
             const newOrder = new orderModel({
@@ -29,4 +29,4 @@ class CODService {
     }
 }
 
-module.exports = new CODService();
+module.exports = new CODController();

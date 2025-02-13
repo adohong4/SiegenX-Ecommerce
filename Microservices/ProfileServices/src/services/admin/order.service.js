@@ -26,6 +26,22 @@ class OrderService {
         }
     }
 
+    static deleteOrder = async ({ orderId, isStatus }) => {
+        try {
+            const deleteOrder = await orderModel.findByIdAndUpdate(
+                orderId,
+                { statusActive: isStatus },
+                { new: true, runValidators: true }
+            )
+
+            return {
+                metadata: deleteOrder
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 
 module.exports = OrderService;

@@ -24,7 +24,8 @@ const orderSchema = new Schema({
         }
     },
     paymentMethod: { type: String, default: "Thanh toán khi nhận hàng" },
-    payment: { type: Boolean, default: false }
+    payment: { type: Boolean, default: false },
+    statusActive: { type: Boolean, default: true }
 }, { timestamps: true })
 
 orderSchema.index({ userId: 1 });

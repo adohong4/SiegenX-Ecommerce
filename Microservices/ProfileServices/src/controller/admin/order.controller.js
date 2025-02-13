@@ -28,6 +28,20 @@ class OrderController {
             next(error);
         }
     }
+
+    deleteOrder = async (req, res, next) => {
+        try {
+            const orderId = req.params.orderId;
+            const isStatus = req.body.statusActive;
+            const order = await OrderService.deleteOrder({ orderId, isStatus });
+            new CREATED({
+                message: 'Xóa đơn hàng thành công',
+                metadata: order.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new OrderController();

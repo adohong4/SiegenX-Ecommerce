@@ -148,3 +148,15 @@ export const fakeContacts = [
         viewed: false
     }
 ];
+
+
+// Fake data của ListUser
+
+export const fakeListUser = [
+        { _id: 1, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
+        { _id: 2, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
+        { _id: 3, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } },
+        { _id: 4, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
+        { _id: 5, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
+        { _id: 6, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } }
+    ];

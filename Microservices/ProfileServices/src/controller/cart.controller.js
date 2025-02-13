@@ -6,7 +6,7 @@ const { OK } = require('../utils/statusCodes')
 class CartController {
     addToCart = async (req, res, next) => {
         try {
-            const { userId } = req.user._id
+            const userId = req.user._id
             const { itemId } = req.body
             const result = await cartService.addToCart(userId, itemId)
             new CREATED({
@@ -20,7 +20,7 @@ class CartController {
 
     addQuantityToCart = async (req, res, next) => {
         try {
-            const { userId } = req.user._id
+            const userId = req.user._id
             const { itemId, quantity } = req.body
             const result = await cartService.addQuantityToCart(userId, itemId, quantity)
             new CREATED({
@@ -34,7 +34,7 @@ class CartController {
 
     getCart = async (req, res, next) => {
         try {
-            const { userId } = req.user._id
+            const userId = req.user._id
             const cart = await cartService.getCart(userId)
             new OK({
                 message: 'Lấy giỏ hàng',
@@ -47,7 +47,7 @@ class CartController {
 
     removeFromCart = async (req, res, next) => {
         try {
-            const { userId } = req.user._id
+            const userId = req.user._id
             const { itemId } = req.body
             const cart = await cartService.removeFromCart(userId, itemId)
             new OK({

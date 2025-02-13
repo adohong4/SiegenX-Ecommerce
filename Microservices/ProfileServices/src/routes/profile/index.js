@@ -2,8 +2,8 @@
 
 const express = require('express')
 const { asyncHandler } = require('../../helpers/asyncHandler')
-const profileController = require('../../controller/profile.controller')
-const addressController = require('../../controller/address.controller')
+const profileController = require('../../controller/user/profile.controller')
+const addressController = require('../../controller/user/address.controller')
 const { authMiddleware, checkTokenCookie } = require('../../middleware/checkAuth')
 const upload = require('../../config/upload.config')
 const router = express.Router()

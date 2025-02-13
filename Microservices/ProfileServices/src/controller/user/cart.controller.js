@@ -1,7 +1,7 @@
 'use strict'
 
-const cartService = require('../services/cart.service')
-const { OK } = require('../utils/statusCodes')
+const cartService = require('../../services/user/cart.service')
+const { OK } = require('../../utils/statusCodes')
 
 class CartController {
     addToCart = async (req, res, next) => {

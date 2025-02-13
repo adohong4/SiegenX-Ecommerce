@@ -1,7 +1,7 @@
 'use strict'
 
-const { OK, CREATED, SuccessResponse } = require('../core/success.response')
-const ProfileService = require('../services/profile.service');
+const { OK, CREATED, SuccessResponse } = require('../../core/success.response')
+const ProfileService = require('../../services/user/profile.service');
 
 class ProfileController {
 

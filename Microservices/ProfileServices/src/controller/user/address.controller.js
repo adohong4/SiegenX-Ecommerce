@@ -1,7 +1,7 @@
 'use strict'
 
-const AddressService = require('../services/address.service');
-const { OK, CREATED } = require('../core/success.response')
+const AddressService = require('../../services/user/address.service');
+const { OK, CREATED } = require('../../core/success.response')
 
 class AddressController {
     createAddress = async (req, res, next) => {

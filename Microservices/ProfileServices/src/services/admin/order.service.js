@@ -33,7 +33,6 @@ class OrderService {
                 { statusActive: isStatus },
                 { new: true, runValidators: true }
             )
-
             return {
                 metadata: deleteOrder
             };

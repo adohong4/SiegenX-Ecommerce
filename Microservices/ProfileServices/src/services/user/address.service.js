@@ -1,6 +1,6 @@
 'use strict'
 
-const profileModel = require("../models/profile.model");
+const profileModel = require("../../models/profile.model");
 
 class AddressService {
     static createAddress = async ({ userId, fullname, phone, street, precinct, city, province }) => {

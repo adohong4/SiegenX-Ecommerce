@@ -75,6 +75,13 @@ class ContactService {
         return await contactModel.countDocuments();
     };
 
+    static find = async (skip, limit) => {
+        return await contactModel.find()
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+    }
+
 
 
 }

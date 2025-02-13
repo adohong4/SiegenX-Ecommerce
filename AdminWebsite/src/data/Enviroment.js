@@ -160,3 +160,145 @@ export const fakeListUser = [
         { _id: 5, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
         { _id: 6, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } }
     ];
+
+
+
+// Fake data của Cart
+export const fakeCart = [
+    {
+        _id: "1",
+        date: "2025-02-13",
+        address: {
+            fullname: "Nguyễn Văn A",
+            street: "123 Đường ABC",
+            state: "Hà Nội",
+            country: "Việt Nam",
+            zipcode: "100000"
+        },
+        paymentMethod: "Thanh toán khi nhận hàng",
+        amount: 1500000,
+        status: "Đợi xác nhận",
+        items: [
+            { nameProduct: "Laptop Dell XPS 13", quantity: 1, price: 1500000 }
+        ]
+    },
+    {
+        _id: "2",
+        date: "2025-02-12",
+        address: {
+            fullname: "Trần Thị B",
+            street: "456 Đường XYZ",
+            state: "TP Hồ Chí Minh",
+            country: "Việt Nam",
+            zipcode: "700000"
+        },
+        paymentMethod: "Chuyển khoản ngân hàng",
+        amount: 5000000,
+        status: "Đang giao hàng",
+        items: [
+            { nameProduct: "iPhone 14 Pro Max", quantity: 1, price: 5000000 }
+        ]
+    },
+    {
+        _id: "3",
+        date: "2025-02-13",
+        address: {
+            fullname: "Nguyễn Văn A",
+            street: "123 Đường ABC",
+            state: "Hà Nội",
+            country: "Việt Nam",
+            zipcode: "100000"
+        },
+        paymentMethod: "Thanh toán khi nhận hàng",
+        amount: 1500000,
+        status: "Đợi xác nhận",
+        items: [
+            { nameProduct: "Laptop Dell XPS 13", quantity: 1, price: 1500000 }
+        ]
+    },
+    {
+        _id: "4",
+        date: "2025-02-12",
+        address: {
+            fullname: "Trần Thị B",
+            street: "456 Đường XYZ",
+            state: "TP Hồ Chí Minh",
+            country: "Việt Nam",
+            zipcode: "700000"
+        },
+        paymentMethod: "Chuyển khoản ngân hàng",
+        amount: 5000000,
+        status: "Đang giao hàng",
+        items: [
+            { nameProduct: "iPhone 14 Pro Max", quantity: 1, price: 5000000 }
+        ]
+    },
+    {
+        _id: "5",
+        date: "2025-02-13",
+        address: {
+            fullname: "Nguyễn Văn A",
+            street: "123 Đường ABC",
+            state: "Hà Nội",
+            country: "Việt Nam",
+            zipcode: "100000"
+        },
+        paymentMethod: "Thanh toán khi nhận hàng",
+        amount: 1500000,
+        status: "Đợi xác nhận",
+        items: [
+            { nameProduct: "Laptop Dell XPS 13", quantity: 1, price: 1500000 }
+        ]
+    },
+    {
+        _id: "6",
+        date: "2025-02-12",
+        address: {
+            fullname: "Trần Thị B",
+            street: "456 Đường XYZ",
+            state: "TP Hồ Chí Minh",
+            country: "Việt Nam",
+            zipcode: "700000"
+        },
+        paymentMethod: "Chuyển khoản ngân hàng",
+        amount: 5000000,
+        status: "Đang giao hàng",
+        items: [
+            { nameProduct: "iPhone 14 Pro Max", quantity: 1, price: 5000000 }
+        ]
+    },
+    {
+        _id: "7",
+        date: "2025-02-13",
+        address: {
+            fullname: "Nguyễn Văn A",
+            street: "123 Đường ABC",
+            state: "Hà Nội",
+            country: "Việt Nam",
+            zipcode: "100000"
+        },
+        paymentMethod: "Thanh toán khi nhận hàng",
+        amount: 1500000,
+        status: "Giao hàng thành công",
+        items: [
+            { nameProduct: "Laptop Dell XPS 13", quantity: 1, price: 1500000 }
+        ]
+    },
+    {
+        _id: "8",
+        date: "2025-02-12",
+        address: {
+            fullname: "Trần Thị B",
+            street: "456 Đường XYZ",
+            state: "TP Hồ Chí Minh",
+            country: "Việt Nam",
+            zipcode: "700000"
+        },
+        paymentMethod: "Chuyển khoản ngân hàng",
+        amount: 5000000,
+        status: "Đang chuẩn bị hàng",
+        items: [
+            { nameProduct: "iPhone 14 Pro Max", quantity: 1, price: 5000000 }
+        ]
+    }
+];

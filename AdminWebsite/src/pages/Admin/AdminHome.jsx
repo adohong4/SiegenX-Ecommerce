@@ -7,7 +7,7 @@ import Contact from '../Admin/Contact';
 import AddProduct from '../Admin/AddProducts';
 import '../styles/styles.css'
 import Headeradmin from'../../components/Headeradmin';
-// import Orders from './Cart/Cart';
+import Orders from '../Admin/Cart';
 // import DashBoard from './Dashboard/DashBoard';
 
 const Admin = () => {
@@ -26,12 +26,13 @@ const Admin = () => {
                     <Route path="product" element={<ListProduct />} />
                     <Route path="contact" element={<Contact />}/>
                     <Route path="user" element={<ListUser />} />
+                    <Route path="orders" element={<Orders />} />
                     {/* <Route path="/dashboard" element={<DashBoard />} />
                     
                     
                      />
                     
-                    <Route path="orders" element={<Orders />} /> */}
+                     */}
                 </Routes>
             </div>
         </div>

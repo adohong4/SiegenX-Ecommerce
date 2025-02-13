@@ -82,6 +82,25 @@ class ContactService {
             .sort({ createdAt: -1 });
     }
 
+    static deleteContact = async (id) => {
+        try {
+            const contact = await contactModel.findById(id);
+
+            if (!contact) {
+                throw new BadRequestError("Contact ID not found.")
+            }
+
+            await contactModel.findByIdAndDelete(id)
+
+            return {
+                contact
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
 
 }

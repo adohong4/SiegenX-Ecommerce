@@ -103,6 +103,20 @@ class ContactController {
         }
     };
 
+
+    deleteContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.deleteContact(req.params.id);
+            new OK({
+                message: 'Deleted Successfully!',
+                metadata: result
+            }).send(res);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 

@@ -58,17 +58,25 @@ class ContactController {
 
     getContactsByEmail = async (req, res, next) => {
         try {
-            const { email } = req.params; // Lấy title từ query params
+            const { email } = req.params;
             const result = await ContactService.findByEmail(email);
-
-            new OK({
-                message: 'Get contacts By email OK',
-                metadata: result.contacts
-            }).send(res);
+            new OK({ message: 'Get contacts By email OK', metadata: result.contacts }).send(res);
         } catch (error) {
             next(error);
         }
     };
+
+    countContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.countDocuments();
+            new OK({
+                message: 'Đếm thành công',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 
 }
 

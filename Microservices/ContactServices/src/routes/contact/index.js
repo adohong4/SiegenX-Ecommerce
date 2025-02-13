@@ -3,6 +3,7 @@
 const express = require('express')
 const { asyncHandler } = require('../../helpers/asyncHandler')
 const ContactController = require('../../controllers/contact.controller')
+const contactController = require('../../controllers/contact.controller')
 const router = express.Router()
 
 //client
@@ -11,5 +12,6 @@ router.get('/contact/list', asyncHandler(ContactController.getListContact))
 router.get('/contact/list/:id', asyncHandler(ContactController.getDetailContact))
 router.put('/contact/updateCheck/:id', asyncHandler(ContactController.updateContactIsCheck))
 router.get('/contact/search_email/:email', asyncHandler(ContactController.getContactsByEmail));
+router.get('/contact/count', asyncHandler(contactController.countContact));
 
 module.exports = router; 

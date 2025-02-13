@@ -8,7 +8,7 @@ import AddProduct from '../Admin/AddProducts';
 import '../styles/styles.css'
 import Headeradmin from'../../components/Headeradmin';
 import Orders from '../Admin/Cart';
-// import DashBoard from './Dashboard/DashBoard';
+import DashBoard from '../Admin/DashBoard';
 
 const Admin = () => {
     return (
@@ -27,7 +27,8 @@ const Admin = () => {
                     <Route path="contact" element={<Contact />}/>
                     <Route path="user" element={<ListUser />} />
                     <Route path="orders" element={<Orders />} />
-                    {/* <Route path="/dashboard" element={<DashBoard />} />
+                    <Route path="/dashboard" element={<DashBoard />} />
+                    {/* 
                     
                     
                      />

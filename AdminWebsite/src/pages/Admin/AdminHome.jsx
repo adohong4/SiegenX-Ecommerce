@@ -6,6 +6,7 @@ import ListProduct from '../Admin/Product';
 import Contact from '../Admin/Contact';
 import AddProduct from '../Admin/AddProducts';
 import '../styles/styles.css'
+import Headeradmin from'../../components/Headeradmin';
 // import Orders from './Cart/Cart';
 // import DashBoard from './Dashboard/DashBoard';
 
@@ -15,7 +16,11 @@ const Admin = () => {
             <div className='sidebar-left'>
                 <Sidebar />
             </div>
+            <div className='header-topadmin'>
+                <Headeradmin />
+            </div>
             <div className="admin-content sidebar-right">
+                
                 <Routes>
                     <Route path="add" element={<AddProduct />} />
                     <Route path="product" element={<ListProduct />} />

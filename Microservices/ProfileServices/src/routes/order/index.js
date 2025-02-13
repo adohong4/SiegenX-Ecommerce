@@ -14,5 +14,6 @@ router.get('/profile/user/order/get', checkTokenCookie, asyncHandler(OrderUserCo
 
 //Admin
 router.get('/profile/order/get', checkTokenCookie, asyncHandler(OrderAdminController.getOrders));
+router.put('/profile/order/update', checkTokenCookie, asyncHandler(OrderAdminController.updateStatusOrder));
 
 module.exports = router;

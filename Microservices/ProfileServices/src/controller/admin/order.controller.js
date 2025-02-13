@@ -16,6 +16,18 @@ class OrderController {
             next(error);
         }
     }
+
+    updateStatusOrder = async (req, res, next) => {
+        try {
+            const order = await OrderService.updateStatusOrder(req, res);
+            new CREATED({
+                message: 'Cập nhật trạng thái đơn hàng thành công',
+                metadata: order.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new OrderController();

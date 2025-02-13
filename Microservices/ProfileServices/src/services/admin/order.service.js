@@ -15,6 +15,17 @@ class OrderService {
         }
     }
 
+    static updateStatusOrder = async (req, res) => {
+        try {
+            const order = await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
+            return {
+                metadata: order
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 
 module.exports = OrderService;

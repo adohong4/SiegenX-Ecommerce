@@ -56,6 +56,19 @@ class ContactController {
         }
     }
 
+    getContactsByEmail = async (req, res, next) => {
+        try {
+            const { email } = req.params; // Lấy title từ query params
+            const result = await ContactService.findByEmail(email);
+
+            new OK({
+                message: 'Get contacts By email OK',
+                metadata: result.contacts
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    };
 
 }
 

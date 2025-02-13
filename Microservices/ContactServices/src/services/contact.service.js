@@ -65,6 +65,19 @@ class ContactService {
         }
     };
 
+    static findByEmail = async (email) => {
+        try {
+            const contacts = await contactModel.find({ email: { $regex: email, $options: 'i' } });
+            if (!contacts || contacts.length === 0) {
+                throw new Error("No contacts found with the given email");
+            }
+            return { contacts };
+        } catch (error) {
+            throw error;
+        }
+    };
+
+
 }
 
 module.exports = ContactService;  // xuất class

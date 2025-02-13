@@ -13,6 +13,18 @@ class CartController {
             res.status(500).json({ message: error.message })
         }
     }
+
+    getCart = async (req, res) => {
+        try {
+            const { userId } = req.user._id
+            const cart = await cartService.getCart(userId)
+            res.status(200).json(cart)
+        } catch (error) {
+            res.status(500).json({ message: error.message })
+        }
+    }
+
+
 }
 
 module.exports = new CartController();

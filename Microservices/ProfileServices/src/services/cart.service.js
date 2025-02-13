@@ -22,6 +22,17 @@ class UserCartService {
         }
     }
 
+    static getCart = async (userId) => {
+        try {
+            let user = await userCart.findById(userId)
+
+            return {
+                cart: user.cartData
+            }
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
 
 }
 

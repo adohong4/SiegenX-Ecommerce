@@ -72,5 +72,16 @@ class ProductService {
         }
     }
 
+    static getProductByslug = async (product_slug) => {
+        try {
+            const product = await productModel.findOne({product_slug});
+            return {
+                product,
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 module.exports = ProductService ;

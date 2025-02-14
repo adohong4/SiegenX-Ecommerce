@@ -22,6 +22,8 @@ const upload = multer({ storage: storage })
 router.post("/product/add", upload.array("images"), asyncHandler(ProductController.createProduct));
 router.get("/product/getAll", asyncHandler(ProductController.getAllProduct));
 router.get("/product/getById/:id", asyncHandler(ProductController.getProductById));
+router.get("/product/getBySlug/:product_slug", asyncHandler(ProductController.getProductByslug));
+
 
 
 

@@ -45,5 +45,19 @@ class ProductController {
             next(error);
         }
     }
+
+
+    getProductByslug = async (req, res, next) => {
+        try {
+            const result = await ProductService.getProductByslug(req.params.product_slug);
+
+            new OK({
+                message: 'get Product By slug OK',
+                metadata: result.product
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 module.exports = new ProductController() ;

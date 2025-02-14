@@ -59,5 +59,18 @@ class ProductController {
             next(error);
         }
     }
+
+    updateProduct = async (req, res, next) => {
+        try {
+            const result = await ProductService.updateProduct(req, res, next);
+
+            new CREATED({
+                message: 'Cập nhật thành công!',
+                metadata: result.product
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 module.exports = new ProductController() ;

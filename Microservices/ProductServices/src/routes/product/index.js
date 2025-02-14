@@ -23,6 +23,7 @@ router.post("/product/add", upload.array("images"), asyncHandler(ProductControll
 router.get("/product/getAll", asyncHandler(ProductController.getAllProduct));
 router.get("/product/getById/:id", asyncHandler(ProductController.getProductById));
 router.get("/product/getBySlug/:product_slug", asyncHandler(ProductController.getProductByslug));
+router.post("/product/updateProduct/:id", asyncHandler(ProductController.updateProduct));
 
 
 

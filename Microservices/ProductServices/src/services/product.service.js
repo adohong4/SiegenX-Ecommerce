@@ -83,5 +83,48 @@ class ProductService {
         }
     }
 
+
+    static updateProduct = async (req, res, next) => {
+        try {
+            const productId = req.params.id;
+            const product = await productModel.findById(productId);
+
+            if (!product) {
+                throw new BadRequestError('Sản phẩm không tồn tại');
+            }
+
+            // Cập nhật thông tin sản phẩm
+            const updates = {
+                title: req.body.title,
+                nameProduct: req.body.nameProduct,
+                price: req.body.price,
+                recap: req.body.recap,
+                description: req.body.description,
+                category: req.body.category,
+                quantity: req.body.quantity,
+                mainBoard: req.body.mainBoard,
+                chip: req.body.chip,
+                cpu: req.body.cpu,
+                gpu: req.body.gpu,
+                ram: req.body.ram,
+                memory: req.body.memory,
+                version: req.body.version,
+                ports: req.body.ports,
+                displaySize: req.body.displaySize,
+                pixelDensity: req.body.pixelDensity,
+                display: req.body.display,
+                refreshRate: req.body.refreshRate
+            };
+
+            const updatedProduct = await productModel.findByIdAndUpdate(productId, updates, { new: true });
+
+            return {
+                product: updatedProduct
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 module.exports = ProductService ;

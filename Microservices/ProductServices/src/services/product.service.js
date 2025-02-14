@@ -173,5 +173,19 @@ class ProductService {
         }
     }
 
+    static getProductByTitle = async (title) => {
+        try {
+            const product_title = String(title).trim();
+            const product = await productModel.find({
+                title: { $regex: product_title, $options: 'i' } // 'i' để tìm kiếm không phân biệt chữ hoa/thường
+            });
+            return {
+                product,
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 module.exports = ProductService ;

@@ -25,6 +25,7 @@ router.get("/product/getById/:id", asyncHandler(ProductController.getProductById
 router.get("/product/getBySlug/:product_slug", asyncHandler(ProductController.getProductByslug));
 router.post("/product/updateProduct/:id", asyncHandler(ProductController.updateProduct));
 router.delete("/product/deleteProduct/:id", asyncHandler(ProductController.deleteProduct));
+router.get("/product/getProductByTitle/:titlee", asyncHandler(ProductController.getProductByTitle));
 
 
 

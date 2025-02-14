@@ -85,5 +85,20 @@ class ProductController {
             next(error);
         }
     }
+
+    getProductByTitle = async (req, res, next) => {
+        try {
+            const result = await ProductService.getProductByTitle(req.params.title);
+
+            new OK({
+                message: 'get Product By title OK',
+                metadata: result.product
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
 }
 module.exports = new ProductController() ;

@@ -72,5 +72,18 @@ class ProductController {
             next(error);
         }
     }
+
+    deleteProduct = async (req, res, next) => {
+        try {
+            const result = await ProductService.deleteProduct(req.params.id);
+
+            new OK({
+                message: 'Xóa thành công',
+                metadata: result.product
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 module.exports = new ProductController() ;

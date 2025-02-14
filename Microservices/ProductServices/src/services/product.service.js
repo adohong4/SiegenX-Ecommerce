@@ -191,5 +191,35 @@ class ProductService {
         return await productModel.countDocuments();
     }
 
+    static getProductsByPage = async (page = 1, pageSize = 5) => {
+        try {
+            // Tính toán vị trí bắt đầu và số lượng sản phẩm cần lấy
+            const skip = (page - 1) * pageSize;
+            const limit = pageSize;
+    
+            // Lấy danh sách sản phẩm với phân trang
+            const products = await productModel.find()
+                .skip(skip)        // Bỏ qua các sản phẩm đã được truy vấn trước đó
+                .limit(limit);     // Giới hạn số lượng sản phẩm mỗi trang
+    
+            // Lấy tổng số sản phẩm để tính số trang
+            const totalProducts = await productModel.countDocuments();
+    
+            // Tính toán số trang
+            const totalPages = Math.ceil(totalProducts / pageSize);
+    
+            return {
+                metadata:{
+                products,
+                currentPage: page,
+                totalPages,
+                totalProducts,}
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+
 }
 module.exports = ProductService ;

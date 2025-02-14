@@ -111,6 +111,19 @@ class ProductController {
         }
     }
 
+    getProductsByPage = async (req, res, next) => {
+        try {
+            const result = await ProductService.getProductsByPage();
+
+            new OK({
+                message: 'get Product By Page OK',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
 
 

@@ -49,5 +49,19 @@ class ProductService {
         }
     }
 
+    static getProduct = async () => {
+        try {
+            const product = await productModel.find({});
+            return {
+                product
+            }
+        } catch (error) {
+            console.log(error);
+            res.json({ success: false, message: "Error" })
+        }
+    }
+
+    
+
 }
 module.exports = ProductService ;

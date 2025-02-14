@@ -20,7 +20,7 @@ const upload = multer({ storage: storage })
 
 //admin
 router.post("/product/add", upload.array("images"), asyncHandler(ProductController.createProduct));
-
+router.get("/product/getAll", asyncHandler(ProductController.getAllProduct));
 
 
 

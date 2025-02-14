@@ -98,6 +98,20 @@ class ProductController {
             next(error);
         }
     }
+    getCountProduct = async (req, res, next) => {
+        try {
+            const result = await ProductService.getCountProduct();
+
+            new OK({
+                message: 'get CountProduct  OK',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
 
 
 }

@@ -187,5 +187,9 @@ class ProductService {
         }
     }
 
+    static getCountProduct = async () => {
+        return await productModel.countDocuments();
+    }
+
 }
 module.exports = ProductService ;

@@ -61,7 +61,16 @@ class ProductService {
         }
     }
 
-    
+    static getProductById = async (id) => {
+        try {
+            const product = await productModel.findById(id);
+            return {
+                product,
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 module.exports = ProductService ;

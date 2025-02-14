@@ -32,5 +32,18 @@ class ProductController {
             next(error);
         }
     }
+
+    getProductById = async (req, res, next) => {
+        try {
+            const result = await ProductService.getProductById(req.params.id);
+
+            new OK({
+                message: 'get Product By Id OK',
+                metadata: result.product
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 module.exports = new ProductController() ;

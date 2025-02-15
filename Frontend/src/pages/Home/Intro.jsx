@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from "react";
+
 // import AboutUs from '../../components/Introduce/AboutUs/AboutUs'
 // import Culture from '../../components/Introduce/Culture/Culture'
 // import Economic from '../../components/Introduce/Economic/Economic'
@@ -40,9 +41,25 @@ const itemVariants = {
     hidden: { opacity: 0, y: 25 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
-
+const tabVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
 const Introduce = () => {
+    const [activeTab, setActiveTab] = useState('tech');
+    const tabImages = {
+        tech: assets.techImage,
+        meeting: assets.meetingImage,
+        advertising: assets.advertisingImage,
+        ktv: assets.ktvImage,
+        architecture: assets.architectureImage
+    };
+
+
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+    };
     return (
         <main>
             <div className='banner-top-img'>
@@ -118,8 +135,86 @@ const Introduce = () => {
                 </motion.section>
 
 
-                {/* <Culture />
-                <Economic /> */}
+
+
+                <motion.section
+                    className='section-linhvuc'
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: false, amount: 0.2 }}
+                >
+                    <div className="economic-activity container">
+                        <motion.h2
+                            className="culture-title text-center mb-4"
+                            variants={tabVariants}
+                        >
+                            LĨNH VỰC KINH DOANH
+                        </motion.h2>
+
+                        <div className="row">
+                            {/* Tabs (Vertical Buttons) */}
+                            <div className="col-md-4 col-xxl-4 col-tab-left-linhvuc">
+                                <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    {["tech", "meeting", "advertising", "ktv", "architecture"].map((tab, index) => (
+                                        <motion.button
+                                            key={tab}
+                                            className={`nav-link ${activeTab === tab ? 'active' : ''}`}
+                                            onClick={() => handleTabClick(tab)}
+                                            type="button"
+                                            role="tab"
+                                            aria-controls={`v-pills-${tab}`}
+                                            aria-selected={activeTab === tab}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            {["Giải pháp công nghệ toàn diện", "Giải pháp phòng họp thông minh", "Giải pháp quảng cáo 3D ngoài trời", "KTV 5D", "Kiến trúc điêu khắc đương đại"][index]}
+                                        </motion.button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Tab Content */}
+                            <div className="col-md-8 col-xxl-8 col-tab-right-linhvuc">
+                                <motion.div
+                                    className="tab-content tab-gt"
+                                    id="v-pills-tabContent"
+                                    variants={tabVariants}
+                                >
+                                    {["tech", "meeting", "advertising", "ktv", "architecture"].map((tab) => (
+                                        <motion.div
+                                            key={tab}
+                                            className={`tab-pane fade ${activeTab === tab ? 'show active' : ''}`}
+                                            role="tabpanel"
+                                            aria-labelledby={`v-pills-${tab}-tab`}
+                                            initial="hidden"
+                                            animate={activeTab === tab ? "visible" : "hidden"}
+                                            variants={tabVariants}
+                                        >
+                                            {activeTab === tab && (
+                                                <motion.img
+                                                    src={assets.economic}
+                                                    alt={tab}
+                                                    className="img-fluid rounded"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ duration: 0.5 }}
+                                                />
+                                            )}
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+
+                                <motion.button
+                                    className="btn btn-primary mt-3"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    Xem chi tiết
+                                </motion.button>
+                            </div>
+                        </div>
+                    </div>
+                </motion.section>
             </div>
         </main>
     )

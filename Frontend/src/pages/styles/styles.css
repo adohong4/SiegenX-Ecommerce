@@ -855,7 +855,92 @@ section{
   max-width: 60%;
   margin: 0 auto;
 }
+#v-pills-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
 
+.section-linhvuc {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.section-linhvuc .nav-link {
+  font-size: 16px;
+  padding: 20px 20px;
+  text-align: left;
+  border-radius: 50px;
+  background-color: #dddddd;
+  border: none;
+  color: #333;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.section-linhvuc .row {
+  justify-content: center;
+}
+
+.section-linhvuc .nav-link:hover {
+  background-color: #00B98E;
+  color: #fff;
+}
+
+.section-linhvuc .nav-link.active {
+  background-color: #00B98E;
+  color: #fff !important;
+}
+
+.col-tab-left-linhvuc {
+  margin-top: -50p x;
+}
+
+.col-tab-right-linhvuc .tab-content {
+  margin-top: 20px;
+  padding: 0;
+  border: none;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.show {
+  display: block;
+}
+
+.economic-activity .row {
+  display: flex;
+  justify-content: center;
+}
+
+.section-linhvuc .col-tab-right-linhvuc {
+  padding: 40px;
+}
+
+.section-linhvuc .col-tab-right-linhvuc button {
+  margin-top: 30px;
+  padding: 15px 30px;
+  color: #fff;
+  border-radius: 50px;
+  background-color: #00B98E;
+  border: 1px solid #fff;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.section-linhvuc .col-tab-right-linhvuc button:hover {
+  background-color: #009E79;
+}
+  
 @media only screen and (max-width: 48em) {
   .row_intro {
       display: block;
@@ -891,5 +976,20 @@ section{
 }
 .culture-title {
     font-size: 1.5rem;
+}
+.economic-activity .row {
+  display: block;
+}
+#v-pills-tab {
+  height: fit-content;
+}
+.section-linhvuc .col-tab-right-linhvuc {
+  padding: 20px;
+}
+.tab-gt img{
+  width: 100%;
+}
+.col-tab-right-linhvuc{
+  text-align: center;
 }
 }

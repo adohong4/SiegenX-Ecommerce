@@ -767,3 +767,53 @@ section{
   transform: none;
 }
 }
+
+
+/* CSS cho trang Giới thiệu */
+
+.row_intro {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0px;
+}
+
+.row_intro .row_intro_feft {
+  padding: 0px;
+  text-align: center;
+}
+
+.row_intro .row_intro_feft img {
+  width: 80%;
+}
+
+.row_intro .row_intro_right {
+  padding: 50px;
+}
+
+.row_intro .row_intro_right img {
+  width: 90%;
+}
+
+@media only screen and (max-width: 48em) {
+  .row_intro {
+      display: block;
+      padding-bottom: 0;
+  }
+  .row_intro .row_intro_feft {
+      text-align: center;
+  }
+  .main-body-vanhoa {
+      max-width: 100%;
+  }
+  .section-vanhoa{
+      padding: 10px;
+  }
+  .culture-items {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 0.5rem;
+  }
+  .economic-activity .row {
+      display: block;
+  }
+}

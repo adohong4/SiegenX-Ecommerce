@@ -940,7 +940,7 @@ section{
 .section-linhvuc .col-tab-right-linhvuc button:hover {
   background-color: #009E79;
 }
-  
+
 @media only screen and (max-width: 48em) {
   .row_intro {
       display: block;
@@ -992,4 +992,203 @@ section{
 .col-tab-right-linhvuc{
   text-align: center;
 }
+}
+
+/* CSS cho trang Liên hệ */
+.banner-contact img{
+  width: 100vw;
+}
+.page-contact{
+  width: 100vw;
+}
+.banner-contact {
+  margin-top: 100px;
+}
+
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+
+  padding: 40px 120px;
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
+
+}
+
+.contact-info {
+  flex: 1;
+  margin-right: 20px;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 32%;
+  background-color: #00c8a0;
+  height: 520px;
+}
+
+.contact-info h2 {
+  font-size: 20px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  color: #fff;
+  margin-bottom: 20px;
+  line-height: 25px;
+}
+
+.contact-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.contact-item i {
+  border: 1px solid #fff;
+  font-size: 18px;
+  color: #fff;
+  margin-right: 20px;
+  padding: 10px;
+  border-radius: 50%;
+
+}
+
+.contact-item span {
+  font-size: 16px;
+
+  color: #fff;
+}
+
+.contact-form {
+  flex: 1;
+  background-color: #d6d6d6;
+  padding: 40px;
+  background-image: url('C:\Users\admin\Desktop\2023-20224\PTHT_TMDT\Project\SiegenX-Ecommerce\Frontend\src\assets\Contact\bgrcontact.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+}
+
+.contact-form .title {
+  display: grid;
+  grid-template-columns: repeat(2, 0.5fr);
+}
+
+.contact-form .group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+
+}
+
+.contact-form h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.contact-form p {
+  font-size: 1rem;
+}
+
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: #000;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  border: 1px solid #e7e1e1
+}
+
+.form-group textarea {
+  height: 120px;
+}
+
+.btn {
+  background-color: #00c8a0;
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  margin-left: 10px;
+  font-size: 14px;
+  border-radius: 50px;
+  width: max-content;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #f2f2f2;
+}
+
+.section-map .container {
+  padding: 40px 120px;
+  padding-top: 0 !important;
+}
+
+.section-map .container iframe {
+  border-radius: 20px;
+}
+
+.img-banner img {
+  width: 100%;
+
+}
+
+
+@media only screen and (max-width: 48em) {
+  .contact-container {
+      display: block;
+      padding: 0;
+      /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
+  
+  }
+  .banner-contact {
+      margin-top: 0px;
+  }
+  .contact-info {
+      flex: 1;
+      max-width: 100%;
+      margin-right: 0;
+      margin-bottom: 20px;
+  }
+  .section-map .container {
+      padding: 10px;
+      padding-top: 0 !important;
+  }
+  .contact-container{
+      padding: 20px;
+  }
+  .contact-form .title {
+      display: block;
+  }
+  .contact-form{
+      padding: 20px;
+  }
+  .submit-form{
+      text-align: center;
+  }
 }

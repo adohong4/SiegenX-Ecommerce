@@ -32,6 +32,9 @@ import vision from './Intro/vision 1.png'
 import economic from './Intro/economic.png'
 
 
+import banner_contact from './Contact/banner_contact.png'
+import bgrcontact from './Contact/bgrcontact.png'
+
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
@@ -39,5 +42,6 @@ export const assets = {
     
     introduce,forme,about1,bulb,currency,eco,mission,rocket, vision,economic,
 
+    banner_contact, bgrcontact,
 
 }

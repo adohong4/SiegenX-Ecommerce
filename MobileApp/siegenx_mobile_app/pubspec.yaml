@@ -55,6 +55,9 @@ flutter:
       - assets/logo.png
       - assets/user.png
       - assets/lock.png
+      - assets/apple.png
+      - assets/facebook.png
+      - assets/google.png
   
 
   

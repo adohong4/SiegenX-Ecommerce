@@ -56,10 +56,10 @@ class _Logo extends StatelessWidget {
             style: isSmallScreen
                 ? Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xff00B98E),
+                      color: Color(0xff929292),
                     )
                 : Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Color(0xff00B98E),
+                      color: Color(0xff929292),
                       fontWeight: FontWeight.bold,
                     ),
           ),
@@ -205,6 +205,100 @@ class __FormContentState extends State<_FormContent> {
                   }
                 },
               ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: Divider(
+                  color: Colors.grey.shade400,
+                  thickness: 1,
+                  endIndent: 8,
+                )),
+
+                // Dòng chữ "Đăng nhập với"
+                const Text(
+                  "Đăng nhập với",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500, // độ đậm trung bình
+                  ),
+                ),
+
+                // Đường kẻ bên phải
+                Expanded(
+                    child: Divider(
+                  color: Colors.grey.shade400,
+                  thickness: 1,
+                  indent: 8,
+                ))
+              ],
+            ),
+
+            const SizedBox(
+              height: 20,
+            ),
+
+            // 3 logo facebook, google, apple
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // xử lý đăng nhập google
+                  },
+                  child:
+                      Image.asset('assets/facebook.png', width: 40, height: 40),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // xử lý đăng nhập google
+                  },
+                  child:
+                      Image.asset('assets/google.png', width: 40, height: 40),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // xử lý đăng nhập google
+                  },
+                  child: Image.asset('assets/apple.png', width: 40, height: 40),
+                ),
+              ],
+            ),
+
+            const SizedBox(
+              height: 30,
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Tôi chưa có tài khoản?',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Xử lý khi nhấn vào nút "ĐĂNG KÝ NGAY"
+                  },
+                  child: const Text(
+                    'ĐĂNG KÝ NGAY',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff00B98E),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

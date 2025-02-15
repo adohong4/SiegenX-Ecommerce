@@ -23,12 +23,20 @@ import interactiveScreen from './Home/interactiveScreen.png'
 import introduce from './Intro/introduce.png'
 import forme from './Intro/forme.png'
 import about1 from './Intro/about1.png'
+import bulb from './Intro/bulb.png'
+import currency from './Intro/currency.png'
+import eco from './Intro/eco.png'
+import mission from './Intro/mission.png'
+import rocket from './Intro/rocket.png'
+import vision from './Intro/vision 1.png'
+
+
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
     
     
-    introduce,forme,about1,
+    introduce,forme,about1,bulb,currency,eco,mission,rocket, vision,
 
 
 }

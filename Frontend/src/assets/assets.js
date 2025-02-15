@@ -15,9 +15,10 @@ import solution1 from './Home/solution1.png'
 import solution2 from './Home/solution2.png'
 import solution3 from './Home/solution3.png'
 import background from './Home/background.png'
+import banner from './Home/Banner.png'
 
 
 export const assets = {
     logo, logo_footer,
-    img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,
+    img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,
 }

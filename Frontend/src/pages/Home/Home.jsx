@@ -11,6 +11,10 @@ const fadeUpVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
+const fadeInScaleUp = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } },
+};
 const staggerContainer = {
     hidden: { opacity: 1 },
     visible: {
@@ -183,6 +187,21 @@ const Home = () => {
                         <img src={assets.solution3} alt="Giải pháp 3" className="solution-img" />
                     </motion.div>
                 </motion.div>
+            </motion.section>
+
+
+            <motion.section
+                id='section-banner-home'
+                className="banner-home"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.2 }}
+                variants={staggerContainer}>
+
+                <motion.div className='row' variants={fadeInScaleUp}>
+                    <img src={assets.banner} alt="Banner Home" className='banner-home-img' />
+                </motion.div>
+
             </motion.section>
         </>
 

@@ -534,3 +534,8 @@ section{
     width: 100%;
   }
 }
+
+/* CSS cho banner home dưới section Giải pháp */
+#section-banner-home .row{
+  padding: 0px 20px;
+}

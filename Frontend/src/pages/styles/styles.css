@@ -539,3 +539,35 @@ section{
 #section-banner-home .row{
   padding: 0px 20px;
 }
+
+/* CSS cho đối tác - Home page */
+.partners {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+.partners h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  font-weight:600;
+}
+.partners-grid {
+  display: flex;
+  justify-content: center;
+}
+.partners-grid img {
+  height: 130px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+@media only screen and (max-width: 48em){
+  .partners-grid {
+    display: block;
+}
+  .partners-grid img {
+    width: 100vw;
+}
+.partners {
+  padding: 0px;
+}
+}

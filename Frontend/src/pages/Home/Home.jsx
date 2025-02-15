@@ -25,6 +25,10 @@ const staggerContainer = {
         }
     }
 };
+const partners = [
+    "/src/assets/Home/logoBrand2.png",
+    "/src/assets/Home/logoBrand1.png",
+  ];
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("Giải pháp phòng học thông minh");
@@ -203,6 +207,15 @@ const Home = () => {
                 </motion.div>
 
             </motion.section>
+
+            <section className="partners">
+                <h2>ĐỐI TÁC CỦA CHÚNG TÔI</h2>
+                <div className="partners-grid">
+                    {partners.map((partner, index) => (
+                        <img src={partner} alt={`Đối tác ${index + 1}`} key={index} />
+                    ))}
+                </div>
+            </section>
         </>
 
     )

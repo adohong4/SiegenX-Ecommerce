@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/screens/home_screen.dart';
 import 'screens/login_screen.dart'; // Thêm import này
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(), // Đổi thành màn hình đăng nhập
+      home: const HomeScreen(), // Đổi thành màn hình đăng nhập
     );
   }
 }

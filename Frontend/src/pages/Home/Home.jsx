@@ -25,14 +25,56 @@ const staggerContainer = {
         }
     }
 };
+const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+const imageVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+};
+
+const textVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+};
 const partners = [
     "/src/assets/Home/logoBrand2.png",
     "/src/assets/Home/logoBrand1.png",
-  ];
+];
+const options = [
+    {
+        title: "Màn hình tương tác",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình di động",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình quảng cáo",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình LED",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình ghép",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+];
+const handleOptionClick = (index) => setSelectedOption(index);
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("Giải pháp phòng học thông minh");
-
+    const [selectedOption, setSelectedOption] = useState(0);
     const handleTabClick = (tabName) => {
         setActiveTab(tabName);
     };
@@ -208,6 +250,50 @@ const Home = () => {
 
             </motion.section>
 
+            <motion.section  id="cungcap-gp" 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: false, amount: 0.2 }} 
+            variants={containerVariants}>
+                <div className="provide-container">
+                    {/* Danh sách lựa chọn */}
+                    <motion.div className="column column-options" variants={textVariants}>
+                        <h2 className="title">CHÚNG TÔI CUNG CẤP CHO BẠN</h2>
+                        <p className="subtitle">CÁC GIẢI PHÁP HIỂN THỊ, ÂM THANH TOÀN DIỆN</p>
+                        <ul className="option-list">
+                            {options.map((option, index) => (
+                                <motion.li
+                                    key={index}
+                                    className={`option ${selectedOption === index ? "active" : ""}`}
+                                    onClick={() => handleOptionClick(index)}
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <span className="option-number">{`0${index + 1}`}</span>
+                                    <span className="option-text">{option.title}</span>
+                                    {selectedOption === index && <span className="arrow">→</span>}
+                                </motion.li>
+                            ))}
+                        </ul>
+                    </motion.div>
+
+                    {/* Nội dung hiển thị */}
+                    <div className="column-content">
+                        <motion.div className="content-image" variants={imageVariants}>
+                            <img
+                                className="image-preview"
+                                src={options[selectedOption].image}
+                                alt={options[selectedOption].title}
+                            />
+                        </motion.div>
+                        <motion.div className="content-description" variants={textVariants}>
+                            <p>{options[selectedOption].description}</p>
+                            <motion.button className="details-button" whileHover={{ scale: 1.1 }}>
+                                XEM CHI TIẾT
+                            </motion.button>
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.section>
             <section className="partners">
                 <h2>ĐỐI TÁC CỦA CHÚNG TÔI</h2>
                 <div className="partners-grid">
@@ -216,6 +302,9 @@ const Home = () => {
                     ))}
                 </div>
             </section>
+
+
+
         </>
 
     )

@@ -571,3 +571,199 @@ section{
   padding: 0px;
 }
 }
+
+
+/* CSS cho  section cung cấp -Homepage*/
+
+.provide-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 73vh;
+  gap: 20px;
+  padding: 40px;
+}
+
+.column-options {
+  width: 40%;
+  padding: 20px;
+  margin-left: 150px;
+  
+}
+
+.title {
+  font-size: 23px;
+  color: #333;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #00B98E;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  font-weight: bold;
+}
+
+.option-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.option {
+  width: 360px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  background-color: #f7f7f7;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.option:hover {
+  background-color: #e6f7f2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.option-number {
+  font-weight: bold;
+  color: #555;
+  margin-right: 10px;
+}
+
+.option-text {
+  margin-left: 30px;
+  font-size: 15px;
+  color: #333;
+  flex-grow: 1;
+  font-weight: bold;
+}
+
+.option.active {
+  background-color: #00c17c;
+  color: #fff;
+}
+
+.option.active .option-number {
+  color: #fff;
+}
+.option.active .option-text {
+  color: #fff;
+}
+
+.arrow {
+  color: #000000;
+  width: 40px;
+  height: 40px;
+  padding-left: 11px;
+  padding-top: 4.5px;
+  font-size: 18px;
+  background-color: #ffffff;
+  border-radius: 30px;
+}
+
+.column-content {
+  width: 75%; 
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden; 
+}
+
+.content-image {
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  max-width: 700px;
+}
+
+.image-preview {
+  width: 50%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+  z-index: 1; 
+}
+
+.content-description {
+  position: absolute; 
+  top: 15%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 330px;
+  padding: 20px;
+  background-color: #EDEDED; 
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 10; 
+}
+
+.content-description p {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 20px;
+  padding: 20px;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-line;
+}
+
+.details-button {
+  position: absolute;
+  left: 10%;
+  background-color: #00B98E;
+  color: #fff;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.details-button:hover {
+  background-color: #009d68;
+  transform: scale(1.05);
+}
+
+
+@media only screen and (max-width: 48em){
+  .provide-container {
+    padding: 20px;
+}
+.column-options {
+  width: 100%;
+  padding: 20px;
+  margin-left: 0px;
+}
+.provide-container {
+  display: block;
+}
+.column-content {
+  position: relative;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+  width: 100%;
+}
+.image-preview {
+  width: 100%;
+}
+.content-description {
+  position: relative;
+  top: 230px;
+  width: 100%;  
+  left: 0px;
+  transform: none;
+}
+}

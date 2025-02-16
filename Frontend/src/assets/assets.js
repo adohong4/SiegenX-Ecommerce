@@ -35,6 +35,13 @@ import economic from './Intro/economic.png'
 import banner_contact from './Contact/banner_contact.png'
 import bgrcontact from './Contact/bgrcontact.png'
 
+
+import sol from './Solution/sol.png'
+import sol1 from './Solution/sol1.png'
+import sol2 from './Solution/sol2.png'
+import sol3 from './Solution/sol3.png'
+
+
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
@@ -43,5 +50,7 @@ export const assets = {
     introduce,forme,about1,bulb,currency,eco,mission,rocket, vision,economic,
 
     banner_contact, bgrcontact,
+
+    sol1, sol2, sol3,sol,
 
 }

@@ -32,9 +32,9 @@ const Solution = () => {
                                     <motion.img src={assets.sol1} alt="sol-1 section" />
                                 </div>
                                 <div className='sol-sec1-right'>
-                                    <h3>Giải pháp phòng họp thông minh</h3>
+                                    <h3>Giải pháp phòng học thông minh</h3>
                                     <p>Giải pháp của SiegenX tập trung vào việc cung cấp các sản phẩm và dịch vụ công nghệ thông minh nhằm tối ưu hóa quy trình hoạt động và nâng cao hiệu quả kinh doanh cho doanh nghiệp.</p>
-                                    <motion.button whileHover={{ scale: 1.1 }} onClick={() => navigate("/giai-phap/phong-hop-thong-minh")}>
+                                    <motion.button whileHover={{ scale: 1.1 }} onClick={() => navigate("/giai-phap/lop-hoc-thong-minh")}>
                                         Xem chi tiết
                                     </motion.button>
                                 </div>
@@ -42,9 +42,9 @@ const Solution = () => {
 
                             <motion.section className='sol-section-2 sol-section' initial="hidden"  whileInView="visible" viewport={{ once: false, amount: 0.2 }} variants={sectionVariants_1}>
                                 <div className='sol-sec2-left'>
-                                    <h3>Giải pháp phòng học thông minh</h3>
+                                    <h3>Giải pháp phòng họp thông minh</h3>
                                     <p>Giải pháp của SiegenX tập trung vào việc cung cấp các sản phẩm và dịch vụ công nghệ thông minh nhằm tối ưu hóa quy trình hoạt động và nâng cao hiệu quả kinh doanh cho doanh nghiệp.</p>
-                                    <motion.button whileHover={{ scale: 1.1 }} onClick={() => navigate("/giai-phap/lop-hoc-thong-minh")}>
+                                    <motion.button whileHover={{ scale: 1.1 }} onClick={() => navigate("/giai-phap/phong-hop-thong-minh")}>
                                         Xem chi tiết
                                     </motion.button>
                                 </div>

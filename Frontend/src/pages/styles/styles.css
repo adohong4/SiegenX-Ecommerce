@@ -1277,10 +1277,12 @@ section{
   color: white;
   margin-top: 10px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .sol-section button:hover {
   background-color: #009472;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .sol-section div h3 {

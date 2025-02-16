@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { fakeContacts } from "../../data/Enviroment";   
 
 const Contact = () => {
     // const { url } = useContext(StoreContext);
@@ -24,45 +25,66 @@ const Contact = () => {
         setCurrentPage(event.selected + 1);
     };
 
-    const handleViewToggle = async (itemId) => {
-        try {
-            const updatedList = list.map(item => {
-                if (item._id === itemId) {
-                    return { ...item, viewed: !item.viewed };
-                }
-                return item;
-            });
+    // const handleViewToggle = async (itemId) => {
+    //     try {
+    //         const updatedList = list.map(item => {
+    //             if (item._id === itemId) {
+    //                 return { ...item, viewed: !item.viewed };
+    //             }
+    //             return item;
+    //         });
 
-            setList(updatedList);
+    //         setList(updatedList);
 
-            await axios.put(`${url}/v1/api/contact/updateCheck/${itemId}`, {
-                isCheck: updatedList.find(item => item._id === itemId).viewed
-            });
-        } catch (error) {
-            toast.error("Lỗi khi cập nhật tình trạng");
-        }
+    //         await axios.put(`${url}/v1/api/contact/updateCheck/${itemId}`, {
+    //             isCheck: updatedList.find(item => item._id === itemId).viewed
+    //         });
+    //     } catch (error) {
+    //         toast.error("Lỗi khi cập nhật tình trạng");
+    //     }
+    // };
+
+    // Fake data cho hàm handleViewToggle
+
+    const handleViewToggle = (itemId) => {
+        setList(prevList =>
+            prevList.map(item =>
+                item._id === itemId ? { ...item, viewed: !item.viewed } : item
+            )
+        );
+    };
+    
+
+    // const fetchListcontact = async (page = 1) => {
+    //     try {
+    //         const response = await axios.get(`${url}/v1/api/contact/pagination?page=${page}&limit=20`);
+
+    //         if (response.data.message) {
+    //             const contacts = response.data.data.map(contact => ({
+    //                 ...contact,
+    //                 viewed: contact.isCheck // Thiết lập trạng thái viewed
+    //             }));
+    //             setList(contacts);
+    //             setTotalItems(response.data.pagination.totalItems);
+    //             setTotalPages(response.data.pagination.totalPages);
+    //         } else {
+    //             toast.error('Lỗi khi lấy dữ liệu liên hệ');
+    //         }
+    //     } catch (error) {
+    //         toast.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
+    //         console.error(error);
+    //     }
+    // };
+
+
+
+    // Hàm fetchList Fake data
+    const fetchListcontact = (page = 1) => {
+        setList(fakeContacts); // Sử dụng dữ liệu giả
+        setTotalItems(fakeContacts.length);
+        setTotalPages(1); // Vì là dữ liệu giả, chỉ có 1 trang
     };
 
-    const fetchListcontact = async (page = 1) => {
-        try {
-            const response = await axios.get(`${url}/v1/api/contact/pagination?page=${page}&limit=20`);
-
-            if (response.data.message) {
-                const contacts = response.data.data.map(contact => ({
-                    ...contact,
-                    viewed: contact.isCheck // Thiết lập trạng thái viewed
-                }));
-                setList(contacts);
-                setTotalItems(response.data.pagination.totalItems);
-                setTotalPages(response.data.pagination.totalPages);
-            } else {
-                toast.error('Lỗi khi lấy dữ liệu liên hệ');
-            }
-        } catch (error) {
-            toast.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
-            console.error(error);
-        }
-    };
 
     // let nofi = true;
 
@@ -77,39 +99,54 @@ const Contact = () => {
 
 
 
-    const handleSearch = async () => {
+    // const handleSearch = async () => {
+    //     if (searchTerm.trim() === '') {
+    //         await fetchListcontact(currentPage);
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await axios.get(`${url}/v1/api/contact/search`, {
+    //             params: { query: searchTerm, page: currentPage, limit: 20 } // Cập nhật tham số
+    //         });
+
+    //         if (response.data.status) {
+    //             if (Array.isArray(response.data.data)) {
+    //                 const contacts = response.data.data.map(contact => ({
+    //                     ...contact,
+    //                     viewed: contact.isCheck // Thiết lập trạng thái viewed
+    //                 }));
+    //                 setList(contacts);
+    //                 setTotalPages(response.data.pagination.totalPages); // Cập nhật tổng số trang
+    //             } else {
+    //                 setList([]);
+    //                 setTotalPages(0); // Đặt số trang về 0 nếu không có kết quả
+    //                 toast.error("Không tìm thấy liên hệ");
+    //             }
+    //         } else {
+    //             setList([]);
+    //         }
+    //     } catch (error) {
+    //         setList([]); // Gán giá trị rỗng khi xảy ra lỗi
+    //         setTotalPages(0);
+    //         toast.error("Lỗi trong quá trình tìm kiếm");
+    //     }
+    // };
+
+
+    // Hàm HandleSearch cho fake data
+    const handleSearch = () => {
         if (searchTerm.trim() === '') {
-            await fetchListcontact(currentPage);
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${url}/v1/api/contact/search`, {
-                params: { query: searchTerm, page: currentPage, limit: 20 } // Cập nhật tham số
-            });
-
-            if (response.data.status) {
-                if (Array.isArray(response.data.data)) {
-                    const contacts = response.data.data.map(contact => ({
-                        ...contact,
-                        viewed: contact.isCheck // Thiết lập trạng thái viewed
-                    }));
-                    setList(contacts);
-                    setTotalPages(response.data.pagination.totalPages); // Cập nhật tổng số trang
-                } else {
-                    setList([]);
-                    setTotalPages(0); // Đặt số trang về 0 nếu không có kết quả
-                    toast.error("Không tìm thấy liên hệ");
-                }
-            } else {
-                setList([]);
-            }
-        } catch (error) {
-            setList([]); // Gán giá trị rỗng khi xảy ra lỗi
-            setTotalPages(0);
-            toast.error("Lỗi trong quá trình tìm kiếm");
+            setList(fakeContacts);
+        } else {
+            const filteredList = fakeContacts.filter(contact =>
+                contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setList(filteredList);
         }
     };
+    
 
     const removeContact = async (id) => {
         try {

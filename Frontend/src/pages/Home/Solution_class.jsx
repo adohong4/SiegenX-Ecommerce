@@ -113,13 +113,13 @@ const ClassRoomSolution = () => {
                     <div className="spnoibat-row">
                         <div className="sp-col col-3">
                             <div className='sp'>
-                                <img src={assets.productClass1} alt="productclass1" />
-                                <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
+                                <img src={assets.productClass1} alt="productclass1" className='col-10' />
+                                <a href="/" className='buy'><i className="fa-solid fa-cart-shopping col-2"></i></a>
                                 <h5>Màn Hình Tương Tác Thông Minh SIEGenX 75inch 4k SGX -1T75</h5>
                                 <div className='btn-sp'>
-                                    <a href="/lien-he">
+                                    <a href="/lien-he" className='btn-lienhe'>
                                         <span>LIÊN HỆ</span></a>
-                                    <a href="/san-pham">
+                                    <a href="/san-pham" className='btn-xemngay'>
                                         <span>XEM NGAY</span></a>
                                 </div>
                             </div>
@@ -130,9 +130,9 @@ const ClassRoomSolution = () => {
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
                                 <h5>Màn Hình Tương Tác Thông Minh SIEGenX 75inch 4k SGX -1T75</h5>
                                 <div className='btn-sp'>
-                                    <a href="/lien-he">
+                                    <a href="/lien-he" className='btn-lienhe'>
                                         <span>LIÊN HỆ</span></a>
-                                    <a href="/san-pham">
+                                    <a href="/san-pham" className='btn-xemngay'>
                                         <span>XEM NGAY</span></a>
                                 </div>
                             </div>
@@ -143,9 +143,9 @@ const ClassRoomSolution = () => {
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
                                 <h5>Màn Hình Tương Tác Thông Minh SIEGenX 75inch 4k SGX -1T75</h5>
                                 <div className='btn-sp'>
-                                    <a href="/lien-he">
+                                    <a href="/lien-he" className='btn-lienhe'>
                                         <span>LIÊN HỆ</span></a>
-                                    <a href="/san-pham">
+                                    <a href="/san-pham" className='btn-xemngay'>
                                         <span>XEM NGAY</span></a>
                                 </div>
                             </div>
@@ -156,9 +156,9 @@ const ClassRoomSolution = () => {
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
                                 <h5>Màn Hình Tương Tác Thông Minh SIEGenX 75inch 4k SGX -1T75</h5>
                                 <div className='btn-sp'>
-                                    <a href="/lien-he">
+                                    <a href="/lien-he" className='btn-lienhe'>
                                         <span>LIÊN HỆ</span></a>
-                                    <a href="/san-pham">
+                                    <a href="/san-pham" className='btn-xemngay'>
                                         <span>XEM NGAY</span></a>
                                 </div>
                             </div>

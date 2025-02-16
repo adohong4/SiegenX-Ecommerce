@@ -1447,13 +1447,11 @@ section{
   display: flex;
   padding: 70px 0px;
 }
-.giupgichoban {
-  background-image: url('C:\Users\admin\Desktop\2023-20224\PTHT_TMDT\Project\SiegenX-Ecommerce\Frontend\src\assets\Solution\Frame.png');
-  background-size:800px;
-}
 .giupgichoban .sec-2-right{
   display: flex;
   align-items: center;
+  background-image: url('C:\Users\admin\Desktop\2023-20224\PTHT_TMDT\Project\SiegenX-Ecommerce\Frontend\src\assets\Solution\Frame.png');
+  background-size: cover;
 }
 .giupgichoban .sec-2-right .text-sec-2 .btn-sec-2{
   background-color: #EC1313;
@@ -1566,6 +1564,62 @@ section{
   color: #fff;
   text-transform: uppercase;
   font-weight: bold;
+}
+.spnoibat {
+  margin: 40px 0px;
+}
+.spnoibat .container h1{
+  margin-bottom: 40px;
+}
+.spnoibat .spnoibat-row .sp-col{
+  padding: 20px;
+}
+.spnoibat .spnoibat-row .sp{
+  text-align: center;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 20px;
+
+}
+.spnoibat .spnoibat-row .sp img{
+  width: 120px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+.spnoibat .spnoibat-row .sp h5{
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+.spnoibat .spnoibat-row .sp>a{
+  color: #00A982;
+  position: absolute;
+  padding-left: 20px;
+}
+.spnoibat .spnoibat-row .btn-sp{
+  display: flex;
+  justify-content: space-around;
+}
+.spnoibat .spnoibat-row .btn-sp a{
+  text-decoration: none;
+  color: #fff;
+}
+.spnoibat .spnoibat-row .btn-sp a.btn-lienhe{
+  padding: 5px 25px ;
+  background-color: #EC1313;
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}
+.spnoibat .spnoibat-row .btn-sp a.btn-lienhe:hover{
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+.spnoibat .spnoibat-row .btn-sp a.btn-xemngay{
+  padding: 5px 20px ;
+  background-color: #00B98E;
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}
+.spnoibat .spnoibat-row .btn-sp a.btn-xemngay:hover{
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 @media screen and (max-width: 48em) {
   

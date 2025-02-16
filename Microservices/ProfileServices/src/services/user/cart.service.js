@@ -1,7 +1,7 @@
 'use strict'
 
-const userCart = require('../models/profile.model')
-const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../core/error.response")
+const userCart = require('../../models/profile.model')
+const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 
 class UserCartService {
 

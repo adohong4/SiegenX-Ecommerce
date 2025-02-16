@@ -1,11 +1,11 @@
 'use strict'
 
-const profileModel = require("../models/profile.model");
-const cloudinary = require('../config/cloudinary.config');
+const profileModel = require("../../models/profile.model");
+const cloudinary = require('../../config/cloudinary.config');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 
-const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../core/error.response")
+const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 
 class ProfileService {
 

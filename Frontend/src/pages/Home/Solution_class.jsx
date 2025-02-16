@@ -65,12 +65,15 @@ const ClassRoomSolution = () => {
             </section>
 
 
-            <div className='meet-section-3 class-section'>
-                <div className="div meet-container">
+            <section className='section-4 thuctrang'>
+                <div className="container">
                     <h1>THỰC TRẠNG CHUNG</h1>
-                    <div className='meet-section-3-child'>
-                        <img src={assets.class7} alt="class7" />
-                        <div>
+                    <div className='section-4-child'>
+                        <div className='sec-4-child-left col-6'>
+                            <img src={assets.class7} alt="class7" />
+                        </div>
+                        
+                        <div className='sec-4-child-right col-6'>
                             <h2>NHỮNG TIẾT HỌC NHÀM CHÁN, NHỮNG BÀI HỌC KHÔNG THẤY KẾT QUẢ</h2>
                             <div className='sol-box'>
                                 <i className="fa-solid fa-check"></i>
@@ -101,7 +104,7 @@ const ClassRoomSolution = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <div className='meet-section-4 meet-section'>
                 {/* <a href="/"><span>LIÊN HỆ</span></a> */}

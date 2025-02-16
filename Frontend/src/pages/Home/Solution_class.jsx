@@ -30,7 +30,7 @@ const ClassRoomSolution = () => {
                             <div className='button'>
                                 <a href="/lien-he" className='btn-sec-2'><span>LIÊN HỆ</span></a>
                             </div>
-                            
+
                         </div>
 
                     </div>
@@ -72,7 +72,7 @@ const ClassRoomSolution = () => {
                         <div className='sec-4-child-left col-6'>
                             <img src={assets.class7} alt="class7" />
                         </div>
-                        
+
                         <div className='sec-4-child-right col-6'>
                             <h2>NHỮNG TIẾT HỌC NHÀM CHÁN, NHỮNG BÀI HỌC KHÔNG THẤY KẾT QUẢ</h2>
                             <div className='sol-box'>
@@ -106,12 +106,12 @@ const ClassRoomSolution = () => {
                 </div>
             </section>
 
-            <div className='meet-section-4 meet-section'>
+            <section className='meet-section-5 spnoibat'>
                 {/* <a href="/"><span>LIÊN HỆ</span></a> */}
-                <div className='meet-container'>
+                <div className='container'>
                     <h1>THIẾT BỊ & SẢN PHẨM</h1>
-                    <div className="sp-row">
-                        <div className="sp-col">
+                    <div className="spnoibat-row">
+                        <div className="sp-col col-3">
                             <div className='sp'>
                                 <img src={assets.productClass1} alt="productclass1" />
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
@@ -124,7 +124,7 @@ const ClassRoomSolution = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="sp-col">
+                        <div className="sp-col col-3">
                             <div className="sp">
                                 <img src={assets.productClass2} alt="productclass2" />
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
@@ -137,7 +137,7 @@ const ClassRoomSolution = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="sp-col">
+                        <div className="sp-col col-3">
                             <div className="sp">
                                 <img src={assets.productClass3} alt="productclass3" />
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
@@ -150,7 +150,7 @@ const ClassRoomSolution = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="sp-col">
+                        <div className="sp-col col-3">
                             <div className="sp">
                                 <img src={assets.productClass4} alt="productclass4" />
                                 <a href="/" className='buy'><i className="fa-solid fa-cart-shopping"></i></a>
@@ -165,27 +165,33 @@ const ClassRoomSolution = () => {
                         </div>
                     </div>
                 </div>
+            </section>
 
 
-            </div>
-            <section id='section-lh-gp' className='meet-section-5 meet-section'>
-                <div className='section-lh-left'>
+            <section id='section-lh-gp' className='section-lienhe'>
+                <div className='section-lh-left col-6'>
                     <img src={assets.meeting10} alt="meeting10" />
                 </div>
-                <div className='section-lh-right'>
-                    <h2>LIÊN HỆ ĐĂNG KÝ</h2>
-                    <div className='form-lienhe'>
-                        <form action="" className='sol-form'>
-                            <div>
-                                <input className='sol-input' type="text" placeholder='Họ tên' name='sol-name' />
-                                <input className='sol-input' type="text" placeholder='Số điện thoại' name='sol-sdt' />
-                            </div>
-                            <textarea className="sol-input" name="sol-des" placeholder='Nội dung'></textarea>
-                            <div className='btn-send-lh'>
-                                <input className='sol-input' type="submit" value="Gửi đi" name='sol-submit' />
-                            </div>
-                        </form>
+                <div className='section-lh-right col-6'>
+                    <div className='lienhe-form'>
+                        <h2>LIÊN HỆ ĐĂNG KÝ</h2>
+                        <div className='form-lienhe'>
+                            <form action="" className='sol-form'>
+                                <div className='topform'>
+                                    <input className='sol-input' type="text" placeholder='Họ tên' name='sol-name' />
+                                    <input className='sol-input' type="text" placeholder='Số điện thoại' name='sol-sdt' />
+                                </div>
+                                <div className='bottomform'>
+                                    <textarea className="sol-input" name="sol-des" placeholder='Nội dung'></textarea>
+                                </div>
+                                <div className='btn-send-lh'>
+                                    <input className='sol-input' type="submit" value="Gửi đi" name='sol-submit' />
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                    
+
 
                 </div>
 

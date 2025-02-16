@@ -46,6 +46,7 @@ import class4 from './Solution/class4.png'
 import class5 from './Solution/class5.png'
 import class6 from './Solution/class6.png'
 import class7 from './Solution/class7.png'
+import meeting10 from './Solution/meeting10.png'
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
@@ -55,6 +56,6 @@ export const assets = {
 
     banner_contact, bgrcontact,
 
-    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,
+    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10,
 
 }

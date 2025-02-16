@@ -1440,6 +1440,9 @@ section{
 .chitietgiaphap{
   width: 100vw;
 }
+.section-banner img {
+  width: 100vw;
+}
 .giupgichoban .container{
   display: flex;
   padding: 70px 0px;
@@ -1505,6 +1508,64 @@ section{
 }
 .thuctrang .section-4-child .sec-4-child-right .sol-box i{
   color: #008C65;
+}
+.spnoibat{
+  padding: 30px 0;
+}
+.spnoibat .container h1{
+  text-align: center;
+  margin-bottom: 20px;
+}
+.spnoibat .spnoibat-row{
+  display: flex;
+}
+.section-lienhe{
+  display: flex;
+}
+.section-lienhe .section-lh-left img{
+  width: 100%;
+}
+.section-lienhe .section-lh-right{
+  background-image: url('C:\Users\admin\Desktop\2023-20224\PTHT_TMDT\Project\SiegenX-Ecommerce\Frontend\src\assets\Home\background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+  align-items: center;
+}
+.section-lienhe .section-lh-right{
+  display: grid;
+  place-items: center; 
+  background-color: #EFEFEF;
+}
+.section-lienhe .section-lh-right .lienhe-form .topform{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap:20px;
+  display: flex;
+  justify-content: center;
+}
+.section-lienhe .section-lh-right .lienhe-form .topform input{
+  border: 1px solid #e7e1e1;
+  border-radius: 5px;
+}
+.section-lienhe .section-lh-right .lienhe-form .bottomform {
+  margin-bottom: 20px;
+}
+.section-lienhe .section-lh-right .lienhe-form .bottomform textarea{
+  height: 150px;
+  width: 390px;
+  text-align: center;
+  border: 1px solid #e7e1e1;
+  border-radius: 10px;
+}
+.section-lienhe .section-lh-right .lienhe-form .btn-send-lh input{
+  width: 100%;
+  padding: 5px ;
+  border: none;
+  background-color: #00B98E;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 @media screen and (max-width: 48em) {
   

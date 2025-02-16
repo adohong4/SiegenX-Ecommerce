@@ -40,7 +40,11 @@ import sol from './Solution/sol.png'
 import sol1 from './Solution/sol1.png'
 import sol2 from './Solution/sol2.png'
 import sol3 from './Solution/sol3.png'
-
+import class1 from './Solution/class1.png'
+import class2 from './Solution/class2.png'
+import class4 from './Solution/class4.png'
+import class5 from './Solution/class5.png'
+import class6 from './Solution/class6.png'
 
 export const assets = {
     logo, logo_footer,
@@ -51,6 +55,6 @@ export const assets = {
 
     banner_contact, bgrcontact,
 
-    sol1, sol2, sol3,sol,
+    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, 
 
 }

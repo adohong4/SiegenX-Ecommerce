@@ -1,67 +1,68 @@
 import React from 'react'
 import { assets } from '../../assets/assets';
-import "./Solution.ClassroomSolution.css"
-import Notification from "../../components/Notification/Notification";
+import '../styles/styles.css';
+
 
 
 const ClassRoomSolution = () => {
     return (
-        <div>
-            <Notification />
-            <div className="class-section-0">
+        <div className='chitietgiaphap'>
+            <div className="section-1 section-banner">
                 <img src={assets.class1} alt="class1" />
             </div>
-            <div className='meet-section-1 meet-section'>
-                <div className="meet-container">
-                    <div>
-                        <img src={assets.class2} alt="meeting2" />
+            <section className='section-2 giupgichoban'>
+                <div className="container col-12">
+                    <div className='sec-2-left col-6'>
+                        <img src={assets.class2} alt="class2" />
                     </div>
-                    <div>
-                        <h1>GIẢI PHÁP NÀY GIÚP GÌ CHO BẠN</h1>
-                        <p>
-                            Giải pháp phòng học thông minh mang lại nhiều lợi ích thiết thực cho giáo viên và học sinh.
-                            Đầu tiên, nó tạo ra một môi trường học tập tương tác, giúp tăng cường sự hứng thú và động lực học tập.
-                            Với các thiết bị hiện đại như màn hình tương tác và máy chiếu, nội dung bài giảng trở nên hấp dẫn và dễ tiếp thu hơn.
-                        </p>
-                        <p>
-                            Thứ hai, phòng học thông minh giúp giáo viên tiết kiệm thời gian chuẩn bị và giảng dạy,
-                            cho phép họ sử dụng các ứng dụng số để trình bày và chia sẻ thông tin một cách nhanh chóng và hiệu quả.
-                        </p>
-                        <p>
-                            Cuối cùng, giải pháp này hỗ trợ việc theo dõi và đánh giá quá trình học tập, giúp giáo viên nhận biết sự tiến bộ của học sinh
-                            và điều chỉnh phương pháp giảng dạy phù hợp. Tất cả những điều này góp phần nâng cao chất lượng giáo dục một cách rõ rệt.
-                        </p>
-                        <a href="/"><span>LIÊN HỆ</span></a>
+                    <div className='sec-2-right col-6'>
+                        <div className='text-sec-2'>
+                            <h1>GIẢI PHÁP NÀY GIÚP GÌ CHO BẠN</h1>
+                            <p>
+                                Giải pháp phòng học thông minh mang lại nhiều lợi ích thiết thực cho giáo viên và học sinh.
+                                Nó tạo ra một môi trường học tập tương tác, giúp tăng cường sự hứng thú và động lực học tập.
+                                Với các thiết bị hiện đại như màn hình tương tác và máy chiếu, nội dung bài giảng trở nên hấp dẫn và dễ tiếp thu hơn.
+                            </p>
+                            <p>
+                                Cuối cùng, giải pháp này hỗ trợ việc theo dõi và đánh giá quá trình học tập, giúp giáo viên nhận biết sự tiến bộ của học sinh
+                                và điều chỉnh phương pháp giảng dạy phù hợp. Tất cả những điều này góp phần nâng cao chất lượng giáo dục một cách rõ rệt.
+                            </p>
+                            <div className='button'>
+                                <a href="/lien-he" className='btn-sec-2'><span>LIÊN HỆ</span></a>
+                            </div>
+                            
+                        </div>
+
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div className='meet-section-2 meet-section'>
-                <div className="meet-container">
+            <section className='section-3 danhchoai'>
+                <div className="container">
                     <h1>GIẢI PHÁP NÀY DÀNH CHO AI</h1>
                     <p>SIEGenX tự hào là một trong doanh nghiệp hàng đầu cung cấp giải pháp tương tác thông minh tại Việt Nam</p>
-                    <div className='meet-section-2-child'>
-                        <div>
-                            <img src={assets.class4} alt="meeting4" />
-                            <h2>DÀNH CHO TRƯỜNG HỌC</h2>
+                    <div className='section-3-child'>
+                        <div className='col-3'>
+                            <img src={assets.class4} alt="class4" />
+                            <h3>DÀNH CHO TRƯỜNG HỌC</h3>
                             <p>Tăng tính tương tác linh hoạt giữa các thành viên, không giới hạn không gian, thời gian.</p>
                         </div>
 
-                        <div>
-                            <img src={assets.class5} alt="meeting5" />
-                            <h2>DÀNH CHO GIÁO VIÊN</h2>
+                        <div className='col-3'>
+                            <img src={assets.class5} alt="class5" />
+                            <h3>DÀNH CHO GIÁO VIÊN</h3>
                             <p>Hệ thống an toàn thông tin luôn được đảm bảo, không giới hạn không gian, thời gian và khoảng cách địa lý.</p>
                         </div>
 
 
-                        <div>
-                            <img src={assets.class6} alt="meeting6" />
-                            <h2>DÀNH CHO HỌC SINH</h2>
+                        <div className='col-3'>
+                            <img src={assets.class6} alt="class6" />
+                            <h3>DÀNH CHO HỌC SINH</h3>
                             <p>Giúp dễ dàng theo dõi toàn bộ nội dung, diễn biến cuộc họp.</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
 
             <div className='meet-section-3 class-section'>

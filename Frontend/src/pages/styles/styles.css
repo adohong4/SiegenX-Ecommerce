@@ -1434,3 +1434,52 @@ section{
 
   }
 }
+
+
+/* CSS cho trang chi tiết giải pháp */
+.chitietgiaphap{
+  width: 100vw;
+}
+.giupgichoban .container{
+  display: flex;
+  padding: 70px 0px;
+}
+.giupgichoban {
+  background-image: url('C:\Users\admin\Desktop\2023-20224\PTHT_TMDT\Project\SiegenX-Ecommerce\Frontend\src\assets\Solution\Frame.png');
+  background-size:800px;
+}
+.giupgichoban .sec-2-right{
+  display: flex;
+  align-items: center;
+}
+.giupgichoban .sec-2-right .text-sec-2 .btn-sec-2{
+  background-color: #EC1313;
+  padding: 15px 30px;
+  border-radius: 50px;
+  color: #fff;
+  text-decoration: none;
+}
+.giupgichoban .sec-2-right .text-sec-2 .button{
+  margin-top: 50px;
+}
+.giupgichoban .sec-2-left img{
+  width: 80%;
+}
+.danhchoai{
+  text-align: center;
+}
+.danhchoai .container{
+  padding: 70px 0;
+}
+.danhchoai .section-3-child{
+  display: flex;
+  padding: 50px 0px;
+  justify-content: space-around;
+}
+.danhchoai .section-3-child .col-3 h3{
+  font-size: 25px;
+  margin-top: 20px;
+}
+@media screen and (max-width: 48em) {
+  
+}

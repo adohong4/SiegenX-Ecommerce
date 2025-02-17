@@ -48,6 +48,26 @@ class SupplierController {
             next(error);
         }
     }
+
+    updateSupplier = async (req, res, next) => {
+        try {
+            const userId = req.user;
+            const { id } = req.params;
+            const { supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers } = req.body;
+
+            const result = await SupplierService.updateSupplier(
+                userId, id,
+                supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers
+            );
+
+            new OK({
+                message: "Supplier updated successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new SupplierController();

@@ -110,8 +110,8 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="product-info-tab-container">
-      <div className="productinfo-container">
+    <div className="product-info-tab">
+      <div className="container">
         <div className="productinfo-images">
           <div className="productinfo-main-image">
             {/* Kiểm tra nếu mainImage tồn tại mới hiển thị ảnh */}
@@ -158,11 +158,11 @@ const ProductDetail = () => {
             <FaShoppingCart className="productinfo-icon" /> MUA NGAY
           </button>
 
-          <div className="productinfo-actions">
-            <button className="productinfo-contact" onClick={() => navigate("/lien-he")}>
+          <div className="productinfo-actions col-12">
+            <button className="productinfo-contact col-6" onClick={() => navigate("/lien-he")}>
               <FaEnvelope className="productinfo-icon-contact" /> LIÊN HỆ
             </button>
-            <button className="productinfo-addCart" onClick={handleAddQuantityToCart}>
+            <button className="productinfo-addCart col-6" onClick={handleAddQuantityToCart}>
               <FaCartPlus className="productinfo-icon-addCart" /> Thêm vào giỏ hàng
             </button>
           </div>
@@ -170,122 +170,125 @@ const ProductDetail = () => {
       </div>
       {/* ProductTab Section */}
       <div className="product-tab-container">
-        <div className="tab-header">
-          <button
-            className={`tab-button ${activeTab === "description" ? "active" : ""}`}
-            onClick={() => handleTabClick("description")}
-          >
-            Mô tả
-          </button>
-          <button
-            className={`tab-button ${activeTab === "specification" ? "active" : ""}`}
-            onClick={() => handleTabClick("specification")}
-          >
-            Thông số kỹ thuật
-          </button>
+        <div className="container">
+          <div className="tab-header">
+            <button
+              className={`tab-button ${activeTab === "description" ? "active" : ""}`}
+              onClick={() => handleTabClick("description")}
+            >
+              Mô tả
+            </button>
+            <button
+              className={`tab-button ${activeTab === "specification" ? "active" : ""}`}
+              onClick={() => handleTabClick("specification")}
+            >
+              Thông số kỹ thuật
+            </button>
+          </div>
+
+          <div className="product-tab-content">
+            {activeTab === "description" && product && (
+              <div className="description-section">
+                <h1 className="producttab-title">{product.nameProduct}</h1>
+                <div className="producttab-images">
+                  {product.images?.[0] && (
+                    <img
+                      src={`${url2}/images/${product.images[0]}`}
+                      alt="Hình ảnh sản phẩm"
+                      className="producttab-image"
+                    />
+                  )}
+                </div>
+
+                <h2>I. Thông tin sản phẩm</h2>
+                <p className="producttab-description">{product.recap}</p>
+
+                <h2>II. Ưu điểm sản phẩm</h2>
+                <div className="producttab-images">
+                  {product.images?.[1] && (
+                    <img
+                      src={`${url2}/images/${product.images[1]}`}
+                      alt="Hình ảnh sản phẩm"
+                      className="producttab-image"
+                    />
+                  )}
+                </div>
+                <p className="producttab-description">{product.description}</p>
+                <div className="producttab-images">
+                  {product.images?.[2] && (
+                    <img
+                      src={`${url2}/images/${product.images[2]}`}
+                      alt="Hình ảnh sản phẩm"
+                      className="producttab-image"
+                    />
+                  )}
+                </div>
+
+                <h2>III. Ứng dụng</h2>
+                <p className="producttab-description">{product.description}</p>
+              </div>
+            )}
+
+            {activeTab === "specification" && product && (
+              <div className="specification-section">
+                <h2 className="specification-title">Thông số kỹ thuật</h2>
+                <ul className="specification-list">
+                  <li className="spec-item">
+                    <span className="spec-label">Bo mạch chủ:</span>
+                    <span className="spec-value">{product.mainBoard}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Chip:</span>
+                    <span className="spec-value">{product.chip}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">CPU:</span>
+                    <span className="spec-value">{product.cpu}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">GPU:</span>
+                    <span className="spec-value">{product.gpu}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">RAM:</span>
+                    <span className="spec-value">{product.ram}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Bộ nhớ:</span>
+                    <span className="spec-value">{product.memory}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Phiên bản:</span>
+                    <span className="spec-value">{product.version}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Cổng kết nối:</span>
+                    <span className="spec-value">{product.ports}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Kích thước màn hình:</span>
+                    <span className="spec-value">{product.displaySize}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Mật độ điểm ảnh:</span>
+                    <span className="spec-value">{product.pixelDensity}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Màn hình:</span>
+                    <span className="spec-value">{product.display}</span>
+                  </li>
+                  <li className="spec-item">
+                    <span className="spec-label">Tần số quét:</span>
+                    <span className="spec-value">{product.refreshRate}</span>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+
+          </div>
         </div>
 
-        <div className="product-tab-content">
-          {activeTab === "description" && product && (
-            <div className="description-section">
-              <h1 className="producttab-title">{product.nameProduct}</h1>
-              <div className="producttab-images">
-                {product.images?.[0] && (
-                  <img
-                    src={`${url2}/images/${product.images[0]}`}
-                    alt="Hình ảnh sản phẩm"
-                    className="producttab-image"
-                  />
-                )}
-              </div>
-
-              <h2>I. Thông tin sản phẩm</h2>
-              <p className="producttab-description">{product.recap}</p>
-
-              <h2>II. Ưu điểm sản phẩm</h2>
-              <div className="producttab-images">
-                {product.images?.[1] && (
-                  <img
-                    src={`${url2}/images/${product.images[1]}`}
-                    alt="Hình ảnh sản phẩm"
-                    className="producttab-image"
-                  />
-                )}
-              </div>
-              <p className="producttab-description">{product.description}</p>
-              <div className="producttab-images">
-                {product.images?.[2] && (
-                  <img
-                    src={`${url2}/images/${product.images[2]}`}
-                    alt="Hình ảnh sản phẩm"
-                    className="producttab-image"
-                  />
-                )}
-              </div>
-
-              <h2>III. Ứng dụng</h2>
-              <p className="producttab-description">{product.description}</p>
-            </div>
-          )}
-
-          {activeTab === "specification" && product && (
-            <div className="specification-section">
-              <h2 className="specification-title">Thông số kỹ thuật</h2>
-              <ul className="specification-list">
-                <li className="spec-item">
-                  <span className="spec-label">Bo mạch chủ:</span>
-                  <span className="spec-value">{product.mainBoard}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Chip:</span>
-                  <span className="spec-value">{product.chip}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">CPU:</span>
-                  <span className="spec-value">{product.cpu}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">GPU:</span>
-                  <span className="spec-value">{product.gpu}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">RAM:</span>
-                  <span className="spec-value">{product.ram}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Bộ nhớ:</span>
-                  <span className="spec-value">{product.memory}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Phiên bản:</span>
-                  <span className="spec-value">{product.version}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Cổng kết nối:</span>
-                  <span className="spec-value">{product.ports}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Kích thước màn hình:</span>
-                  <span className="spec-value">{product.displaySize}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Mật độ điểm ảnh:</span>
-                  <span className="spec-value">{product.pixelDensity}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Màn hình:</span>
-                  <span className="spec-value">{product.display}</span>
-                </li>
-                <li className="spec-item">
-                  <span className="spec-label">Tần số quét:</span>
-                  <span className="spec-value">{product.refreshRate}</span>
-                </li>
-              </ul>
-            </div>
-          )}
-
-
-        </div>
       </div>
       {showPopup && (
         <div className="popup-overlay" onClick={togglePopup}>

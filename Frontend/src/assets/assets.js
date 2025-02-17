@@ -63,6 +63,11 @@ import gianhang3 from './Solution/gianhang3.png'
 import gianhang4 from './Solution/gianhang4.png'
 import gianhang5 from './Solution/gianhang5.png'
 import gianhang6 from './Solution/gianhang6.jpg'
+
+
+
+import bannerproduct from './Products/bannerproduct.png'
+import Banner from './Products/Banner.png'
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
@@ -74,4 +79,5 @@ export const assets = {
 
     sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10, productClass1, productClass2, productClass3, productClass4, phonghop1, phonghop2, phonghop3, phonghop4, phonghop5,phonghop0, gianhang1, gianhang2, gianhang3, gianhang4, gianhang5, gianhang6,
 
+    bannerproduct, Banner,
 }

@@ -32,7 +32,68 @@ export const product_list = [
     }
 ];
 
-
+export const product = [
+    {
+        product_slug: "man-hinh-led-1",
+        nameProduct: "Màn hình LED P2.5 trong nhà",
+        category: "Màn hình LED",
+        images: ["led1.jpg"],
+    },
+    {
+        product_slug: "man-hinh-led-2",
+        nameProduct: "Màn hình LED P4 ngoài trời",
+        category: "Màn hình LED",
+        images: ["led2.jpg"],
+    },
+    {
+        product_slug: "mh-tuong-tac-1",
+        nameProduct: "Màn hình tương tác 65 inch",
+        category: "MH tương tác",
+        images: ["tuongtac1.jpg"],
+    },
+    {
+        product_slug: "mh-tuong-tac-2",
+        nameProduct: "Màn hình tương tác 75 inch",
+        category: "MH tương tác",
+        images: ["tuongtac2.jpg"],
+    },
+    {
+        product_slug: "lcd-1",
+        nameProduct: "Màn hình quảng cáo LCD 43 inch",
+        category: "Màn hình quảng cáo LCD",
+        images: ["lcd1.jpg"],
+    },
+    {
+        product_slug: "lcd-2",
+        nameProduct: "Màn hình quảng cáo LCD 55 inch",
+        category: "Màn hình quảng cáo LCD",
+        images: ["lcd2.jpg"],
+    },
+    {
+        product_slug: "3d-ooh-1",
+        nameProduct: "Quảng cáo 3D Hologram",
+        category: "Quảng cáo 3D (OOH)",
+        images: ["3d1.jpg"],
+    },
+    {
+        product_slug: "3d-ooh-2",
+        nameProduct: "Màn hình 3D không kính",
+        category: "Quảng cáo 3D (OOH)",
+        images: ["3d2.jpg"],
+    },
+    {
+        product_slug: "ktv-5d-1",
+        nameProduct: "Phòng chiếu KTV 5D 360 độ",
+        category: "KTV 5D",
+        images: ["5d1.jpg"],
+    },
+    {
+        product_slug: "ktv-5d-2",
+        nameProduct: "Hệ thống KTV 5D chuyển động",
+        category: "KTV 5D",
+        images: ["5d2.jpg"],
+    }
+];
 // export const options = [
 //     {
 //       title: "Màn hình tương tác",

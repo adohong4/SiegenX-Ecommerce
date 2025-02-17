@@ -15,6 +15,12 @@ const AddressSchema = new Schema({
     province: { type: String, required: true },
 })
 
+const HistorySchema = new Schema({
+    createdBy: { type: String, required: true }, //id
+    description: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+})
+
 const UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
@@ -26,7 +32,9 @@ const UserSchema = new Schema({
     numberPhone: { type: String },
     gender: { type: String },
     address: [AddressSchema],
-    cartData: { type: Object, default: {} }
+    cartData: { type: Object, default: {} },
+    active: { type: Boolean, default: true },
+    creator: [HistorySchema],
 }, { minimize: false, timestamps: true })
 
 const profileModel = mongoose.models.user || mongoose.model(DOCUMENT_NAME, UserSchema)

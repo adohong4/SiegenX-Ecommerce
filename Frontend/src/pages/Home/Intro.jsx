@@ -61,7 +61,7 @@ const Introduce = () => {
         setActiveTab(tab);
     };
     return (
-        <main>
+        <main className="Intro-page">
             <div className='banner-top-img'>
                 <img src={assets.introduce} alt="Liên hệ" />
             </div>

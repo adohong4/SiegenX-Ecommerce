@@ -140,6 +140,7 @@ section{
     text-overflow: ellipsis; 
     
   }
+
   .banner-main .home-banner-btn{
     position: absolute;
     bottom: 127px; 
@@ -415,7 +416,12 @@ section{
 
 
 /* CSS cho phần giải pháp - Home */
-
+.allContent {
+  width: 100vw;
+}
+.allContent .sol-section-0 img{
+  width: 100vw;
+}
 .solutions {
   text-align: center;
   padding: 30px 20px;
@@ -579,7 +585,7 @@ section{
 .provide-container {
   display: flex;
   flex-direction: row;
-  min-height: 73vh;
+  min-height: fit-content;
   gap: 20px;
   padding: 40px;
 }
@@ -771,7 +777,9 @@ section{
 
 
 /* CSS cho trang Giới thiệu */
-
+.banner-top-img img{
+  width: 100vw;
+}
 .row_intro {
   display: flex;
   justify-content: center;
@@ -1205,8 +1213,19 @@ section{
 .sol-content .sol-container{
   width: 100vw;
 }
-
-
+.sol-section-1 .container,
+.sol-section-2 .container,
+.sol-section-3 .container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+.sol-section-1 .container .sol-sec1-right,
+.sol-section-2 .container .sol-sec2-right,
+.sol-section-3 .container .sol-sec1-right{
+  padding-left: 25px;
+}
 .sol-content:nth-child(even) {
   background-color: #EFEFEF;
 }
@@ -1244,13 +1263,6 @@ section{
   object-fit: cover;
   border-radius: 30px;
   margin: 0;
-}
-
-
-
-.sol-section div {
-  margin-left: 50px;
-  
 }
 
 .sol-content:nth-child(even) .sol-section {
@@ -1629,9 +1641,11 @@ section{
 }
 
 
-
 /* CSS cho trang sản phẩm */
 .container-home {
+  width: 100vw;
+}
+.container-home .banner-main img {
   width: 100vw;
 }
 .products-list {

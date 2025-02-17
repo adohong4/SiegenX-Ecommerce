@@ -99,6 +99,7 @@ const Products = () => {
                     <img src={assets.bannerproduct} alt="" />
                 </div>
                 <div className="products-list">
+                    <div className="container">
                     {/* List Category */}
                     <div className="menu-container">
                         <div className="menu-columns">
@@ -219,6 +220,7 @@ const Products = () => {
                         <img src={assets.bannerProductList} alt="" />
                     </div>
                 </div>
+            </div>
             </div>
         </main>
     );

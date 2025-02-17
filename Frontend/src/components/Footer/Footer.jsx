@@ -13,6 +13,7 @@ const handleSubmit = (event) => {
 const Footer = () => {
     return (
         <footer className="footer">
+            <div className='container'>
             <div className='container footer-container'>
                 <div className=" row footer-content">
                     <div className='top-tittle-footer'>
@@ -89,6 +90,7 @@ const Footer = () => {
 
                     </div>
                 </div>
+            </div>
             </div>
         </footer>
     );

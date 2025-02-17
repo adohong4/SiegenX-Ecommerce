@@ -129,57 +129,59 @@ const Home = () => {
             </section>
 
             <section className="product-showcase">
-                <motion.h2
-                    className="section-title"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: false, amount: 0.2 }}
-                    variants={fadeUpVariants}
-                >
-                    SẢN PHẨM NỔI BẬT
-                </motion.h2>
-
-                <div className="product-content">
-                    {/* Cột banner */}
-                    <motion.div
-                        className="product-banner"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: false, amount: 0.2 }}
-                        transition={{ duration: 1 }}
-                    >
-                        <img src={assets.homeProduct} alt="Màn hình LED" className="banner-main-img" />
-                    </motion.div>
-
-                    {/* Cột sản phẩm */}
-                    <motion.div
-                        className="product-grid"
-                        variants={staggerContainer}
+                <div className='container'>
+                    <motion.h2
+                        className="section-title"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: false, amount: 0.2 }}
+                        variants={fadeUpVariants}
                     >
-                        {product_list.slice(0, 4).map((product) => (
-                            <motion.div
-                                className="product-card"
-                                key={product.product_slug}
-                                variants={fadeUpVariants}
-                                whileHover={{ scale: 1.05 }}
-                            >
-                                <div className="product-img-container">
-                                    <img src={`${url2}/images/${product.images[0]}`} alt={product.title} className="product-img" />
-                                    <div className="cart-icon" onClick={(e) => { e.stopPropagation(); navigate("/cart"); }}>
-                                        <i className="fas fa-shopping-cart"></i>
+                        SẢN PHẨM NỔI BẬT
+                    </motion.h2>
+
+                    <div className="product-content">
+                        {/* Cột banner */}
+                        <motion.div
+                            className="product-banner"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <img src={assets.homeProduct} alt="Màn hình LED" className="banner-main-img" />
+                        </motion.div>
+
+                        {/* Cột sản phẩm */}
+                        <motion.div
+                            className="product-grid"
+                            variants={staggerContainer}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: false, amount: 0.2 }}
+                        >
+                            {product_list.slice(0, 4).map((product) => (
+                                <motion.div
+                                    className="product-card"
+                                    key={product.product_slug}
+                                    variants={fadeUpVariants}
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <div className="product-img-container">
+                                        <img src={`${url2}/images/${product.images[0]}`} alt={product.title} className="product-img" />
+                                        <div className="cart-icon" onClick={(e) => { e.stopPropagation(); navigate("/cart"); }}>
+                                            <i className="fas fa-shopping-cart"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <h3 className="product-name">{product.nameProduct}</h3>
-                                <div className="product-actions">
-                                    <button className="product-price-btn">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ"}</button>
-                                    <button className="product-btn">XEM NGAY</button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                                    <h3 className="product-name">{product.nameProduct}</h3>
+                                    <div className="product-actions">
+                                        <button className="product-price-btn">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ"}</button>
+                                        <button className="product-btn">XEM NGAY</button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -243,56 +245,61 @@ const Home = () => {
                 whileInView="visible"
                 viewport={{ once: false, amount: 0.2 }}
                 variants={staggerContainer}>
+                <div className='container'>
+                    <motion.div className='row' variants={fadeInScaleUp}>
+                        <img src={assets.banner} alt="Banner Home" className='banner-home-img' />
+                    </motion.div>
+                </div>
 
-                <motion.div className='row' variants={fadeInScaleUp}>
-                    <img src={assets.banner} alt="Banner Home" className='banner-home-img' />
-                </motion.div>
 
             </motion.section>
 
-            <motion.section  id="cungcap-gp" 
-            initial="hidden" 
-            whileInView="visible" 
-            viewport={{ once: false, amount: 0.2 }} 
-            variants={containerVariants}>
-                <div className="provide-container">
-                    {/* Danh sách lựa chọn */}
-                    <motion.div className="column column-options" variants={textVariants}>
-                        <h2 className="title">CHÚNG TÔI CUNG CẤP CHO BẠN</h2>
-                        <p className="subtitle">CÁC GIẢI PHÁP HIỂN THỊ, ÂM THANH TOÀN DIỆN</p>
-                        <ul className="option-list">
-                            {options.map((option, index) => (
-                                <motion.li
-                                    key={index}
-                                    className={`option ${selectedOption === index ? "active" : ""}`}
-                                    onClick={() => handleOptionClick(index)}
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <span className="option-number">{`0${index + 1}`}</span>
-                                    <span className="option-text">{option.title}</span>
-                                    {selectedOption === index && <span className="arrow">→</span>}
-                                </motion.li>
-                            ))}
-                        </ul>
-                    </motion.div>
+            <motion.section id="cungcap-gp"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.2 }}
+                variants={containerVariants}>
+                <div className='container'>
+                    <div className="provide-container">
+                        {/* Danh sách lựa chọn */}
+                        <motion.div className="column column-options" variants={textVariants}>
+                            <h2 className="title">CHÚNG TÔI CUNG CẤP CHO BẠN</h2>
+                            <p className="subtitle">CÁC GIẢI PHÁP HIỂN THỊ, ÂM THANH TOÀN DIỆN</p>
+                            <ul className="option-list">
+                                {options.map((option, index) => (
+                                    <motion.li
+                                        key={index}
+                                        className={`option ${selectedOption === index ? "active" : ""}`}
+                                        onClick={() => handleOptionClick(index)}
+                                        whileHover={{ scale: 1.05 }}
+                                    >
+                                        <span className="option-number">{`0${index + 1}`}</span>
+                                        <span className="option-text">{option.title}</span>
+                                        {selectedOption === index && <span className="arrow">→</span>}
+                                    </motion.li>
+                                ))}
+                            </ul>
+                        </motion.div>
 
-                    {/* Nội dung hiển thị */}
-                    <div className="column-content">
-                        <motion.div className="content-image" variants={imageVariants}>
-                            <img
-                                className="image-preview"
-                                src={options[selectedOption].image}
-                                alt={options[selectedOption].title}
-                            />
-                        </motion.div>
-                        <motion.div className="content-description" variants={textVariants}>
-                            <p>{options[selectedOption].description}</p>
-                            <motion.button className="details-button" whileHover={{ scale: 1.1 }}>
-                                XEM CHI TIẾT
-                            </motion.button>
-                        </motion.div>
+                        {/* Nội dung hiển thị */}
+                        <div className="column-content">
+                            <motion.div className="content-image" variants={imageVariants}>
+                                <img
+                                    className="image-preview"
+                                    src={options[selectedOption].image}
+                                    alt={options[selectedOption].title}
+                                />
+                            </motion.div>
+                            <motion.div className="content-description" variants={textVariants}>
+                                <p>{options[selectedOption].description}</p>
+                                <motion.button className="details-button" whileHover={{ scale: 1.1 }}>
+                                    XEM CHI TIẾT
+                                </motion.button>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
+
             </motion.section>
             <section className="partners">
                 <h2>ĐỐI TÁC CỦA CHÚNG TÔI</h2>

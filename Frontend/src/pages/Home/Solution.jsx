@@ -25,9 +25,9 @@ const Solution = () => {
 
             <div>
                 <div className='sol-content'>
-                    <div className='sol-container'>
                         <>
                             <motion.section className='sol-section-1 sol-section'  initial="hidden"  whileInView="visible" viewport={{ once: false, amount: 0.2 }} variants={sectionVariants}>
+                            <div className='container'>
                                 <div className='sol-sec1-left'>
                                     <motion.img src={assets.sol1} alt="sol-1 section" />
                                 </div>
@@ -38,9 +38,11 @@ const Solution = () => {
                                         Xem chi tiết
                                     </motion.button>
                                 </div>
+                            </div>
                             </motion.section>
 
                             <motion.section className='sol-section-2 sol-section' initial="hidden"  whileInView="visible" viewport={{ once: false, amount: 0.2 }} variants={sectionVariants_1}>
+                                <div className='container'>
                                 <div className='sol-sec2-left'>
                                     <h3>Giải pháp phòng họp thông minh</h3>
                                     <p>Giải pháp của SiegenX tập trung vào việc cung cấp các sản phẩm và dịch vụ công nghệ thông minh nhằm tối ưu hóa quy trình hoạt động và nâng cao hiệu quả kinh doanh cho doanh nghiệp.</p>
@@ -51,9 +53,11 @@ const Solution = () => {
                                 <div className='sol-sec2-right'>
                                     <motion.img src={assets.sol2} alt="sol-2 section"  />
                                 </div>
+                                </div>
                             </motion.section>
 
                             <motion.section className='sol-section-3 sol-section' initial="hidden"  whileInView="visible" viewport={{ once: false, amount: 0.2 }} variants={sectionVariants}>
+                            <div className='container'>
                                 <div className='sol-sec1-left'>
                                     <motion.img src={assets.sol3} alt="sol-3"  />
                                 </div>
@@ -64,12 +68,12 @@ const Solution = () => {
                                         Xem chi tiết
                                     </motion.button>
                                 </div>
+                                </div>  
                             </motion.section>
                         </>
                     </div>
                 </div>
             </div>
-        </div>
     )
 }
 

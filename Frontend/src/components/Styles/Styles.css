@@ -104,6 +104,7 @@
   }
   .hotline p span.sdt a{
     color: #000;
+    text-decoration: none;
   }
   
   .hotline p span.label-hotline {
@@ -206,7 +207,7 @@
   
   .icon-user {
     cursor: pointer;
-  }
+  }  
   
   .dropdown {
     position: relative;

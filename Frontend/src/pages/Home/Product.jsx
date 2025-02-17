@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { assets } from '../../assets/assets';
 import '../styles/styles.css';
+
 // import { StoreContext } from "../../../context/StoreContext";
 import { product } from "../../data/Enviroment";
 const Products = () => {

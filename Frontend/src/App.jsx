@@ -9,7 +9,8 @@ import Solution from './pages/Home/Solution';
 import Sol_class from './pages/Home/Solution_class';
 import Sol_phonghop from './pages/Home/Solution_phonghop';
 import Sol_gianhang from './pages/Home/Solution_gianhang';
-import Products from './pages/Home/Product'
+import Products from './pages/Home/Product';
+import ProductDetail from './pages/Home/ProductDetails'
 const App = () => {
   return (
     <>
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/giai-phap/phong-hop-thong-minh" element={<Sol_phonghop />} />
             <Route path="/giai-phap/giai-phap-gian-hang" element={<Sol_gianhang />} />
             <Route path="/san-pham" element={<Products/>} />
+            <Route path="/san-pham/:id" element={<ProductDetail />} />
           </Routes>
           <Footer />
         </div>

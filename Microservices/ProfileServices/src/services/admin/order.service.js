@@ -83,9 +83,9 @@ class OrderService {
             const order = await orderModel.find({
                 $expr: {
                     $regexMatch: {
-                        input: { $toString: "$_id" }, // Chuyển đổi _id thành chuỗi
+                        input: { $toString: "$_id" },
                         regex: id,
-                        options: 'i' // Tìm kiếm không phân biệt chữ hoa chữ thường
+                        options: 'i'
                     }
                 }
             })

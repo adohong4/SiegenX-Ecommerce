@@ -23,7 +23,7 @@ const SupplierSchema = new Schema({
     addressOthers: { type: String },
     creator: [HistorySchema],
     active: { type: Boolean, default: true },
-    orderData: { type: Object, default: [] },
+    orderData: { type: Array, default: [] },
 }, { minimize: false, timestamps: true })
 
 const supplierModel = mongoose.models.supplier || mongoose.model(DOCUMENT_NAME, SupplierSchema)

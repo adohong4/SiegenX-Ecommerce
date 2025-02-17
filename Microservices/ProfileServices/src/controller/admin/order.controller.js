@@ -17,6 +17,19 @@ class OrderController {
         }
     }
 
+    getOrderById = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const orders = await OrderService.getOderById(id);
+            new OK({
+                message: 'Lấy thông tin đơn hàng thành công',
+                metadata: orders.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     updateStatusOrder = async (req, res, next) => {
         try {
             const order = await OrderService.updateStatusOrder(req, res);
@@ -37,6 +50,31 @@ class OrderController {
             new CREATED({
                 message: 'Xóa đơn hàng thành công',
                 metadata: order.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    paginateOder = async (req, res, next) => {
+        try {
+            const result = await OrderService.paginateOrder();
+            new OK({
+                message: 'phân trang thành công',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    searchById = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const result = await OrderService.searchById(id);
+            new OK({
+                message: 'Tìm kiếm thành công',
+                metadata: result.metadata
             }).send(res);
         } catch (error) {
             next(error);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/screens/home_screen.dart';
+import 'package:siegenx_mobile_app/screens/manager_screen.dart';
 import 'package:siegenx_mobile_app/screens/register_screen.dart';
 import 'screens/login_screen.dart'; // Thêm import này
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const RegisterScreen(), // Đổi thành màn hình đăng nhập
+      home: const ManagerScreen(), // Đổi thành màn hình đăng nhập
     );
   }
 }

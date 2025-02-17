@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db.mongodb');
+const connectDB = require('./config/db.mongo');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
@@ -19,7 +19,7 @@ connectDB();
 
 // Init router
 app.use('', require('./routes'));
-app.use('/images', express.static('upload'));
+// app.use('/images', express.static('upload'));
 
 // Handling errors
 app.use((req, res, next) => {

@@ -1,6 +1,5 @@
 'use strict'
 const jwt = require('jsonwebtoken')
-const profileModel = require('../models/profile.model')
 
 const authMiddleware = async (req, res, next) => {
     const { token } = req.headers;
@@ -31,13 +30,13 @@ const checkTokenCookie = async (req, res, next) => {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
 
-        const user = await profileModel.findById(decoded.id).select("-password");
+        // const user = await profileModel.findById(decoded.id).select("-password");
 
-        if (!user) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
+        // if (!user) {
+        //     return res.status(404).json({ success: false, message: "User not found" });
+        // }
 
-        req.user = user;
+        req.user = decoded.id;
 
         next();
     } catch (error) {

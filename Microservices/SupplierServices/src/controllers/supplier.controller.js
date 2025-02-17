@@ -23,6 +23,31 @@ class SupplierController {
             next(error);
         }
     }
+
+    getSupplier = async (req, res, next) => {
+        try {
+            const result = await SupplierService.getSupplier();
+            new OK({
+                message: "Get supplier successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    getSupplierById = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const result = await SupplierService.getSupplierById(id);
+            new OK({
+                message: "Get supplier successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new SupplierController();

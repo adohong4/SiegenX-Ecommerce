@@ -31,6 +31,24 @@ class SupplierService {
             throw error;
         }
     }
+
+    static getSupplier = async () => {
+        try {
+            const supplier = await supplierModel.find({});
+            return { metadata: supplier }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static getSupplierById = async (id) => {
+        try {
+            const supplier = await supplierModel.findById(id);
+            return { metadata: supplier }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = SupplierService;

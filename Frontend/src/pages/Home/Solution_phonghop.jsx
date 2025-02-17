@@ -8,24 +8,27 @@ const ClassRoomSolution = () => {
     return (
         <div className='chitietgiaphap'>
             <div className="section-1 section-banner">
-                <img src={assets.class1} alt="class1" />
+                <img src={assets.phonghop0} alt="class1" />
             </div>
             <section className='section-2 giupgichoban'>
                 <div className="container col-12">
                     <div className='sec-2-left col-6'>
-                        <img src={assets.class2} alt="class2" />
+                        <img src={assets.phonghop1} alt="class2" />
                     </div>
                     <div className='sec-2-right col-6'>
                         <div className='text-sec-2'>
                             <h1>GIẢI PHÁP NÀY GIÚP GÌ CHO BẠN</h1>
                             <p>
-                                Giải pháp phòng học thông minh mang lại nhiều lợi ích thiết thực cho giáo viên và học sinh.
-                                Nó tạo ra một môi trường học tập tương tác, giúp tăng cường sự hứng thú và động lực học tập.
-                                Với các thiết bị hiện đại như màn hình tương tác và máy chiếu, nội dung bài giảng trở nên hấp dẫn và dễ tiếp thu hơn.
+                                Giải pháp phòng họp thông minh mang đến nhiều lợi ích thiết thực cho doanh nghiệp,
+                                giúp nâng cao hiệu quả làm việc và tạo ra trải nghiệm hội họp chuyên nghiệp.
+                                Với khả năng điều khiển tự động các thiết bị trong phòng như đèn, máy lạnh, màn hình và hệ thống âm thanh,
+                                người dùng có thể dễ dàng chuẩn bị và quản lý cuộc họp chỉ với một vài thao tác đơn giản.
                             </p>
                             <p>
-                                Cuối cùng, giải pháp này hỗ trợ việc theo dõi và đánh giá quá trình học tập, giúp giáo viên nhận biết sự tiến bộ của học sinh
-                                và điều chỉnh phương pháp giảng dạy phù hợp. Tất cả những điều này góp phần nâng cao chất lượng giáo dục một cách rõ rệt.
+                                Hơn nữa, phòng họp không giấy tờ giúp tiết kiệm chi phí in ấn và bảo vệ môi trường,
+                                trong khi các thiết bị hiện đại như màn hình lớn và hệ thống hội nghị truyền hình hỗ trợ giao tiếp rõ ràng, mượt mà,
+                                kết nối dễ dàng từ xa. Giải pháp này không chỉ nâng cao hiệu suất công việc mà còn tạo ra không gian làm việc hiện đại, thân thiện,
+                                và chuyên nghiệp.
                             </p>
                             <div className='button'>
                                 <a href="/lien-he" className='btn-sec-2'><span>LIÊN HỆ</span></a>
@@ -43,21 +46,21 @@ const ClassRoomSolution = () => {
                     <p>SIEGenX tự hào là một trong doanh nghiệp hàng đầu cung cấp giải pháp tương tác thông minh tại Việt Nam</p>
                     <div className='section-3-child'>
                         <div className='col-3'>
-                            <img src={assets.class4} alt="class4" />
-                            <h3>DÀNH CHO TRƯỜNG HỌC</h3>
+                            <img src={assets.phonghop2} alt="class4" />
+                            <h3>DÀNH CHO DOANH NGHIỆP</h3>
                             <p>Tăng tính tương tác linh hoạt giữa các thành viên, không giới hạn không gian, thời gian.</p>
                         </div>
 
                         <div className='col-3'>
-                            <img src={assets.class5} alt="class5" />
-                            <h3>DÀNH CHO GIÁO VIÊN</h3>
+                            <img src={assets.phonghop2} alt="class5" />
+                            <h3>DÀNH CHO CHÍNH PHỦ</h3>
                             <p>Hệ thống an toàn thông tin luôn được đảm bảo, không giới hạn không gian, thời gian và khoảng cách địa lý.</p>
                         </div>
 
 
                         <div className='col-3'>
-                            <img src={assets.class6} alt="class6" />
-                            <h3>DÀNH CHO HỌC SINH</h3>
+                            <img src={assets.phonghop3} alt="class6" />
+                            <h3>DÀNH CHO HỘI NGHỊ KHÁC</h3>
                             <p>Giúp dễ dàng theo dõi toàn bộ nội dung, diễn biến cuộc họp.</p>
                         </div>
                     </div>
@@ -70,37 +73,28 @@ const ClassRoomSolution = () => {
                     <h1>THỰC TRẠNG CHUNG</h1>
                     <div className='section-4-child'>
                         <div className='sec-4-child-left col-6'>
-                            <img src={assets.class7} alt="class7" />
+                            <img src={assets.phonghop5} alt="class7" />
                         </div>
 
                         <div className='sec-4-child-right col-6'>
-                            <h2>NHỮNG TIẾT HỌC NHÀM CHÁN, NHỮNG BÀI HỌC KHÔNG THẤY KẾT QUẢ</h2>
+                            <h2>NHỮNG GIỜ HỌP NHÀM CHÁN VÀ KHÔNG HIỆU QUẢ</h2>
                             <div className='sol-box'>
-                                <i className="fa-solid fa-check"></i>
-                                <p><strong>Phương pháp giảng dạy truyền thống: </strong>
-                                    một chiều, quá tập trung vào lý thuyết khiến học sinh dễ cảm thấy mệt mỏi và mất tập trung
-                                </p>
-                            </div>
+                                    <i className="fa-solid fa-check"></i>
+                                    <p><strong>Trước cuộc họp: </strong>
+                                        Vận hành phức tạp nhiều thiết bị dẫn đến hiệu quả công việc thấp.
+                                    </p>
+                                </div>
 
-                            <div className='sol-box'>
-                                <i className="fa-solid fa-check"></i>
-                                <p><strong>Cơ sở vật chất lạc hậu: </strong>
-                                    thiếu các thiết bị hỗ trợ hiện đại cũng hạn chế khả năng tương tác và tạo ra những bài học sinh động</p>
-                            </div>
+                                <div className='sol-box'>
+                                    <i className="fa-solid fa-check"></i>
+                                    <p><strong>Trong cuộc họp: </strong>Khó thu nhập và ghi chép dữ liệu khi họp, khó đảm
+                                        bảo tính chính xác và toàn vẹn của dữ liệu. </p>
+                                </div>
 
-                            <div className='sol-box'>
-                                <i className="fa-solid fa-check"></i>
-                                <p><strong>Thiếu sự tương tác: </strong>
-                                    Các hoạt động nhóm, thảo luận, thực hành ít được khuyến khích,
-                                    khiến học sinh trở nên thụ động và thiếu cơ hội phát triển kỹ năng mềm.</p>
-                            </div>
-
-                            <div className='sol-box'>
-                                <i className="fa-solid fa-check"></i>
-                                <p><strong>Môi trường học tập nhàm chán: </strong>
-                                    Phòng học thiếu sáng tạo, trang thiết bị lạc hậu, không gian học tập hạn chế,
-                                    khiến học sinh cảm thấy bức bách và không thoải mái.</p>
-                            </div>
+                                <div className='sol-box'>
+                                    <i className="fa-solid fa-check"></i>
+                                    <p><strong>Sau cuộc họp: </strong>Khó truy vấn dữ liệu diễn ra trong cuộc họp đồng thời nguy cơ rò rỉ thông tin cao.</p>
+                                </div>
                         </div>
                     </div>
                 </div>

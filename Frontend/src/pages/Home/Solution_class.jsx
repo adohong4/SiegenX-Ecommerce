@@ -3,7 +3,6 @@ import { assets } from '../../assets/assets';
 import '../styles/styles.css';
 
 
-
 const ClassRoomSolution = () => {
     return (
         <div className='chitietgiaphap'>

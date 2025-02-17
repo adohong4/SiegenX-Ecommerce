@@ -51,6 +51,12 @@ import productClass1 from './Solution/productClass1.png'
 import productClass2 from './Solution/productClass2.png'
 import productClass3 from './Solution/productClass3.png'
 import productClass4 from './Solution/productClass4.png'
+import phonghop0 from './Solution/phonghop0.png'
+import phonghop1 from './Solution/phonghop1.png'
+import phonghop2 from './Solution/phonghop2.png'
+import phonghop3 from './Solution/phonghop3.png'
+import phonghop4 from './Solution/phonghop4.png'
+import phonghop5 from './Solution/phonghop5.png'
 export const assets = {
     logo, logo_footer,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
@@ -60,6 +66,6 @@ export const assets = {
 
     banner_contact, bgrcontact,
 
-    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10, productClass1, productClass2, productClass3, productClass4,
+    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10, productClass1, productClass2, productClass3, productClass4, phonghop1, phonghop2, phonghop3, phonghop4, phonghop5,phonghop0,
 
 }

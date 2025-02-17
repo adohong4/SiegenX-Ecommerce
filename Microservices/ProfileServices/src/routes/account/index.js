@@ -10,4 +10,6 @@ const router = express.Router()
 router.get('/profile/account/get', asyncHandler(AccountController.getAllAccount))
 router.get('/profile/account/get/:id', asyncHandler(AccountController.getAccountById))
 
+router.put('/profile/account/update/:id', asyncHandler(AccountController.updateAccountById))
+
 module.exports = router;

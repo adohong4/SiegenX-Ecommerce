@@ -28,6 +28,20 @@ class AccountController {
             next(error);
         }
     }
+
+    updateAccountById = async (req, res, next) => {
+        try {
+            const { id } = req.params
+            const { fullName, username, password } = req.body
+            const result = await AccountService.updateAccountById(id, fullName, username, password)
+            new CREATED({
+                message: 'cập nhật thông tin thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new AccountController();

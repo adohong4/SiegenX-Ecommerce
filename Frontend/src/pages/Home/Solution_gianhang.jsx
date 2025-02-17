@@ -8,12 +8,12 @@ const ClassRoomSolution = () => {
     return (
         <div className='chitietgiaphap'>
             <div className="section-1 section-banner">
-                <img src={assets.class1} alt="class1" />
+                <img src={assets.gianhang1} alt="class1" />
             </div>
             <section className='section-2 giupgichoban'>
                 <div className="container col-12">
                     <div className='sec-2-left col-6'>
-                        <img src={assets.class2} alt="class2" />
+                        <img src={assets.gianhang2} alt="class2" />
                     </div>
                     <div className='sec-2-right col-6'>
                         <div className='text-sec-2'>
@@ -43,20 +43,20 @@ const ClassRoomSolution = () => {
                     <p>SIEGenX tự hào là một trong doanh nghiệp hàng đầu cung cấp giải pháp tương tác thông minh tại Việt Nam</p>
                     <div className='section-3-child'>
                         <div className='col-3'>
-                            <img src={assets.class4} alt="class4" />
+                            <img src={assets.gianhang3} alt="class4" />
                             <h3>DÀNH CHO TRƯỜNG HỌC</h3>
                             <p>Tăng tính tương tác linh hoạt giữa các thành viên, không giới hạn không gian, thời gian.</p>
                         </div>
 
                         <div className='col-3'>
-                            <img src={assets.class5} alt="class5" />
+                            <img src={assets.gianhang4} alt="class5" />
                             <h3>DÀNH CHO GIÁO VIÊN</h3>
                             <p>Hệ thống an toàn thông tin luôn được đảm bảo, không giới hạn không gian, thời gian và khoảng cách địa lý.</p>
                         </div>
 
 
                         <div className='col-3'>
-                            <img src={assets.class6} alt="class6" />
+                            <img src={assets.gianhang5} alt="class6" />
                             <h3>DÀNH CHO HỌC SINH</h3>
                             <p>Giúp dễ dàng theo dõi toàn bộ nội dung, diễn biến cuộc họp.</p>
                         </div>
@@ -70,7 +70,7 @@ const ClassRoomSolution = () => {
                     <h1>THỰC TRẠNG CHUNG</h1>
                     <div className='section-4-child'>
                         <div className='sec-4-child-left col-6'>
-                            <img src={assets.class7} alt="class7" />
+                            <img src={assets.gianhang6} alt="class7" />
                         </div>
 
                         <div className='sec-4-child-right col-6'>

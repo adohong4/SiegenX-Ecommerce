@@ -68,6 +68,20 @@ class SupplierController {
             next(error);
         }
     }
+
+    deleteSupplier = async (req, res, next) => {
+        try {
+            const userId = req.user;
+            const { id } = req.params;
+            const result = await SupplierService.deleteSupplier(userId, id);
+            new OK({
+                message: "Supplier deleted successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new SupplierController();

@@ -22,20 +22,9 @@ const SupplierSchema = new Schema({
     city: { type: String }, //phường
     addressOthers: { type: String },
     creator: [HistorySchema],
+    active: { type: Boolean, default: true }
 }, { minimize: false, timestamps: true })
 
 const supplierModel = mongoose.models.supplier || mongoose.model(DOCUMENT_NAME, SupplierSchema)
-
-
-async function createSupplier(data) {
-    const supplier = new supplierModel(data);
-    await supplier.save();
-
-    const objectIdHex = supplier._id.toString();
-    const formattedId = `SUPN${objectIdHex.slice(-4).toUpperCase()}`;
-
-    console.log('Supplier created with ID: ', formattedId);
-    return formattedId;
-}
 
 module.exports = supplierModel;

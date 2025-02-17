@@ -35,7 +35,8 @@ class SupplierService {
 
     static getSupplier = async () => {
         try {
-            const supplier = await supplierModel.find({});
+            const supplier = await supplierModel.find({})
+                .select('supplierName email numberPhone status taxCode description lane area city addressOthers');
             return { metadata: supplier }
         } catch (error) {
             throw error;
@@ -60,16 +61,7 @@ class SupplierService {
             }
 
             const updatedSupplier = await supplierModel.findByIdAndUpdate(id, {
-                supplierName,
-                email,
-                numberPhone,
-                status,
-                taxCode,
-                description,
-                lane,
-                area,
-                city,
-                addressOthers,
+                supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers,
             }, { new: true });
 
             updatedSupplier.creator.push({
@@ -81,6 +73,36 @@ class SupplierService {
 
             return {
                 metadata: updatedSupplier
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static deleteSupplier = async (userId, id) => {
+        try {
+            if (!id) {
+                throw new BadRequestError("Supplier ID is required");
+            }
+
+            const supplier = await supplierModel.findById(id);
+            if (!supplier) {
+                throw new NotFoundError("Supplier not found");
+            }
+
+            const newActiveStatus = !supplier.active;
+            const actionDescription = newActiveStatus ? "Restored supplier" : "Deleted supplier";
+
+            supplier.active = newActiveStatus;
+            supplier.creator.push({
+                createdBy: userId,
+                description: actionDescription
+            });
+
+            await supplier.save();
+
+            return {
+                metadata: supplier
             }
         } catch (error) {
             throw error;

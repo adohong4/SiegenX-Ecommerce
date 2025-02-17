@@ -11,5 +11,6 @@ router.post('/supplier/create', checkTokenCookie, asyncHandler(supplierControlle
 router.get('/supplier/get', checkTokenCookie, asyncHandler(supplierController.getSupplier))
 router.get('/supplier/get/:id', checkTokenCookie, asyncHandler(supplierController.getSupplierById))
 router.put('/supplier/update/:id', checkTokenCookie, asyncHandler(supplierController.updateSupplier))
+router.delete('/supplier/delete/:id', checkTokenCookie, asyncHandler(supplierController.deleteSupplier))
 
 module.exports = router;

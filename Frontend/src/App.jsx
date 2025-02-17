@@ -10,11 +10,11 @@ import Sol_class from './pages/Home/Solution_class';
 import Sol_phonghop from './pages/Home/Solution_phonghop';
 import Sol_gianhang from './pages/Home/Solution_gianhang';
 import Products from './pages/Home/Product';
-import ProductDetail from './pages/Home/ProductDetails'
+import ProductDetail from './pages/Home/ProductDetails';
+import Cart from './pages/Home/Cart'
 const App = () => {
   return (
     <>
-      <div className="container">
         <div className="app">
           <Navbar />
           <Routes>
@@ -27,10 +27,10 @@ const App = () => {
             <Route path="/giai-phap/giai-phap-gian-hang" element={<Sol_gianhang />} />
             <Route path="/san-pham" element={<Products/>} />
             <Route path="/san-pham/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart/>} />
           </Routes>
           <Footer />
         </div>
-      </div>
     </>
   )
 }

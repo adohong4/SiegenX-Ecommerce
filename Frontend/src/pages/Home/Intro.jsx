@@ -65,7 +65,7 @@ const Introduce = () => {
             <div className='banner-top-img'>
                 <img src={assets.introduce} alt="Liên hệ" />
             </div>
-            <div className='container'>
+
                 <motion.section
                     className="section_1_forme"
                     initial="hidden"
@@ -99,6 +99,7 @@ const Introduce = () => {
                     viewport={{ once: false, amount: 0.2 }}
                     variants={containerVariants}
                 >
+                    <div className="container">
                     <div className="culture-container">
                         <motion.div
                             className='culture-top-title'
@@ -132,6 +133,7 @@ const Introduce = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 </motion.section>
 
 
@@ -142,7 +144,8 @@ const Introduce = () => {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: false, amount: 0.2 }}
-                >
+                >            
+                <div className='container'>
                     <div className="economic-activity container">
                         <motion.h2
                             className="culture-title text-center mb-4"
@@ -214,8 +217,8 @@ const Introduce = () => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 </motion.section>
-            </div>
         </main>
     )
 }

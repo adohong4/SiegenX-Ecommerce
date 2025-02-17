@@ -217,3 +217,6 @@ export const fakedata = [
         refreshRate: "75Hz",
     },
 ];
+
+
+

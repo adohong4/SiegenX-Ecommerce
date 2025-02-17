@@ -28,6 +28,19 @@ class CustomService {
             throw error;
         }
     }
+
+    static searchByName = async (name) => {
+        try {
+            const supplier = await supplierModel.find({ supplierName: { $regex: name, $options: 'i' } })
+                .select('supplierName email numberPhone status taxCode description lane area city addressOthers')
+                .exec();
+            return {
+                metadata: supplier
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = CustomService;

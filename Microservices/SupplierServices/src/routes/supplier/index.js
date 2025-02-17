@@ -12,7 +12,8 @@ router.post('/supplier/create', checkTokenCookie, asyncHandler(supplierControlle
 
 router.get('/supplier/get', checkTokenCookie, asyncHandler(supplierController.getSupplier))
 router.get('/supplier/get/:id', checkTokenCookie, asyncHandler(supplierController.getSupplierById))
-router.get('/supplier/paginate', checkTokenCookie, asyncHandler(CustomController.paginate))
+router.get('/supplier/paginate', checkTokenCookie, asyncHandler(CustomController.paginate)) //pagination
+router.get('/supplier/search/:name', checkTokenCookie, asyncHandler(CustomController.searchByName)) //search by name
 
 router.put('/supplier/update/:id', checkTokenCookie, asyncHandler(supplierController.updateSupplier))
 

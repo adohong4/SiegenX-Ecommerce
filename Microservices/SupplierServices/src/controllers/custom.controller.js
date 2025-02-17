@@ -17,7 +17,18 @@ class CustomController {
         }
     }
 
-
+    searchByName = async (req, res, next) => {
+        try {
+            const { name } = req.params;
+            const result = await CustomService.searchByName(name);
+            new OK({
+                message: "Get supplier successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new CustomController();

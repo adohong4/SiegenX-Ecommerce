@@ -58,6 +58,8 @@ const PlaceOrder = () => {
             phone: selectedAddress.phone
         });
     };
+// Code cũ
+
 
     // const handleSubmit = async (event) => {
     //     event.preventDefault();
@@ -127,6 +129,8 @@ const PlaceOrder = () => {
             }
         });
     };
+
+    // Kết thúc giả lập cho handleSubmit
 
     const sendEmailConfirmation = async (orderDetails, email) => {
         try {

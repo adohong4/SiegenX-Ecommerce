@@ -13,6 +13,7 @@ import Products from './pages/Home/Product';
 import ProductDetail from './pages/Home/ProductDetails';
 import Cart from './pages/Home/Cart';
 import Order from './pages/Home/Order';
+import Login from './pages/Home/Login';
 const App = () => {
   return (
     <>
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/san-pham/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart/>} />
             <Route path="/hoa-don" element={<Order/>} />
+            <Route path="/login" element={<Login/>} />
           </Routes>
           <Footer />
         </div>

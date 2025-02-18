@@ -43,6 +43,16 @@ class CampaignController {
             metadata: result.metadata
         }).send(res)
     }
+
+    activeCampaign = async (req, res, next) => {
+        const userId = req.user;
+        const { id } = req.params;
+        const result = await CampaignService.activeCampaign(userId, id)
+        new CREATED({
+            message: 'chuyển đổi thành công',
+            metadata: result.metadata
+        }).send(res)
+    }
 }
 
 module.exports = new CampaignController();

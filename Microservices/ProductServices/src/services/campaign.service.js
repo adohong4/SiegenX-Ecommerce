@@ -56,8 +56,22 @@ class CampaignService {
 
     }
 
-    static activeCampaign = async () => {
+    static activeCampaign = async (userId, id) => {
+        try {
+            const campaign = await campaigModel.findById(id)
+            const newActiveStatus = !campaign.active;
+            const actionDescription = newActiveStatus ? "Restored supplier" : "Deleted supplier";
 
+            campaign.active = newActiveStatus;
+            campaign.creator.push({
+                createdBy: userId,
+                description: actionDescription
+            })
+            await campaign.save();
+            return { metadata: campaign }
+        } catch (error) {
+            throw error;
+        }
     }
 
 

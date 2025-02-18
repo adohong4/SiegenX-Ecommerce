@@ -13,4 +13,6 @@ router.post('/product/campaign/create', checkTokenCookie, asyncHandler(campaignC
 router.get('/product/campaign/get', checkTokenCookie, asyncHandler(campaignController.getAllCampaign))
 router.get('/product/campaign/get/:id', checkTokenCookie, asyncHandler(campaignController.getCampaignById))
 
+router.delete('/product/campaign/active/:id', checkTokenCookie, asyncHandler(campaignController.activeCampaign))
+
 module.exports = router;

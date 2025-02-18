@@ -81,10 +81,6 @@ class SupplierService {
 
     static deleteSupplier = async (userId, id) => {
         try {
-            if (!id) {
-                throw new BadRequestError("Supplier ID is required");
-            }
-
             const supplier = await supplierModel.findById(id);
             if (!supplier) {
                 throw new NotFoundError("Supplier not found");

@@ -219,4 +219,43 @@ export const fakedata = [
 ];
 
 
-
+export const Order = [
+    {
+        "orderId": "ORD123456789",
+        "address": {
+            "fullname": "Nguyễn Văn A",
+            "email": "nguyenvana@example.com",
+            "street": "123 Đường Lê Lợi",
+            "precinct": "Phường Bến Nghé",
+            "city": "TP. Hồ Chí Minh",
+            "province": "Hồ Chí Minh",
+            "phone": "0987654321"
+        },
+        "items": [
+            {
+                "id": "P001",
+                "name": "Laptop Dell XPS 13",
+                "quantity": 1,
+                "price": 25000000
+            },
+            {
+                "id": "P002",
+                "name": "Chuột Logitech MX Master 3",
+                "quantity": 2,
+                "price": 2500000
+            },
+            {
+                "id": "P003",
+                "name": "Bàn phím cơ Keychron K8",
+                "quantity": 1,
+                "price": 2800000
+            }
+        ],
+        "totalAmount": 33000000,
+        "shippingFee": 50000,
+        "finalAmount": 33050000,
+        "paymentMethod": "cash",
+        "orderDate": "2025-02-18",
+        "status": "Chờ xác nhận"
+    }
+];

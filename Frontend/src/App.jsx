@@ -11,7 +11,8 @@ import Sol_phonghop from './pages/Home/Solution_phonghop';
 import Sol_gianhang from './pages/Home/Solution_gianhang';
 import Products from './pages/Home/Product';
 import ProductDetail from './pages/Home/ProductDetails';
-import Cart from './pages/Home/Cart'
+import Cart from './pages/Home/Cart';
+import Order from './pages/Home/Order';
 const App = () => {
   return (
     <>
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/san-pham" element={<Products/>} />
             <Route path="/san-pham/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart/>} />
+            <Route path="/hoa-don" element={<Order/>} />
           </Routes>
           <Footer />
         </div>

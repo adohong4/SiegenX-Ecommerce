@@ -2646,3 +2646,138 @@ input[type="number"]::-webkit-inner-spin-button {
       margin-top: 0 !important;
   }
 }
+
+
+/* CSS cho trang Hóa đơn */
+.place-order {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 180px;
+  margin-bottom: 100px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.place-order-left, .place-order-right {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #00A07B;
+  margin-bottom: 20px;
+}
+
+.Place-address select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 1em;
+}
+
+.multi-fields {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.multi-fields input[type="text"],.multi-fields input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  height: 100%;
+}
+
+.multi-fields input::placeholder {
+  color: #aaa;
+}
+
+.cart-total {
+  background-color: #00B98E;
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.cart-total h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  margin: 10px 0;
+}
+
+.place-order-btn {
+  background-color: #00A07B;
+  color: #fff;
+  border: 1px solid #fff !important;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.place-order-btn:hover {
+  background-color: #008E6D;
+}
+.hinhthuc-thanhtoan p{
+  margin-bottom: 20px;
+  
+}
+.hinhthuc-thanhtoan label{
+  display: flex;
+  color: #fff !important;
+  font-weight: 500;
+}
+.hinhthuc-thanhtoan label input{
+  width: fit-content;
+  margin-right: 20px;
+}
+.pay-options{
+  display: flex;
+  gap:10px;
+}
+.payment-options img{
+  width: 50px;
+  border-radius: 20px;
+  transition: all 0.2s ease-in-out;
+}
+.btn-thanhtoan{
+  margin-top: 25px;
+}
+.payment-options img:hover{
+  scale: 1.1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+@media only screen and (max-width: 48em){
+  .place-order {
+      display: block;
+      margin-top: 0;
+      margin-bottom: 0;
+  }
+  .place-order-left p{
+      text-align: center;
+  }
+}

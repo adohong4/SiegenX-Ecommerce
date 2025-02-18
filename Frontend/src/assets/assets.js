@@ -17,7 +17,7 @@ import solution3 from './Home/solution3.png'
 import background from './Home/background.png'
 import banner from './Home/Banner.png'
 import interactiveScreen from './Home/interactiveScreen.png'
-
+import stripe from './stripe.jpeg'
 
 
 import introduce from './Intro/introduce.png'
@@ -69,7 +69,7 @@ import gianhang6 from './Solution/gianhang6.jpg'
 import bannerproduct from './Products/bannerproduct.png'
 import Banner from './Products/Banner.png'
 export const assets = {
-    logo, logo_footer,
+    logo, logo_footer, stripe,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
     
     

@@ -73,6 +73,17 @@ class StaffService {
         }
     };
 
+    static getStaffById = async (id) => {
+        try {
+            const staff = await staffModel.findById(id);
+            return {
+                staff,
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     
 }
 

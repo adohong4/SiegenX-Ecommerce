@@ -45,6 +45,20 @@ class StaffController {
         }
     }
 
+
+    getStaffById = async (req, res, next) => {
+        try {
+            const result = await StaffService.getStaffById(req.params.id);
+
+            new OK({
+                message: 'get staff By Id OK',
+                metadata: result.staff
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new StaffController() ;

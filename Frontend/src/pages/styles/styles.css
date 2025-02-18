@@ -2498,14 +2498,24 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* CSS cho trang Cart */
 
-
-
+.bottom-cart-content{
+  margin-top: 20px;
+}
+.bottom-cart-content h2{
+  font-size: 20px;
+  font-style: italic;
+}
+.bottom-cart-content .text-note{
+  padding-left: 20px;
+}
+.bottom-cart-content .text-note p{
+  font-style: italic;
+}
 .cart {
-  /* margin-top: 150px !important; */
   width: 100vw;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Poppins', sans-serif;
+  /* font-family: 'Poppins', sans-serif; */
   color: #333;
   margin-top: 120px;
 }

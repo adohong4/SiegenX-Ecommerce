@@ -537,11 +537,12 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    text-decoration: none;
 }
 
 .footer-content {
     display: block;
-    padding: 50px 200px;
+    padding: 50px;
 }
 
 .footer-content .top-tittle-footer {
@@ -627,8 +628,12 @@
     text-align: center;
     line-height: 30px;
 }
+.body-footer .footer-info img{
+  margin-bottom: 30px;
+}
 .body-footer .footer-info h3{
     color: #fff;
+    font-size: 20px;
 }
 
 .footer-copy{

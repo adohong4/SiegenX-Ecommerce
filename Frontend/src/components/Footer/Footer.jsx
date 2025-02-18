@@ -65,17 +65,17 @@ const Footer = () => {
                                 <h4>LIÊN KẾT</h4>
                                 <ul>
                                     <li>
-                                        <a href="https://facebook.com/Siegenx" target="_blank">
+                                        <a href="https://web.facebook.com/anh.vanhnguyen1234" target="_blank">
                                             <i class="fa-brands fa-facebook"></i> Facebook
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://tiktok.com/Siegenx" target="_blank">
+                                        <a href="https://web.facebook.com/anh.vanhnguyen1234" target="_blank">
                                             <i class="fa-brands fa-tiktok"></i> Tiktok
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://zalo.com/Siegenx" target="_blank">
+                                        <a href="https://web.facebook.com/anh.vanhnguyen1234" target="_blank">
                                             <i class="fa-solid fa-comment"></i> Zalo
                                         </a>
                                     </li>

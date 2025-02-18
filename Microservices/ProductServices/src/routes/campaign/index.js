@@ -15,4 +15,7 @@ router.get('/product/campaign/get/:id', checkTokenCookie, asyncHandler(campaignC
 
 router.delete('/product/campaign/active/:id', checkTokenCookie, asyncHandler(campaignController.activeCampaign))
 
+router.get('/product/campaign/paginate', checkTokenCookie, asyncHandler(campaignController.paginateCampaign))
+router.get('/product/campaign/search/:code', checkTokenCookie, asyncHandler(campaignController.searchCampaignByCode))
+
 module.exports = router;

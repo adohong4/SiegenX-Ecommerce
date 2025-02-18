@@ -1,6 +1,7 @@
 'use strict'
 
 const CampaignService = require('../services/campaign.service')
+const CustomCampaignService = require('../services/custom.campaign')
 const { OK, CREATED, SuccessResponse } = require('../core/success.response')
 
 class CampaignController {
@@ -52,6 +53,31 @@ class CampaignController {
             message: 'chuyển đổi thành công',
             metadata: result.metadata
         }).send(res)
+    }
+
+    paginateCampaign = async (req, res, next) => {
+        try {
+            const result = await CustomCampaignService.paginateCampaign()
+            new CREATED({
+                message: 'phân trang thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    searchCampaignByCode = async (req, res, next) => {
+        try {
+            const { code } = req.params;
+            const result = await CustomCampaignService.searchCampaignByCode(code)
+            new CREATED({
+                message: 'lấy thông tin thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

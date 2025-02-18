@@ -1,6 +1,6 @@
 'use strict';
 
-const campaigModel = require('../models/campaign.model')
+const campaignModel = require('../models/campaign.model')
 const { BadRequestError, ConflictRequestError } = require('../core/error.response');
 
 class CampaignService {
@@ -17,12 +17,12 @@ class CampaignService {
             if (new Date(startDate) >= new Date(endDate))
                 throw new BadRequestError('Start_Date must be before End_date')
 
-            const foundCampaign = await campaigModel.findOne({ code })
+            const foundCampaign = await campaignModel.findOne({ code })
 
             if (foundCampaign && foundCampaign.active)
                 throw new BadRequestError('Discount exist!')
 
-            const newCampaign = await campaigModel.create({
+            const newCampaign = await campaignModel.create({
                 name, description, value, status, maxValue, appliesTo, productIds,
                 startDate, endDate, code,
                 creator: {
@@ -40,7 +40,7 @@ class CampaignService {
     }
 
     static getAllCampaign = async () => {
-        const campaign = await campaigModel.find()
+        const campaign = await campaignModel.find()
             .select('name description value code startDate endDate status maxValue appliesTo productIds active')
             .sort({ createdAt: -1 })
             .exec();
@@ -48,7 +48,7 @@ class CampaignService {
     }
 
     static getCampaignById = async (id) => {
-        const campaign = await campaigModel.findById(id)
+        const campaign = await campaignModel.findById(id)
         return { metadata: campaign }
     }
 
@@ -58,7 +58,7 @@ class CampaignService {
 
     static activeCampaign = async (userId, id) => {
         try {
-            const campaign = await campaigModel.findById(id)
+            const campaign = await campaignModel.findById(id)
             const newActiveStatus = !campaign.active;
             const actionDescription = newActiveStatus ? "Restored supplier" : "Deleted supplier";
 

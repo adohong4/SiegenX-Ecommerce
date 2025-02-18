@@ -1,9 +1,9 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema; 
 
-const DOCUMENT_NAME = 'Staff';  
+const DOCUMENT_NAME = 'Staffs';  
 
 const StaffSchema = new Schema(
     {

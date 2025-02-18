@@ -40,11 +40,16 @@ class CampaignService {
     }
 
     static getAllCampaign = async () => {
-
+        const campaign = await campaigModel.find()
+            .select('name description value code startDate endDate status maxValue appliesTo productIds active')
+            .sort({ createdAt: -1 })
+            .exec();
+        return { metadata: campaign }
     }
 
-    static getCampaignById = async () => {
-
+    static getCampaignById = async (id) => {
+        const campaign = await campaigModel.findById(id)
+        return { metadata: campaign }
     }
 
     static updateCampaign = async () => {

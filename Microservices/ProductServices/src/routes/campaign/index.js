@@ -10,5 +10,7 @@ const router = express.Router();
 
 router.post('/product/campaign/create', checkTokenCookie, asyncHandler(campaignController.createCampaign))
 
+router.get('/product/campaign/get', checkTokenCookie, asyncHandler(campaignController.getAllCampaign))
+router.get('/product/campaign/get/:id', checkTokenCookie, asyncHandler(campaignController.getCampaignById))
 
 module.exports = router;

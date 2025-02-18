@@ -41,6 +41,37 @@ class StaffService {
         }
     }
 
+    static updateStaffs = async (req, res, next) => {
+        try {
+            const staffId = req.params.id;
+            const staff = await staffModel.findById(staffId);
+
+            if (!staff) {
+                throw new BadRequestError('nhan vien không tồn tại');
+            }
+
+            // Cập nhật thông tin nhan vien
+            const updates = {
+                Username: req.body.Username,
+                StaffName: req.body.StaffName,
+                Email: req.body.Email,
+                Password: req.body.Password,
+                Numberphone: req.body.Numberphone,
+                Tax: req.body.Tax,
+                Role: req.body.Role,
+                StatusActive: req.body.StatusActive,
+
+            };
+
+            const updatedStaff = await staffModel.findByIdAndUpdate(staffId, updates, { new: true });
+
+            return {
+                staff: updatedStaff
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
 
     
 }

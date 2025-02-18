@@ -16,7 +16,7 @@ class ProductController {
         } catch (error) {
             next(error);
         }
-    }
+    } 
 
 
     getAllProduct = async (req, res, next) => {

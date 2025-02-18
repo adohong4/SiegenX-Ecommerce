@@ -32,6 +32,19 @@ class StaffController {
         }
     }
 
+    updateStaff = async (req, res, next) => {
+        try {
+            const result = await StaffService.updateStaffs(req, res, next);
+
+            new CREATED({
+                message: 'Cập nhật thành công!',
+                metadata: result.staff
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new StaffController() ;

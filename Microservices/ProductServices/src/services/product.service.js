@@ -45,7 +45,7 @@ class ProductService {
                 product
             }
         } catch (error) {
-            throw error
+            throw error 
         }
     }
 

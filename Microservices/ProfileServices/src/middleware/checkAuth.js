@@ -1,8 +1,9 @@
 'use strict'
 const jwt = require('jsonwebtoken')
-const profileModel = require('../models/profile.model')
+const { Types } = require('mongoose');
+const { asyncHandler } = require('../helpers/asyncHandler')
 
-const authMiddleware = async (req, res, next) => {
+const authMiddleware = asyncHandler(async (req, res, next) => {
     const { token } = req.headers;
     if (!token) {
         return res.json({ success: false, message: "Not Authorized Login Again" })
@@ -15,12 +16,11 @@ const authMiddleware = async (req, res, next) => {
         console.log(error);
         res.json({ success: false, message: "Error" })
     }
-}
+})
 
-const checkTokenCookie = async (req, res, next) => {
+const checkTokenCookie = asyncHandler(async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
-
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized - No Token Provided" });
         }
@@ -31,20 +31,14 @@ const checkTokenCookie = async (req, res, next) => {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
 
-        // const user = await profileModel.findById(decoded.id).select("-password");
-
-        // if (!user) {
-        //     return res.status(404).json({ success: false, message: "User not found" });
-        // }
-
-        req.user = decoded.id;
+        req.user = new Types.ObjectId(decoded.userId);
 
         next();
     } catch (error) {
         console.log(error);
         res.status(401).json({ success: false, message: "Invalid token" });
     }
-}
+})
 
 module.exports = {
     authMiddleware, checkTokenCookie

@@ -53,7 +53,7 @@ class IdentityService {
         }
     }
 
-    static login = async (req, { email, password, role }) => {
+    static login = async (req, { email, password }) => {
         try {
             const user = await identityModel.findOne({ email });
 
@@ -67,7 +67,10 @@ class IdentityService {
                 throw new BadRequestError("Mật khẩu không chính xác");
             }
 
-            const token = createToken(user._id, req.res);
+            const { _id: userId } = user;
+            const role = user.role;
+            const token = createToken({ userId, email, password, role }, req.res);
+
             return {
                 user: {
                     id: user._id,

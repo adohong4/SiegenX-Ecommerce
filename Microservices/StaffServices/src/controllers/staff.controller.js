@@ -72,6 +72,20 @@ class StaffController {
         }
     }
 
+    toggleStaffStatusActive = async (req, res, next) => {
+        try {
+            const { id } = req.params; // Lấy ID từ URL
+            const result = await StaffService.toggleStaffStatusActive(id);
+
+            new OK({
+                message: `Trạng thái nhân viên đã được cập nhật thành ${result.StatusActive}`,
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    };
+
 }
 
 module.exports = new StaffController() ;

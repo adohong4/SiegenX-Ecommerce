@@ -113,6 +113,42 @@ class StaffService {
         }
     }
 
+    static softDeleteStaff = async (id) => {
+        try {
+            const staff = await staffModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+            if (!staff) {
+                throw new Error("Nhân viên không tồn tại!");
+            }
+            return {
+                message: "Nhân viên đã được xóa mềm",
+                staff
+            };
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    static async toggleStaffStatusActive(id) {
+        try {
+            // Tìm nhân viên theo ID
+            const staff = await staffModel.findById(id);
+            if (!staff) {
+                throw new Error("Nhân viên không tồn tại!");
+            }
+
+            // Đảo ngược trạng thái StatusActive
+            const newStatus = !staff.StatusActive;
+
+            // Cập nhật lại giá trị trong DB
+            const updatedStaff = await staffModel.findByIdAndUpdate(id, { StatusActive: newStatus }, { new: true });
+
+            return updatedStaff; // Trả về thông tin sau khi cập nhật
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+
     
 }
 

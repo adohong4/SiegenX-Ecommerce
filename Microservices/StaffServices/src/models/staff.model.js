@@ -15,6 +15,7 @@ const StaffSchema = new Schema(
             Tax: { type: String, required: true, unique: true },
             Role: { type: String, required: true },
             StatusActive: { type: Boolean },
+            
         
     },
     { minimize: false, timestamps: true }

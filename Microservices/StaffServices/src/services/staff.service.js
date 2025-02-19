@@ -84,6 +84,35 @@ class StaffService {
         }
     }
 
+    static getStaffByPage = async (page = 1, pageSize = 5) => {
+        try {
+            // Tính toán vị trí bắt đầu và số lượng sản phẩm cần lấy
+            const skip = (page - 1) * pageSize;
+            const limit = pageSize;
+    
+            // Lấy danh sách sản phẩm với phân trang
+            const staffs = await staffModel.find()
+                .skip(skip)        // Bỏ qua các sản phẩm đã được truy vấn trước đó
+                .limit(limit);     // Giới hạn số lượng sản phẩm mỗi trang
+    
+            // Lấy tổng số sản phẩm để tính số trang
+            const totalStaff = await staffModel.countDocuments();
+    
+            // Tính toán số trang
+            const totalPages = Math.ceil(totalStaff / pageSize);
+    
+            return {
+                metadata:{
+                    staffs,
+                currentPage: page,
+                totalPages,
+                totalStaff,}
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
     
 }
 

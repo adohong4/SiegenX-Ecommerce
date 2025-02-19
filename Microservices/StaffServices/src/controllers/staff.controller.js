@@ -59,6 +59,19 @@ class StaffController {
         }
     }
 
+    getStaffByPage = async (req, res, next) => {
+        try {
+            const result = await StaffService.getStaffByPage();
+
+            new OK({
+                message: 'get Staff By Page OK',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new StaffController() ;

@@ -10,14 +10,20 @@ const { createToken } = require("../middleware/authUtils")
 class StaffService {
     static createStaff = async (req, res, next) => {
         try {
+            const staffId = req.user;
+            //console.log('Id: ',staffId)
+            const staffRole = req.role;
+            if(staffRole != 'ADMIN'){
+                throw new BadRequestError('Bạn không có quyền truy cập');
+            }
             const { Email, Password, Username, Tax, StaffName, Numberphone } = req.body;
     
             if (!validator.isEmail(Email)) {
                 throw new BadRequestError('Không đúng định dạng email');
             }
     
-            if (!validator.isStrongPassword(Password, { minLength: 8 })) {
-                throw new BadRequestError('Mật khẩu quá yếu, cần ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt');
+            if (Password.length < 8) {
+                throw new BadRequestError('Mật khẩu quá yếu, cần ít nhất 8 ký tự')
             }
     
             const existingStaff = await staffModel.findOne({ 
@@ -42,9 +48,15 @@ class StaffService {
                 Username,
                 StaffName,
                 Email,
+                Password,
                 HashedPassword: hashedPassword, 
                 Numberphone,
-                Tax
+                Tax,
+
+                creator: {
+                    createdBy: staffId,
+                    description: "Created new campaign"
+                }
             });
     
             const staff = await newStaff.save();
@@ -56,8 +68,11 @@ class StaffService {
     };
     
     
-    static getstaff = async () => {
+    static getstaff = async (req,res) => {
         try {
+            // const staffId = req.user;
+            // console.log('Id: ',staffId)
+
             const staff = await staffModel.find({});
             return {
                 staff
@@ -139,23 +154,14 @@ class StaffService {
         }
     }
 
-    static softDeleteStaff = async (id) => {
-        try {
-            const staff = await staffModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
-            if (!staff) {
-                throw new Error("Nhân viên không tồn tại!");
-            }
-            return {
-                message: "Nhân viên đã được xóa mềm",
-                staff
-            };
-        } catch (error) {
-            throw error;
-        }
-    };
+    
 
-    static async toggleStaffStatusActive(id) {
+    static async toggleStaffStatusActive(id, staffId, staffRole) {
         try {
+            console.log(staffRole);
+            if(staffRole != 'ADMIN'){
+                throw new BadRequestError('Bạn không có quyền truy cập');
+            }
             // Tìm nhân viên theo ID
             const staff = await staffModel.findById(id);
             if (!staff) {
@@ -164,17 +170,52 @@ class StaffService {
 
             // Đảo ngược trạng thái StatusActive
             const newStatus = !staff.StatusActive;
- 
+            const actionDes = newStatus? "restored staff" : "deleted Staff" ;
             // Cập nhật lại giá trị trong DB
-            const updatedStaff = await staffModel.findByIdAndUpdate(id, { StatusActive: newStatus }, { new: true });
-
-            return updatedStaff; // Trả về thông tin sau khi cập nhật
+            staff.StatusActive = newStatus ;
+            staff.creator.push({
+                createdBy: staffId,
+                    description: actionDes
+            })
+            await staff.save();
+            return staff; // Trả về thông tin sau khi cập nhật
         } catch (error) {
             throw error;
         }
     }
     
+    static LoginStaff = async (req , res) => {
+        try {
+            const { Email, Password  } = req.body;
+            const staff = await staffModel.findOne({ Email });
 
+            if (!staff) {
+                throw new BadRequestError("Tài khoản không tồn tại");
+            }
+
+            const isMath = await bcrypt.compare(Password, staff.HashedPassword);
+
+            if (!isMath) {
+                throw new BadRequestError("Mật khẩu không chính xác");
+            }
+
+            const { _id: staffId } = staff;
+            const role = staff.Role;
+            console.log('role: ', role);
+            const token = createToken({ staffId, Email, role }, req.res);
+
+            return {
+                staff: {
+                    id: staff._id,
+                    email: staff.Email,
+                    role: staff.Role,
+                },
+                token,
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
     
 }
 

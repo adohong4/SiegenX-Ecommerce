@@ -5,6 +5,11 @@ const Schema = mongoose.Schema;
 
 const DOCUMENT_NAME = 'Staffs';  
 
+const HistorySchema = new Schema({
+    createdBy: { type: String, required: true }, //id
+    description: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+})
 const StaffSchema = new Schema(
     {
             Username: { type: String, required: true, unique: true },
@@ -16,7 +21,7 @@ const StaffSchema = new Schema(
             Tax: { type: String, required: true, unique: true },
             Role: { type: String, enum :  ['ADMIN', 'STAFF'], default: "STAFF" },
             StatusActive: { type: Boolean, default : true },
-            
+            creator: [HistorySchema],
         
     },
     { minimize: false, timestamps: true }

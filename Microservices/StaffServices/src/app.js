@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/config.db.mongo');
-
+const cookieParser = require('cookie-parser');
 const app = express();
 
 // Init middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-
+app.use(cookieParser());
 // Init db
 connectDB();
 

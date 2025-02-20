@@ -1,4 +1,4 @@
-  'use strict';
+'use strict';
 
 const productModel = require('../models/product.model');
 const fs = require('fs')
@@ -8,6 +8,10 @@ const { BadRequestError } = require('../core/error.response');
 class ProductService {
     static createProduct = async (req, res, next) => {
         try {
+            const staffId = req.user;
+            const { title, nameProduct, price, recap, description, category, quantity,
+                mainBoard, chip, cpu, gpu, ram, memory, version, ports, displaySize, pixelDensity, display, refreshRate
+            } = req.body
             let image_filename = "";
             if (req.files) {
                 image_filename = req.files.map(file => file.filename);
@@ -16,48 +20,36 @@ class ProductService {
             }
 
             const newProduct = new productModel({
-                title: req.body.title,
-                nameProduct: req.body.nameProduct,
-                product_slug: req.body.product_slug,
-                price: req.body.price,
+                title, nameProduct, price, category, quantity,
                 images: image_filename,
-                recap: req.body.recap,
-                description: req.body.description,
-                category: req.body.category,
-                quantity: req.body.quantity,
-                mainBoard: req.body.mainBoard,
-                chip: req.body.chip,
-                cpu: req.body.cpu,
-                gpu: req.body.gpu,
-                ram: req.body.ram,
-                memory: req.body.memory,
-                version: req.body.version,
-                ports: req.body.ports,
-                displaySize: req.body.displaySize,
-                pixelDensity: req.body.pixelDensity,
-                display: req.body.display,
-                refreshRate: req.body.refreshRate
+                recap, description,
+
+                mainBoard, chip, cpu, gpu, ram, memory, version, ports,
+                displaySize, pixelDensity, display, refreshRate,
+                creator: {
+                    createdBy: staffId,
+                    description: "Tạo mới sản phẩm"
+                }
             });
-
             const product = await newProduct.save();
-
             return {
                 product
             }
         } catch (error) {
-            throw error 
+            throw error
         }
     }
 
     static getProduct = async () => {
         try {
-            const product = await productModel.find({});
+            const product = await productModel.find()
+                .select('title nameProduct product_slug price images category quantity active')
+                .exec();
             return {
                 product
             }
         } catch (error) {
-            console.log(error);
-            res.json({ success: false, message: "Error" })
+            throw error;
         }
     }
 
@@ -74,7 +66,7 @@ class ProductService {
 
     static getProductByslug = async (product_slug) => {
         try {
-            const product = await productModel.findOne({product_slug});
+            const product = await productModel.findOne({ product_slug });
             return {
                 product,
             }
@@ -86,41 +78,31 @@ class ProductService {
 
     static updateProduct = async (req, res, next) => {
         try {
+            const staffId = req.user;
             const productId = req.params.id;
-            const product = await productModel.findById(productId);
+            const { title, nameProduct, price, recap, description, category, quantity,
+                mainBoard, chip, cpu, gpu, ram, memory, version, ports, displaySize, pixelDensity, display, refreshRate
+            } = req.body;
 
-            if (!product) {
-                throw new BadRequestError('Sản phẩm không tồn tại');
-            }
-
-            // Cập nhật thông tin sản phẩm
             const updates = {
-                title: req.body.title,
-                nameProduct: req.body.nameProduct,
-                price: req.body.price,
-                recap: req.body.recap,
-                description: req.body.description,
-                category: req.body.category,
-                quantity: req.body.quantity,
-                mainBoard: req.body.mainBoard,
-                chip: req.body.chip,
-                cpu: req.body.cpu,
-                gpu: req.body.gpu,
-                ram: req.body.ram,
-                memory: req.body.memory,
-                version: req.body.version,
-                ports: req.body.ports,
-                displaySize: req.body.displaySize,
-                pixelDensity: req.body.pixelDensity,
-                display: req.body.display,
-                refreshRate: req.body.refreshRate
+                title, nameProduct, price, recap, description, category, quantity,
+                mainBoard, chip, cpu, gpu, ram, memory, version, ports, displaySize, pixelDensity, display, refreshRate
             };
 
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
             const updatedProduct = await productModel.findByIdAndUpdate(productId, updates, { new: true });
 
-            return {
-                product: updatedProduct
+            if (!updatedProduct) {
+                throw new BadRequestError('Không tìm thấy sản phẩm');
             }
+
+            updatedProduct.creator.push({
+                createdBy: staffId,
+                description: "Cập nhật sản phẩm"
+            });
+            await updatedProduct.save();
+
+            return { product: updatedProduct }
         } catch (error) {
             throw error;
         }
@@ -173,6 +155,20 @@ class ProductService {
         }
     }
 
+    static softRestoreProduct = async (staffId, id) => {
+        const product = await productModel.findById(id)
+        const newActiveStatus = !product.active;
+        const actionDescription = newActiveStatus ? "Hồi phục sản phẩm" : "Xóa sản phẩm";
+
+        product.active = newActiveStatus;
+        product.creator.push({
+            createdBy: staffId,
+            description: actionDescription
+        })
+        await product.save();
+        return { metadata: product }
+    }
+
     static getProductByTitle = async (title) => {
         try {
             const product_title = String(title).trim();
@@ -193,33 +189,31 @@ class ProductService {
 
     static getProductsByPage = async (page = 1, pageSize = 5) => {
         try {
-            // Tính toán vị trí bắt đầu và số lượng sản phẩm cần lấy
             const skip = (page - 1) * pageSize;
             const limit = pageSize;
-    
-            // Lấy danh sách sản phẩm với phân trang
+
             const products = await productModel.find()
-                .skip(skip)        // Bỏ qua các sản phẩm đã được truy vấn trước đó
-                .limit(limit);     // Giới hạn số lượng sản phẩm mỗi trang
-    
-            // Lấy tổng số sản phẩm để tính số trang
+                .select('title nameProduct product_slug price images category quantity active')
+                .skip(skip)
+                .limit(limit)
+                .exec();
+
             const totalProducts = await productModel.countDocuments();
-    
-            // Tính toán số trang
             const totalPages = Math.ceil(totalProducts / pageSize);
-    
+
             return {
-                metadata:{
-                products,
-                currentPage: page,
-                totalPages,
-                totalProducts,}
+                metadata: {
+                    products,
+                    currentPage: page,
+                    totalPages,
+                    totalProducts,
+                }
             };
         } catch (error) {
             throw error;
         }
     }
-    
+
 
 }
-module.exports = ProductService ;
+module.exports = ProductService;

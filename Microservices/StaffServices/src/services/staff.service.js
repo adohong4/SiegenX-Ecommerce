@@ -13,23 +13,23 @@ class StaffService {
             const staffId = req.user;
             //console.log('Id: ',staffId)
             const staffRole = req.role;
-            if(staffRole != 'ADMIN'){
+            if (staffRole != 'ADMIN') {
                 throw new BadRequestError('Bạn không có quyền truy cập');
             }
             const { Email, Password, Username, Tax, StaffName, Numberphone } = req.body;
-    
+
             if (!validator.isEmail(Email)) {
                 throw new BadRequestError('Không đúng định dạng email');
             }
-    
+
             if (Password.length < 8) {
                 throw new BadRequestError('Mật khẩu quá yếu, cần ít nhất 8 ký tự')
             }
-    
-            const existingStaff = await staffModel.findOne({ 
+
+            const existingStaff = await staffModel.findOne({
                 $or: [{ Email }, { Username }, { Tax }]
             });
-    
+
             if (existingStaff) {
                 if (existingStaff.Email === Email) {
                     throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác');
@@ -41,15 +41,15 @@ class StaffService {
                     throw new BadRequestError('Mã số thuế đã bị trùng');
                 }
             }
-    
+
             const hashedPassword = await bcrypt.hash(Password, 10);
-    
+
             const newStaff = new staffModel({
                 Username,
                 StaffName,
                 Email,
                 Password,
-                HashedPassword: hashedPassword, 
+                HashedPassword: hashedPassword,
                 Numberphone,
                 Tax,
 
@@ -58,17 +58,17 @@ class StaffService {
                     description: "Created new campaign"
                 }
             });
-    
+
             const staff = await newStaff.save();
-    
+
             return { staff };
         } catch (error) {
-            next(error); 
+            next(error);
         }
     };
-    
-    
-    static getstaff = async (req,res) => {
+
+
+    static getstaff = async (req, res) => {
         try {
             // const staffId = req.user;
             // console.log('Id: ',staffId)
@@ -130,36 +130,37 @@ class StaffService {
             // Tính toán vị trí bắt đầu và số lượng sản phẩm cần lấy
             const skip = (page - 1) * pageSize;
             const limit = pageSize;
-    
+
             // Lấy danh sách sản phẩm với phân trang
             const staffs = await staffModel.find()
                 .skip(skip)        // Bỏ qua các sản phẩm đã được truy vấn trước đó
                 .limit(limit);     // Giới hạn số lượng sản phẩm mỗi trang
-    
+
             // Lấy tổng số sản phẩm để tính số trang
             const totalStaff = await staffModel.countDocuments();
-    
+
             // Tính toán số trang
             const totalPages = Math.ceil(totalStaff / pageSize);
-    
+
             return {
-                metadata:{
+                metadata: {
                     staffs,
-                currentPage: page,
-                totalPages,
-                totalStaff,}
+                    currentPage: page,
+                    totalPages,
+                    totalStaff,
+                }
             };
         } catch (error) {
             throw error;
         }
     }
 
-    
+
 
     static async toggleStaffStatusActive(id, staffId, staffRole) {
         try {
             console.log(staffRole);
-            if(staffRole != 'ADMIN'){
+            if (staffRole != 'ADMIN') {
                 throw new BadRequestError('Bạn không có quyền truy cập');
             }
             // Tìm nhân viên theo ID
@@ -170,12 +171,12 @@ class StaffService {
 
             // Đảo ngược trạng thái StatusActive
             const newStatus = !staff.StatusActive;
-            const actionDes = newStatus? "restored staff" : "deleted Staff" ;
+            const actionDes = newStatus ? "restored staff" : "deleted Staff";
             // Cập nhật lại giá trị trong DB
-            staff.StatusActive = newStatus ;
+            staff.StatusActive = newStatus;
             staff.creator.push({
                 createdBy: staffId,
-                    description: actionDes
+                description: actionDes
             })
             await staff.save();
             return staff; // Trả về thông tin sau khi cập nhật
@@ -183,10 +184,10 @@ class StaffService {
             throw error;
         }
     }
-    
-    static LoginStaff = async (req , res) => {
+
+    static LoginStaff = async (req, res) => {
         try {
-            const { Email, Password  } = req.body;
+            const { Email, Password } = req.body;
             const staff = await staffModel.findOne({ Email });
 
             if (!staff) {
@@ -216,7 +217,7 @@ class StaffService {
             throw error;
         }
     }
-    
+
 }
 
-module.exports = StaffService ;
+module.exports = StaffService;

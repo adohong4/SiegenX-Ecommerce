@@ -6,7 +6,7 @@ class ProductController {
 
     createProduct = async (req, res, next) => {
         try {
-            const result = await ProductService.createProduct(req, res, next); 
+            const result = await ProductService.createProduct(req, res, next);
             if (result) {
                 new CREATED({
                     message: 'Đã thêm sản phẩm mới',
@@ -16,7 +16,7 @@ class ProductController {
         } catch (error) {
             next(error);
         }
-    } 
+    }
 
 
     getAllProduct = async (req, res, next) => {
@@ -27,7 +27,7 @@ class ProductController {
                     message: 'get Product OK',
                     metadata: result.product
                 }).send(res);
-            } 
+            }
         } catch (error) {
             next(error);
         }
@@ -86,6 +86,16 @@ class ProductController {
         }
     }
 
+    softRestoreProduct = async (req, res, next) => {
+        const staffId = req.user;
+        const { id } = req.params;
+        const result = await ProductService.softRestoreProduct(staffId, id);
+        new CREATED({
+            message: 'Xóa thành công',
+            metadata: result.product
+        }).send(res);
+    }
+
     getProductByTitle = async (req, res, next) => {
         try {
             const result = await ProductService.getProductByTitle(req.params.title);
@@ -98,6 +108,7 @@ class ProductController {
             next(error);
         }
     }
+
     getCountProduct = async (req, res, next) => {
         try {
             const result = await ProductService.getCountProduct();
@@ -123,9 +134,5 @@ class ProductController {
             next(error);
         }
     }
-
-
-
-
 }
-module.exports = new ProductController() ;
+module.exports = new ProductController();

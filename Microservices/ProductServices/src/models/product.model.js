@@ -4,15 +4,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const slugify = require('slugify')
 
-const DOCUMENT_NAME = 'Products';  
+const DOCUMENT_NAME = 'Products';
+
+const HistorySchema = new Schema({
+    createdBy: { type: String, required: true }, //id
+    description: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+})
 
 const ProductSchema = new Schema(
     {
         title: { type: String, required: true },
         nameProduct: { type: String, required: true },
         product_slug: String,
-        price: { type: Number, required: true },
-        images: [String], 
+        price: { type: Number, default: 0 },
+        images: [String],
         recap: { type: String, required: true },
         description: { type: String, required: true },
         category: { type: String, required: true },
@@ -28,7 +34,9 @@ const ProductSchema = new Schema(
         displaySize: { type: String },
         pixelDensity: { type: String },
         display: { type: String },
-        refreshRate: { type: String }
+        refreshRate: { type: String },
+        creator: [HistorySchema],
+        active: { type: Boolean, default: true },
     },
     { minimize: false, timestamps: true }
 );

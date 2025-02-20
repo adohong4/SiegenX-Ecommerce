@@ -45,6 +45,20 @@ class CampaignController {
         }).send(res)
     }
 
+    updateCampaignById = async (req, res, next) => {
+        const userId = req.user;
+        const { id } = req.params;
+        const { name, description, value, code, startDate, endDate, status, maxValue, appliesTo, productIds, type } = req.body
+        const result = await CampaignService.updateCampaignById(
+            userId, id, name, description, value, code,
+            startDate, endDate, status, maxValue, appliesTo, productIds, type
+        );
+        new CREATED({
+            message: 'cập nhật thành công',
+            metadata: result.metadata
+        }).send(res)
+    }
+
     activeCampaign = async (req, res, next) => {
         const userId = req.user;
         const { id } = req.params;

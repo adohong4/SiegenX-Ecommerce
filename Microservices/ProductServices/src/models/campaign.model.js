@@ -32,7 +32,7 @@ const CampaignSchema = new Schema(
         },
         maxValue: { type: Number, required: true },
         appliesTo: { type: String, required: true, enum: ['all', 'category', 'items'] },
-        productCategory: { type: Array, default: [] },
+        // productCategory: { type: Array, default: [] },
         productIds: { type: Array, default: [] }, // so san pham duoc ap dung
         creator: [HistorySchema],
         active: { type: Boolean, default: true },

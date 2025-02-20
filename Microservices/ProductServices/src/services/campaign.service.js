@@ -68,8 +68,57 @@ class CampaignService {
         return { metadata: campaign }
     }
 
-    static updateCampaign = async () => {
+    static updateCampaignById = async (userId, id,
+        name, description, value, code, startDate, endDate,
+        status, maxValue, appliesTo, productIds, type
+    ) => {
+        try {
+            const updates = { userId, name, description, value, code, startDate, endDate, status, maxValue, appliesTo, productIds, type };
 
+            // Kiểm tra điều kiện của type
+            if (type === 'percentage' && (value <= 0 || value > 100)) {
+                throw new BadRequestError('Value must be greater than 0 and less than or equal to 100 for percentage type');
+            }
+            if (type === 'fixed_amount' && value <= 0) {
+                throw new BadRequestError('Value must be greater than 0 for fixed amount type');
+            }
+
+            // Kiểm tra thời gian
+            const now = new Date();
+            if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
+            if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
+
+            // Kiểm tra CODE
+            const foundCampaign = await campaignModel.findOne({ code });
+            if (foundCampaign && foundCampaign.active) throw new BadRequestError('CODE exist!');
+
+            // Cập nhật appliesTo && productIds
+            if (appliesTo !== 'items') {
+                productIds = [];
+            }
+
+            // Xóa các trường không có giá trị
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+
+            // Cập nhật thông tin chiến dịch trong database
+            const updatedCampaign = await campaignModel.findByIdAndUpdate(id, updates, { new: true });
+
+            // Kiểm tra xem updatedCampaign có tồn tại không
+            if (!updatedCampaign) {
+                throw new BadRequestError('Campaign not found');
+            }
+
+            // Cập nhật thông tin người dùng
+            updatedCampaign.creator.push({
+                createdBy: userId,
+                description: "Updated campaign"
+            });
+            await updatedCampaign.save();
+
+            return { metadata: updatedCampaign };
+        } catch (error) {
+            throw error;
+        }
     }
 
     static activeCampaign = async (userId, id) => {

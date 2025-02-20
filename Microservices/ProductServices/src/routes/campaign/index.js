@@ -18,4 +18,9 @@ router.delete('/product/campaign/active/:id', checkTokenCookie, asyncHandler(cam
 router.get('/product/campaign/paginate', checkTokenCookie, asyncHandler(campaignController.paginateCampaign))
 router.get('/product/campaign/search/:code', checkTokenCookie, asyncHandler(campaignController.searchCampaignByCode))
 
+//custom
+router.post('/product/campaign/addToCampaign', checkTokenCookie, asyncHandler(campaignController.addToCampaign))
+router.post('/product/campaign/removeFromCampaign', checkTokenCookie, asyncHandler(campaignController.removeFromCampaign))
+
+router.get('/product/campaign/updateProductPrice', checkTokenCookie, asyncHandler(campaignController.updateProductPricesForCampaign))
 module.exports = router;

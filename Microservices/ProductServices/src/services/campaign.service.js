@@ -7,24 +7,40 @@ class CampaignService {
     static createCampaign = async (
         userId,
         name, description, value, code, startDate, endDate,
-        status, maxValue, appliesTo, productIds
+        status, maxValue, appliesTo, productIds, type
     ) => {
         try {
-            //check
-            if (new Date() < new Date(startDate) || new Date() > new Date(endDate))
-                throw new BadRequestError('Discount codes has expried')
+            //check conditions of type
+            if (type === 'percentage') {
+                if (value <= 0 || value > 100) {
+                    throw new BadRequestError('Value must be greater than 0 and less than or equal to 100 for percentage type');
+                }
+            } else if (type === 'fixed_amount') {
+                if (value <= 0) {
+                    throw new BadRequestError('Value must be greater than 0 for fixed amount type');
+                }
+            } else {
+                throw new BadRequestError('Invalid type specified');
+            }
 
+            //check time
+            if (new Date() > new Date(endDate))
+                throw new BadRequestError('Discount codes has expried')
             if (new Date(startDate) >= new Date(endDate))
                 throw new BadRequestError('Start_Date must be before End_date')
 
+            //check CODE
             const foundCampaign = await campaignModel.findOne({ code })
-
             if (foundCampaign && foundCampaign.active)
                 throw new BadRequestError('Discount exist!')
 
+            //set the campaign status
+            if (new Date(startDate) > new Date()) status = "pending";
+            if (new Date(startDate) < new Date()) status = "active";
+
             const newCampaign = await campaignModel.create({
                 name, description, value, status, maxValue, appliesTo, productIds,
-                startDate, endDate, code,
+                startDate, endDate, code, type,
                 creator: {
                     createdBy: userId,
                     description: "Created new campaign"

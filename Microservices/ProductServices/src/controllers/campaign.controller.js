@@ -12,12 +12,12 @@ class CampaignController {
             const {
                 name, description, value, code,
                 startDate, endDate, status,
-                maxValue, appliesTo, productIds
+                maxValue, appliesTo, productIds, type
             } = req.body
             const result = await CampaignService.createCampaign(
                 userId,
                 name, description, value, code, startDate, endDate,
-                status, maxValue, appliesTo, productIds
+                status, maxValue, appliesTo, productIds, type
             )
             new CREATED({
                 message: 'Tạo chiến dịch thành công',
@@ -78,6 +78,34 @@ class CampaignController {
         } catch (error) {
             next(error);
         }
+    }
+
+    addToCampaign = async (req, res, next) => {
+        const { id } = req.params;
+        const { itemId } = req.body;
+        const result = await CustomCampaignService.addToCampaign(id, itemId)
+        new CREATED({
+            message: 'Thêm id sản phẩm vào phiếu giảm giá thành công',
+            metadata: result.metadata
+        }).send(res)
+    }
+
+    removeFromCampaign = async (req, res, next) => {
+        const { id } = req.params;
+        const { itemId } = req.body;
+        const result = await CustomCampaignService.removeFromCampaign(id, itemId)
+        new CREATED({
+            message: 'Xóa id sản phẩm vào phiếu giảm giá thành công',
+            metadata: result.metadata
+        }).send(res)
+    }
+
+    updateProductPricesForCampaign = async (req, res, next) => {
+        const result = await CustomCampaignService.updateProductPricesForCampaign()
+        new CREATED({
+            message: 'Thông tin sản phẩm sau update',
+            metadata: result.metadata
+        }).send(res)
     }
 }
 

@@ -14,7 +14,7 @@ const CampaignSchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, required: true },
-        type: { type: String, default: 'fixed_amount' }, // percentage
+        type: { type: String, enum: ['percentage', 'fixed_amount'] }, // percentage
         value: { type: Number, required: true }, // 10.000 , 10
         code: { type: String, required: true }, // campaignCode
         startDate: { type: Date, required: true }, // ngay bat dau
@@ -31,7 +31,8 @@ const CampaignSchema = new Schema(
             ], default: 'active'
         },
         maxValue: { type: Number, required: true },
-        appliesTo: { type: String, required: true, enum: ['all', 'specific'] },
+        appliesTo: { type: String, required: true, enum: ['all', 'category', 'items'] },
+        productCategory: { type: Array, default: [] },
         productIds: { type: Array, default: [] }, // so san pham duoc ap dung
         creator: [HistorySchema],
         active: { type: Boolean, default: true },

@@ -19,7 +19,7 @@ class UserCartService {
                 cart: updatedCart.cartData
             }
         } catch (error) {
-            throw new Error(error)
+            throw error
         }
     }
 
@@ -31,7 +31,7 @@ class UserCartService {
                 cart: user.cartData
             }
         } catch (error) {
-            throw new Error(error)
+            throw error
         }
     }
 

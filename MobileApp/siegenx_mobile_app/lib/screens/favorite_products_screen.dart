@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class FavoriteProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text("Search")),
       body: Center(
-        child: Text("Home", style: TextStyle(fontSize: 22)),
+        child: Text("Favorite products", style: TextStyle(fontSize: 22)),
       ),
     );
   }

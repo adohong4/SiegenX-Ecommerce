@@ -51,7 +51,6 @@ const LineChart = () => {
     return (
         <div className="chart-factors">
             <div className="orders-status">
-                <h3>Doanh thu hàng ngày</h3>
                 <div className='orders'>
                     {/* Chart for User Factors */}
                     <div className='orders-right-2'>

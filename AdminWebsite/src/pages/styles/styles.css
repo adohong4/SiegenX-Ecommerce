@@ -627,27 +627,9 @@ textarea {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* .user-list-container {
-    max-width: 100%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-} */
-
-
-/* .user-list-container p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-} */
 .search {
     display: flex;
     justify-content: flex-end; 
-    /* margin-bottom: 20px; */
 }
 
 .search-CSKH {
@@ -1325,8 +1307,8 @@ body.popup-open {
 /* Thẻ thông tin */
 .info-cards {
     display: grid;
-    grid-template-columns: repeat(2, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(4, minmax(300px, 1fr));
+    gap: 50px;
     margin-top: 80px;
 }
 
@@ -1364,7 +1346,7 @@ body.popup-open {
 .info-card p {
     font-size: 20px;
     font-weight: bold;
-    color: #3498db;
+    color: #fff;
     margin: 0;
 }
 .section-thongke{

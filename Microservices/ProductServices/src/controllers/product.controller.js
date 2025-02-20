@@ -6,7 +6,7 @@ class ProductController {
 
     createProduct = async (req, res, next) => {
         try {
-            const result = await ProductService.createProduct(req, res, next);
+            const result = await ProductService.createProduct(req, res, next); 
             if (result) {
                 new CREATED({
                     message: 'Đã thêm sản phẩm mới',
@@ -16,7 +16,7 @@ class ProductController {
         } catch (error) {
             next(error);
         }
-    }
+    } 
 
 
     getAllProduct = async (req, res, next) => {

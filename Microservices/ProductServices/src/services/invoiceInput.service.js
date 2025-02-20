@@ -56,6 +56,28 @@ class InvoiceInputService {
             throw error;
         }
     }
+
+    static getAllInvoice = async () => {
+        try {
+            const invoice = await invoiceInputModel.find()
+                .select('inputDate statusPayment statusInput supplierId valueInvoice creator.createdBy status')
+                .sort({ createdAt: -1 })
+                .exec()
+
+            return invoice;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static getAllInvoiceById = async (id) => {
+        try {
+            const invoice = await invoiceInputModel.findById(id)
+            return invoice;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = InvoiceInputService;

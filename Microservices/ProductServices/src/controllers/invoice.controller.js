@@ -14,6 +14,31 @@ class InvoiceInputController {
             next(error);
         }
     }
+
+    getAllInvoice = async (req, res, next) => {
+        try {
+            const result = await InvoiceInputService.getAllInvoice(req, res);
+            new OK({
+                message: 'Danh sách hóa đơn nhập',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    getAllInvoiceById = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const result = await InvoiceInputService.getAllInvoiceById(id);
+            new OK({
+                message: 'Thông tin hóa đơn nhập',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new InvoiceInputController();

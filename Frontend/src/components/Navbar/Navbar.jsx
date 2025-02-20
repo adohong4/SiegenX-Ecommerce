@@ -58,33 +58,33 @@ const Navbar = () => {
                                     <button className="search-button"><i className="fas fa-search"></i></button>
                                 </div>
 
-                                <div className='icons'>
+                                {/* <div className='icons'>
                                     <span className="icon-user" onClick={toggleDropdown} style={{ cursor: 'pointer' }}>
                                         <i className="fas fa-user"></i>
                                     </span>
                                     <span className="icon-cart" onClick={() => navigate('/cart')}>
                                         <i className="fas fa-shopping-cart"></i>
                                     </span>
-                                </div>
+                                </div> */}
 
 
 
-                                {/* <div className="icons">
-                                    {!token ? (
+                                <div className="icons">
+                                    {/* {!token ? ( */}
                                         <button
                                             className="btn btn-signin btn-primary"
                                             onClick={() => navigate('/login')}
                                         >
                                             Đăng Nhập
                                         </button>
-                                    ) : (
+                                    {/* ) : ( */}
                                         <div className="dropdown">
                                             <span className="icon-user" onClick={toggleDropdown} style={{ cursor: 'pointer' }}>
                                                 <i className="fas fa-user"></i>
                                             </span>
                                             <span className="icon-cart" onClick={() => navigate('/cart')}>
                                                 <i className="fas fa-shopping-cart"></i>
-                                                {/* <div className={getTotalCartAmount() === 0 ? "none" : "dot"}></div> }
+                                                    {/* <div className={getTotalCartAmount() === 0 ? "none" : "dot"}></div>  */}
                                             </span>
 
                                             {isDropdownOpen && (
@@ -102,9 +102,9 @@ const Navbar = () => {
                                             )}
                                         </div>
 
-                                    )}
+                                    {/* )} */}
 
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                         <div className="mid-row-header-2">
@@ -140,7 +140,7 @@ const Navbar = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
 
                 {/* Mobile Navbar */}
                 <div className="mobile-display">

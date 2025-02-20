@@ -17,7 +17,7 @@ import solution3 from './Home/solution3.png'
 import background from './Home/background.png'
 import banner from './Home/Banner.png'
 import interactiveScreen from './Home/interactiveScreen.png'
-
+import stripe from './stripe.jpeg'
 
 
 import introduce from './Intro/introduce.png'
@@ -35,8 +35,41 @@ import economic from './Intro/economic.png'
 import banner_contact from './Contact/banner_contact.png'
 import bgrcontact from './Contact/bgrcontact.png'
 
+
+import sol from './Solution/sol.png'
+import sol1 from './Solution/sol1.png'
+import sol2 from './Solution/sol2.png'
+import sol3 from './Solution/sol3.png'
+import class1 from './Solution/class1.png'
+import class2 from './Solution/class2.png'
+import class4 from './Solution/class4.png'
+import class5 from './Solution/class5.png'
+import class6 from './Solution/class6.png'
+import class7 from './Solution/class7.png'
+import meeting10 from './Solution/meeting10.png'
+import productClass1 from './Solution/productClass1.png'
+import productClass2 from './Solution/productClass2.png'
+import productClass3 from './Solution/productClass3.png'
+import productClass4 from './Solution/productClass4.png'
+import phonghop0 from './Solution/phonghop0.png'
+import phonghop1 from './Solution/phonghop1.png'
+import phonghop2 from './Solution/phonghop2.png'
+import phonghop3 from './Solution/phonghop3.png'
+import phonghop4 from './Solution/phonghop4.png'
+import phonghop5 from './Solution/phonghop5.png'
+import gianhang1 from './Solution/gianhang1.jpg'
+import gianhang2 from './Solution/gianhang2.png'
+import gianhang3 from './Solution/gianhang3.png'
+import gianhang4 from './Solution/gianhang4.png'
+import gianhang5 from './Solution/gianhang5.png'
+import gianhang6 from './Solution/gianhang6.jpg'
+
+
+
+import bannerproduct from './Products/bannerproduct.png'
+import Banner from './Products/Banner.png'
 export const assets = {
-    logo, logo_footer,
+    logo, logo_footer, stripe,
     img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
     
     
@@ -44,4 +77,7 @@ export const assets = {
 
     banner_contact, bgrcontact,
 
+    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10, productClass1, productClass2, productClass3, productClass4, phonghop1, phonghop2, phonghop3, phonghop4, phonghop5,phonghop0, gianhang1, gianhang2, gianhang3, gianhang4, gianhang5, gianhang6,
+
+    bannerproduct, Banner,
 }

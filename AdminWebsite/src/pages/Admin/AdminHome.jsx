@@ -28,12 +28,7 @@ const Admin = () => {
                     <Route path="user" element={<ListUser />} />
                     <Route path="orders" element={<Orders />} />
                     <Route path="/dashboard" element={<DashBoard />} />
-                    {/* 
                     
-                    
-                     />
-                    
-                     */}
                 </Routes>
             </div>
         </div>

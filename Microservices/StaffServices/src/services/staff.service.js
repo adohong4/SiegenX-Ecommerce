@@ -2,33 +2,59 @@
 
 const staffModel = require('../models/staff.model');
 const { BadRequestError } = require('../core/error.response');
+const bcrypt = require('bcrypt')
+const validator = require('validator')
+const { createToken } = require("../middleware/authUtils")
+
 
 class StaffService {
     static createStaff = async (req, res, next) => {
         try {
-            
-            const newStaff = new staffModel({
-                Username: req.body.Username,
-                StaffName: req.body.StaffName,
-                Email: req.body.Email,
-                Password: req.body.Password,
-                Numberphone: req.body.Numberphone,
-                Tax: req.body.Tax,
-                Role: req.body.Role,
-                StatusActive: req.body.StatusActive,
-
-                
-            });
-
-            const staff = await newStaff.save();
-
-            return {
-                staff
+            const { Email, Password, Username, Tax, StaffName, Numberphone } = req.body;
+    
+            if (!validator.isEmail(Email)) {
+                throw new BadRequestError('Không đúng định dạng email');
             }
+    
+            if (!validator.isStrongPassword(Password, { minLength: 8 })) {
+                throw new BadRequestError('Mật khẩu quá yếu, cần ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt');
+            }
+    
+            const existingStaff = await staffModel.findOne({ 
+                $or: [{ Email }, { Username }, { Tax }]
+            });
+    
+            if (existingStaff) {
+                if (existingStaff.Email === Email) {
+                    throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác');
+                }
+                if (existingStaff.Username === Username) {
+                    throw new BadRequestError('Tên đăng nhập đã được tạo');
+                }
+                if (existingStaff.Tax === Tax) {
+                    throw new BadRequestError('Mã số thuế đã bị trùng');
+                }
+            }
+    
+            const hashedPassword = await bcrypt.hash(Password, 10);
+    
+            const newStaff = new staffModel({
+                Username,
+                StaffName,
+                Email,
+                HashedPassword: hashedPassword, 
+                Numberphone,
+                Tax
+            });
+    
+            const staff = await newStaff.save();
+    
+            return { staff };
         } catch (error) {
-            throw error
+            next(error); 
         }
-    }
+    };
+    
     
     static getstaff = async () => {
         try {
@@ -138,7 +164,7 @@ class StaffService {
 
             // Đảo ngược trạng thái StatusActive
             const newStatus = !staff.StatusActive;
-
+ 
             // Cập nhật lại giá trị trong DB
             const updatedStaff = await staffModel.findByIdAndUpdate(id, { StatusActive: newStatus }, { new: true });
 

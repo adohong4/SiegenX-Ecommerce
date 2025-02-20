@@ -11,17 +11,18 @@ const StaffSchema = new Schema(
             StaffName: { type: String, required: true },
             Email: { type: String, required: true, unique: true },
             Password: { type: String, required: true },
+            HashedPassword: { type: String, required: true },
             Numberphone: { type: String, required: true },
             Tax: { type: String, required: true, unique: true },
-            Role: { type: String, required: true },
-            StatusActive: { type: Boolean },
+            Role: { type: String, enum :  ['ADMIN', 'STAFF'], default: "STAFF" },
+            StatusActive: { type: Boolean, default : true },
             
         
     },
     { minimize: false, timestamps: true }
 );
 
-
+  
 
 StaffSchema.index({ _id: -1, category: 1 });
 

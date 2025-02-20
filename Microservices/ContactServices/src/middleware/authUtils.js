@@ -1,40 +1,23 @@
+'use strict';
+
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const validator = require('validator')
 
 // create token for user
-const createToken = (id) => {
-    return jwt.sign(
-        { id },
+const createToken = (user, res) => {
+    const token = jwt.sign(
+        { id: user._id, Username: user.Username, Email: user.Email, Role: user.role },
         process.env.JWT_SECRET,
-        { expiresIn: '3h' }
+        { expiresIn: '1d' }
     );
+
+    res.cookie("jwt", token, {
+        maxAge: 7 * 24 * 60 * 60 * 1000, // MS
+        httpOnly: true, // prevent XSS attacks cross-site scripting attacks
+        sameSite: "strict", // CSRF attacks cross-site request forgery attacks
+        secure: process.env.NODE_ENV !== "development",
+    });
+
+    return token;
 }
 
-// check token validity
-const checkToken = async (req, res) => {
-    const token = req.headers['authorization'];
-
-    if (!token) {
-        return res.status(401).json({ success: false, message: "No token provided" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await userModel.findById(decoded.id);
-
-    if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
-    }
-
-    res.json({ success: true, user: { id: user._id, email: user.email } });
-    try {
-
-    } catch (error) {
-        console.log(error);
-        res.status(401).json({ success: false, message: "Invalid token" });
-    }
-}
-
-module.exports = {
-    createToken, checkToken
-}
+module.exports = { createToken }

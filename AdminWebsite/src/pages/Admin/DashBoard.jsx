@@ -10,21 +10,20 @@ const DashBoard = () => {
     return (
         <div className='Dashboard'>
             <div className='section-doanhthu'>
-                <div className='doanhthu-left'>
+                <div className='thongke'>
                     <Factors />
-                </div>
-                <div className='doanhthu-right'>
-                    
-                    <ColumnChart />
                 </div>
             </div>
             <div className='section-thongke'>
                 <div className='thongke-left'>
-                    <LineChart />
+                    <ColumnChart />
                 </div>
                 <div className='thongke-right'>
                     <OrderTable />
                 </div>
+            </div>
+            <div className='section-line'>
+                <LineChart />
             </div>
             
             

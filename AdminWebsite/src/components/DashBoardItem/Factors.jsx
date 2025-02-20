@@ -1,60 +1,41 @@
-
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-// import { StoreContext } from '../../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faBox, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { fakeFactors} from "../../data/Enviroment";
+import { fakeFactors } from "../../data/Enviroment";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const StatsCard = ({ maxCount, label }) => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCount((prev) => {
+                if (prev < maxCount) {
+                    return prev + 1;
+                } else {
+                    clearInterval(interval);
+                    return maxCount;
+                }
+            });
+        }, 50);
+
+        return () => clearInterval(interval);
+    }, [maxCount]);
+
+    return (
+        <div className="stats-card">
+            <p className="stats-number">{count} <span className="plus">+</span></p>
+            <p className="stats-label">{label}</p>
+        </div>
+    );
+};
 
 const Factors = () => {
-    // const { url } = useContext(StoreContext)
-
-    const [orders, setOrders] = useState([]);
-    const [user, setUser] = useState([]);
-    const [product, setProduct] = useState([]);
-    const [contact, setContact] = useState([]);
-
-    const fetchOrderCount = async () => {
-        const response = await axios.get(`${url}/v1/api/profile/order/count`);
-        if (response.data.status) {
-            setOrders(response.data.metadata);
-        }
-    }
-
-    const fetchProductCount = async () => {
-        const response = await axios.get(`${url}/v1/api/product/count`);
-        if (response.data.status) {
-            setProduct(response.data.metadata);
-        }
-    }
-
-    const fetchUserCount = async () => {
-        const response = await axios.get(`${url}/v1/api/profile/admin/user/count`);
-        if (response.data.status) {
-            setUser(response.data.metadata);
-        }
-    }
-
-    const fetchContactCount = async () => {
-        const response = await axios.get(`${url}/v1/api/contact/count`);
-        if (response.data.status) {
-            setContact(response.data.metadata);
-        }
-    }
-
-
-
-    // useEffect(() => {
-    //     fetchProductCount();
-    //     fetchOrderCount();
-    //     fetchUserCount();
-    //     fetchContactCount();
-    // }, [url]);
+    const [orders, setOrders] = useState(0);
+    const [user, setUser] = useState(0);
+    const [product, setProduct] = useState(0);
+    const [contact, setContact] = useState(0);
 
     useEffect(() => {
         // Thay thế API call bằng dữ liệu giả
@@ -64,42 +45,26 @@ const Factors = () => {
         setContact(fakeFactors.contact);
     }, []);
 
-
     return (
         <div className="user-factors-container">
             <div className='user-factors-title'>
-                <h2>Thống kê</h2>
             </div>
             <div className="info-cards">
-                <div className="info-card">
+                <div className="info-card" style={{ background: "#6F42C1", color: "white" }}>
                     <FontAwesomeIcon icon={faUsers} className="info-icon" />
-                    <div className='tt'>
-                        <h3>Người dùng</h3>
-                        <p>{user}</p>
-                    </div>
+                    <StatsCard maxCount={user} label="Người dùng" />
                 </div>
-                <div className="info-card">
+                <div className="info-card" style={{ background: "#3399FF", color: "white" }}>
                     <FontAwesomeIcon icon={faBox} className="info-icon" />
-                    <div className='tt'>
-                        <h3>Sản phẩm</h3>
-                        <p>{product}</p>
-                    </div>
+                    <StatsCard maxCount={product} label="Sản phẩm" />
                 </div>
-                <div className="info-card">
+                <div className="info-card" style={{ background: "#F9B115", color: "white" }}>
                     <FontAwesomeIcon icon={faShoppingCart} className="info-icon" />
-                    <div className='tt'>
-                        <h3>Đơn hàng</h3>
-                        <p>{orders}</p>
-                    </div>
-
+                    <StatsCard maxCount={orders} label="Đơn hàng" />
                 </div>
-                <div className="info-card">
+                <div className="info-card" style={{ background: "#DC3545", color: "white" }}>
                     <FontAwesomeIcon icon={faEnvelope} className="info-icon" />
-                    <div className='tt'>
-                        <h3>Liên hệ</h3>
-                        <p>{contact}</p>
-                    </div>
-
+                    <StatsCard maxCount={contact} label="Liên hệ" />
                 </div>
             </div>
         </div>

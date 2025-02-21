@@ -71,6 +71,33 @@ class InvoiceInputService {
         }
     }
 
+    static updateInvoiceById = async (req, res) => {
+        try {
+            const staffId = req.user;
+            const staffName = req.staffName;
+            const { id } = req.params;
+            const { statusPayment, status } = req.body;
+
+            const updates = { statusPayment, status }
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+
+            const updatedInvoice = await invoiceInputModel.findByIdAndUpdate(id, updates, { new: true });
+            if (!updatedInvoice) {
+                throw new BadRequestError('Invoice not found');
+            }
+            updatedInvoice.creator.push({
+                createdBy: staffId,
+                createdName: staffName,
+                description: "Cập nhật hóa đơn nhập"
+            });
+            await updatedInvoice.save();
+
+            return { metadata: updatedInvoice };
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static getAllInvoice = async () => {
         try {
             const invoice = await invoiceInputModel.find()
@@ -115,14 +142,14 @@ class InvoiceInputService {
                     const count = product.count; // Số lượng nhập vào
 
                     // Cập nhật quantity
-                    productInDb.quantity += count; // Cộng số lượng nhập vào
-                    await productInDb.save(); // Lưu thay đổi
+                    productInDb.quantity += count;
+                    await productInDb.save();
 
                     results.push({
                         productId: product.productId,
                         previousQuantity: previousQuantity,
                         count: count,
-                        newQuantity: productInDb.quantity, // Số lượng sau khi cập nhật
+                        newQuantity: productInDb.quantity,
                     });
                 }
             }

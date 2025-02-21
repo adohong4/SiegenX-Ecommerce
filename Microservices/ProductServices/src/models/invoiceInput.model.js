@@ -32,17 +32,17 @@ const InvoiceInputSchema = new Schema(
     {
         productIds: [ProductInputSchema],
         inputDate: { type: Date, required: true },
-        statusPayment: { type: String, enum: ['pending', 'processing', 'completed'], default: 'pending' },
+        statusPayment: { type: String, enum: ['pending', 'partial payment', 'completed'], default: 'pending' },
         statusInput: { type: String, enum: ['not imported', 'imported'], default: 'not imported' },
         status: {
             type: String, enum: [
-                'active',          // Chiến dịch đang hoạt động
-                'paused',          // Chiến dịch tạm dừng
-                'completed',       // Chiến dịch đã hoàn thành
-                'pending',         // Chiến dịch đang chờ xử lý
-                'cancelled',       // Chiến dịch đã bị hủy
-                'failed',          // Chiến dịch không thành công
-                'draft'            // Chiến dịch đang ở dạng nháp
+                'active',          // đang hoạt động
+                'paused',          // tạm dừng
+                'completed',       // đã hoàn thành
+                'pending',         // đang chờ xử lý
+                'cancelled',       // đã bị hủy
+                'failed',          // không thành công
+                'draft'            // đang ở dạng nháp
             ], default: 'pending'
         },
         supplierId: [SupplierSchema],

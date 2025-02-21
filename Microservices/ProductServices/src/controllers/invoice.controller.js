@@ -15,6 +15,18 @@ class InvoiceInputController {
         }
     }
 
+    updateInvoiceById = async (req, res, next) => {
+        try {
+            const result = await InvoiceInputService.updateInvoiceById(req, res);
+            new CREATED({
+                message: 'Cập nhật hóa đơn nhập',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     getAllInvoice = async (req, res, next) => {
         try {
             const result = await InvoiceInputService.getAllInvoice(req, res);

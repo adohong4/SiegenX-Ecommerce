@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/favorite_products_screen.dart';
-import 'package:siegenx_mobile_app/screens/home_screen.dart';
+import 'package:siegenx_mobile_app/screens/home/home_screen.dart';
 import 'package:siegenx_mobile_app/screens/message_screen.dart';
 import 'package:siegenx_mobile_app/screens/profile_screen.dart';
 

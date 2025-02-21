@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/screens/banner_widget.dart';
+import 'package:siegenx_mobile_app/screens/home/banner_widget.dart';
+import 'package:siegenx_mobile_app/screens/home/featured_products.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,12 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
           // Hiển thị banner
           BannerWidget(),
 
-          // Nội dung chính
-          Expanded(
-            child: Center(
-              child: Text("Nội dung chính", style: TextStyle(fontSize: 22)),
-            ),
+          SizedBox(
+            height: 5,
           ),
+          // Nội dung chính
+          FeaturedProducts(),
         ],
       ),
     );

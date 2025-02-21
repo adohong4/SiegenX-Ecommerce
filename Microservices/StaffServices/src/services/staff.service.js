@@ -219,6 +219,26 @@ class StaffService {
         }
     }
 
+    static getProfile = async (req, res) => {
+        try {
+            const staffId = req.user;
+            console.log("staffId: ", staffId);
+
+            if (!staffId) {
+                throw new BadRequestError("Thiếu thông tin tài khoản");
+            }
+            const profile = await staffModel.findById(staffId);
+            console.log("profile: ", profile);
+
+            if (!profile) {
+                throw new BadRequestError("Tài khoản không tồn tại");
+            }
+
+            return profile;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = StaffService;

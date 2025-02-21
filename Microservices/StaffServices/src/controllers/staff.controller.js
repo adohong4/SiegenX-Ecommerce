@@ -75,7 +75,7 @@ class StaffController {
 
     toggleStaffStatusActive = async (req, res, next) => {
         try {
-            const staffId = req.user ;
+            const staffId = req.user ;  
             const staffRole = req.role ;
             const { id } = req.params; // Lấy ID từ URL
             const result = await StaffService.toggleStaffStatusActive(id, staffId, staffRole);
@@ -101,6 +101,20 @@ class StaffController {
             next(error);
         }
     }
+
+    getProfile = async (req, res, next) => {
+        try {
+            const profile = await StaffService.getProfile(req, res);
+            new OK({
+                message: 'Lấy thông tin profile thành công',
+                metadata: profile
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    
 
 
 

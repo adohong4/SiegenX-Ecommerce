@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken')
 const { Types } = require('mongoose');
 const { asyncHandler } = require('../helpers/asyncHandler');
-const { request } = require('../app');
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
     const { token } = req.headers;
@@ -28,14 +27,14 @@ const checkTokenCookie = asyncHandler(async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Role: ', decoded.Role);
         if (!decoded) {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
 
-        req.user = new Types.ObjectId(decoded.userId);
+        req.user = new Types.ObjectId(decoded.id);
         req.role = decoded.Role;
         req.staffName = decoded.staffName;
+
         next();
     } catch (error) {
         console.log(error);

@@ -26,6 +26,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: IndexedStack(
         index: currentIndex,
         children: screens,

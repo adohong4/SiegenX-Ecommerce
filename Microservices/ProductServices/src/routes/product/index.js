@@ -31,7 +31,7 @@ router.post("/product/updateProduct/:id", checkTokenCookie, asyncHandler(Product
 router.delete("/product/deleteProduct/:id", checkTokenCookie, asyncHandler(ProductController.deleteProduct)); //xóa cứng
 router.delete("/product/delete/:id", checkTokenCookie, asyncHandler(ProductController.softRestoreProduct)); //xóa mềm
 
-router.get("/product/getProductByTitle/:title", asyncHandler(ProductController.getProductByTitle));
+router.get("/product/getProductByName/:nameProduct", asyncHandler(ProductController.getProductByName));
 router.get("/product/getCountProduct", asyncHandler(ProductController.getCountProduct));
 router.get("/product/getProductsByPage", asyncHandler(ProductController.getProductsByPage));
 

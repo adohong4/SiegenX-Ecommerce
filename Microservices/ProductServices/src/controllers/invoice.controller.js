@@ -74,6 +74,22 @@ class InvoiceInputController {
             metadata: result.metadata
         }).send(res);
     }
+
+    paginateInvoice = async (req, res, next) => {
+        const result = await InvoiceInputService.paginateInvoice()
+        new OK({
+            message: 'Phân trang thành công',
+            metadata: result.metadata
+        }).send(res);
+    }
+
+    searchByInvoiceId = async (req, res, next) => {
+        const result = await InvoiceInputService.searchByInvoiceId(req, res)
+        new OK({
+            message: 'Tìm kiếm thành công',
+            metadata: result.metadata
+        }).send(res);
+    }
 }
 
 module.exports = new InvoiceInputController();

@@ -97,13 +97,12 @@ class ProductController {
         }).send(res);
     }
 
-    getProductByTitle = async (req, res, next) => {
+    getProductByName = async (req, res, next) => {
         try {
-            const result = await ProductService.getProductByTitle(req.params.title);
-
+            const result = await ProductService.getProductByName(req, res);
             new OK({
                 message: 'get Product By title OK',
-                metadata: result.product
+                metadata: result.metadata
             }).send(res);
         } catch (error) {
             next(error);

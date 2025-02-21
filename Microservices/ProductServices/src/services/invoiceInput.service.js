@@ -13,6 +13,11 @@ class InvoiceInputService {
             const staffName = req.staffName;
             const { statusPayment, statusInput, status, supplierId, productIds } = req.body;
 
+            // Lấy tổng số hóa đơn hiện có
+            const countInvoices = await invoiceInputModel.countDocuments();
+            const stt = String(countInvoices + 1).padStart(3, '0'); // Tạo số thứ tự dạng '001', '002', ...
+            const invoiceId = `HDN${stt}`; // Tạo mã hóa đơn
+
             // get info product from productIds
             const products = await Promise.all(
                 productIds.map(async (productId) => {
@@ -46,6 +51,7 @@ class InvoiceInputService {
             }, 0);
 
             const newInvoice = new invoiceInputModel({
+                invoiceId,
                 productIds: newProductIds,
                 statusPayment,
                 statusInput,
@@ -101,7 +107,7 @@ class InvoiceInputService {
     static getAllInvoice = async () => {
         try {
             const invoice = await invoiceInputModel.find()
-                .select('inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
                 .sort({ createdAt: -1 })
                 .exec()
 
@@ -185,6 +191,40 @@ class InvoiceInputService {
         })
         await invoice.save();
         return { metadata: invoice }
+    }
+
+    static paginateInvoice = async (page = 1, pageSize = 5) => {
+        try {
+            const skip = (page - 1) * pageSize;
+            const limit = pageSize;
+
+            const invoice = await invoiceInputModel.find()
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalInvoice = await invoiceInputModel.countDocuments();
+            const totalPages = Math.ceil(totalInvoice / pageSize);
+            return {
+                metadata: {
+                    invoice,
+                    currentPage: page,
+                    totalPages,
+                    totalInvoice
+                }
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    static searchByInvoiceId = async (req, res) => {
+        const { invoiceId } = req.params;
+        const invoices = await invoiceInputModel.find({ invoiceId: { $regex: invoiceId, $options: 'i' } });
+        return {
+            metadata: invoices
+        }
     }
 }
 

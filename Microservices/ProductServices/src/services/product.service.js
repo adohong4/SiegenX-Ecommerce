@@ -174,14 +174,13 @@ class ProductService {
         return { metadata: product }
     }
 
-    static getProductByTitle = async (title) => {
+    static getProductByName = async (req, res) => {
         try {
-            const product_title = String(title).trim();
-            const product = await productModel.find({
-                title: { $regex: product_title, $options: 'i' } // 'i' để tìm kiếm không phân biệt chữ hoa/thường
-            });
+            const { nameProduct } = req.params;
+            console.log(nameProduct)
+            const product = await productModel.find({ nameProduct: { $regex: nameProduct, $options: 'i' } });
             return {
-                product,
+                metadata: product,
             }
         } catch (error) {
             throw error;

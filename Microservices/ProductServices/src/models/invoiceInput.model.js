@@ -30,6 +30,7 @@ const HistorySchema = new Schema({
 
 const InvoiceInputSchema = new Schema(
     {
+        invoiceId: { type: String, required: true, unique: true },
         productIds: [ProductInputSchema],
         inputDate: { type: Date, required: true },
         statusPayment: { type: String, enum: ['pending', 'partial payment', 'completed'], default: 'pending' },

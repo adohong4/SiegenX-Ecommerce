@@ -201,8 +201,7 @@ class StaffService {
 
             const { _id: staffId } = staff;
             const role = staff.Role;
-            console.log('role: ', role);
-            const token = createToken({ staffId, Email, role }, req.res);
+            const token = createToken({ staffId, Email, role }, req.res); 
 
             return {
                 staff: {
@@ -212,6 +211,27 @@ class StaffService {
                 },
                 token,
             };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static getProfile = async (req , res) => {
+        try {
+            const staffId = req.user ;  
+            console.log("staffId: ", staffId);
+
+        if (!staffId) {
+            throw new BadRequestError("Thiếu thông tin tài khoản");
+        }
+            const profile = await staffModel.findById(staffId);
+            console.log("profile: ", profile);
+
+            if (!profile) {
+                throw new BadRequestError("Tài khoản không tồn tại");
+            }
+
+            return profile;
         } catch (error) {
             throw error;
         }

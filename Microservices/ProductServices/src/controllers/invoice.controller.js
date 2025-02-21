@@ -40,6 +40,18 @@ class InvoiceInputController {
         }
     }
 
+    pushNumberOfProduct = async (req, res, next) => {
+        try {
+            const result = await InvoiceInputService.pushNumberOfProduct(req, res);
+            new OK({
+                message: 'Đẩy số lượng thành công',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     softDeleteRestoreInvoice = async (req, res, next) => {
         const staffId = req.user;
         const staffName = req.staffName;

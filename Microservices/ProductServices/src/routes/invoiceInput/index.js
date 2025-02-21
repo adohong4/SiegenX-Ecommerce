@@ -10,8 +10,10 @@ const router = express.Router();
 
 router.post('/invoice/create', checkTokenCookie, asyncHandler(invoiceController.createInvoiceInput))
 
-router.get('/invoice/get', asyncHandler(invoiceController.getAllInvoice))
+router.get('/invoice/get', checkTokenCookie, asyncHandler(invoiceController.getAllInvoice))
 router.get('/invoice/get/:id', asyncHandler(invoiceController.getInvoiceById))
+
+router.put('/invoice/push/:id', checkTokenCookie, asyncHandler(invoiceController.pushNumberOfProduct)) // push the number of product from invoice to product
 
 router.delete('/invoice/active/:id', checkTokenCookie, asyncHandler(invoiceController.softDeleteRestoreInvoice)) //delete && restore
 

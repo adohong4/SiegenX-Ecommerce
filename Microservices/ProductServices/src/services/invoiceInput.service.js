@@ -93,9 +93,60 @@ class InvoiceInputService {
         }
     }
 
+    static pushNumberOfProduct = async (req, res) => {
+        try {
+            const staffId = req.user;
+            const staffName = req.staffName;
+            const { id } = req.params;
+            const invoice = await invoiceInputModel.findById(id)
+                .select('productIds.productId productIds.count status statusInput creator')
+                .exec();
+
+            if (invoice.status !== 'completed' || invoice.statusInput !== 'not imported') {
+                throw new BadRequestError('Đơn hàng nhập chưa hoàn tất')
+            }
+
+            const results = [];
+
+            for (const product of invoice.productIds) {
+                const productInDb = await productModel.findById(product.productId);
+                if (productInDb) {
+                    const previousQuantity = productInDb.quantity; // Số lượng trước đó
+                    const count = product.count; // Số lượng nhập vào
+
+                    // Cập nhật quantity
+                    productInDb.quantity += count; // Cộng số lượng nhập vào
+                    await productInDb.save(); // Lưu thay đổi
+
+                    results.push({
+                        productId: product.productId,
+                        previousQuantity: previousQuantity,
+                        count: count,
+                        newQuantity: productInDb.quantity, // Số lượng sau khi cập nhật
+                    });
+                }
+            }
+
+            invoice.statusInput = 'imported';
+            invoice.creator.push({
+                createdBy: staffId,
+                createdName: staffName,
+                description: "Đẩy số lượng thành công"
+            })
+            await invoice.save();
+            return {
+                metadata: {
+                    result: results,
+                    invoice: invoice
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static softDeleteRestoreInvoice = async (staffId, staffName, id) => {
         const invoice = await invoiceInputModel.findById(id)
-        console.log("data:", invoice)
         const newActiveStatus = !invoice.active;
         const actionDescription = newActiveStatus ? "Hồi phục hóa đơn nhập" : "Xóa hóa đơn nhập";
 

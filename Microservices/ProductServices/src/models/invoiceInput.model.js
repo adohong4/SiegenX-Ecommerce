@@ -8,7 +8,7 @@ const ProductInputSchema = new Schema({
     nameProduct: { type: String, required: true },
     imageProduct: { type: String, required: true },
     productId: { type: String, required: true }, //id
-    count: { type: String, required: true },
+    count: { type: Number, required: true },
     priceInput: { type: Number, required: true },
     tax: { type: Number },
     value: { type: Number, required: true }

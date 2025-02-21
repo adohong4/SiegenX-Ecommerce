@@ -7,9 +7,9 @@ const slugify = require('slugify')
 const DOCUMENT_NAME = 'Products';
 
 const HistorySchema = new Schema({
-    createdBy: { type: String, required: true },//id
-    createdName: { type: String, required: true },
-    description: { type: String, required: true },
+    createdBy: { type: String },//id
+    createdName: { type: String },
+    description: { type: String },
     createdAt: { type: Date, default: Date.now },
 })
 
@@ -18,12 +18,12 @@ const ProductSchema = new Schema(
         title: { type: String, required: true },
         nameProduct: { type: String, required: true },
         product_slug: String,
-        price: { type: Number, default: 0 },
+        price: { type: Number, required: true },
         images: [String],
         recap: { type: String, required: true },
         description: { type: String, required: true },
         category: { type: String, required: true },
-        quantity: { type: Number, required: true },
+        quantity: { type: Number, default: 0 },
         mainBoard: { type: String },
         chip: { type: String },
         cpu: { type: String },

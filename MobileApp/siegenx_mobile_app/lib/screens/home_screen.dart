@@ -9,6 +9,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> bannerImages = [
+    'assets/banner1.jpg',
+    'assets/banner2.jpg',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

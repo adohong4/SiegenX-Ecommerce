@@ -27,10 +27,10 @@ class InvoiceInputController {
         }
     }
 
-    getAllInvoiceById = async (req, res, next) => {
+    getInvoiceById = async (req, res, next) => {
         try {
             const { id } = req.params;
-            const result = await InvoiceInputService.getAllInvoiceById(id);
+            const result = await InvoiceInputService.getInvoiceById(id);
             new OK({
                 message: 'Thông tin hóa đơn nhập',
                 metadata: result
@@ -38,6 +38,17 @@ class InvoiceInputController {
         } catch (error) {
             next(error);
         }
+    }
+
+    softDeleteRestoreInvoice = async (req, res, next) => {
+        const staffId = req.user;
+        const staffName = req.staffName;
+        const { id } = req.params;
+        const result = await InvoiceInputService.softDeleteRestoreInvoice(staffId, staffName, id)
+        new CREATED({
+            message: 'Chuyển đổi thành công',
+            metadata: result.metadata
+        }).send(res);
     }
 }
 

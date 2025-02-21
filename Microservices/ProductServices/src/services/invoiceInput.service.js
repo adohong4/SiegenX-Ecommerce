@@ -74,7 +74,7 @@ class InvoiceInputService {
     static getAllInvoice = async () => {
         try {
             const invoice = await invoiceInputModel.find()
-                .select('inputDate statusPayment statusInput supplierId valueInvoice creator.createdBy status')
+                .select('inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
                 .sort({ createdAt: -1 })
                 .exec()
 
@@ -84,13 +84,29 @@ class InvoiceInputService {
         }
     }
 
-    static getAllInvoiceById = async (id) => {
+    static getInvoiceById = async (id) => {
         try {
             const invoice = await invoiceInputModel.findById(id)
             return invoice;
         } catch (error) {
             throw error;
         }
+    }
+
+    static softDeleteRestoreInvoice = async (staffId, staffName, id) => {
+        const invoice = await invoiceInputModel.findById(id)
+        console.log("data:", invoice)
+        const newActiveStatus = !invoice.active;
+        const actionDescription = newActiveStatus ? "Hồi phục hóa đơn nhập" : "Xóa hóa đơn nhập";
+
+        invoice.active = newActiveStatus;
+        invoice.creator.push({
+            createdBy: staffId,
+            createdName: staffName,
+            description: actionDescription
+        })
+        await invoice.save();
+        return { metadata: invoice }
     }
 }
 

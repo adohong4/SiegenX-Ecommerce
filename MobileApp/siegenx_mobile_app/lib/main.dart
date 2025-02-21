@@ -1,10 +1,11 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/manager_screen.dart';
 import 'package:siegenx_mobile_app/screens/register_screen.dart';
 import 'screens/login_screen.dart'; // Thêm import này
 
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(builder: (context) => const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -25,6 +25,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  device_preview: 1.2.0
     
 
   # The following adds the Cupertino Icons font to your application.

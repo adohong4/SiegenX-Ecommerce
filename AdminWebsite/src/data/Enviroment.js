@@ -7,6 +7,7 @@ export const fakeProducts = [
         category: "Màn hình LED",
         price: 25000000,
         quantity: 10,
+        
         images: ["led1.jpg"],
     },
     {
@@ -365,3 +366,11 @@ export const fakeOrderData = {
         totalPages: 3,
     }
 };
+
+
+export  const stats = [
+    { label: "Tổng số sản phẩm", value: 20 },
+    { label: "Sản phẩm hết hàng", value: 3 },
+    { label: "Sản phẩm còn hàng", value: 17 },
+    { label: "Sản phẩm bị ẩn", value: 0 },
+  ];

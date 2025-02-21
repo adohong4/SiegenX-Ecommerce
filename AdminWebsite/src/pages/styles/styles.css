@@ -205,7 +205,23 @@ textarea {
 /* CSS cho List Product */
 
 
-
+.das-body{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+.das-body .box{
+    width: 20%;
+    background-color: #e2e2e2;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+}
+.das-body .box:hover{
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
 .listproduct {
     animation: bounce 0.3s ease-in-out;
     width: 100%;
@@ -222,7 +238,7 @@ textarea {
 
 .list-table-format {
     display: grid;
-    grid-template-columns: 0.3fr 0.5fr 1fr 0.5fr 0.3fr 0.3fr 0.3fr;
+    grid-template-columns: 0.3fr 0.5fr 1fr 0.5fr 0.3fr 0.3fr 0.3fr 0.3fr;
     align-items: center;
     gap: 10px;
     text-align: center;
@@ -457,7 +473,7 @@ textarea {
 }
 .search-CSKH .btn-search{
     border-radius: 50px;
-    background-color: #fff;
+    background-color: #00B98E;
     border:  3px solid #00B98E;
     transition: all 0.3s ease-in-out;
 }
@@ -884,7 +900,9 @@ textarea {
     position: fixed;
     width: 89vw;
     left: 10vw;
-    top:0;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
 }
 
 

@@ -5,7 +5,7 @@ const { BadRequestError, ConflictRequestError } = require('../core/error.respons
 
 class CampaignService {
     static createCampaign = async (
-        userId,
+        userId, staffName,
         name, description, value, code, startDate, endDate,
         status, maxValue, appliesTo, productIds, type
     ) => {
@@ -43,6 +43,7 @@ class CampaignService {
                 startDate, endDate, code, type,
                 creator: {
                     createdBy: userId,
+                    createdName: staffName,
                     description: "Created new campaign"
                 }
             })
@@ -68,12 +69,12 @@ class CampaignService {
         return { metadata: campaign }
     }
 
-    static updateCampaignById = async (userId, id,
+    static updateCampaignById = async (userId, staffName, id,
         name, description, value, code, startDate, endDate,
         status, maxValue, appliesTo, productIds, type
     ) => {
         try {
-            const updates = { userId, name, description, value, code, startDate, endDate, status, maxValue, appliesTo, productIds, type };
+            const updates = { userId, staffName, name, description, value, code, startDate, endDate, status, maxValue, appliesTo, productIds, type };
 
             // Kiểm tra điều kiện của type
             if (type === 'percentage' && (value <= 0 || value > 100)) {
@@ -111,6 +112,7 @@ class CampaignService {
             // Cập nhật thông tin người dùng
             updatedCampaign.creator.push({
                 createdBy: userId,
+                createdName: staffName,
                 description: "Updated campaign"
             });
             await updatedCampaign.save();
@@ -121,7 +123,7 @@ class CampaignService {
         }
     }
 
-    static activeCampaign = async (userId, id) => {
+    static activeCampaign = async (userId, staffName, id) => {
         try {
             const campaign = await campaignModel.findById(id)
             const newActiveStatus = !campaign.active;
@@ -130,6 +132,7 @@ class CampaignService {
             campaign.active = newActiveStatus;
             campaign.creator.push({
                 createdBy: userId,
+                createdName: staffName,
                 description: actionDescription
             })
             await campaign.save();

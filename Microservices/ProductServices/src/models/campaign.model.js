@@ -6,6 +6,7 @@ const DOCUMENT_NAME = 'Campaigns';
 
 const HistorySchema = new Schema({
     createdBy: { type: String, required: true }, //id
+    createdName: { type: String, required: true },
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 })

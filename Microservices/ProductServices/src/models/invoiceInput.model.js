@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const DOCUMENT_NAME = 'InvoiceInputs';
 
-const ProductIds = new Schema({
+const ProductInputSchema = new Schema({
     nameProduct: { type: String, required: true },
     imageProduct: { type: String, required: true },
     productId: { type: String, required: true }, //id
@@ -14,15 +14,23 @@ const ProductIds = new Schema({
     value: { type: Number, required: true }
 })
 
+const SupplierSchema = new Schema({
+    nameSupplier: { type: String, required: true },
+    supplierId: { type: String, required: true }, //id
+    email: { type: String, required: true },
+    numberPhone: { type: String, required: true },
+})
+
 const HistorySchema = new Schema({
     createdBy: { type: String, required: true }, //id
+    createdName: { type: String, required: true },
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 })
 
 const InvoiceInputSchema = new Schema(
     {
-        productIds: [ProductIds],
+        productIds: [ProductInputSchema],
         inputDate: { type: Date, required: true },
         statusPayment: { type: String, enum: ['pending', 'processing', 'completed'], default: 'pending' },
         statusInput: { type: String, enum: ['not imported', 'imported'], default: 'not imported' },
@@ -37,7 +45,7 @@ const InvoiceInputSchema = new Schema(
                 'draft'            // Chiến dịch đang ở dạng nháp
             ], default: 'pending'
         },
-        supplierId: { type: String, required: true },
+        supplierId: [SupplierSchema],
         valueInvoice: { type: Number, required: true },
         creator: [HistorySchema],
         active: { type: Boolean, default: true },

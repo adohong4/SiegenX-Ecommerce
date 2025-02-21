@@ -2,8 +2,7 @@
 
 const productModel = require('../models/product.model');
 const invoiceInputModel = require('../models/invoiceInput.model');
-const fs = require('fs')
-const path = require('path');
+const supplierModel = require('../models/supplier.model')
 const { BadRequestError } = require('../core/error.response');
 
 
@@ -11,6 +10,7 @@ class InvoiceInputService {
     static createInvoiceInput = async (req, res) => {
         try {
             const staffId = req.user;
+            const staffName = req.staffName;
             const { statusPayment, statusInput, status, supplierId, productIds } = req.body;
 
             // get info product from productIds
@@ -31,6 +31,15 @@ class InvoiceInputService {
                 value: productIds[index].count * productIds[index].priceInput
             }));
 
+            //create Supplier
+            const supplier = await supplierModel.findById(supplierId.supplierId); // Thêm await
+            const newSupplier = {
+                nameSupplier: supplier.supplierName,
+                supplierId: supplier._id,
+                email: supplier.email,
+                numberPhone: supplier.numberPhone,
+            };
+
             // Tính tổng giá trị hóa đơn
             const valueInvoice = newProductIds.reduce((total, product) => {
                 return total + product.value + (product.tax || 0); // Cộng thuế nếu có
@@ -41,16 +50,21 @@ class InvoiceInputService {
                 statusPayment,
                 statusInput,
                 status,
-                supplierId,
+                supplierId: newSupplier,
                 inputDate: new Date(),
                 valueInvoice: valueInvoice,
                 creator: [{
                     createdBy: staffId,
+                    createdName: staffName,
                     description: "Tạo mới hóa đơn nhập"
                 }]
             });
 
             const invoiceInput = await newInvoice.save();
+
+            //Đẩy id invoice vô orderData của supplierModel
+            await supplierModel.findByIdAndUpdate(supplier._id, { $push: { orderData: invoiceInput._id } });
+
             return invoiceInput;
         } catch (error) {
             throw error;

@@ -7,7 +7,8 @@ const slugify = require('slugify')
 const DOCUMENT_NAME = 'Products';
 
 const HistorySchema = new Schema({
-    createdBy: { type: String, required: true }, //id
+    createdBy: { type: String, required: true },//id
+    createdName: { type: String, required: true },
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 })

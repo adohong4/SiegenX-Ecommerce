@@ -9,6 +9,7 @@ class ProductService {
     static createProduct = async (req, res, next) => {
         try {
             const staffId = req.user;
+            const staffName = req.staffName;
             const { title, nameProduct, price, recap, description, category, quantity,
                 mainBoard, chip, cpu, gpu, ram, memory, version, ports, displaySize, pixelDensity, display, refreshRate
             } = req.body
@@ -28,6 +29,7 @@ class ProductService {
                 displaySize, pixelDensity, display, refreshRate,
                 creator: {
                     createdBy: staffId,
+                    createdName: staffName,
                     description: "Tạo mới sản phẩm"
                 }
             });
@@ -79,6 +81,7 @@ class ProductService {
     static updateProduct = async (req, res, next) => {
         try {
             const staffId = req.user;
+            const staffName = req.staffName;
             const productId = req.params.id;
             const { title, nameProduct, price, recap, description, category, quantity,
                 mainBoard, chip, cpu, gpu, ram, memory, version, ports, displaySize, pixelDensity, display, refreshRate
@@ -98,6 +101,7 @@ class ProductService {
 
             updatedProduct.creator.push({
                 createdBy: staffId,
+                createdName: staffName,
                 description: "Cập nhật sản phẩm"
             });
             await updatedProduct.save();
@@ -155,7 +159,7 @@ class ProductService {
         }
     }
 
-    static softRestoreProduct = async (staffId, id) => {
+    static softRestoreProduct = async (staffId, staffName, id) => {
         const product = await productModel.findById(id)
         const newActiveStatus = !product.active;
         const actionDescription = newActiveStatus ? "Hồi phục sản phẩm" : "Xóa sản phẩm";
@@ -163,6 +167,7 @@ class ProductService {
         product.active = newActiveStatus;
         product.creator.push({
             createdBy: staffId,
+            createdName: staffName,
             description: actionDescription
         })
         await product.save();

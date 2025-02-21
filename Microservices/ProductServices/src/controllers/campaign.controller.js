@@ -9,13 +9,14 @@ class CampaignController {
     createCampaign = async (req, res, next) => {
         try {
             const userId = req.user
+            const staffName = req.staffName;
             const {
                 name, description, value, code,
                 startDate, endDate, status,
                 maxValue, appliesTo, productIds, type
             } = req.body
             const result = await CampaignService.createCampaign(
-                userId,
+                userId, staffName,
                 name, description, value, code, startDate, endDate,
                 status, maxValue, appliesTo, productIds, type
             )
@@ -47,10 +48,11 @@ class CampaignController {
 
     updateCampaignById = async (req, res, next) => {
         const userId = req.user;
+        const staffName = req.staffName;
         const { id } = req.params;
         const { name, description, value, code, startDate, endDate, status, maxValue, appliesTo, productIds, type } = req.body
         const result = await CampaignService.updateCampaignById(
-            userId, id, name, description, value, code,
+            userId, staffName, id, name, description, value, code,
             startDate, endDate, status, maxValue, appliesTo, productIds, type
         );
         new CREATED({
@@ -61,8 +63,9 @@ class CampaignController {
 
     activeCampaign = async (req, res, next) => {
         const userId = req.user;
+        const staffName = req.staffName;
         const { id } = req.params;
-        const result = await CampaignService.activeCampaign(userId, id)
+        const result = await CampaignService.activeCampaign(userId, staffName, id)
         new CREATED({
             message: 'chuyển đổi thành công',
             metadata: result.metadata

@@ -88,8 +88,9 @@ class ProductController {
 
     softRestoreProduct = async (req, res, next) => {
         const staffId = req.user;
+        const staffName = req.req.staffName;
         const { id } = req.params;
-        const result = await ProductService.softRestoreProduct(staffId, id);
+        const result = await ProductService.softRestoreProduct(staffId, staffName, id);
         new CREATED({
             message: 'Xóa thành công',
             metadata: result.product

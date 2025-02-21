@@ -6,6 +6,7 @@ const DOCUMENT_NAME = 'Suppliers'
 
 const HistorySchema = new Schema({
     createdBy: { type: String, required: true }, //id
+    createdName: { type: String, required: true },
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 })
@@ -13,8 +14,8 @@ const HistorySchema = new Schema({
 const SupplierSchema = new Schema({
     supplierName: { type: String, required: true },
     email: { type: String, required: true },
-    numberPhone: { type: Number, required: true },
-    status: { type: String, required: true },
+    numberPhone: { type: String, required: true },
+    // status: { type: String, required: true },
     taxCode: { type: String, required: true },
     description: { type: String },
     lane: { type: String }, //đường

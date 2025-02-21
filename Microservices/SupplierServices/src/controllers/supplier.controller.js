@@ -7,11 +7,12 @@ class SupplierController {
 
     createSupplier = async (req, res, next) => {
         try {
-            const userId = req.user;
+            const staffId = req.user;
+            const staffName = req.staffName;
             const { supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers } = req.body;
 
             const result = await SupplierService.createSupplier(
-                userId,
+                staffId, staffName,
                 supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers
             );
 
@@ -51,12 +52,13 @@ class SupplierController {
 
     updateSupplier = async (req, res, next) => {
         try {
-            const userId = req.user;
+            const staffId = req.user;
+            const staffName = req.staffName;
             const { id } = req.params;
             const { supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers } = req.body;
 
             const result = await SupplierService.updateSupplier(
-                userId, id,
+                staffId, staffName, id,
                 supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers
             );
 
@@ -71,9 +73,10 @@ class SupplierController {
 
     deleteSupplier = async (req, res, next) => {
         try {
-            const userId = req.user;
+            const staffId = req.user;
+            const staffName = req.staffName;
             const { id } = req.params;
-            const result = await SupplierService.deleteSupplier(userId, id);
+            const result = await SupplierService.deleteSupplier(staffId, staffName, id);
             new OK({
                 message: "Supplier deleted successfully",
                 metadata: result.metadata

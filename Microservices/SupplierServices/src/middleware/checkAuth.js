@@ -32,6 +32,7 @@ const checkTokenCookie = asyncHandler(async (req, res, next) => {
         }
 
         req.user = new Types.ObjectId(decoded.userId);
+        req.staffName = decoded.StaffName;
 
         next();
     } catch (error) {

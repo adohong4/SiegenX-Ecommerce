@@ -8,7 +8,7 @@ const connectDB = async () => {
         await mongoose.connect(process.env.MONGODB_URI, {
             // useNewUrlParser: true,
             // useUnifiedTopology: true,
-            dbName: 'Supplier'
+            dbName: 'Product'
         });
         console.log('MongoDB connected');
     } catch (error) {

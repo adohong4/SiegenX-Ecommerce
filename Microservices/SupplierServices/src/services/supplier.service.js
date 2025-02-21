@@ -2,25 +2,36 @@
 
 const supplierModel = require('../models/supplier.model');
 const { BadRequestError, AuthFailureError, ConflictRequestError, NotFoundError, ForbiddenError } = require('../core/error.response');
+const validator = require('validator')
 
 class SupplierService {
 
-    static createSupplier = async (userId, supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers) => {
+    static createSupplier = async (staffId, staffName, supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers) => {
         try {
+            if (!validator.isEmail(email))
+                throw new BadRequestError('Không đúng định dạng email');
+
+            const existingSupplier = await supplierModel.findOne({
+                $or: [{ email }, { taxCode }]
+            });
+
+            if (existingSupplier) {
+                if (existingSupplier.email === email) {
+                    throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác');
+                }
+                if (existingSupplier.taxCode === taxCode) {
+                    throw new BadRequestError('Mã số thuế đã bị trùng');
+                }
+            }
+
             const supplier = new supplierModel({
-                supplierName,
-                email,
-                numberPhone,
-                status,
-                taxCode,
-                description,
-                lane,
-                area,
-                city,
-                addressOthers,
+                supplierName, email, numberPhone, status, taxCode, description,
+                lane, area, city, addressOthers,
+
                 creator: {
-                    createdBy: userId,
-                    description: "Created new supplier"
+                    createdBy: staffId,
+                    createdName: staffName,
+                    description: "Tạo mới nhà cung cấp"
                 }
             })
             const supplierCreated = await supplier.save();
@@ -53,11 +64,23 @@ class SupplierService {
     }
 
     static updateSupplier = async (
-        userId, id, supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers
+        staffId, staffName, id, supplierName, email, numberPhone, status, taxCode, description, lane, area, city, addressOthers
     ) => {
         try {
-            if (!id) {
-                throw new BadRequestError("Supplier ID is required");
+            if (!validator.isEmail(email))
+                throw new BadRequestError('Không đúng định dạng email');
+
+            const existingSupplier = await supplierModel.findOne({
+                $or: [{ email }, { taxCode }]
+            });
+
+            if (existingSupplier) {
+                if (existingSupplier.email === email) {
+                    throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác');
+                }
+                if (existingSupplier.taxCode === taxCode) {
+                    throw new BadRequestError('Mã số thuế đã bị trùng');
+                }
             }
 
             const updatedSupplier = await supplierModel.findByIdAndUpdate(id, {
@@ -65,10 +88,10 @@ class SupplierService {
             }, { new: true });
 
             updatedSupplier.creator.push({
-                createdBy: userId,
-                description: "Updated supplier"
+                createdBy: staffId,
+                createdName: staffName,
+                description: "Cập nhật nhà cung cấp"
             });
-
             await updatedSupplier.save();
 
             return {
@@ -79,7 +102,7 @@ class SupplierService {
         }
     }
 
-    static deleteSupplier = async (userId, id) => {
+    static deleteSupplier = async (staffId, staffName, id) => {
         try {
             const supplier = await supplierModel.findById(id);
             if (!supplier) {
@@ -87,11 +110,12 @@ class SupplierService {
             }
 
             const newActiveStatus = !supplier.active;
-            const actionDescription = newActiveStatus ? "Restored supplier" : "Deleted supplier";
+            const actionDescription = newActiveStatus ? "Hồi phục nhà cung cấp" : "Xóa nhà cung cấp";
 
             supplier.active = newActiveStatus;
             supplier.creator.push({
-                createdBy: userId,
+                createdBy: staffId,
+                createdName: staffName,
                 description: actionDescription
             });
 

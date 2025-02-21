@@ -202,8 +202,9 @@ class StaffService {
 
             const { _id: staffId } = staff;
             const role = staff.Role;
-            console.log('role: ', role);
-            const token = createToken({ staffId, Email, role }, req.res);
+            const staffName = staff.StaffName
+            // console.log('role: ', role);
+            const token = createToken({ staffId, Email, role, staffName }, req.res);
 
             return {
                 staff: {

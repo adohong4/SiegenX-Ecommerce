@@ -45,7 +45,13 @@ class FeaturedProducts extends StatelessWidget {
         ),
 
         // Gọi Widget danh sách sản phẩm
-        SingleChildScrollView(child: ProductGrid()),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              ProductGrid(),
+            ],
+          ),
+        )
       ],
     );
   }

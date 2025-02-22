@@ -7,7 +7,7 @@ List<Product> sampleProducts = [
     price: 27000000,
     discountPercentage: 70,
     description: "Giày thể thao chính hãng Nike.",
-    isFavorite: true,
+    isFavorite: false,
     imageUrl: "assets/products/product1.png",
   ),
   Product(
@@ -21,7 +21,7 @@ List<Product> sampleProducts = [
   Product(
     name:
         "Màn Hình Tương Tác Thông Minh SIEGenX 86 inch 4K (tích hợp Camera + Micro) SGX – T86",
-    price: 35000000,
+    price: 14500000,
     discountPercentage: 10,
     description: "Laptop mạnh mẽ cho công việc và giải trí.",
     isFavorite: true,
@@ -58,7 +58,7 @@ List<Product> sampleProducts = [
     price: 35000000,
     discountPercentage: 10,
     description: "Laptop mạnh mẽ cho công việc và giải trí.",
-    isFavorite: false,
+    isFavorite: true,
     imageUrl: "assets/products/product7.png",
   ),
   Product(
@@ -66,7 +66,7 @@ List<Product> sampleProducts = [
     price: 35000000,
     discountPercentage: 10,
     description: "Laptop mạnh mẽ cho công việc và giải trí.",
-    isFavorite: false,
+    isFavorite: true,
     imageUrl: "assets/products/product8.png",
   ),
 ];

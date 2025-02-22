@@ -13,166 +13,160 @@ class FavoriteProductGrid extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          int crossAxisCount = (constraints.maxWidth ~/ 150).clamp(2, 4);
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: favoriteProducts.length,
+        itemBuilder: (context, index) {
+          final product = favoriteProducts[index];
 
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.65,
-            ),
-            itemCount: favoriteProducts.length,
-            itemBuilder: (context, index) {
-              final product = favoriteProducts[index];
+          return GestureDetector(
+            onLongPress: () {
+              showProductDialog(context, product);
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                  )
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Hình ảnh bên trái
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      product.imageUrl,
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(width: 5),
 
-              return GestureDetector(
-                onLongPress: () {
-                  showProductDialog(context, product);
-                },
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xFFF2F3F4),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  product.imageUrl,
-                                  width: double.infinity,
-                                  height: 160,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          if (product.discountPercentage > 0)
-                            Positioned(
-                              top: 8,
-                              left: 0,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEC7063),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(4),
-                                    bottomRight: Radius.circular(4),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Giảm ${product.discountPercentage}%',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF2F3F4),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(Icons.add_shopping_cart_rounded,
-                                    color: Colors.black, size: 18),
-                                onPressed: () {
-                                  // TODO: Thêm chức năng thêm vào giỏ hàng
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
+                  // Nội dung bên phải
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Hàng 1: Tên sản phẩm + Icon trái tim
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              formatCurrency(product.discountedPrice.toInt()),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color(0xFF00B98E),
+                            Expanded(
+                              child: Text(
+                                product.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            const SizedBox(
+                              width: 3,
+                            ),
                             Icon(
-                              product.isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: product.isFavorite
-                                  ? Color(0xFF00B98E)
-                                  : Colors.grey[400],
+                              Icons.favorite,
+                              color: Color(0xFFEC7063),
                               size: 20,
                             ),
                           ],
                         ),
-                      ),
-                      if (product.discountPercentage > 0)
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                formatCurrency(product.price as int),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                '-${product.discountPercentage}%',
-                                style: TextStyle(
-                                  color: Color(0xFFEC7063),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
+                        SizedBox(height: 4),
+
+                        // Hàng 2: Giá tiền sau khi giảm
+                        Text(
+                          formatCurrency(product.discountedPrice.toInt()),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF00B98E),
+                            // fontWeight: FontWeight.bold,
                           ),
                         ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            product.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                        SizedBox(height: 4),
+
+                        // Hàng 3: Giá gốc + % giảm giá (trái) | Icon giỏ hàng + Button Mua ngay (phải)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Bên trái: Giá gốc và phần trăm giảm giá (nếu có)
+                            if (product.discountPercentage > 0)
+                              Row(
+                                children: [
+                                  Text(
+                                    formatCurrency(product.price as int),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '-${product.discountPercentage}%',
+                                    style: TextStyle(
+                                      color: Color(0xFFEC7063),
+                                      fontSize: 12,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                            // Bên phải: Icon giỏ hàng + Button "Mua ngay"
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.add_shopping_cart_rounded,
+                                      color: Colors.black, size: 20),
+                                  onPressed: () {
+                                    // TODO: Thêm chức năng giỏ hàng
+                                  },
+                                ),
+                                SizedBox(width: 5),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // TODO: Thêm chức năng mua ngay
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFFEC7063),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                  ),
+                                  child: Text(
+                                    'Mua ngay',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                ],
+              ),
+            ),
           );
         },
       ),

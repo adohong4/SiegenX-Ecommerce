@@ -56,18 +56,9 @@ flutter:
 
   assets:
       - assets/logo.png
-      - assets/user.png
-      - assets/lock.png
-      - assets/apple.png
-      - assets/facebook.png
-      - assets/google.png
-      - assets/banners/banner1.jpg
-      - assets/banners/banner2.jpg
-      - assets/banners/banner3.jpg
-      - assets/products/product1.png
-      - assets/products/product2.png
-      - assets/products/product3.png
-      - assets/products/product4.png
+      - assets/icons/
+      - assets/banners/
+      - assets/products/
   
 
   

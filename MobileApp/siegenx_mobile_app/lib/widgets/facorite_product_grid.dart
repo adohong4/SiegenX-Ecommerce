@@ -3,11 +3,14 @@ import 'package:siegenx_mobile_app/test/sample_products.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 
-class ProductGrid extends StatelessWidget {
-  const ProductGrid({Key? key}) : super(key: key);
+class FavoriteProductGrid extends StatelessWidget {
+  const FavoriteProductGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final favoriteProducts =
+        sampleProducts.where((product) => product.isFavorite).toList();
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: LayoutBuilder(
@@ -23,9 +26,9 @@ class ProductGrid extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 0.65,
             ),
-            itemCount: sampleProducts.length,
+            itemCount: favoriteProducts.length,
             itemBuilder: (context, index) {
-              final product = sampleProducts[index];
+              final product = favoriteProducts[index];
 
               return GestureDetector(
                 onLongPress: () {
@@ -35,10 +38,8 @@ class ProductGrid extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Ảnh sản phẩm với Overlay chứa giảm giá và giỏ hàng
                       Stack(
                         children: [
-                          // Hình ảnh sản phẩm
                           Container(
                             decoration: BoxDecoration(
                               color: Color(0xFFF2F3F4),
@@ -57,8 +58,6 @@ class ProductGrid extends StatelessWidget {
                               ),
                             ),
                           ),
-
-                          // Ô giảm giá (Chỉ hiển thị nếu có giảm giá)
                           if (product.discountPercentage > 0)
                             Positioned(
                               top: 8,
@@ -82,8 +81,6 @@ class ProductGrid extends StatelessWidget {
                                 ),
                               ),
                             ),
-
-                          // Icon giỏ hàng nằm trong ô vuông màu xám
                           Positioned(
                             top: 8,
                             right: 8,
@@ -106,10 +103,7 @@ class ProductGrid extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       SizedBox(height: 5),
-
-                      // Giá tiền và biểu tượng yêu thích
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
@@ -134,8 +128,6 @@ class ProductGrid extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      // Giá gốc + Giảm giá (Chỉ hiển thị nếu có giảm giá)
                       if (product.discountPercentage > 0)
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -160,8 +152,6 @@ class ProductGrid extends StatelessWidget {
                             ],
                           ),
                         ),
-
-                      // Tên sản phẩm
                       Flexible(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),

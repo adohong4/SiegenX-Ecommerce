@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/screens/all_products.dart';
 import 'package:siegenx_mobile_app/test/sample_products.dart';
 import 'package:siegenx_mobile_app/widgets/product_grid.dart';
 
@@ -21,24 +22,35 @@ class FeaturedProducts extends StatelessWidget {
                 "Sản phẩm Nổi Bật",
                 style: TextStyle(
                   fontSize: 16,
-                  // fontWeight: FontWeight.bold,
                 ),
               ),
-              // "Xem chi tiết" + Icon mũi tên
-              Row(
-                children: [
-                  Text(
-                    "Xem chi tiết",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF00B98E), // Màu xanh
+
+              // "Xem chi tiết" + Icon mũi tên (thêm GestureDetector để điều hướng)
+              GestureDetector(
+                onTap: () {
+                  // Điều hướng sang màn hình chi tiết sản phẩm
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AllProducts(),
                     ),
-                  ),
-                  SizedBox(width: 5),
-                  Icon(Icons.arrow_forward,
-                      size: 16, color: Color(0xFF00B98E)), // Mũi tên
-                ],
+                  );
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      "Xem chi tiết",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF00B98E), // Màu xanh
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(Icons.arrow_forward,
+                        size: 16, color: Color(0xFF00B98E)), // Mũi tên
+                  ],
+                ),
               ),
             ],
           ),

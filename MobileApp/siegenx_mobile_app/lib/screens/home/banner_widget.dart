@@ -14,6 +14,7 @@ class _BannerWidgetState extends State<BannerWidget> {
     "assets/banners/banner1.jpg",
     "assets/banners/banner2.jpg",
     "assets/banners/banner3.jpg",
+    "assets/banners/banner4.png",
   ];
 
   int _currentIndex = 0;

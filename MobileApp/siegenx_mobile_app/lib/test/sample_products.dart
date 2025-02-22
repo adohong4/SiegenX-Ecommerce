@@ -5,7 +5,7 @@ List<Product> sampleProducts = [
     name:
         "Màn Hình Tương Tác Thông Minh SIEGenX 98 inch 4K (tích hợp Camera + Micro) SGX – T98",
     price: 27000000,
-    discountPercentage: 15,
+    discountPercentage: 70,
     description: "Giày thể thao chính hãng Nike.",
     isFavorite: true,
     imageUrl: "assets/products/product1.png",

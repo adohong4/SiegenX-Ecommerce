@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/test/sample_products.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
-import 'package:siegenx_mobile_app/utils/dialog_utils.dart'; // Import hàm tiện ích
+import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 
 class ProductGrid extends StatelessWidget {
   const ProductGrid({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class ProductGrid extends StatelessWidget {
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.65,
             ),
             itemCount: sampleProducts.length,
             itemBuilder: (context, index) {
@@ -29,31 +29,84 @@ class ProductGrid extends StatelessWidget {
 
               return GestureDetector(
                 onLongPress: () {
-                  showProductDialog(context, product); // Gọi hàm từ utils
+                  showProductDialog(context, product);
                 },
                 child: IntrinsicHeight(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Hình ảnh sản phẩm
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF2F3F4),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              product.imageUrl,
-                              width: double.infinity,
-                              height: 150,
-                              fit: BoxFit.cover,
+                      // Ảnh sản phẩm với Overlay chứa giảm giá và giỏ hàng
+                      Stack(
+                        children: [
+                          // Hình ảnh sản phẩm
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF2F3F4),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  product.imageUrl,
+                                  width: double.infinity,
+                                  height: 160,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          // Ô giảm giá (Chỉ hiển thị nếu có giảm giá)
+                          if (product.discountPercentage > 0)
+                            Positioned(
+                              top: 8,
+                              left: 0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFEC7063),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(4),
+                                    bottomRight: Radius.circular(4),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Giảm ${product.discountPercentage}%',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          // Icon giỏ hàng nằm trong ô vuông màu xám
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF2F3F4),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.add_shopping_cart_rounded,
+                                    color: Colors.black, size: 18),
+                                onPressed: () {
+                                  // TODO: Thêm chức năng thêm vào giỏ hàng
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+
                       SizedBox(height: 5),
 
                       // Giá tiền và biểu tượng yêu thích
@@ -78,30 +131,31 @@ class ProductGrid extends StatelessWidget {
                         ),
                       ),
 
-                      // Giá gốc + Giảm giá
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              formatCurrency(product.price as int),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                                decoration: TextDecoration.lineThrough,
+                      // Giá gốc + Giảm giá (Chỉ hiển thị nếu có giảm giá)
+                      if (product.discountPercentage > 0)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                formatCurrency(product.price as int),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              '-${product.discountPercentage}%',
-                              style: TextStyle(
-                                color: Color(0xFFEC7063),
-                                fontSize: 12,
+                              SizedBox(width: 5),
+                              Text(
+                                '-${product.discountPercentage}%',
+                                style: TextStyle(
+                                  color: Color(0xFFEC7063),
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
 
                       // Tên sản phẩm
                       Flexible(

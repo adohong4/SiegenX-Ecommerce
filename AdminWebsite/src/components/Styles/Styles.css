@@ -223,3 +223,290 @@ swal2-html-container {
         display: none;
     }
 }
+
+
+
+/* CSS cho PopupUser */
+
+
+body.popup-open {
+    overflow: hidden; 
+    position: fixed; 
+    width: 100%; 
+}
+
+.user-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000; 
+    overflow: hidden;
+}
+
+
+
+.user-popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px; 
+    max-width: 90%; 
+    position: relative;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+.user-close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: red;
+    border-radius: 10px;
+}
+
+.user-close-popup:hover {
+    color: #ff4d4f;
+}
+
+
+.user-popup-content h3 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+
+.user-popup-input {
+    width: 100%;
+    padding: 10px 15px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.user-popup-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+
+.user-popup-btn-save {
+    background: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-popup-btn-save:hover {
+    background: #0056b3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+/* CSS cho popup Product */
+
+
+
+.popup-products-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    font-size: 14px;
+  }
+  
+
+  .technical-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .popup-products-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 900px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    max-height: 85vh;
+  }
+  
+/* .products-infor{
+    display: flex;
+    justify-content: space-around;
+} */
+  .popup-image {
+    width: 10%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+
+.form-products {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: repeat(2, auto); 
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+
+  h3 {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+  }
+  
+
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .close-button:hover {
+    color: red;
+  }
+  
+
+  .form-products-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  input,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
+  input:focus,
+  textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+  }
+  
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .save-button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .save-button:hover {
+    background-color: #357ab7;
+  }
+  
+
+  /* input[type="text"],
+  input[type="number"] {
+    margin-bottom: 10px;
+  } */
+  
+
+  .form-products-actions {
+    text-align: center;
+  }
+  
+
+.product-images {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .popup-image {
+    width: 100%;
+    height: auto;
+    max-width: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .image-upload-input {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    border-radius: 8px;
+  }
+  
+  .image-upload-input:hover {
+    opacity: 0.7;
+  }
+  

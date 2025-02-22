@@ -12,6 +12,8 @@ import {
   faBoxOpen,
   faHeadset,
   faChartBar,
+  faInbox,
+  faBarcode,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -85,12 +87,12 @@ const Sidebar = () => {
             </NavLink>
 
             <NavLink to="/import" className="sidebar-option">
-                <FontAwesomeIcon icon={faHeadset} />
+              <FontAwesomeIcon icon={faInbox} />
                 <p>Nhập Hàng</p>
             </NavLink>
           
             <NavLink to="/campain" className="sidebar-option">
-                <FontAwesomeIcon icon={faHeadset} />
+              <FontAwesomeIcon icon={faBarcode} />
                 <p>Chiến dịch</p>
             </NavLink>
         </div>

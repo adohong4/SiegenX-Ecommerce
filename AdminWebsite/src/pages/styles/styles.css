@@ -243,12 +243,11 @@ textarea {
     gap: 10px;
     text-align: center;
     padding: 12px 10px;
-    border: 1px solid #e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
     font-size: 13px;
     white-space: nowrap;
     border-radius: 8px;
     background-color: #fff;
-    margin-bottom: 10px;
     transition: all 0.3s ease-in-out;
 }
 .list-table-format .name-product{
@@ -257,10 +256,11 @@ textarea {
 }
 .list-table-format p{
     font-size: 14px !important;
+    margin-bottom: 0;
 }
 .list-table-format:hover {
-    scale:1.02;
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    /* scale:1.02;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); */
     cursor: pointer;
 }
 .list-table-format b:last-child {
@@ -331,12 +331,11 @@ textarea {
     background-color: #dc3545;
     border: none;
     color: #fff;
-    border-radius: 50px;
+    border-radius: 5px;
     height: 40px;
     font-weight: bold;
-    padding: 0 30px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: all 0.6s ease-in-out;
 }
 
 .btn-update1 {
@@ -347,12 +346,13 @@ textarea {
     height: 40px;
     padding: 0 30px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: all 0.3s ease-in-out;
+
 }
 
 .cursor1:hover {
-    transform: scale(1.05);
-    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
+    border-radius: 50px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     background-color: #c0392b;
     color: white;
 }
@@ -476,6 +476,7 @@ textarea {
     background-color: #00B98E;
     border:  3px solid #00B98E;
     transition: all 0.3s ease-in-out;
+    padding: 5px 20px;
 }
 .search-CSKH .btn-search:hover{
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
@@ -506,8 +507,8 @@ textarea {
 
 .sort-container select,
 .selected-container select {
-    width: 150px;
-    padding: 10px;
+    width: 207px;
+    padding:5px 10px ;
     font-size: 16px;
     color: #333;
     border: 1px solid #ccc;
@@ -586,13 +587,46 @@ textarea {
     }
 }
 
-
-
+/* CSS cho trang Hóa đơn */
+.order-list-table{
+    width: 100%;
+}
+.order-list-container .search{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.order-list-table .btn-delete{
+    background-color: transparent;
+    color: #dc3545;
+}
+.order-list-table .btn-delete:hover{
+    background-color: transparent;
+}
+.order-list-table .btn-info{
+    color: #000;
+    background-color: transparent;
+}
 /* CSS cho Contact */
+.section-dashboard-contact{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+.section-dashboard-contact .dashboard-body{
+    background-color: #cccccc;
+    width: 20%;
+    padding: 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.6s ease-in-out;
+}
+.section-dashboard-contact .dashboard-body:hover{
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
 .table-row.viewed {
     opacity: 0.2; /* Làm mờ hàng */
   }
-  
+
   .btn-eye {
     background: none;
     border: none;
@@ -618,7 +652,6 @@ textarea {
     background-color: #333;
     font-weight: bold;
     padding: 10px;
-    border-radius: 8px;
     text-align: center !important; 
 }
 
@@ -629,18 +662,14 @@ textarea {
     align-items: center;
     padding: 10px;
     border: 1px solid #e2e2e2;
-    border-radius: 8px;
     background-color: #fff;
     text-align: center !important; 
     transition: all 0.3s ease-in-out;
-    margin-top: 10px;
 }
 
 
 .contact-list-table .table-row:hover {
     background-color: #f9f9f9;
-    transform: translateY(-5px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search {
@@ -651,26 +680,25 @@ textarea {
 .search-CSKH {
     display: flex;
     justify-content: end;
-    margin-bottom: 10px;
-    border: 1px solid #00A07B;
     border-radius: 50px;
     padding: 5px;
-    width: 300px;
+    width: 400px;
 }
 
 .search-input {
     flex: 1;
-    padding: 10px;
+    padding: 5px 20px;
     border: none;
     border-radius: 50px;
     font-size: 1rem;
     margin-right: 10px;
     margin: 0;
     outline: none; 
+    border: 1px solid #ccc;
 }
 .search-input:focus {
-    border-color: #ccc; 
-    background-color: transparent;
+    /* border-color: #ccc;  */
+    /* background-color: transparent; */
     box-shadow: none; 
 }
 .btn-search {
@@ -770,7 +798,7 @@ textarea {
 
 .popup-overlay {
     position: fixed;
-    top: -80px;
+    top: 0px;
     left: 0;
     width: 100%;
     height: 100%;
@@ -916,6 +944,9 @@ textarea {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+.user-list-container .search{
+    margin-bottom: 20px;
+}
 .user-list-container .user-list-title p{
     font-size: 2rem;
 }
@@ -985,7 +1016,6 @@ textarea {
 .user-list-table {
     display: grid;
     grid-template-rows: auto;
-    gap: 10px;
 }
 
 
@@ -995,7 +1025,6 @@ textarea {
     background-color: #f5f5f5;
     font-weight: bold;
     padding: 10px;
-    border-radius: 8px;
     text-align: center !important; 
 }
 
@@ -1006,18 +1035,17 @@ textarea {
     align-items: center;
     padding: 10px;
     border: 1px solid #e2e2e2;
-    border-radius: 8px;
     background-color: #fff;
     text-align: center !important; 
     transition: all 0.3s ease-in-out;
 }
 
 
-.user-list-table .table-row:hover {
+/* .user-list-table .table-row:hover {
     background-color: #f9f9f9;
     transform: translateY(-5px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+} */
 
 
 .actions {
@@ -1191,7 +1219,7 @@ textarea {
     cursor: pointer;
 }
 
-.btn-delete {
+.user-list-table .btn-delete {
     background: #fff;
     color: #000000c0;
     border: 2px solid #000000c0;

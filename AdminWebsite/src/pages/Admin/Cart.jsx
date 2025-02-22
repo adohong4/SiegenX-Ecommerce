@@ -149,9 +149,6 @@ const Cart = () => {
 
     return (
         <div className='order-list-container'>
-            {/* <div className='order-list-title'>
-                <p>Hóa đơn</p>
-            </div> */}
 
             <div className='search'>
                 <div className='search-CSKH'>
@@ -159,11 +156,11 @@ const Cart = () => {
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search..."
+                        placeholder="Tìm kiếm ..."
                         className='search-input'
                     />
                     <button onClick={handleSearch} className='btn-search'>
-                        <i className="fas fa-search"></i>
+                        Tìm kiếm
                     </button>
                 </div>
             </div>
@@ -171,22 +168,22 @@ const Cart = () => {
             <table className="order-list-table">
                 <thead>
                     <tr className="table-header">
-                        <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer' }}>
+                        <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer', textAlign:'center' }}>
                             Mã hóa đơn {sortOrder._id === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th onClick={() => sortBy('date')} style={{ cursor: 'pointer' }}>
+                        <th onClick={() => sortBy('date')} style={{ cursor: 'pointer', textAlign:'center' }}>
                             Thời gian {sortOrder.date === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer' }}>
+                        <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer', textAlign:'center' }}>
                             Khách hàng {sortOrder['address.fullname'] === 'asc' ? '↑' : '↓'}
                         </th>
                         <th>Hình thức thanh toán</th>
-                        <th onClick={() => sortBy('amount')} style={{ cursor: 'pointer' }}>
+                        <th onClick={() => sortBy('amount')} style={{ cursor: 'pointer', textAlign:'center' }}>
                             Giá trị hóa đơn {sortOrder.amount === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th>Địa chỉ</th>
-                        <th>Trạng thái</th>
-                        <th>Chức năng</th>
+                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Địa chỉ</th>
+                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Trạng thái</th>
+                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -214,7 +211,7 @@ const Cart = () => {
                                 <option value="Đang giao hàng">Đang giao hàng</option>
                                 <option value="Giao hàng thành công">Giao hàng thành công</option>
                             </select></td>
-                            <td className='btn-order'>
+                            <td className="btn-order" style={{ padding: "0px", display: "flex", justifyContent: "space-around" , alignItems: "center",verticalAlign: "middle", padding:'15px 0px'}}>
                                 <button onClick={(e) => { e.stopPropagation(); removeOrder(item._id); }} className='btn-delete'>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>

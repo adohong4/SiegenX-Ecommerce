@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
-import { fakeContacts } from "../../data/Enviroment";   
+import { fakeContacts, fakeCustomerData } from "../../data/Enviroment";
 
 const Contact = () => {
     // const { url } = useContext(StoreContext);
@@ -20,7 +20,8 @@ const Contact = () => {
     const [sortOrder, setSortOrder] = useState({ name: 'asc', email: 'asc' });
     const [selectedRow, setSelectedRow] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [sort, setSort] = useState('Sort By');
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
     };
@@ -44,16 +45,7 @@ const Contact = () => {
     //     }
     // };
 
-    // Fake data cho hàm handleViewToggle
 
-    const handleViewToggle = (itemId) => {
-        setList(prevList =>
-            prevList.map(item =>
-                item._id === itemId ? { ...item, viewed: !item.viewed } : item
-            )
-        );
-    };
-    
 
     // const fetchListcontact = async (page = 1) => {
     //     try {
@@ -76,6 +68,15 @@ const Contact = () => {
     //     }
     // };
 
+    // Fake data cho hàm handleViewToggle
+
+    const handleViewToggle = (itemId) => {
+        setList(prevList =>
+            prevList.map(item =>
+                item._id === itemId ? { ...item, viewed: !item.viewed } : item
+            )
+        );
+    };
 
 
     // Hàm fetchList Fake data
@@ -97,7 +98,20 @@ const Contact = () => {
         }
     }, [currentPage, searchTerm]);
 
+    // Hàm HandleSearch cho fake data
+    const handleSearch = () => {
+        if (searchTerm.trim() === '') {
+            setList(fakeContacts);
+        } else {
+            const filteredList = fakeContacts.filter(contact =>
+                contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setList(filteredList);
+        }
+    };
 
+    // kết thúc fake data
 
     // const handleSearch = async () => {
     //     if (searchTerm.trim() === '') {
@@ -134,19 +148,8 @@ const Contact = () => {
     // };
 
 
-    // Hàm HandleSearch cho fake data
-    const handleSearch = () => {
-        if (searchTerm.trim() === '') {
-            setList(fakeContacts);
-        } else {
-            const filteredList = fakeContacts.filter(contact =>
-                contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                contact.email.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setList(filteredList);
-        }
-    };
-    
+
+
 
     const removeContact = async (id) => {
         try {
@@ -186,14 +189,70 @@ const Contact = () => {
         setSelectedRow(null);
         document.body.classList.remove('popup-open');
     };
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(e.target.value);
+    };
 
+    const handleSortChange = (e) => {
+        setSort(e.target.value);
+    };
     return (
         <div className='contact-list-container'>
-            <div className='contact-tittle'>
-                <p>Danh sách Khách hàng liên hệ</p>
-            </div>
+            <section className="section-dashboard-contact">
+                {fakeCustomerData.map((item, index) => (
+                    <div key={index} className=" dashboard-body">
+                        <p className="text-lg font-semibold">{item.title}</p>
+                        <p className="text-2xl font-bold">{item.value.toString().padStart(2, "0")}</p>
+                    </div>
+                ))}
+            </section>
+            <div className='top-list-tiltle'>
 
-            <br />
+                <div className='col-lg-4 tittle-right'>
+                </div>
+                <div className='col-lg-8 list-left'>
+                    <div className='search-right'>
+                        <div className="sort-container">
+                            <select id="sort" onChange={handleSortChange} value={sort}>
+                                <option value="Sort By">Sắp xếp theo </option>
+                                <option value="Asc">Tăng dần</option>
+                                <option value="Desc">Giảm dần</option>
+                            </select>
+                        </div>
+
+                        <div className="selected-container">
+                            <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
+                                <option value="All">Danh mục sản phẩm</option>
+                                <option value="Màn hình LED">Màn hình LED</option>
+                                <option value="MH tương tác">MH tương tác</option>
+                                <option value="MH quảng cáo LCD">MH quảng cáo LCD</option>
+                                <option value="Quảng cáo 3D (OOH)">Quảng cáo 3D (OOH)</option>
+                                <option value="KTV 5D">KTV 5D</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className='search-left'>
+                        <div className='search'>
+                            <div className='search-CSKH'>
+                                <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder="Search..."
+                                    className='search-input'
+                                />
+                                <button className='btn-search'>
+                                    Tìm kiếm
+                                </button>
+                                {/* <button onClick={handleSearch} className='btn-search'>
+                    <i className="fas fa-search"></i>
+                </button> */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/* <div className='search'>
                 <div className='search-CSKH'>
                     <input

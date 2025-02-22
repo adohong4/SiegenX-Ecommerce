@@ -5,10 +5,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 // import { StoreContext } from '../../../context/StoreContext';
-// import ProductPopup from '../../components/Popup/ProductsPopup';
+import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { fakeProducts, stats } from "../../data/Enviroment"; 
+import { fakeProducts, stats } from "../../data/Enviroment";
 
 const ListProduct = () => {
     // const { url, url2, product_list } = useContext(StoreContext)
@@ -57,7 +57,7 @@ const ListProduct = () => {
         setList((prevList) => prevList.filter(product => product._id !== productId));
         toast.success("Sản phẩm đã được xóa!");
     };
-    
+
 
     // const handleSearch = async () => {
     //     if (searchTerm.trim() === '') {
@@ -167,24 +167,24 @@ const ListProduct = () => {
     return (
         <div className='listproduct add flex-col'>
             <div className='dashboard-product'>
-                    <div className="das-body">
-                        {stats.map((stat, index) => (
-                            <div key={index} className="box">
+                <div className="das-body">
+                    {stats.map((stat, index) => (
+                        <div key={index} className="box">
                             <p className="label">{stat.label}</p>
                             <p className="value">{stat.value.toString().padStart(2, "0")} + </p>
-                            </div>
-                        ))}
                         </div>
+                    ))}
                 </div>
-                <div className='top-list-tiltle'>
-                
-                <div className='col-lg-6 tittle-right'>
+            </div>
+            <div className='top-list-tiltle'>
+
+                <div className='col-lg-4 tittle-right'>
                 </div>
-                <div className='col-lg-6 list-left'>
+                <div className='col-lg-8 list-left'>
                     <div className='search-right'>
                         <div className="sort-container">
                             <select id="sort" onChange={handleSortChange} value={sort}>
-                                <option value="Sort By">Sắp xếp</option>
+                                <option value="Sort By">Sắp xếp theo </option>
                                 <option value="Asc">Tăng dần</option>
                                 <option value="Desc">Giảm dần</option>
                             </select>
@@ -192,7 +192,7 @@ const ListProduct = () => {
 
                         <div className="selected-container">
                             <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
-                                <option value="All">Lọc</option>
+                                <option value="All">Danh mục sản phẩm</option>
                                 <option value="Màn hình LED">Màn hình LED</option>
                                 <option value="MH tương tác">MH tương tác</option>
                                 <option value="MH quảng cáo LCD">MH quảng cáo LCD</option>
@@ -212,7 +212,7 @@ const ListProduct = () => {
                                     placeholder="Search..."
                                     className='search-input'
                                 />
-                                <button  className='btn-search'>
+                                <button className='btn-search'>
                                     Tìm kiếm
                                 </button>
                                 {/* <button onClick={handleSearch} className='btn-search'>

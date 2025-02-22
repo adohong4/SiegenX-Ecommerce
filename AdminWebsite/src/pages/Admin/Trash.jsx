@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate';
 // import { StoreContext } from '../../../context/StoreContext';
 // import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash,faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment"; 
 
 const ListProduct = () => {
@@ -178,9 +178,9 @@ const ListProduct = () => {
                 </div>
                 <div className='top-list-tiltle'>
                 
-                <div className='col-lg-6 tittle-right'>
+                <div className='col-lg-4 tittle-right'>
                 </div>
-                <div className='col-lg-6 list-left'>
+                <div className='col-lg-8 list-left'>
                     <div className='search-right'>
                         <div className="sort-container">
                             <select id="sort" onChange={handleSortChange} value={sort}>
@@ -230,10 +230,10 @@ const ListProduct = () => {
                     <b>Mã sản phẩm</b>
                     <b>Tên Sản Phẩm</b>
                     <b>Danh Mục</b>
-                    <b>Trạng thái</b>
+                    <b>Chi tiết</b>
                     <b>Giá</b>
                     <b>Số Lượng</b>
-                    <b>Tùy Chỉnh</b>
+                    <b>Khôi phục</b>
                 </div>
 
                 {sortedList.map((item, index) => (
@@ -248,7 +248,7 @@ const ListProduct = () => {
                         <p className=''>{item.quantity}</p>
                         <div className='button-product'>
                             <button onClick={() => removeProduct(item._id)} className='cursor1' >
-                                <FontAwesomeIcon icon={faTrash} />
+                                <FontAwesomeIcon icon={faRotateRight} />
                             </button>
                         </div>
                     </div>

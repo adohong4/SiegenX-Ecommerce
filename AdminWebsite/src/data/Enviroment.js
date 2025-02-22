@@ -374,3 +374,12 @@ export  const stats = [
     { label: "Sản phẩm còn hàng", value: 17 },
     { label: "Sản phẩm bị ẩn", value: 0 },
   ];
+
+
+export const fakeCustomerData = [
+    { title: "Tổng số khách hàng", value: 25 },
+    { title: "Khách hàng đã liên hệ", value: 3 },
+    { title: "Khách hàng chưa liên hệ", value: 17 },
+    { title: "Số khách hàng trong ngày", value: 12 }
+  ];
+  

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/home/banner_widget.dart';
+import 'package:siegenx_mobile_app/screens/home/cart_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/featured_products.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.shopping_cart), // Icon giỏ hàng
             onPressed: () {
-              // Thực hiện hành động khi bấm vào giỏ hàng
-              print("Giỏ hàng được nhấn");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CartScreen()));
             },
           ),
         ],

@@ -32,38 +32,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Thanh tìm kiếm
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Tìm kiếm...",
-                hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
-                prefixIcon: Icon(Icons.search,
-                    color: Color(0xFF00B98E)), // Đổi màu icon
-                filled: true,
-                fillColor: Color(0xFFF0F0F0), // Màu nền trắng
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12.0), // Căn giữa nội dung
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0), // Bo góc tròn
-                  borderSide: BorderSide.none, // Bỏ viền
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Thanh tìm kiếm
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Tìm kiếm...",
+                  hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
+                  prefixIcon: Icon(Icons.search,
+                      color: Color(0xFF00B98E)), // Đổi màu icon
+                  filled: true,
+                  fillColor: Color(0xFFF0F0F0), // Màu nền trắng
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 12.0), // Căn giữa nội dung
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0), // Bo góc tròn
+                    borderSide: BorderSide.none, // Bỏ viền
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Hiển thị banner
-          BannerWidget(),
+            // Hiển thị banner
+            BannerWidget(),
 
-          SizedBox(
-            height: 5,
-          ),
-          // Nội dung chính
-          FeaturedProducts(),
-        ],
+            SizedBox(
+              height: 5,
+            ), // Nội dung chính
+            FeaturedProducts(),
+          ],
+        ),
       ),
     );
   }

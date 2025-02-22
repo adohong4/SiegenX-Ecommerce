@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/test/sample_products.dart';
+import 'package:siegenx_mobile_app/widgets/product_grid.dart';
 
 class FeaturedProducts extends StatelessWidget {
   const FeaturedProducts({Key? key}) : super(key: key);
@@ -43,62 +44,8 @@ class FeaturedProducts extends StatelessWidget {
           ),
         ),
 
-        // Hiển thị danh sách sản phẩm (2 cột)
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0), // Căn giữa danh sách
-          child: GridView.count(
-            crossAxisCount: 2, // 2 cột
-            crossAxisSpacing: 16, // Khoảng cách giữa các cột
-            mainAxisSpacing: 16, // Khoảng cách giữa các hàng
-            shrinkWrap:
-                true, // Để tránh lỗi "Vertical viewport was given unbounded height"
-            physics:
-                NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn bên trong
-            children: List.generate(sampleProducts.length, (index) {
-              final product = sampleProducts[index];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Hình ảnh sản phẩm
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: AssetImage(product.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  // Tên sản phẩm
-                  Text(
-                    product.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                  // Giá sản phẩm
-                  Text(
-                    "${product.discountedPrice.toStringAsFixed(0)}đ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              );
-            }),
-          ),
-        ),
+        // Gọi Widget danh sách sản phẩm
+        SingleChildScrollView(child: ProductGrid()),
       ],
     );
   }

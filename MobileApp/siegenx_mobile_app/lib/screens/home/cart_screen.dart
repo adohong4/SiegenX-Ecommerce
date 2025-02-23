@@ -21,6 +21,55 @@ class CartScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Cột 1: Checkbox + Tất cả
+            Row(
+              children: [
+                Checkbox(value: false, onChanged: (bool? value) {}),
+                Text("Tất cả"),
+              ],
+            ),
+            // Cột 2: Thông tin giá
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("52.500.000 đ",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("Phí vận chuyển: 0đ"),
+                Text("Giảm: 22.000.000 đ", style: TextStyle(color: Colors.red)),
+              ],
+            ),
+            // Cột 3: Button Thanh toán
+            SizedBox(
+              height: 50, // Giới hạn chiều cao nút
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                ),
+                onPressed: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Thanh toán", style: TextStyle(color: Colors.white)),
+                    Text("(3)", style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

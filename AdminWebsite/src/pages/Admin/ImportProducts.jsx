@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import "../styles/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import orderData from "../../data/Enviroment"; // Import dữ liệu
+import { orders as initialOrders } from "../../data/Enviroment"; // Import dữ liệu
 
 const ImportOrders = () => {
-  const [orders, setOrders] = useState(orderData);
+  const [orders, setOrders] = useState(initialOrders); // Sử dụng useState trong component
 
   return (
     <div className="nhap-hang-page">

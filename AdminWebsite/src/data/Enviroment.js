@@ -383,3 +383,16 @@ export const fakeCustomerData = [
     { title: "Số khách hàng trong ngày", value: 12 }
   ];
   
+
+//   Data cho trang nhập Hàng
+export const [orders, setOrders] = useState([
+    { id: 1, code: "ABDKC125", date: "20/11/2024", types: 3, value: "20.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+    { id: 2, code: "ABDKC126", date: "22/11/2024", types: 4, value: "15.000.000", status: "Chưa hoàn tất", supplier: "NSX SiegenX", completed: false },
+    { id: 3, code: "ABDKC127", date: "23/11/2024", types: 6, value: "30.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+    { id: 4, code: "ABDKC128", date: "24/11/2024", types: 2, value: "10.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+    { id: 5, code: "ABDKC129", date: "25/11/2024", types: 5, value: "25.000.000", status: "Chưa hoàn tất", supplier: "NSX SiegenX", completed: false },
+    { id: 6, code: "ABDKC130", date: "26/11/2024", types: 8, value: "40.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+    { id: 7, code: "ABDKC128", date: "24/11/2024", types: 2, value: "10.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+    { id: 8, code: "ABDKC129", date: "25/11/2024", types: 5, value: "25.000.000", status: "Chưa hoàn tất", supplier: "NSX SiegenX", completed: false },
+    { id: 9, code: "ABDKC130", date: "26/11/2024", types: 8, value: "40.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
+  ]);

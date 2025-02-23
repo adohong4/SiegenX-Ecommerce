@@ -211,7 +211,7 @@ const Cart = () => {
                                 <option value="Đang giao hàng">Đang giao hàng</option>
                                 <option value="Giao hàng thành công">Giao hàng thành công</option>
                             </select></td>
-                            <td className="btn-order" style={{ padding: "0px", display: "flex", justifyContent: "space-around" , alignItems: "center",verticalAlign: "middle", padding:'15px 0px'}}>
+                            <td className="btn-order" style={{  display: "flex", justifyContent: "space-around" , alignItems: "center",verticalAlign: "middle", padding:'15px 0px'}}>
                                 <button onClick={(e) => { e.stopPropagation(); removeOrder(item._id); }} className='btn-delete'>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>

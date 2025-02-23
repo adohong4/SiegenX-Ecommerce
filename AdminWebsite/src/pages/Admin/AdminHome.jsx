@@ -10,6 +10,7 @@ import Headeradmin from'../../components/Headeradmin';
 import Orders from '../Admin/Cart';
 import DashBoard from '../Admin/DashBoard';
 import Trash from '../Admin/Trash';
+import ImportProducts from '../Admin/ImportProducts'
 const Admin = () => {
     return (
         <div className="admin-container">
@@ -29,6 +30,7 @@ const Admin = () => {
                     <Route path="orders" element={<Orders />} />
                     <Route path="/dashboard" element={<DashBoard />} />
                     <Route path="/trash" element={<Trash />} />
+                    <Route path="/nhap-hang" element={<ImportProducts />} />
                 </Routes>
             </div>
         </div>

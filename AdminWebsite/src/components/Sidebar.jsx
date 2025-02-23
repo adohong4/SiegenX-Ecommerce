@@ -86,7 +86,7 @@ const Sidebar = () => {
                 <p>Liên Hệ CSKH</p>
             </NavLink>
 
-            <NavLink to="/import" className="sidebar-option">
+            <NavLink to="/nhap-hang" className="sidebar-option">
               <FontAwesomeIcon icon={faInbox} />
                 <p>Nhập Hàng</p>
             </NavLink>

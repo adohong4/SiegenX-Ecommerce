@@ -84,7 +84,7 @@ class StaffController {
                 message: `Trạng thái nhân viên đã được cập nhật thành ${result.StatusActive}`,
                 metadata: result
             }).send(res);
-        } catch (error) {
+        } catch (error) {  
             next(error);
         }
     };
@@ -114,7 +114,19 @@ class StaffController {
         }
     }
 
+    LogOutStaff = async (req, res, next) => {
+        try {
+            const result = await StaffService.LogOutStaff(req, res);
     
+            return res.status(200).json({
+                status: "success",
+                message: "Đăng xuất thành công",
+                metadata: result
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 
 
 

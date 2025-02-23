@@ -236,7 +236,29 @@ class StaffService {
             throw error;
         }
     }
+
+    static LogOutStaff =  async (req, res) => {
+        try {
+            const staffId = req.user;
+            console.log("staffId: ", staffId);
+
+            if (!staffId) {
+                throw new Error("Thiếu thông tin tài khoản");
+            }
+
+            // Xóa cookie chứa token
+            res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "strict" });
+
+            console.log("Đăng xuất thành công!");
+
+            return { message: "Đăng xuất thành công" };
+        } catch (error) {
+            throw new Error("Lỗi khi đăng xuất: " + error.message);
+        }
+    }
+
+    
     
 }
-
+  
 module.exports = StaffService ;

@@ -178,7 +178,7 @@ class _TopPortion extends StatelessWidget {
                   right: 0, // Dịch sang phải để chồng lên avatar
                   child: CircleAvatar(
                     radius: 20, // Tăng kích thước lớn hơn
-                    backgroundColor: Color(0xffF2F3F4), // Màu nền trắng
+                    backgroundColor: Color(0xffE1E2E3), // Màu nền trắng
                     child: Icon(
                       Icons.edit, // Icon chỉnh sửa
                       color: Colors.black, // Màu icon

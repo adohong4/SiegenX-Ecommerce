@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../test/sample_products.dart';
 import '../utils/format_untils.dart';
 
 void showProductDialog(BuildContext context, dynamic product) {

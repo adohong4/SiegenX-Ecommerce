@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/test/sample_products.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
+import 'package:siegenx_mobile_app/widgets/product_detail.dart';
 
 class ProductGrid extends StatelessWidget {
   const ProductGrid({Key? key}) : super(key: key);
@@ -30,6 +31,15 @@ class ProductGrid extends StatelessWidget {
               return GestureDetector(
                 onLongPress: () {
                   showProductDialog(context, product);
+                },
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProductDetailScreen(product: product),
+                    ),
+                  );
                 },
                 child: IntrinsicHeight(
                   child: Column(

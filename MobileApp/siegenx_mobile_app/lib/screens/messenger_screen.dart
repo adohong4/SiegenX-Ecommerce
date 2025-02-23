@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MessageScreen extends StatefulWidget {
+class MessengerScreen extends StatefulWidget {
   @override
-  _MessageScreenState createState() => _MessageScreenState();
+  _MessengerScreenState createState() => _MessengerScreenState();
 }
 
-class _MessageScreenState extends State<MessageScreen> {
+class _MessengerScreenState extends State<MessengerScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
 
@@ -90,12 +90,12 @@ class _MessageScreenState extends State<MessageScreen> {
                     decoration: InputDecoration(
                       hintText: "Nhập tin nhắn...",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(20)),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send, color: Colors.blue),
+                  icon: Icon(Icons.send_rounded, color: Colors.blue),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
               ],

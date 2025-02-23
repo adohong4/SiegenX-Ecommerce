@@ -10,7 +10,7 @@ List<Product> sampleProducts = [
     description: "Giày thể thao chính hãng Nike.",
     isFavorite: false,
     imageUrl: "assets/products/product1.png",
-    quantity: 4,
+    quantity: 0,
   ),
   Product(
     id: 2,
@@ -20,7 +20,7 @@ List<Product> sampleProducts = [
     description: "Áo hoodie phong cách thể thao.",
     isFavorite: false,
     imageUrl: "assets/products/product2.png",
-    quantity: 5,
+    quantity: 0,
   ),
   Product(
     id: 3,
@@ -41,7 +41,7 @@ List<Product> sampleProducts = [
     description: "Laptop mạnh mẽ cho công việc và giải trí.",
     isFavorite: true,
     imageUrl: "assets/products/product4.png",
-    quantity: 0,
+    quantity: 1,
   ),
   Product(
     id: 5,
@@ -52,7 +52,7 @@ List<Product> sampleProducts = [
     description: "Giày thể thao chính hãng Nike.",
     isFavorite: false,
     imageUrl: "assets/products/product5.png",
-    quantity: 1,
+    quantity: 0,
   ),
   Product(
     id: 6,

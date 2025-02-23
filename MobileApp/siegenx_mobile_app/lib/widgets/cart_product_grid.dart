@@ -4,7 +4,14 @@ import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 
 class CartProductGrid extends StatefulWidget {
-  const CartProductGrid({Key? key}) : super(key: key);
+  final bool selectAll;
+  final Function(bool) onSelectionChange; // Thêm tham số callback
+
+  const CartProductGrid({
+    Key? key,
+    required this.selectAll,
+    required this.onSelectionChange, // Bắt buộc truyền vào
+  }) : super(key: key);
 
   @override
   _CartProductGridState createState() => _CartProductGridState();
@@ -12,6 +19,18 @@ class CartProductGrid extends StatefulWidget {
 
 class _CartProductGridState extends State<CartProductGrid> {
   final Map<int, bool> _selectedProducts = {};
+
+  @override
+  void didUpdateWidget(covariant CartProductGrid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectAll != oldWidget.selectAll) {
+      setState(() {
+        for (int i = 0; i < sampleProducts.length; i++) {
+          _selectedProducts[i] = widget.selectAll;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +74,13 @@ class _CartProductGridState extends State<CartProductGrid> {
                           onChanged: (bool? value) {
                             setState(() {
                               _selectedProducts[index] = value ?? false;
+
+                              // Kiểm tra nếu tất cả sản phẩm đã được chọn
+                              bool allSelected = _selectedProducts.values
+                                  .every((isSelected) => isSelected);
+
+                              // Gửi trạng thái mới lên CartScreen
+                              widget.onSelectionChange(allSelected);
                             });
                           },
                         ),

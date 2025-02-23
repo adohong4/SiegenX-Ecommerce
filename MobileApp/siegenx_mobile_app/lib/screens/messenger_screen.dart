@@ -39,7 +39,12 @@ class _MessengerScreenState extends State<MessengerScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.image, size: 40),
+            Image.asset(
+              'assets/icons/customer_service.png', // Ảnh từ assets
+              width: 35,
+              height: 35,
+              fit: BoxFit.cover,
+            ),
             SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,6 +58,10 @@ class _MessengerScreenState extends State<MessengerScreen> {
             ),
           ],
         ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, color: Colors.black), // Đường kẻ đen
+        ),
       ),
       body: Column(
         children: [
@@ -63,6 +72,7 @@ class _MessengerScreenState extends State<MessengerScreen> {
               itemBuilder: (context, index) {
                 final message = _messages[index];
                 final isUser = message["sender"] == "user";
+
                 return Align(
                   alignment:
                       isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -70,11 +80,21 @@ class _MessengerScreenState extends State<MessengerScreen> {
                     margin: EdgeInsets.symmetric(vertical: 5),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isUser ? Colors.blue : Colors.grey[300],
+                      color: isUser
+                          ? Color(0xFF00B98E)
+                          : Colors.grey[300], // Màu người dùng gửi là 00B98E
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child:
-                        Text(message["text"]!, style: TextStyle(fontSize: 16)),
+                    child: Text(
+                      message["text"]!,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isUser
+                            ? Colors.white
+                            : Colors
+                                .black, // Chữ màu trắng nếu là tin nhắn người dùng
+                      ),
+                    ),
                   ),
                 );
               },
@@ -90,12 +110,19 @@ class _MessengerScreenState extends State<MessengerScreen> {
                     decoration: InputDecoration(
                       hintText: "Nhập tin nhắn...",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send_rounded, color: Colors.blue),
+                  icon: Icon(Icons.add_photo_alternate, color: Colors.grey),
+                  onPressed: () {
+                    // Chọn ảnh (Chưa implement)
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.send_rounded, color: Color(0xFF00B98E)),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
               ],

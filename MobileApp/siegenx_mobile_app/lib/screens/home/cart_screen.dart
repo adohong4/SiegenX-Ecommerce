@@ -112,10 +112,9 @@ class CartScreen extends StatelessWidget {
                     Text(
                       formatCurrency(totalPrice.toInt()), // Tổng tiền đã giảm
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    const Text("Phí vận chuyển: 0đ",
-                        style: TextStyle(fontSize: 12)),
+                    const Text("Phí vận chuyển: 0đ"),
                     Text(
                       "Giảm ${formatCurrency(totalDiscount.toInt())}", // Tổng tiền đã giảm giá
                       style: const TextStyle(fontSize: 12, color: Colors.red),

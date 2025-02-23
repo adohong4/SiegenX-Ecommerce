@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import Cookies from 'js-cookie';
 // import { GoogleLogin } from '@react-oauth/google'
 // import { StoreContext } from '../../context/StoreContext'
 import { useNavigate } from 'react-router-dom';
@@ -48,23 +49,23 @@ const Login = () => {
 
     const onLogin = async (event) => {
         event.preventDefault()
-        let newUrl = url;
+        let newUrl = "http://localhost:9001";
 
         if (currState === 'Đăng nhập') {
             newUrl += "/v1/api/identity/login"
         } else {
-            newUrl += "/v1/api/identity/signup"
+            newUrl += "/v1/api/identity/register"
         }
 
         try {
             const response = await axios.post(newUrl, data);
             if (response.data.status) {
-                setToken(response.data.metadata.token);
+                // Lưu token vào cookie
+                Cookies.set('jwt', response.data.metadata.token, { expires: 7 }); // Thời gian sống của cookie là 7 ngày
                 toast.success(currState === 'Đăng ký' ? 'Đăng ký thành công!' : 'Đăng nhập thành công!');
-                localStorage.setItem("token", response.data.metadata.token);
             }
 
-            navigate('/')
+            navigate('/');
         } catch (error) {
             if (error.response) {
                 toast.error(error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại!');

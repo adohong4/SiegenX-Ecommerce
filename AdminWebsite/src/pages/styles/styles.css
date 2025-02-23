@@ -1590,3 +1590,113 @@ body.popup-open {
     margin-right: 5px;
   }
   
+
+  /* CSS cho trang tạo hóa đơn nhập */
+
+  .create-import-order-container {
+    max-width: 90vw;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 90vh;
+  }
+  
+  .create-import-order-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .create-import-order-back-button {
+    font-size: 20px;
+    margin-right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  .create-import-order-grid {
+    display: flex;
+    gap:10px;
+  }
+  
+  .create-import-order-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  .create-import-order-table{
+    width: 100%;
+    text-align: center;
+  }
+  .create-import-order-card h3 {
+    margin-bottom: 10px;
+  }
+  .total-import-product h3{
+    text-align: left;
+  }
+  .create-import-order-table tbody td button{
+    padding: 0px 7px;
+    border-radius: 50px;
+  }
+  .btn-delete-product-details{
+    transition: all 0.3s ease-in-out;
+  }
+  .btn-delete-product-details:hover{
+    color: #c0392b;
+  }
+  .create-import-order-container .btn-save{
+    background-color: #007bff;
+    color: #fff;
+  }
+  .create-import-order-header button{
+    background-color: #007bff;
+    color: #fff;
+  }
+  .create-import-order-input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .create-import-order-btn {
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .create-import-order-btn:hover {
+    background: #0056b3;
+  }
+  
+  .create-import-order-empty-product {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+  }
+  
+  .create-import-order-payment-info div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+  .create-import-order-payment-info .bold {
+    font-weight: bold;
+  }
+  
+  .create-import-order-span-2 {
+    grid-column: span 2;
+  }
+  

@@ -1566,6 +1566,7 @@ body.popup-open {
   
   .nhap-hang-page .order-table th {
     background-color: #f4f4f4;
+    text-align: center;
   }
   
   .nhap-hang-page .status {

@@ -3,14 +3,25 @@ import "../styles/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { orders as initialOrders } from "../../data/Enviroment"; // Import dữ liệu
-
+import SupplierPopup from "../../components/Popup/SupplierPopup"; // Import popup
 const ImportOrders = () => {
   const [orders, setOrders] = useState(initialOrders); // Sử dụng useState trong component
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [newSupplier, setNewSupplier] = useState("");
 
+  const handleAddSupplier = () => {
+    if (newSupplier.trim() !== "") {
+      alert(`Nhà cung cấp ${newSupplier} đã được thêm!`);
+      setNewSupplier("");
+      setIsPopupOpen(false);
+    }
+  };
   return (
     <div className="nhap-hang-page">
       <div className="header">
-        <button className="btn btn-primary">+ Thêm nhà cung cấp</button>
+      <button className="btn btn-primary" onClick={() => setIsPopupOpen(true)}>
+          + Thêm nhà cung cấp
+        </button>
         <button className="btn btn-primary">+ Thêm mới đơn hàng nhập</button>
       </div>
       <div className="table-container">
@@ -48,7 +59,17 @@ const ImportOrders = () => {
           </tbody>
         </table>
       </div>
+      <SupplierPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        newSupplier={newSupplier}
+        setNewSupplier={setNewSupplier}
+        handleAddSupplier={handleAddSupplier}
+      />
     </div>
+
+
+
   );
 };
 

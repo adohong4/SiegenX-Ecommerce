@@ -168,9 +168,10 @@ class _TopPortion extends StatelessWidget {
                     color: Colors.black,
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fHx8&auto=format&fit=crop&w=1470&q=80')),
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                          'assets/avatars/cat.png'), // Đường dẫn đến ảnh trong assets
+                    ),
                   ),
                 ),
                 Positioned(

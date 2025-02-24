@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 // import { StoreContext } from '../../../context/StoreContext';
-// import PopupUser from '../../../components/Popup/UserPopup/PopupUser';
+import PopupUser from '../../components/Popup/PopupUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
@@ -164,9 +164,6 @@ const ListUser = () => {
 
     return (
         <div className="user-list-container">
-            <div className='user-list-title'>
-                <p>Tài khoản khách hàng</p>
-            </div>
             <div className="search">
                 <div className="search-CSKH">
                     <input
@@ -177,7 +174,7 @@ const ListUser = () => {
                         className="search-input"
                     />
                     <button onClick={handleSearch} className="btn-search">
-                        <i className="fas fa-search"></i>
+                        Tìm kiếm
                     </button>
                 </div>
             </div>
@@ -239,13 +236,13 @@ const ListUser = () => {
                 activeClassName="active"
             />
 
-            {/* <PopupUser
+            <PopupUser
                 isOpen={isPopupOpen}
                 onClose={closePopup}
                 userData={currentUser}
                 onChange={handleInputChange}
                 onSave={handleUpdate}
-            /> */}
+            />
         </div>
     );
 };

@@ -94,33 +94,34 @@ export const product = [
         images: ["5d2.jpg"],
     }
 ];
-// export const options = [
-//     {
-//       title: "Màn hình tương tác",
-//       description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-//       image: assets.interactiveScreen
-//     },
-//     {
-//       title: "Màn hình di động",
-//       description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-//       image: assets.minteractiveScreen
-//     },
-//     {
-//       title: "Màn hình quảng cáo",
-//       description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-//       image: assets.interactiveScreen
-//     },
-//     {
-//       title: "Màn hình LED",
-//       description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-//       image: assets.interactiveScreen
-//     },
-//     {
-//       title: "Màn hình ghép",
-//       description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-//       image: assets.interactiveScreen
-//     },
-//   ];
+
+export const options = [
+    {
+        title: "Màn hình tương tác",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình di động",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình quảng cáo",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình LED",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+    {
+        title: "Màn hình ghép",
+        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
+        image: assets.interactiveScreen
+    },
+];
 
 
 export const fakedata = [

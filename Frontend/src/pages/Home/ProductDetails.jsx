@@ -1,60 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { StoreContext } from '../../context/StoreContext'
 import { useParams, useNavigate } from "react-router-dom";
 import { FaSearch, FaShoppingCart, FaCartPlus, FaEnvelope } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import '../styles/styles.css';
 
-// Fake data
-const fakedata = {
-  product_slug: [
-    {
-      _id: "1",
-      slug: "man-hinh-led-1",
-      nameProduct: "Laptop Dell XPS 15",
-      price: 35000000,
-      quantity: 10,
-      recap: "Laptop hiệu năng cao dành cho dân công nghệ.",
-      description: "Dell XPS 15 được trang bị CPU Intel Core i7, RAM 16GB, SSD 512GB và màn hình 4K UHD.",
-      mainBoard: "Intel HM470",
-      chip: "Intel Core i7-10750H",
-      cpu: "6 nhân 12 luồng, 2.6GHz - 5.0GHz",
-      gpu: "NVIDIA GTX 1650 Ti",
-      ram: "16GB DDR4",
-      memory: "512GB SSD NVMe",
-      version: "2023",
-      ports: "USB-C, HDMI, SD Card",
-      displaySize: "15.6 inch",
-      pixelDensity: "282 PPI",
-      display: "OLED 4K",
-      refreshRate: "60Hz",
-      images: ["laptop1.jpg", "laptop2.jpg", "laptop3.jpg"]
-    },
-    {
-      _id: "2",
-      slug: "macbook-pro-m2",
-      nameProduct: "MacBook Pro M2",
-      price: 42000000,
-      quantity: 5,
-      recap: "Hiệu suất đỉnh cao với chip Apple M2.",
-      description: "MacBook Pro M2 sở hữu hiệu năng mạnh mẽ, thời lượng pin lên đến 20 giờ.",
-      mainBoard: "Apple Silicon",
-      chip: "Apple M2",
-      cpu: "8 nhân CPU",
-      gpu: "10 nhân GPU",
-      ram: "16GB Unified Memory",
-      memory: "512GB SSD",
-      version: "2023",
-      ports: "Thunderbolt 4, MagSafe",
-      displaySize: "14 inch",
-      pixelDensity: "250 PPI",
-      display: "Retina Display",
-      refreshRate: "120Hz",
-      images: ["macbook1.jpg", "macbook2.jpg", "macbook3.jpg"]
-    }
-  ]
-};
-
 const ProductDetail = () => {
+  const { product_slug, fetchProductSlug, url, cartItems, addQuantityToCart, addToCart, removeFromCart } = useContext(StoreContext);
   const { id } = useParams(); // Lấy ID từ URL
   const [product, setProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
@@ -62,24 +14,21 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState(null);
   const [selectedThumbnail, setSelectedThumbnail] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const navigate = useNavigate();
-  const url2 = "https://your-image-url.com"; // URL giả lập hình ảnh
+  const navigate = useNavigate();// URL giả lập hình ảnh
 
   useEffect(() => {
-    console.log("Product ID from URL:", id);
     if (id) {
-      const foundProduct = fakedata.product_slug.find((p) => p.slug === id);
-      console.log("Found Product:", foundProduct);
-      if (foundProduct) {
-        setProduct(foundProduct);
-        setMainImage(foundProduct.images[0]);
-      } else {
-        console.log("Sản phẩm không tồn tại.");
-        setProduct(null);
-      }
+      fetchProductSlug(id);
     }
   }, [id]);
 
+  useEffect(() => {
+    setProduct(product_slug);
+    if (product_slug && product_slug.images && product_slug.images.length > 0) {
+      setMainImage(product_slug.images[0]);
+      setSelectedThumbnail(product_slug.images[0]);
+    }
+  }, [product_slug]);
 
   // Kiểm tra nếu không có sản phẩm thì render thông báo sản phẩm không tồn tại
   if (!product) return <div>Sản phẩm không tồn tại</div>;
@@ -115,7 +64,7 @@ const ProductDetail = () => {
         <div className="productinfo-images">
           <div className="productinfo-main-image">
             {/* Kiểm tra nếu mainImage tồn tại mới hiển thị ảnh */}
-            {mainImage && <img src={`${url2}/images/${mainImage}`} alt={product.nameProduct} />}
+            {mainImage && <img src={`http://localhost:9003/images/${mainImage}`} alt={product.nameProduct} />}
             <div className="productinfo-zoom-icon" onClick={togglePopup}>
               <FaSearch size={22} color="black" />
             </div>
@@ -124,7 +73,7 @@ const ProductDetail = () => {
             {product.images && product.images.map((image, index) => (
               <img
                 key={index}
-                src={`${url2}/images/${image}`}
+                src={`http://localhost:9003/images/${image}`}
                 alt={`Thumbnail ${index + 1}`}
                 className={`productinfo-thumbnail ${selectedThumbnail === image ? "selected" : ""}`}
                 onClick={() => handleThumbnailClick(image)}
@@ -135,6 +84,7 @@ const ProductDetail = () => {
 
         <div className="productinfo-details">
           <h1 className="productinfo-name">{product.nameProduct}</h1>
+          <p>{product.recap}</p>
           <p className="productinfo-price">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ VỚI SHOP"}</p>
 
           <div className="productinfo-quantity">
@@ -193,7 +143,7 @@ const ProductDetail = () => {
                 <div className="producttab-images">
                   {product.images?.[0] && (
                     <img
-                      src={`${url2}/images/${product.images[0]}`}
+                      src={`http://localhost:9003/images/${product.images[0]}`}
                       alt="Hình ảnh sản phẩm"
                       className="producttab-image"
                     />
@@ -207,7 +157,7 @@ const ProductDetail = () => {
                 <div className="producttab-images">
                   {product.images?.[1] && (
                     <img
-                      src={`${url2}/images/${product.images[1]}`}
+                      src={`http://localhost:9003/images/${product.images[1]}`}
                       alt="Hình ảnh sản phẩm"
                       className="producttab-image"
                     />
@@ -217,7 +167,7 @@ const ProductDetail = () => {
                 <div className="producttab-images">
                   {product.images?.[2] && (
                     <img
-                      src={`${url2}/images/${product.images[2]}`}
+                      src={`http://localhost:9003/images/${product.images[2]}`}
                       alt="Hình ảnh sản phẩm"
                       className="producttab-image"
                     />
@@ -293,7 +243,7 @@ const ProductDetail = () => {
       {showPopup && (
         <div className="popup-overlay" onClick={togglePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <img src={`${url2}/images/${mainImage}`} alt={product.nameProduct} className="popup-image-vanh" />
+            <img src={`http://localhost:9003/images/${mainImage}`} alt={product.nameProduct} className="popup-image-vanh" />
             <button className="popup-close" onClick={togglePopup}>X</button>
           </div>
         </div>

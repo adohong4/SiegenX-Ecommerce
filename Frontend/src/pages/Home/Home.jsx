@@ -1,12 +1,12 @@
 
 import { assets } from '../../assets/assets';
 import '../styles/styles.css'
-import { product_list } from "../../data/Enviroment";
-import React, { useState, useEffect } from "react";
+import { StoreContext } from '../../context/StoreContext'
+import React, { useState, useEffect, useContext } from "react";
 
 import { motion } from "framer-motion";
+import { options } from "../../data/Enviroment";
 
-const url2 = "https://example.com"; // url fakedata
 const fadeUpVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
@@ -43,36 +43,11 @@ const partners = [
     "/src/assets/Home/logoBrand2.png",
     "/src/assets/Home/logoBrand1.png",
 ];
-const options = [
-    {
-        title: "Màn hình tương tác",
-        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-        image: assets.interactiveScreen
-    },
-    {
-        title: "Màn hình di động",
-        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-        image: assets.interactiveScreen
-    },
-    {
-        title: "Màn hình quảng cáo",
-        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-        image: assets.interactiveScreen
-    },
-    {
-        title: "Màn hình LED",
-        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-        image: assets.interactiveScreen
-    },
-    {
-        title: "Màn hình ghép",
-        description: "Biển hiệu tại trung tâm mua sắm rất đa dạng. Bao gồm các biển cửa hàng, biển chỉ hướng, biển hướng dẫn đến các phòng ban khác nhau. \n\nCác biển hiệu không chỉ đóng vai trò là hình ảnh nhận diện cho thương hiệu mà còn là sự thể hiện đầy màu sắc của các...",
-        image: assets.interactiveScreen
-    },
-];
+
 const handleOptionClick = (index) => setSelectedOption(index);
 
 const Home = () => {
+    const { product_list } = useContext(StoreContext);
     const [activeTab, setActiveTab] = useState("Giải pháp phòng học thông minh");
     const [selectedOption, setSelectedOption] = useState(0);
     const handleTabClick = (tabName) => {
@@ -168,7 +143,7 @@ const Home = () => {
                                     whileHover={{ scale: 1.05 }}
                                 >
                                     <div className="product-img-container">
-                                        <img src={`${url2}/images/${product.images[0]}`} alt={product.title} className="product-img" />
+                                        <img src={`http://localhost:9003/images/${product.images[0]}`} alt={product.title} className="product-img" />
                                         <div className="cart-icon" onClick={(e) => { e.stopPropagation(); navigate("/cart"); }}>
                                             <i className="fas fa-shopping-cart"></i>
                                         </div>

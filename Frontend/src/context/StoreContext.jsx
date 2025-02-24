@@ -49,24 +49,24 @@ const StoreContextProvider = (props) => {
         }
     }
 
-    // const getTotalCartAmount = () => {
-    //     let totalAmount = 0;
-    //     for (const item in cartItems) {
-    //         if (cartItems[item] > 0) {
-    //             let itemInfo = product_list.find((product) => product._id === item);
-    //             totalAmount += itemInfo.price * cartItems[item];
-    //         }
-    //     }
-    //     return totalAmount;
-    // }
+    const getTotalCartAmount = () => {
+        let totalAmount = 0;
+        for (const item in cartItems) {
+            if (cartItems[item] > 0) {
+                let itemInfo = product_list.find((product) => product._id === item);
+                totalAmount += itemInfo.price * cartItems[item];
+            }
+        }
+        return totalAmount;
+    }
 
     const fetchProductList = async () => {
-        const response = await axios.get(`${url}/v1/api/product/get`);
+        const response = await axios.get(`${url}/v1/api/product/getAll`);
         setProductList(response.data.metadata);
     };
 
     const fetchProductSlug = async (slug) => {
-        const response = await axios.get(`${url}/v1/api/product/getSlug/${slug}`);
+        const response = await axios.get(`${url}/v1/api/product/getBySlug/${slug}`);
         setProductSlug(response.data.metadata);
     };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Cookies from 'js-cookie';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext';
 import '../Styles/Styles.css';
@@ -16,8 +17,7 @@ const Navbar = () => {
     }, [location.pathname]);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        setToken('');
+        Cookies.remove('jwt'); // Xóa token từ cookie
         navigate('/');
     };
 
@@ -29,6 +29,8 @@ const Navbar = () => {
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen); // Toggle trạng thái dropdown
     };
+
+    const token = Cookies.get('jwt');
 
     return (
         <header id='header' className="nav-header">
@@ -67,24 +69,22 @@ const Navbar = () => {
                                     </span>
                                 </div> */}
 
-
-
                                 <div className="icons">
-                                    {/* {!token ? ( */}
+                                    {!token ? (
                                         <button
                                             className="btn btn-signin btn-primary"
                                             onClick={() => navigate('/login')}
                                         >
                                             Đăng Nhập
                                         </button>
-                                    {/* ) : ( */}
+                                    ) : (
                                         <div className="dropdown">
                                             <span className="icon-user" onClick={toggleDropdown} style={{ cursor: 'pointer' }}>
                                                 <i className="fas fa-user"></i>
                                             </span>
                                             <span className="icon-cart" onClick={() => navigate('/cart')}>
                                                 <i className="fas fa-shopping-cart"></i>
-                                                    {/* <div className={getTotalCartAmount() === 0 ? "none" : "dot"}></div>  */}
+                                                {/* <div className={getTotalCartAmount() === 0 ? "none" : "dot"}></div>  */}
                                             </span>
 
                                             {isDropdownOpen && (
@@ -102,7 +102,7 @@ const Navbar = () => {
                                             )}
                                         </div>
 
-                                    {/* )} */}
+                                    )}
 
                                 </div>
                             </div>
@@ -140,7 +140,7 @@ const Navbar = () => {
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
 
                 {/* Mobile Navbar */}
                 <div className="mobile-display">

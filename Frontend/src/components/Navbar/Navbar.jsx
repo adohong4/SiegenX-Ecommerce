@@ -69,8 +69,6 @@ const Navbar = () => {
                                     </span>
                                 </div> */}
 
-
-
                                 <div className="icons">
                                     {!token ? (
                                         <button

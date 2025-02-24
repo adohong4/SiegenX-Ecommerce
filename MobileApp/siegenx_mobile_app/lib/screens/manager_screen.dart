@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/favorite_products_screen.dart';
-import 'package:siegenx_mobile_app/screens/home_screen.dart';
-import 'package:siegenx_mobile_app/screens/message_screen.dart';
+import 'package:siegenx_mobile_app/screens/home/home_screen.dart';
+import 'package:siegenx_mobile_app/screens/messenger_screen.dart';
 import 'package:siegenx_mobile_app/screens/profile_screen.dart';
 
 class ManagerScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
   final List<Widget> screens = [
     HomeScreen(),
     FavoriteProductsScreen(),
-    MessageScreen(),
+    MessengerScreen(),
     ProfileScreen(),
   ];
 
@@ -51,9 +51,17 @@ class _ManagerScreenState extends State<ManagerScreen> {
           padding: EdgeInsets.symmetric(horizontal: size.width * .024),
           itemBuilder: (context, index) => InkWell(
             onTap: () {
-              setState(() {
-                currentIndex = index;
-              });
+              if (index == 2) {
+                // Kiểm tra nếu nhấn vào Messenger
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MessengerScreen()),
+                );
+              } else {
+                setState(() {
+                  currentIndex = index;
+                });
+              }
             },
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,

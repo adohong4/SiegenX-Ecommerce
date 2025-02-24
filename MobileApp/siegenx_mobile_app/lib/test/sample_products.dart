@@ -1,0 +1,88 @@
+import '../models/product.dart';
+
+List<Product> sampleProducts = [
+  Product(
+    id: 1,
+    name:
+        "Màn Hình Tương Tác Thông Minh SIEGenX 98 inch 4K (tích hợp Camera + Micro) SGX – T98",
+    price: 27000000,
+    discountPercentage: 70,
+    description: "Giày thể thao chính hãng Nike.",
+    isFavorite: false,
+    imageUrl: "assets/products/product1.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 2,
+    name: "Màn Hình Tương Tác Thông Minh SIEGenX 98 inch 4K SGX – T98",
+    price: 1200000,
+    discountPercentage: 15,
+    description: "Áo hoodie phong cách thể thao.",
+    isFavorite: false,
+    imageUrl: "assets/products/product2.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 3,
+    name:
+        "Màn Hình Tương Tác Thông Minh SIEGenX 86 inch 4K (tích hợp Camera + Micro) SGX – T86",
+    price: 14500000,
+    discountPercentage: 10,
+    description: "Laptop mạnh mẽ cho công việc và giải trí.",
+    isFavorite: true,
+    imageUrl: "assets/products/product3.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 4,
+    name: "Màn Hình Tương Tác Thông Minh SIEGENX 86 inch 4K SGX – 1T86",
+    price: 35000000,
+    discountPercentage: 10,
+    description: "Laptop mạnh mẽ cho công việc và giải trí.",
+    isFavorite: true,
+    imageUrl: "assets/products/product4.png",
+    quantity: 1,
+  ),
+  Product(
+    id: 5,
+    name:
+        "Màn Hình Tương Tác Thông Minh SIEGenX 110 inch 4K (tích hợp Camera + Micro) SGX – T110",
+    price: 27000000,
+    discountPercentage: 70,
+    description: "Giày thể thao chính hãng Nike.",
+    isFavorite: false,
+    imageUrl: "assets/products/product5.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 6,
+    name:
+        "Màn Hình Tương Tác Thông Minh SIEGenX 75 inch 4K (tích hợp Camera + Micro) SGX – T75",
+    price: 1200000,
+    discountPercentage: 0,
+    description: "Áo hoodie phong cách thể thao.",
+    isFavorite: false,
+    imageUrl: "assets/products/product6.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 7,
+    name: "Loa báo chuyển khoản SIEGENX [Kèm mã QR – Chính hãng 100%]",
+    price: 18000000,
+    discountPercentage: 10,
+    description: "Laptop mạnh mẽ cho công việc và giải trí.",
+    isFavorite: true,
+    imageUrl: "assets/products/product7.png",
+    quantity: 0,
+  ),
+  Product(
+    id: 8,
+    name: "Màn Hình Di Động Thông Minh SIEGenX 27 inch",
+    price: 20000000,
+    discountPercentage: 10,
+    description: "Laptop mạnh mẽ cho công việc và giải trí.",
+    isFavorite: true,
+    imageUrl: "assets/products/product8.png",
+    quantity: 0,
+  ),
+];

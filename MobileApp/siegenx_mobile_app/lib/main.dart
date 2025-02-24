@@ -24,5 +24,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// Có thể xóa phần MyHomePage đi vì không dùng đến nữa

@@ -113,7 +113,7 @@ class __FormContentState extends State<_FormContent> {
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(12.0), // Căn chỉnh icon
                   child: Image(
-                    image: AssetImage('assets/user.png'),
+                    image: AssetImage('assets/icons/user.png'),
                     width: 24, // Điều chỉnh kích thước icon
                     height: 24,
                   ),
@@ -146,7 +146,7 @@ class __FormContentState extends State<_FormContent> {
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(12.0), // Căn chỉnh icon
                   child: Image(
-                    image: AssetImage('assets/lock.png'),
+                    image: AssetImage('assets/icons/lock.png'),
                     width: 24, // Điều chỉnh kích thước icon
                     height: 24,
                   ),
@@ -250,8 +250,8 @@ class __FormContentState extends State<_FormContent> {
                   onTap: () {
                     // xử lý đăng nhập google
                   },
-                  child:
-                      Image.asset('assets/facebook.png', width: 40, height: 40),
+                  child: Image.asset('assets/icons/facebook.png',
+                      width: 40, height: 40),
                 ),
                 const SizedBox(
                   width: 30,
@@ -260,8 +260,8 @@ class __FormContentState extends State<_FormContent> {
                   onTap: () {
                     // xử lý đăng nhập google
                   },
-                  child:
-                      Image.asset('assets/google.png', width: 40, height: 40),
+                  child: Image.asset('assets/icons/google.png',
+                      width: 40, height: 40),
                 ),
                 const SizedBox(
                   width: 30,
@@ -270,7 +270,8 @@ class __FormContentState extends State<_FormContent> {
                   onTap: () {
                     // xử lý đăng nhập google
                   },
-                  child: Image.asset('assets/apple.png', width: 40, height: 40),
+                  child: Image.asset('assets/icons/apple.png',
+                      width: 40, height: 40),
                 ),
               ],
             ),

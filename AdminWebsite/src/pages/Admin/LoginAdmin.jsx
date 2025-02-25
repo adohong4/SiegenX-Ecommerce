@@ -98,12 +98,8 @@ const Login = () => {
                         <button type='submit' className='btn-sub'>{currState === "Đăng ký" ? "Tạo tài khoản mới" : "Đăng nhập"}</button>
                         <div className="login-popup-condition">
                             <input type="checkbox" required />
-                            <p>Đồng ý với các chính sách của công ty</p>
+                            <p>Đồng ý với các chính sách của quản trị</p>
                         </div>
-                        {currState === "Đăng nhập"
-                            ? <p><span onClick={() => setCurrState("Đăng ký")}>Tạo tài khoản mới?</span></p>
-                            : <p><span onClick={() => setCurrState("Đăng nhập")}>Đã có tài khoản?</span></p>
-                        }
                     </form>
                 </div>
             </div>

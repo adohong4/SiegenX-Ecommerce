@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import ListUser from '../Admin/ListUser';
 import ListProduct from '../Admin/Product';
@@ -14,14 +14,22 @@ import ImportProducts from '../Admin/ImportProducts';
 import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
-
+import Cookies from 'js-cookie';
 const Admin = () => {
+    const token = Cookies.get("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate("/admin-login");
+        }
+    }, [token, navigate]);
     return (
         <div className="admin-container">
             <Routes>
                 {/* Login page chỉ hiển thị khi vào "/admin-login" */}
                 <Route path="/admin-login" element={<LoginAdmin />} />
-                
+
                 {/* Admin Layout */}
                 <Route path="/*" element={
                     <div className="admin-layout">

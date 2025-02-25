@@ -25,7 +25,7 @@ const StoreContextProvider = (props) => {
             setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }))
         }
         if (token) {
-            await axios.post(url + "http://localhost:9002/v1/api/profile/cart/add", { itemId })
+            await axios.post(url + "/v1/api/profile/cart/add", { itemId })
         }
 
     }
@@ -82,7 +82,8 @@ const StoreContextProvider = (props) => {
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
-            const cookieToken = Cookies.get("jwt"); // Lấy token từ cookies
+            const cookieToken = Cookies.get("jwt");
+            console.log("cookieToken: ", cookieToken)
             if (cookieToken) {
                 setToken(cookieToken);
                 await loadCartData(cookieToken);

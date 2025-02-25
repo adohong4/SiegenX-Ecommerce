@@ -60,8 +60,7 @@ const Login = () => {
         try {
             const response = await axios.post(newUrl, data);
             if (response.data.status) {
-                // Lưu token vào cookie
-                Cookies.set('jwt', response.data.metadata.token, { expires: 7 }); // Thời gian sống của cookie là 7 ngày
+                Cookies.set("jwt", response.data.metadata.token,);
                 toast.success(currState === 'Đăng ký' ? 'Đăng ký thành công!' : 'Đăng nhập thành công!');
             }
 

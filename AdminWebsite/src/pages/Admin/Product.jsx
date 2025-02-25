@@ -4,14 +4,14 @@ import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-// import { StoreContext } from '../../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment";
 
 const ListProduct = () => {
-    // const { url, url2, product_list } = useContext(StoreContext)
+    const { url, url2, product_list } = useContext(StoreContext)
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0); // Theo dõi tổng số trang
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -236,10 +236,9 @@ const ListProduct = () => {
                     <b>Tùy Chỉnh</b>
                 </div>
 
-                {sortedList.map((item, index) => (
+                {product_list.map((item, index) => (
                     <div key={index} className='list-table-format' onClick={() => handleRowClick(item)} style={{ cursor: 'pointer' }}>
-                        {/* <img src={`${url2}/images/${item.images[0]}`} alt="" /> */}
-                        <p> Đây là ảnh fake data</p>
+                        <img src={`http://localhost:9003/images/${item.images[0]}`} alt="" />
                         <p className='id-product'>{item._id}</p>
                         <p className='name-product'>{item.title}</p>
                         <p className='category-product'>{item.category}</p>

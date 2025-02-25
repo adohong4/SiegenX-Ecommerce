@@ -15,25 +15,15 @@ const StoreContextProvider = (props) => {
 
     const [token, setToken] = useState("")
     const [product_list, setProductList] = useState([])
+    const [account_list, setAccountList] = useState([])
     const [product_slug, setProductSlug] = useState(null);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
-    const Login = async (data) => {
-        try {
-            const response = await axios.post(`${url}/v1/api/staff/login`, data);
-            console.log("data: ", response.data)
-            if (response.data.status) {
-                Cookies.set("token", response.data.metadata.token);
-                setToken(response.data.metadata.token);
-                toast.success('Đăng nhập thành công!');
-                navigate('/');
-            }
-        } catch (error) {
-            throw error;
-            toast.error('Đăng nhập thất bại!');
-        }
-    }
+    const fetchAccountList = async (page = 1) => {
+        const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=5`);
+        setAccountList(response.data.metadata);
+    };
 
     const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {
@@ -99,6 +89,7 @@ const StoreContextProvider = (props) => {
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
+            await fetchAccountList();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -110,10 +101,10 @@ const StoreContextProvider = (props) => {
 
 
     const contextValue = {
-        Login,
         product_list,
         product_slug,
         cartItems,
+        account_list,
         setCartItems,
         addToCart,
         addQuantityToCart,

@@ -59,7 +59,7 @@ class AccountController {
 
     paginateAccount = async (req, res, next) => {
         try {
-            const result = await AccountService.paginateAccount()
+            const result = await AccountService.paginateAccount(req, res)
             new OK({
                 message: 'Lấy danh sách thành công',
                 metadata: result.metadata

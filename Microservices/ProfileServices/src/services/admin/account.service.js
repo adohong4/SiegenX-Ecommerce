@@ -62,25 +62,27 @@ class AccountService {
         }
     }
 
-    static paginateAccount = async (page = 1, pageSize = 5) => {
+    static paginateAccount = async (req, res,) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
 
             const account = await accountModel.find()
-                .select('username email role address cartData')
+                .select('username email role address cartData createdAt')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
             const totalAccount = await accountModel.countDocuments();
-            const totalPages = Math.ceil(totalAccount / pageSize);
+            const totalPages = Math.ceil(totalAccount / limit);
             return {
                 metadata: {
                     account,
                     currentPage: page,
                     totalPages,
-                    totalAccount
+                    totalAccount,
+                    limit
                 }
             }
         } catch (error) {

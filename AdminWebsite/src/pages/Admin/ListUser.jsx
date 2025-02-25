@@ -3,15 +3,16 @@ import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-// import { StoreContext } from '../../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import PopupUser from '../../components/Popup/PopupUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { fakeListUser } from "../../data/Enviroment"; 
+import { formatDayTime } from '../../lib/utils';
+
 const ListUser = () => {
-    // const { url } = useContext(StoreContext);
+    const { url, account_list } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -34,14 +35,14 @@ const ListUser = () => {
         document.body.classList.remove('popup-open');
     };
 
-
     const fetchList = async (page = 1) => {
         try {
-            const response = await axios.get(`${url}/v1/api/profile/pagination?page=${page}&limit=10`);
+            const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=5`);
             if (response.data.message) {
-                setList(response.data.data);
-                setTotalUser(response.data.pagination.limit);
-                setTotalPages(response.data.pagination.totalPages);
+                setList(response.data.metadata.account);
+                setTotalUser(response.data.metadata.limit);
+                setTotalPages(response.data.metadata.totalPages);
+                console.log("account: ", response.data.metadata.account)
             } else {
                 toast.error('Lấy dữ liệu thất bại');
             }
@@ -51,20 +52,20 @@ const ListUser = () => {
         }
     };
 
-    // useEffect(() => {
-    //     if (searchTerm.trim()) {
-    //         // nofi = false
-    //         handleSearch(); 
-    //     } else {
-    //         fetchList(currentPage); 
-    //     }
-    // }, [currentPage, searchTerm]); 
+    useEffect(() => {
+        if (searchTerm.trim()) {
+            // nofi = false
+            handleSearch();
+        } else {
+            fetchList(currentPage);
+        }
+    }, [currentPage, searchTerm]);
 
 
     //Fake data UseEffect cho ListUser
-    useEffect(() => {
-        setList(fakeListUser);
-    }, []);
+    // useEffect(() => {
+    //     setList(fakeListUser);
+    // }, []);
 
 
     const handleSearch = async () => {
@@ -74,8 +75,8 @@ const ListUser = () => {
         }
 
         try {
-            const response = await axios.get(`${url}/v1/api/profile/admin/users/email`, { 
-                params: { email: searchTerm, page: currentPage, limit: 10} 
+            const response = await axios.get(`${url}/v1/api/profile/admin/users/email`, {
+                params: { email: searchTerm, page: currentPage, limit: 10 }
             });
 
             if (response.data.status) {
@@ -196,7 +197,7 @@ const ListUser = () => {
                     <div key={index} className="table-row">
                         <div>{item.username}</div>
                         <div>{item.email}</div>
-                        <div>{item.createdAt}</div>
+                        <div>{formatDayTime(item.createdAt)}</div>
                         <div>{item.address.length}</div>
                         <div>{Object.keys(item.cartData).length}</div>
                         <div className="actions">

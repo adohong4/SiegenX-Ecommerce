@@ -1,9 +1,16 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import "./Styles/Styles.css"
-import { assets } from '../assets/assets'
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import "./Styles/Styles.css";
+import { assets } from '../assets/assets';
 import { motion } from "framer-motion";
+
 const Sidebar = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
+    };
+
     return (
         <div className="section-header-admin">
             <motion.div 
@@ -32,11 +39,24 @@ const Sidebar = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <img className="logo" src={assets.avt} alt="avt" />
+                    <div className="profile-container">
+                        <img 
+                            className="logo profile-pic" 
+                            src={assets.avt} 
+                            alt="avt" 
+                            onClick={toggleMenu} 
+                        />
+                        {menuOpen && (
+                            <div className="profile-menu">
+                                <NavLink to="/profile">Xem Profile</NavLink>
+                                <NavLink to="/admin-login">Đăng Xuất</NavLink>
+                            </div>
+                        )}
+                    </div>
                 </motion.div>
             </motion.div>
         </div>
-    )
+    );
 }
 
-export default Sidebar
+export default Sidebar;

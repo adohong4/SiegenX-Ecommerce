@@ -5,44 +5,10 @@ import { StoreContext } from '../../context/StoreContext'
 import React, { useState, useEffect, useContext } from "react";
 
 import { motion } from "framer-motion";
-import { options } from "../../data/Enviroment";
-
-const fadeUpVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-};
-const fadeInScaleUp = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } },
-};
-const staggerContainer = {
-    hidden: { opacity: 1 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.2,
-            delayChildren: 0.1
-        }
-    }
-};
-const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-const imageVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-};
-
-const textVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-};
-const partners = [
-    "/src/assets/Home/logoBrand2.png",
-    "/src/assets/Home/logoBrand1.png",
-];
+import {
+    options,
+    fadeUpVariants, fadeInScaleUp, staggerContainer, containerVariants, imageVariants, textVariants, partners
+} from "../../data/Enviroment";
 
 const handleOptionClick = (index) => setSelectedOption(index);
 
@@ -284,11 +250,7 @@ const Home = () => {
                     ))}
                 </div>
             </section>
-
-
-
         </>
-
     )
 }
 

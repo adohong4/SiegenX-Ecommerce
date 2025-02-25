@@ -26,7 +26,8 @@ const UserSchema = new Schema({
     NumberPhone: { type: Number },
     Gender: { type: String },
     address: [AddressSchema],
-    cartData: { type: Object, default: {} }
+    cartData: { type: Object, default: {} },
+    active: { type: Boolean, default: true }
 }, { minimize: false, timestamps: true })
 
 const identityModel = mongoose.models.user || mongoose.model(DOCUMENT_NAME, UserSchema)

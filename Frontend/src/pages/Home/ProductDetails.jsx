@@ -54,7 +54,8 @@ const ProductDetail = () => {
 
   const togglePopup = () => setShowPopup(!showPopup);
 
-  const handleAddQuantityToCart = () => {
+  const handleAddQuantityToCart = (id, quantity) => {
+    addQuantityToCart(id, quantity)
     toast.success("Thêm vào giỏ hàng");
   };
 
@@ -104,7 +105,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <button className="productinfo-buy-now" onClick={handleAddQuantityToCart}>
+          <button className="productinfo-buy-now" onClick={() => { handleAddQuantityToCart(product_slug._id, quantity), navigate("/cart") }}>
             <FaShoppingCart className="productinfo-icon" /> MUA NGAY
           </button>
 
@@ -112,7 +113,7 @@ const ProductDetail = () => {
             <button className="productinfo-contact col-6" onClick={() => navigate("/lien-he")}>
               <FaEnvelope className="productinfo-icon-contact" /> LIÊN HỆ
             </button>
-            <button className="productinfo-addCart col-6" onClick={handleAddQuantityToCart}>
+            <button className="productinfo-addCart col-6" onClick={() => handleAddQuantityToCart(product_slug._id, quantity)}>
               <FaCartPlus className="productinfo-icon-addCart" /> Thêm vào giỏ hàng
             </button>
           </div>

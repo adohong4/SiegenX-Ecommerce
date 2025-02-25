@@ -51,20 +51,29 @@ class ContactService {
     }
 
     
-    static updateIsCheck = async (contactId, isCheckValue) => {
+
+    static updateIsCheck = async (contactId) => {
         try {
-            // Tìm và cập nhật trường isCheck
+            // Tìm tài liệu theo contactId
+            const contact = await contactModel.findById(contactId);
+            if (!contact) {
+                throw new Error("Không tìm thấy liên hệ.");
+            }
+    
+            // Đảo ngược trạng thái isCheck (true <-> false)
             const updatedContact = await contactModel.findByIdAndUpdate(
                 contactId,
-                { isCheck: isCheckValue },
-                { new: true, runValidators: true } // Trả về tài liệu đã cập nhật
+                { isCheck: !contact.isCheck }, // Đảo trạng thái
+                { new: true, runValidators: true }
             );
-
+    
             return updatedContact;
         } catch (error) {
             throw error;
         }
     };
+    
+
 
     static findByEmail = async (email) => {
         const contacts = await contactModel.find({ email: { $regex: email, $options: 'i' } });
@@ -100,8 +109,37 @@ class ContactService {
         } catch (error) {
             throw error;
         }
-    }
+    }  
 
+
+    static  toggleContactStatus = async (id, userId) => {
+        try {
+           
+            // Tìm contact theo ID
+            const contact = await contactModel.findById(id);
+            if (!contact) {
+                throw new Error("Liên hệ không tồn tại!");
+            }
+    
+            // Đảo ngược trạng thái StatusActive
+            const newStatus = !contact.StatusActive;
+            const actionDes = newStatus ? "restored contact" : "deleted contact";
+    
+            // Cập nhật lại giá trị trong DB
+            contact.StatusActive = newStatus;
+            contact.updatedBy = {
+                userId: userId,
+                description: actionDes,
+                updatedAt: new Date()
+            };
+    
+            await contact.save();
+            return contact; // Trả về thông tin sau khi cập nhật
+        } catch (error) {
+            throw error;
+        }
+    }
+    
 
 
 }

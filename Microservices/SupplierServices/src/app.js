@@ -5,11 +5,22 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const app = express();
-
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, origin);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Cho phép gửi cookie/token
+    })
+);
 app.use(cookieParser());
 
 // Init db

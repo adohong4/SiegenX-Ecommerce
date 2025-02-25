@@ -2,6 +2,7 @@ const http = require('http');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
 // Define API routes and corresponding backend services
 const routes = {
     '/v1/api/identity': 'http://localhost:9001',
@@ -9,6 +10,23 @@ const routes = {
     '/v1/api/product': 'http://localhost:9003',
     '/v1/api/contact': 'http://localhost:9004',
 };
+
+const corsMiddleware = (req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+    }
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+    }
+    next();
+};
+
 
 // Create proxy middleware
 const proxy = createProxyMiddleware({
@@ -32,7 +50,7 @@ const proxy = createProxyMiddleware({
 
 // Create API gateway server
 const server = http.createServer((req, res) => {
-    cors()(req, res, () => {
+    corsMiddleware(req, res, () => {
         proxy(req, res);
     });
 });

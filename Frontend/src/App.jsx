@@ -14,27 +14,29 @@ import ProductDetail from './pages/Home/ProductDetails';
 import Cart from './pages/Home/Cart';
 import Order from './pages/Home/Order';
 import Login from './pages/Home/Login';
+import { ToastContainer } from 'react-toastify';
 const App = () => {
   return (
     <>
-        <div className="app">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/gioi-thieu" element={<Intro />} />
-            <Route path="/lien-he" element={<Contact />} />
-            <Route path="/giai-phap" element={<Solution />} />
-            <Route path="/giai-phap/lop-hoc-thong-minh" element={<Sol_class />} />
-            <Route path="/giai-phap/phong-hop-thong-minh" element={<Sol_phonghop />} />
-            <Route path="/giai-phap/giai-phap-gian-hang" element={<Sol_gianhang />} />
-            <Route path="/san-pham" element={<Products/>} />
-            <Route path="/san-pham/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart/>} />
-            <Route path="/hoa-don" element={<Order/>} />
-            <Route path="/login" element={<Login/>} />
-          </Routes>
-          <Footer />
-        </div>
+      <ToastContainer />
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/gioi-thieu" element={<Intro />} />
+          <Route path="/lien-he" element={<Contact />} />
+          <Route path="/giai-phap" element={<Solution />} />
+          <Route path="/giai-phap/lop-hoc-thong-minh" element={<Sol_class />} />
+          <Route path="/giai-phap/phong-hop-thong-minh" element={<Sol_phonghop />} />
+          <Route path="/giai-phap/giai-phap-gian-hang" element={<Sol_gianhang />} />
+          <Route path="/san-pham" element={<Products />} />
+          <Route path="/san-pham/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/hoa-don" element={<Order />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+        <Footer />
+      </div>
     </>
   )
 }

@@ -51,20 +51,29 @@ class ContactService {
     }
 
     
-    static updateIsCheck = async (contactId, isCheckValue) => {
+
+    static updateIsCheck = async (contactId) => {
         try {
-            // Tìm và cập nhật trường isCheck
+            // Tìm tài liệu theo contactId
+            const contact = await contactModel.findById(contactId);
+            if (!contact) {
+                throw new Error("Không tìm thấy liên hệ.");
+            }
+    
+            // Đảo ngược trạng thái isCheck (true <-> false)
             const updatedContact = await contactModel.findByIdAndUpdate(
                 contactId,
-                { isCheck: isCheckValue },
-                { new: true, runValidators: true } // Trả về tài liệu đã cập nhật
+                { isCheck: !contact.isCheck }, // Đảo trạng thái
+                { new: true, runValidators: true }
             );
-
+    
             return updatedContact;
         } catch (error) {
             throw error;
         }
     };
+    
+
 
     static findByEmail = async (email) => {
         const contacts = await contactModel.find({ email: { $regex: email, $options: 'i' } });
@@ -100,7 +109,7 @@ class ContactService {
         } catch (error) {
             throw error;
         }
-    }
+    }  
 
 
 

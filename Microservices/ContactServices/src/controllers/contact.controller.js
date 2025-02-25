@@ -11,7 +11,7 @@ class ContactController {
                 message: 'Contact OK',
                 metadata: result.metadata
             }).send(res);
-        } catch (error) {
+        } catch (error) { 
             next(error);
         }
     }
@@ -42,11 +42,11 @@ class ContactController {
 
     updateContactIsCheck = async (req, res, next) => {
         try {
-            const { id } = req.params; // ID của liên hệ từ URL
-            const { isCheck } = req.body; // Giá trị mới cho isCheck từ body
-
-            const updatedContact = await ContactService.updateIsCheck(id, isCheck);
-
+            const { id } = req.params; // Lấy ID từ URL
+    
+            // Gọi Service để cập nhật trạng thái isCheck
+            const updatedContact = await ContactService.updateIsCheck(id);
+    
             res.status(200).json({
                 message: "Cập nhật trạng thái isCheck thành công",
                 metadata: updatedContact
@@ -54,7 +54,8 @@ class ContactController {
         } catch (error) {
             next(error);
         }
-    }
+    };
+    
 
     getContactsByEmail = async (req, res, next) => {
         try {

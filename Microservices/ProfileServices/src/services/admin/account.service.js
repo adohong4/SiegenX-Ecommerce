@@ -62,7 +62,7 @@ class AccountService {
         }
     }
 
-    static paginateAccount = async (req, res,) => {
+    static paginateAccount = async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;

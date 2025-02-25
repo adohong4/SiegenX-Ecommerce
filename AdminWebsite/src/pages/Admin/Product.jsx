@@ -135,25 +135,25 @@ const ListProduct = () => {
             return 0;
         });
 
-    // const fetchList = async (page = 1) => {
-    //     const response = await axios.get(`${url}/v1/api/product/pagination?page=${page}&limit=10`);
-    //     if (response.data.message) {
-    //         setList(response.data.data);
-    //         setList(fakeProducts);
-    //         setTotalPages(response.data.pagination.totalPages);
-    //     } else {
-    //         toast.error('Lỗi khi lấy danh sách sản phẩm');
-    //     }
-    // };
-
-    // Fake data cho fetchList
-
-    const fetchList = async (page = 1) => {
-        setTimeout(() => {
+    const fetchList = async (page = 1, limit = 10) => {
+        const response = await axios.get(`${url}/v1/api/product/paginate?page=${page}&limit=${limit}`);
+        if (response.data.message) {
+            setList(response.data.data);
             setList(fakeProducts);
-            setTotalPages(1);
-        }, 500);
+            setTotalPages(response.data.pagination.totalPages);
+        } else {
+            toast.error('Lỗi khi lấy danh sách sản phẩm');
+        }
     };
+
+    // // Fake data cho fetchList
+
+    // const fetchList = async (page = 1) => {
+    //     setTimeout(() => {
+    //         setList(fakeProducts);
+    //         setTotalPages(1);
+    //     }, 500);
+    // };
 
     useEffect(() => {
         if (searchTerm.trim()) {

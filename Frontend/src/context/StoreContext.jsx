@@ -57,7 +57,7 @@ const StoreContextProvider = (props) => {
         let totalAmount = 0;
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
-                let itemInfo = product_list.find((product) => product._id === item);
+                let itemInfo = product_list.find((product) => (product._id) === (item));
                 totalAmount += itemInfo.price * cartItems[item];
             }
         }
@@ -83,7 +83,6 @@ const StoreContextProvider = (props) => {
         async function loadData() {
             await fetchProductList();
             const cookieToken = Cookies.get("jwt");
-            console.log("cookieToken: ", cookieToken)
             if (cookieToken) {
                 setToken(cookieToken);
                 await loadCartData(cookieToken);

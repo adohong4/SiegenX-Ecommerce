@@ -191,19 +191,21 @@ class ProductService {
         return await productModel.countDocuments();
     }
 
-    static getProductsByPage = async (page = 1, pageSize = 5) => {
+    static getProductsByPage = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
 
             const products = await productModel.find()
                 .select('title nameProduct product_slug price images category quantity active')
+                .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
             const totalProducts = await productModel.countDocuments();
-            const totalPages = Math.ceil(totalProducts / pageSize);
+            const totalPages = Math.ceil(totalProducts / limit);
 
             return {
                 metadata: {
@@ -211,6 +213,7 @@ class ProductService {
                     currentPage: page,
                     totalPages,
                     totalProducts,
+                    limit
                 }
             };
         } catch (error) {

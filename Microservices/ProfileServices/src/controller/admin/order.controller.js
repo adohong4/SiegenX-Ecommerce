@@ -58,7 +58,7 @@ class OrderController {
 
     paginateOder = async (req, res, next) => {
         try {
-            const result = await OrderService.paginateOrder();
+            const result = await OrderService.paginateOrder(req, res);
             new OK({
                 message: 'phân trang thành công',
                 metadata: result.metadata

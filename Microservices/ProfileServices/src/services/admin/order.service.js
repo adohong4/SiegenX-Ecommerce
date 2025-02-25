@@ -53,10 +53,11 @@ class OrderService {
         }
     }
 
-    static paginateOrder = async (page = 1, pageSize = 5) => {
+    static paginateOrder = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize
-            const limit = pageSize;
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit
 
             const order = await orderModel.find()
                 .select('userId amount address status paymentMethod payment')
@@ -64,13 +65,14 @@ class OrderService {
                 .limit(limit)
                 .exec();
             const totalOrder = await orderModel.countDocuments();
-            const totalPages = Math.ceil(totalOrder / pageSize);
+            const totalPages = Math.ceil(totalOrder / limit);
             return {
                 metadata: {
                     order,
                     currentPage: page,
                     totalPages,
-                    totalOrder
+                    totalOrder,
+                    limit
                 }
             }
         } catch (error) {

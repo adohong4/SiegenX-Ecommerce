@@ -3,13 +3,13 @@ import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-// import { StoreContext } from '../../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { fakeCart } from "../../data/Enviroment"; 
+import { fakeCart } from "../../data/Enviroment";
 const Cart = () => {
-    // const { url, order_list, fetchOrder } = useContext(StoreContext);
+    const { url, order_list, fetchOrder } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalOrder, setTotalOrder] = useState(0);
@@ -116,36 +116,27 @@ const Cart = () => {
         document.body.classList.remove('popup-open');
     };
 
-    const fetchListpage = async (page = 1) => {
+    const fetchListpage = async (page = 1, limit = 10) => {
         try {
-            const response = await axios.get(`${url}/v1/api/profile/order/pagination?page=${page}&limit=10`);
+            const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
             if (response.data.message) {
-                setList(response.data.data);
-                setTotalOrder(response.data.pagination.limit);
-                setTotalPages(response.data.pagination.totalPages);
+                setList(response.data.metadata.order);
+                setTotalOrder(response.data.metadata.limit);
+                setTotalPages(response.data.metadata.totalPages);
             }
         } catch (error) {
             toast.error('Error fetching data');
         }
     };
 
-
-    // useEffect(() => {
-    //     if (searchTerm.trim()) {
-    //         // nofi = false
-    //         handleSearch();
-    //     } else {
-    //         fetchListpage(currentPage);
-    //     }
-    // }, [currentPage, searchTerm]);
-
-
-    // Fake data useEfect của Cart
-        useEffect(() => {
-            setList(fakeCart);
-        }, []);
-
-
+    useEffect(() => {
+        if (searchTerm.trim()) {
+            // nofi = false
+            handleSearch();
+        } else {
+            fetchListpage(currentPage);
+        }
+    }, [currentPage, searchTerm]);
 
     return (
         <div className='order-list-container'>
@@ -168,22 +159,22 @@ const Cart = () => {
             <table className="order-list-table">
                 <thead>
                     <tr className="table-header">
-                        <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer', textAlign:'center' }}>
+                        <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Mã hóa đơn {sortOrder._id === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th onClick={() => sortBy('date')} style={{ cursor: 'pointer', textAlign:'center' }}>
+                        <th onClick={() => sortBy('date')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Thời gian {sortOrder.date === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer', textAlign:'center' }}>
+                        <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Khách hàng {sortOrder['address.fullname'] === 'asc' ? '↑' : '↓'}
                         </th>
                         <th>Hình thức thanh toán</th>
-                        <th onClick={() => sortBy('amount')} style={{ cursor: 'pointer', textAlign:'center' }}>
+                        <th onClick={() => sortBy('amount')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Giá trị hóa đơn {sortOrder.amount === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Địa chỉ</th>
-                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Trạng thái</th>
-                        <th style={{ cursor: 'pointer', textAlign:'center' }}>Chức năng</th>
+                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Địa chỉ</th>
+                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Trạng thái</th>
+                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -211,7 +202,7 @@ const Cart = () => {
                                 <option value="Đang giao hàng">Đang giao hàng</option>
                                 <option value="Giao hàng thành công">Giao hàng thành công</option>
                             </select></td>
-                            <td className="btn-order" style={{  display: "flex", justifyContent: "space-around" , alignItems: "center",verticalAlign: "middle", padding:'15px 0px'}}>
+                            <td className="btn-order" style={{ display: "flex", justifyContent: "space-around", alignItems: "center", verticalAlign: "middle", padding: '15px 0px' }}>
                                 <button onClick={(e) => { e.stopPropagation(); removeOrder(item._id); }} className='btn-delete'>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>

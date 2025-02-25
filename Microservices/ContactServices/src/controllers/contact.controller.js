@@ -118,6 +118,24 @@ class ContactController {
         }
     }
 
+    toggleContactStatus = async (req, res, next) => {
+        try {
+            const userId = req.user;  
+         
+            const { id } = req.params; // Lấy ID liên hệ từ URL
+            
+            const result = await ContactService.toggleContactStatus(id, userId);
+    
+            new OK({
+                message: `Trạng thái liên hệ đã được cập nhật thành ${result.StatusActive ? 'hoạt động' : 'đã xóa'}.`,
+                metadata: result
+            }).send(res);
+        } catch (error) {  
+            next(error);
+        }
+    };
+    
+
 }
 
 

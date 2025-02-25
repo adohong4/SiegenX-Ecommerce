@@ -112,6 +112,35 @@ class ContactService {
     }  
 
 
+    static  toggleContactStatus = async (id, userId) => {
+        try {
+           
+            // Tìm contact theo ID
+            const contact = await contactModel.findById(id);
+            if (!contact) {
+                throw new Error("Liên hệ không tồn tại!");
+            }
+    
+            // Đảo ngược trạng thái StatusActive
+            const newStatus = !contact.StatusActive;
+            const actionDes = newStatus ? "restored contact" : "deleted contact";
+    
+            // Cập nhật lại giá trị trong DB
+            contact.StatusActive = newStatus;
+            contact.updatedBy = {
+                userId: userId,
+                description: actionDes,
+                updatedAt: new Date()
+            };
+    
+            await contact.save();
+            return contact; // Trả về thông tin sau khi cập nhật
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+
 
 }
 

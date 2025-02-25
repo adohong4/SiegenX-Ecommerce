@@ -48,7 +48,7 @@ const Sidebar = () => {
                         />
                         {menuOpen && (
                             <div className="profile-menu">
-                                <NavLink to="/profile">Xem Profile</NavLink>
+                                <NavLink to="/profile-admin">Xem Profile</NavLink>
                                 <NavLink to="/admin-login">Đăng Xuất</NavLink>
                             </div>
                         )}

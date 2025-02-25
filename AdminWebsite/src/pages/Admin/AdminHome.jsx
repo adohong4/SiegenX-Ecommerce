@@ -13,6 +13,7 @@ import Trash from '../Admin/Trash';
 import ImportProducts from '../Admin/ImportProducts';
 import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
+import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 
 const Admin = () => {
     return (
@@ -41,6 +42,7 @@ const Admin = () => {
                                 <Route path="trash" element={<Trash />} />
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+                                <Route path="profile-admin" element={<ProfileAdmin />} />
                             </Routes>
                         </div>
                     </div>

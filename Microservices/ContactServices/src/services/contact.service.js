@@ -91,8 +91,13 @@ class ContactService {
             .sort({ createdAt: -1 });
     }
 
-    static deleteContact = async (id) => {
+    static deleteContact = async (req, res) => {
         try {
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== "ADMIN") {
+                throw new ForbiddenError("Tài khoản bị giới hạn chức năng.")
+            }
             const contact = await contactModel.findById(id);
 
             if (!contact) {

@@ -9,7 +9,8 @@ import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
 import Orders from '../Admin/Cart';
 import DashBoard from '../Admin/DashBoard';
-import Trash from '../Admin/Trash';
+import ProductTrash from '../Admin/Trash';
+import ContactTrash from '../Admin/Trash/ContactTrash';
 import ImportProducts from '../Admin/ImportProducts';
 import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
@@ -42,12 +43,20 @@ const Admin = () => {
                         <div className="admin-content sidebar-right">
                             <Routes>
                                 <Route path="dashboard" element={<DashBoard />} />
+
+                                {/* Route Product */}
                                 <Route path="add" element={<AddProduct />} />
                                 <Route path="product" element={<ListProduct />} />
+                                <Route path="product/trash" element={<ProductTrash />} />
+
+                                {/* Route Contact */}
                                 <Route path="contact" element={<Contact />} />
+                                <Route path="contact/trash" element={<ContactTrash />} />
+
+                                {/* Route User */}
                                 <Route path="user" element={<ListUser />} />
                                 <Route path="orders" element={<Orders />} />
-                                <Route path="trash" element={<Trash />} />
+
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
                                 <Route path="profile-admin" element={<ProfileAdmin />} />

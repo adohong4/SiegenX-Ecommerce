@@ -1,17 +1,14 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import '../styles/styles.css';
+import '../../styles/styles.css';
 import axios from 'axios';
-import { formatDayTime, formatTime, formatHourDayTime } from '../../lib/utils'
+import { formatDayTime, formatTime, formatHourDayTime } from '../../../lib/utils'
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash'
-import ContactPopup from '../../components/Popup/ContactPopup';
+import ContactPopup from '../../../components/Popup/ContactPopup';
 import ReactPaginate from 'react-paginate';
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
-import { fakeContacts, fakeCustomerData } from "../../data/Enviroment";
+import { faBook, faRotateRight, faEye, faEyeSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Contact = () => {
     const { url } = useContext(StoreContext);
@@ -31,19 +28,24 @@ const Contact = () => {
     };
 
     const handleViewToggle = async (itemId) => {
-        await axios.put(`${url}/v1/api/contact/isCheck/${itemId}`);
-        const updatedList = list.map(item => {
-            if (item._id === itemId) {
-                return { ...item, viewed: !item.viewed };
-            }
-            return item;
-        });
-        setList(updatedList);
+        try {
+            await axios.put(`${url}/v1/api/contact/isCheck/${itemId}`);
+            const updatedList = list.map(item => {
+                if (item._id === itemId) {
+                    return { ...item, viewed: !item.viewed };
+                }
+                return item;
+            });
+            setList(updatedList);
+        } catch (error) {
+            toast.error("Lỗi khi cập nhật tình trạng");
+            console.error(error);
+        }
     };
 
     const fetchListcontact = async (page = 1, limit = 10) => {
         try {
-            const response = await axios.get(`${url}/v1/api/contact/pagination?page=${page}&limit=${limit}`);
+            const response = await axios.get(`${url}/v1/api/contact/paginate?page=${page}&limit=${limit}`);
             if (response.data.message) {
                 let contacts = response.data.metadata.contact.map(contact => ({
                     ...contact,
@@ -51,7 +53,7 @@ const Contact = () => {
                 }));
 
                 if (filterStatus !== "All") {
-                    const isCheckValue = filterStatus === "true"; // Convert "true"/"false" thành boolean
+                    const isCheckValue = filterStatus === "true";
                     contacts = contacts.filter(contact => contact.isCheck === isCheckValue);
                 }
 
@@ -89,17 +91,25 @@ const Contact = () => {
         [searchTerm, list, setList]
     );
 
+    const RestoreContact = async (id) => {
+        const response = await axios.delete(`${url}/v1/api/contact/status/${id}`);
+        if (response.data.status) {
+            toast.success(response.data.message);
+            fetchListcontact();
+        }
+    };
+
     const removeContact = async (id) => {
         try {
-            const response = await axios.delete(`${url}/v1/api/contact/status/${id}`);
+            const response = await axios.delete(`${url}/v1/api/contact/delete/${id}`);
             if (response.data.status) {
                 toast.success(response.data.message);
                 fetchListcontact();
             }
         } catch (error) {
-            toast.error("Xảy ra ngoại lệ khi xóa thông tin");
+            toast.error(error.response.data.message);
         }
-    };
+    }
 
     const sortBy = (field) => {
         const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
@@ -123,14 +133,6 @@ const Contact = () => {
     };
     return (
         <div className='contact-list-container'>
-            <section className="section-dashboard-contact">
-                {fakeCustomerData.map((item, index) => (
-                    <div key={index} className=" dashboard-body">
-                        <p className="text-lg font-semibold">{item.title}</p>
-                        <p className="text-2xl font-bold">{item.value.toString().padStart(2, "0")}</p>
-                    </div>
-                ))}
-            </section>
             <div className='top-list-tiltle'>
 
                 <div className='col-lg-4 tittle-right'>
@@ -204,6 +206,9 @@ const Contact = () => {
                             <div className="col-actions">
                                 <button onClick={(e) => { e.stopPropagation(); removeContact(item._id); }} className="btn-delete">
                                     <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                                <button onClick={() => RestoreContact(item._id)} className="btn-warn">
+                                    <FontAwesomeIcon icon={faRotateRight} />
                                 </button>
                                 <button onClick={() => openPopup(item._id)} className="btn-info">
                                     <FontAwesomeIcon icon={faBook} />

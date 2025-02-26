@@ -103,9 +103,9 @@ class ContactController {
 
     deleteContact = async (req, res, next) => {
         try {
-            const result = await ContactService.deleteContact(req.params.id);
+            const result = await ContactService.deleteContact(req, res);
             new OK({
-                message: 'Deleted Successfully!',
+                message: 'Xóa thành công',
                 metadata: result
             }).send(res);
 

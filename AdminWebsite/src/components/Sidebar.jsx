@@ -18,6 +18,7 @@ import {
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenContact, setIsOpenContact] = useState(false);
 
   return (
     <div className="section-sidebar">
@@ -34,67 +35,61 @@ const Sidebar = () => {
             <p>Tổng quan</p>
           </NavLink>
 
+          {/* Sản phẩm */}
           <div className="sidebar-dropdown">
-            <div
-              className="sidebar-option sidebar-main"
-              onClick={() => setIsOpen(!isOpen)}
-            >
+            <div className="sidebar-option sidebar-main" onClick={() => setIsOpen(!isOpen)}>
               <div className="dad-menu sidebar-title">
                 <FontAwesomeIcon icon={faPlusCircle} />
                 <p>Sản phẩm</p>
               </div>
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                className={`sidebar-icon ${isOpen ? "rotate" : ""}`}
-              />
+              <FontAwesomeIcon icon={faChevronDown} className={`sidebar-icon ${isOpen ? "rotate" : ""}`} />
             </div>
-
-            {/* Menu con */}
             {isOpen && (
               <ul className="sidebar-submenu">
-                <li>
-                  <NavLink to="/add" className="submenu-item">
-                    Thêm sản phẩm
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/product" className="submenu-item">
-                    Danh sách sản phẩm
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/trash" className="submenu-item">
-                    Thùng rác
-                  </NavLink>
-                </li>
+                <li><NavLink to="/add" className="submenu-item">Thêm sản phẩm</NavLink></li>
+                <li><NavLink to="/product" className="submenu-item">Danh sách sản phẩm</NavLink></li>
+                <li><NavLink to="/product/trash" className="submenu-item">Thùng rác</NavLink></li>
               </ul>
             )}
           </div>
 
-            <NavLink to="/user" className="sidebar-option">
-                <FontAwesomeIcon icon={faUser} />
-                <p>Tài Khoản</p>
-            </NavLink>
+          <NavLink to="/user" className="sidebar-option">
+            <FontAwesomeIcon icon={faUser} />
+            <p>Tài Khoản</p>
+          </NavLink>
 
-            <NavLink to="/orders" className="sidebar-option">
-                <FontAwesomeIcon icon={faBoxOpen} />
-                <p>Hóa Đơn</p>
-            </NavLink>
+          <NavLink to="/orders" className="sidebar-option">
+            <FontAwesomeIcon icon={faBoxOpen} />
+            <p>Hóa Đơn</p>
+          </NavLink>
 
-            <NavLink to="/contact" className="sidebar-option">
+          {/* Liên hệ CSKH */}
+          <div className="sidebar-dropdown">
+            <div className="sidebar-option sidebar-main" onClick={() => setIsOpenContact(!isOpenContact)}>
+              <div className="dad-menu sidebar-title">
                 <FontAwesomeIcon icon={faHeadset} />
                 <p>Liên Hệ CSKH</p>
-            </NavLink>
+              </div>
+              <FontAwesomeIcon icon={faChevronDown} className={`sidebar-icon ${isOpenContact ? "rotate" : ""}`} />
+            </div>
+            {isOpenContact && (
+              <ul className="sidebar-submenu">
+                <li><NavLink to="/contact" className="submenu-item">Danh sách liên hệ</NavLink></li>
+                <li><NavLink to="/contact/trash" className="submenu-item">Thùng rác</NavLink></li>
+              </ul>
+            )}
+          </div>
 
-            <NavLink to="/nhap-hang" className="sidebar-option">
-              <FontAwesomeIcon icon={faInbox} />
-                <p>Nhập Hàng</p>
-            </NavLink>
-          
-            <NavLink to="/campain" className="sidebar-option">
-              <FontAwesomeIcon icon={faBarcode} />
-                <p>Chiến dịch</p>
-            </NavLink>
+
+          <NavLink to="/nhap-hang" className="sidebar-option">
+            <FontAwesomeIcon icon={faInbox} />
+            <p>Nhập Hàng</p>
+          </NavLink>
+
+          <NavLink to="/campain" className="sidebar-option">
+            <FontAwesomeIcon icon={faBarcode} />
+            <p>Chiến dịch</p>
+          </NavLink>
         </div>
 
 

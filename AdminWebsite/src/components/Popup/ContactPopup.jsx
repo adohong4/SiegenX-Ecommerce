@@ -53,7 +53,7 @@ const ContactPopup = ({ isOpen, onClose, contactId }) => {
                         <p>{contact.phone}</p>
                     </div>
                     <div className="popup-info">
-                        <label><strong>Thời gian:</strong></label>
+                        <label><strong>Thời gian:</strong> </label>
                         <p>{contact.date}</p>
                     </div>
                     <div className="popup-info">

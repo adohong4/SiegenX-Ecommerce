@@ -11,7 +11,7 @@ class ContactController {
                 message: 'Contact OK',
                 metadata: result.metadata
             }).send(res);
-        } catch (error) { 
+        } catch (error) {
             next(error);
         }
     }
@@ -42,20 +42,16 @@ class ContactController {
 
     updateContactIsCheck = async (req, res, next) => {
         try {
-            const { id } = req.params; // Lấy ID từ URL
-    
-            // Gọi Service để cập nhật trạng thái isCheck
-            const updatedContact = await ContactService.updateIsCheck(id);
-    
-            res.status(200).json({
+            const updatedContact = await ContactService.updateIsCheck(req, res);
+            new OK({
                 message: "Cập nhật trạng thái isCheck thành công",
                 metadata: updatedContact
-            });
+            }).send(res);
         } catch (error) {
             next(error);
         }
     };
-    
+
 
     getContactsByEmail = async (req, res, next) => {
         try {
@@ -81,24 +77,11 @@ class ContactController {
 
     getContactWithPagination = async (req, res, next) => {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-            const skip = (page - 1) * limit;
-
-            const totalContacts = await ContactService.countDocuments();
-            const contacts = await ContactService.find(limit, skip);
-
-            res.status(200).json({
-                message: 'Contacts fetched successfully',
-                data: contacts,
-                pagination: {
-                    total: totalContacts,
-                    currentPage: page,
-                    totalContacts: Math.ceil(totalContacts / limit),
-                    limit,
-                },
-            });
-
+            const result = await ContactService.paginateContact(req, res);
+            new OK({
+                message: 'Get contact with pagination OK',
+                metadata: result.metadata
+            }).send(res);
         } catch (error) {
             next(error);
         }
@@ -120,21 +103,15 @@ class ContactController {
 
     toggleContactStatus = async (req, res, next) => {
         try {
-            const userId = req.user;  
-         
-            const { id } = req.params; // Lấy ID liên hệ từ URL
-            
-            const result = await ContactService.toggleContactStatus(id, userId);
-    
+            const result = await ContactService.toggleContactStatus(req, res);
             new OK({
-                message: `Trạng thái liên hệ đã được cập nhật thành ${result.StatusActive ? 'hoạt động' : 'đã xóa'}.`,
+                message: `Trạng thái liên hệ đã được ${result.StatusActive ? 'hoạt động' : 'xóa'}.`,
                 metadata: result
             }).send(res);
-        } catch (error) {  
+        } catch (error) {
             next(error);
         }
     };
-    
 
 }
 

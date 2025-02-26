@@ -116,12 +116,10 @@ class StaffController {
     LogOutStaff = async (req, res, next) => {
         try {
             const result = await StaffService.LogOutStaff(req, res);
-
-            return res.status(200).json({
-                status: "success",
+            new OK({
                 message: "Đăng xuất thành công",
                 metadata: result
-            });
+            }).send(res);
         } catch (error) {
             next(error);
         }

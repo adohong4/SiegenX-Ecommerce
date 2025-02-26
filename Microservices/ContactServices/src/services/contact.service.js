@@ -38,41 +38,40 @@ class ContactService {
 
     static GetDetailContact = async (id) => {
         try {
-            const contacts = await contactModel.findById(id);
-            if (!contacts) {
-                throw new BadRequestError('Không tìm thấy id contact.');
+            const contacts = await contactModel.findById(id)
+                .lean();
+            if (contacts.creator) {
+                contacts.creator = contacts.creator.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
-            return {
-                contacts
-            }
+            return { contacts }
         } catch (error) {
             throw error;
         }
     }
 
-    
-
-    static updateIsCheck = async (contactId) => {
+    static updateIsCheck = async (req, res) => {
         try {
-            // Tìm tài liệu theo contactId
+            const contactId = req.params.id;
+            const userId = req.user;
+            const staffName = req.staffName;
+
             const contact = await contactModel.findById(contactId);
-            if (!contact) {
-                throw new Error("Không tìm thấy liên hệ.");
-            }
-    
-            // Đảo ngược trạng thái isCheck (true <-> false)
-            const updatedContact = await contactModel.findByIdAndUpdate(
-                contactId,
-                { isCheck: !contact.isCheck }, // Đảo trạng thái
-                { new: true, runValidators: true }
-            );
-    
-            return updatedContact;
+            const newActiveStatus = !contact.isCheck;
+            const actionDescription = newActiveStatus ? "Đã liên hệ" : "Chưa liên hệ";
+
+            contact.isCheck = newActiveStatus;
+            contact.creator.push({
+                createdBy: userId,
+                createdName: staffName,
+                description: actionDescription
+            })
+            await contact.save();
+            return { metadata: contact }
         } catch (error) {
             throw error;
         }
     };
-    
+
 
 
     static findByEmail = async (email) => {
@@ -109,39 +108,60 @@ class ContactService {
         } catch (error) {
             throw error;
         }
-    }  
+    }
 
 
-    static  toggleContactStatus = async (id, userId) => {
+    static paginateContact = async (req, res) => {
         try {
-           
-            // Tìm contact theo ID
-            const contact = await contactModel.findById(id);
-            if (!contact) {
-                throw new Error("Liên hệ không tồn tại!");
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
+
+            const contact = await contactModel.find({ StatusActive: true })
+                .select('username email phone content isCheck createdAt StatusActive')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalContact = await contactModel.countDocuments({ StatusActive: true });
+            const totalPages = Math.ceil(totalContact / limit);
+            return {
+                metadata: {
+                    contact,
+                    currentPage: page,
+                    totalPages,
+                    totalContact,
+                    limit
+                }
             }
-    
-            // Đảo ngược trạng thái StatusActive
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
+
+    static toggleContactStatus = async (req, res) => {
+        try {
+            const contactId = req.params.id;
+            const userId = req.user;
+            const staffName = req.staffName;
+
+            const contact = await contactModel.findById(contactId);
             const newStatus = !contact.StatusActive;
-            const actionDes = newStatus ? "restored contact" : "deleted contact";
-    
-            // Cập nhật lại giá trị trong DB
+            const actionDes = newStatus ? "Hồi phục liên hệ" : "Đã xóa liên hệ";
+
             contact.StatusActive = newStatus;
-            contact.updatedBy = {
-                userId: userId,
-                description: actionDes,
-                updatedAt: new Date()
-            };
-    
+            contact.creator.push({
+                createdBy: userId,
+                createdName: staffName,
+                description: actionDes
+            })
             await contact.save();
-            return contact; // Trả về thông tin sau khi cập nhật
+            return contact;
         } catch (error) {
             throw error;
         }
     }
-    
-
-
 }
 
 module.exports = ContactService;  // xuất class

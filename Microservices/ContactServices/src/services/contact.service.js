@@ -111,7 +111,7 @@ class ContactService {
     }
 
 
-    static paginateContact = async (req, res) => {
+    static paginateContactTrue = async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
@@ -124,6 +124,34 @@ class ContactService {
                 .limit(limit)
                 .exec();
             const totalContact = await contactModel.countDocuments({ StatusActive: true });
+            const totalPages = Math.ceil(totalContact / limit);
+            return {
+                metadata: {
+                    contact,
+                    currentPage: page,
+                    totalPages,
+                    totalContact,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
+    static paginateContactFalse = async (req, res) => {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
+
+            const contact = await contactModel.find({ StatusActive: false })
+                .select('username email phone content isCheck createdAt StatusActive')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalContact = await contactModel.countDocuments({ StatusActive: false });
             const totalPages = Math.ceil(totalContact / limit);
             return {
                 metadata: {

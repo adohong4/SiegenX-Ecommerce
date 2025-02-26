@@ -77,7 +77,7 @@ class ContactController {
 
     getContactWithPagination = async (req, res, next) => {
         try {
-            const result = await ContactService.paginateContact(req, res);
+            const result = await ContactService.paginateContactTrue(req, res);
             new OK({
                 message: 'Get contact with pagination OK',
                 metadata: result.metadata
@@ -86,6 +86,19 @@ class ContactController {
             next(error);
         }
     };
+
+    paginateContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.paginateContactFalse(req, res);
+            new OK({
+                message: 'Get contact with Active Status is false',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    };
+
 
 
     deleteContact = async (req, res, next) => {

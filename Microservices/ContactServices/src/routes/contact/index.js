@@ -15,7 +15,10 @@ router.get('/contact/list/:id', asyncHandler(ContactController.getDetailContact)
 router.put('/contact/isCheck/:id', checkTokenCookie, asyncHandler(ContactController.updateContactIsCheck));
 router.get('/contact/search/:email', asyncHandler(ContactController.getContactsByEmail));
 router.get('/contact/count', asyncHandler(contactController.countContact));
-router.get('/contact/pagination', asyncHandler(contactController.getContactWithPagination));
+
+router.get('/contact/pagination', asyncHandler(contactController.getContactWithPagination));//StatusActive: true
+router.get('/contact/paginate', asyncHandler(contactController.paginateContact));//StatusActive: false
+
 router.delete('/contact/delete/:id', checkTokenCookie, asyncHandler(contactController.deleteContact));
 router.delete('/contact/status/:id', checkTokenCookie, asyncHandler(ContactController.toggleContactStatus)); //delete && restore
 

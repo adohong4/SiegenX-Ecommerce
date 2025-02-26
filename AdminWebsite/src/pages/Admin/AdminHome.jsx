@@ -15,7 +15,9 @@ import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 import Staff from '../../pages/Admin/Staff';
-import AddSupplier from '../../pages/Supplier/AddSupplier'
+import AddSupplier from '../../pages/Supplier/AddSupplier';
+import Supplier from '../../pages/Supplier/Supplier';
+import TrashSupplier from '../../pages/Supplier/TrashSupplier';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -57,6 +59,8 @@ const Admin = () => {
 
                                 {/* Nhập Hàng */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
+                                <Route path="supplier" element={<Supplier />} />
+                                <Route path="trash-supplier" element={<TrashSupplier />} />
                             </Routes>
                         </div>
                     </div>

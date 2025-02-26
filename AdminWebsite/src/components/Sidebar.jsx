@@ -152,12 +152,12 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/product" className="submenu-item">
+                  <NavLink to="/supplier" className="submenu-item">
                     Danh sách nhà cung cấp
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/trash" className="submenu-item">
+                  <NavLink to="/trash-supplier" className="submenu-item">
                     Thùng rác
                   </NavLink>
                 </li>

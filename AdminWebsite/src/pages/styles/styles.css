@@ -926,8 +926,8 @@ textarea {
 }
 .header-topadmin {
     position: fixed;
-    width: 89vw;
-    left: 10vw;
+    width: calc(100% - 180px);
+    left: 180px;
     top: 0;
     z-index: 999;
     background-color: #fff;
@@ -2168,4 +2168,73 @@ h2 {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+
+/* CSS cho trang Danh sách nahf cung cấp */
+.supplier-list-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.supplier-list-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.supplier-list-container .ant-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.supplier-list-container .ant-btn {
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.supplier-list-container .ant-btn-primary {
+    background: #1677ff;
+    border-color: #1677ff;
+}
+
+.supplier-list-container .ant-btn-danger {
+    background: #ff4d4f;
+    border-color: #ff4d4f;
+}
+
+.supplier-list-container .ant-btn:hover {
+    opacity: 0.85;
+}
+
+.supplier-list-container .ant-modal {
+    border-radius: 8px;
+}
+
+.supplier-list-container .ant-modal-header {
+    background: #f0f2f5;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.supplier-list-container .ant-modal-title {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.supplier-list-container .ant-modal-footer {
+    display: none;
+}
+
+.supplier-list-container .ant-form-item-label label {
+    font-weight: 500;
+}
+
+.supplier-list-container .ant-input {
+    border-radius: 5px;
 }

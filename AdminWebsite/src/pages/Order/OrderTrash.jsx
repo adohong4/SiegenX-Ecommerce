@@ -5,34 +5,17 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEye, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { formatHourDayTime } from '../../lib/utils';
-const Cart = () => {
-    const { url, order_list, fetchOrder } = useContext(StoreContext);
+const OrderTrash = () => {
+    const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalOrder, setTotalOrder] = useState(0);
     const [totalPages, setTotalPages] = useState(0); // Theo dõi tổng số trang
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState({ 'address.fullname': 'asc', amount: 'asc' });
-    const [selectedRow, setSelectedRow] = useState(null); // Lưu thông tin hàng được chọn
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // Trạng thái mở/đóng popup
-    const popupRef = useRef(null); // Tạo ref cho popup
     axios.defaults.withCredentials = true;
-
-    const handlePrint = () => {
-        if (popupRef.current) {
-            const printContent = popupRef.current.innerHTML;
-            const originalContent = document.body.innerHTML;
-            // Chuyển nội dung popup vào body để in
-            document.body.innerHTML = printContent;
-            // Thực hiện in
-            window.print();
-            // Khôi phục nội dung ban đầu
-            document.body.innerHTML = originalContent;
-            window.location.reload(); // Reload lại trang sau khi in xong
-        }
-    };
 
     const handleSearch = async () => {
         if (searchTerm.trim() === '') {
@@ -79,8 +62,16 @@ const Cart = () => {
         }
     };
 
-    const removeOrder = async (id) => {
+    const restoreOrder = async (id) => {
         const response = await axios.delete(`${url}/v1/api/profile/order/status/${id}`);
+        if (response.data.status) {
+            toast.success(response.data.message);
+            fetchListpage(currentPage);
+        }
+    };
+
+    const removeOrder = async (id) => {
+        const response = await axios.delete(`${url}/v1/api/profile/order/delete/${id}`);
         if (response.data.status) {
             toast.success(response.data.message);
             fetchListpage(currentPage);
@@ -102,20 +93,8 @@ const Cart = () => {
         setList(sortedList);
     };
 
-    const openPopup = (row) => {
-        setSelectedRow(row);
-        setIsPopupOpen(true);
-        document.body.classList.add('popup-open');
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setSelectedRow(null);
-        document.body.classList.remove('popup-open');
-    };
-
     const fetchListpage = async (page = 1, limit = 10) => {
-        const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
+        const response = await axios.get(`${url}/v1/api/profile/order/trash/paginate?page=${page}&limit=${limit}`);
         if (response.data.message) {
             setList(response.data.metadata.order);
             setTotalOrder(response.data.metadata.limit);
@@ -125,7 +104,6 @@ const Cart = () => {
 
     useEffect(() => {
         if (searchTerm.trim()) {
-            // nofi = false
             handleSearch();
         } else {
             fetchListpage(currentPage);
@@ -200,8 +178,8 @@ const Cart = () => {
                                 <button onClick={(e) => { e.stopPropagation(); removeOrder(item._id); }} className='btn-delete'>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
-                                <button type="button" onClick={() => openPopup(item)} className='btn-info'>
-                                    <FontAwesomeIcon icon={faEye} />
+                                <button onClick={(e) => restoreOrder(item._id)} className='btn-delete'>
+                                    <FontAwesomeIcon icon={faRotateRight} />
                                 </button>
                             </td>
                         </tr>
@@ -228,81 +206,8 @@ const Cart = () => {
                 containerClassName="pagination"
                 activeClassName="active"
             />
-
-
-            {isPopupOpen && selectedRow && (
-                <div className="popup-overlay" onClick={closePopup}>
-                    <div className="popup-content-cskh" onClick={(e) => e.stopPropagation()}
-                        ref={popupRef}>
-                        <button className="close-popup" onClick={closePopup}>×</button>
-                        <div className="popup-header">
-                            <h3>Chi tiết hóa đơn</h3>
-                        </div>
-                        <div className="popup-body">
-                            <div className="popup-info">
-                                <label><strong>Mã hóa đơn:</strong></label>
-                                <p>{selectedRow._id}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Thời gian:</strong></label>
-                                <p>{selectedRow.date}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Khách hàng:</strong></label>
-                                <p>{selectedRow.address?.fullname || 'Không có thông tin'}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Hình thức thanh toán:</strong></label>
-                                <p>{selectedRow.paymentMethod || 'Không có thông tin'}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Giá trị đơn hàng:</strong></label>
-                                <p>{(selectedRow.amount).toLocaleString()} VND</p>
-                            </div>
-                            <div className="popup-info" style={{ display: 'block' }}>
-                                <label><strong>Địa chỉ:</strong></label>
-                                <p>
-                                    {selectedRow.address?.street}, {selectedRow.address?.state}, {selectedRow.address?.country}, {selectedRow.address?.zipcode}
-                                </p>
-                            </div>
-                            <div className="popup-info" style={{ display: 'block' }}>
-                                <label><strong>Sản phẩm đã mua:</strong></label>
-                                {selectedRow.items && selectedRow.items.length > 0 ? (
-                                    <table className="product-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tên sản phẩm</th>
-                                                <th>Số lượng</th>
-                                                <th>Giá</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedRow.items.map((item, index) => (
-                                                <tr key={index}>
-                                                    <td>{item.nameProduct}</td>
-                                                    <td style={{ textAlign: 'center' }} >{item.quantity}</td>
-                                                    <td style={{ textAlign: 'center' }}>{item.price.toLocaleString()} </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <p>Không có sản phẩm nào.</p>
-                                )}
-                            </div>
-                            <div className="popup-footer">
-                                <div className="popup-printf">
-                                    <button onClick={handlePrint} className="popup-print-btn">In hóa đơn</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            )}
-
         </div>
     );
 };
 
-export default Cart;
+export default OrderTrash;

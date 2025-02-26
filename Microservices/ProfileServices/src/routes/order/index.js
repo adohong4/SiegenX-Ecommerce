@@ -14,10 +14,15 @@ router.get('/profile/user/order/get', checkTokenCookie, asyncHandler(OrderUserCo
 //Admin
 router.get('/profile/order/get', asyncHandler(OrderAdminController.getOrders));
 router.get('/profile/order/get/:id', asyncHandler(OrderAdminController.getOrderById));
+
 router.get('/profile/order/paginate', asyncHandler(OrderAdminController.paginateOder));
+router.get('/profile/order/trash/paginate', asyncHandler(OrderAdminController.paginateOderTrash));
+
 router.get('/profile/order/search/:id', asyncHandler(OrderAdminController.searchById));
 
 router.put('/profile/order/update', checkTokenCookie, asyncHandler(OrderAdminController.updateStatusOrder));
-router.delete('/profile/order/delete/:orderId', checkTokenCookie, asyncHandler(OrderAdminController.deleteOrder));
+
+router.delete('/profile/order/delete/:id', checkTokenCookie, asyncHandler(OrderAdminController.deleteOrder));
+router.delete('/profile/order/status/:id', checkTokenCookie, asyncHandler(OrderAdminController.toggleOrderStatus)); //delete && restore
 
 module.exports = router;

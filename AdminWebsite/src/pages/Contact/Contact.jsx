@@ -8,9 +8,7 @@ import ContactPopup from '../../components/Popup/ContactPopup';
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faTrash, faBook } from '@fortawesome/free-solid-svg-icons';
 import { fakeContacts, fakeCustomerData } from "../../data/Enviroment";
 
 const Contact = () => {

@@ -44,9 +44,19 @@ class OrderController {
 
     deleteOrder = async (req, res, next) => {
         try {
-            const orderId = req.params.orderId;
-            const isStatus = req.body.statusActive;
-            const order = await OrderService.deleteOrder({ orderId, isStatus });
+            const order = await OrderService.deleteOrder(req, res);
+            new CREATED({
+                message: 'Xóa đơn hàng thành công',
+                metadata: order.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    toggleOrderStatus = async (req, res, next) => {
+        try {
+            const order = await OrderService.toggleOrderStatus(req, res);
             new CREATED({
                 message: 'Xóa đơn hàng thành công',
                 metadata: order.metadata
@@ -67,6 +77,19 @@ class OrderController {
             next(error);
         }
     }
+
+    paginateOderTrash = async (req, res, next) => {
+        try {
+            const result = await OrderService.paginateOrderTrash(req, res);
+            new OK({
+                message: 'phân trang thành công',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
     searchById = async (req, res, next) => {
         try {

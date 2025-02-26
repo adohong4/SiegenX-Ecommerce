@@ -9,6 +9,7 @@ import AddProduct from '../Product/AddProducts';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
 import Orders from '../Order/Cart';
+import OrderTrash from '../Order/OrderTrash';
 import DashBoard from '../Admin/DashBoard';
 import ProductTrash from '../Product/Trash';
 import ContactTrash from '../Contact/ContactTrash';
@@ -64,7 +65,7 @@ const Admin = () => {
 
                                 {/* Route Order */}
                                 <Route path="orders" element={<Orders />} />
-                                <Route path="orders/trash" element={<Orders />} />
+                                <Route path="orders/trash" element={<OrderTrash />} />
 
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />

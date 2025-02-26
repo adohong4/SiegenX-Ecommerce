@@ -4,6 +4,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const DOCUMENT_NAME = 'Orders'
 
+const HistorySchema = new Schema({
+    createdBy: { type: String }, //id
+    createdName: { type: String }, //id
+    description: { type: String },
+    createdAt: { type: Date, default: Date.now },
+})
+
 const orderSchema = new Schema({
     userId: { type: String, required: true },
     items: { type: Array, required: true },
@@ -25,7 +32,8 @@ const orderSchema = new Schema({
     },
     paymentMethod: { type: String, default: "Thanh toán khi nhận hàng" },
     payment: { type: Boolean, default: false },
-    statusActive: { type: Boolean, default: true }
+    statusActive: { type: Boolean, default: true },
+    creator: [HistorySchema]
 }, { timestamps: true })
 
 orderSchema.index({ userId: 1 });

@@ -12,7 +12,7 @@ class IdentityService {
     static register = async (req, { username, email, password, role }) => {
         try {
             //checking is user already exists
-            const exists = await identityModel.findOne({ email });  
+            const exists = await identityModel.findOne({ email });
             if (exists) {
                 throw new BadRequestError('Email đã được đăng ký, vui lòng chọn email khác')
             }
@@ -35,7 +35,6 @@ class IdentityService {
                 username: username,
                 email: email,
                 password: hashedPassword,
-                role: 'USER'
             })
             const token = createToken(newUser._id, req.res);
 

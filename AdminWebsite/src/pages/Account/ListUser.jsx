@@ -1,6 +1,7 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useCallback } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
+import { debounce } from 'lodash'
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
@@ -12,7 +13,7 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { formatDayTime } from '../../lib/utils';
 
 const ListUser = () => {
-    const { url, account_list } = useContext(StoreContext);
+    const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -20,8 +21,12 @@ const ListUser = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortNameOrder, setSortNameOrder] = useState('asc');
-    const [sortEmailOrder, setSortEmailOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState({ name: 'asc', email: 'asc' });
+    axios.defaults.withCredentials = true;
+
+    const removeAccents = (str) => {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
 
     const openUpdatePopup = (user) => {
         setCurrentUser(user);
@@ -36,82 +41,45 @@ const ListUser = () => {
     };
 
     const fetchList = async (page = 1, limit = 6) => {
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=${limit}`);
-            if (response.data.message) {
-                setList(response.data.metadata.account);
-                setTotalUser(response.data.metadata.limit);
-                setTotalPages(response.data.metadata.totalPages);
-                console.log("account: ", response.data.metadata.account)
-            } else {
-                toast.error('Lấy dữ liệu thất bại');
-            }
-        } catch (error) {
-            toast.error('Lỗi khi lấy dữ liệu');
-            console.error(error);
+        const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=${limit}`);
+        if (response.data.message) {
+            setList(response.data.metadata.account);
+            setTotalUser(response.data.metadata.limit);
+            setTotalPages(response.data.metadata.totalPages);
+        } else {
+            toast.error('Lấy dữ liệu thất bại');
         }
     };
 
     useEffect(() => {
         if (searchTerm.trim()) {
-            // nofi = false
             handleSearch();
         } else {
             fetchList(currentPage);
         }
     }, [currentPage, searchTerm]);
 
-
-    //Fake data UseEffect cho ListUser
-    // useEffect(() => {
-    //     setList(fakeListUser);
-    // }, []);
-
-
-    const handleSearch = async () => {
-        if (searchTerm.trim() === '') {
-            await fetchList();
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/admin/users/email`, {
-                params: { email: searchTerm, page: currentPage, limit: 10 }
-            });
-
-            if (response.data.status) {
-                if (Array.isArray(response.data.data)) {
-                    setList(response.data.data);
-                    setTotalPages(response.data.pagination.totalPages); // Cập nhật tổng số trang
-                    // toast.success(response.data.message);
-                } else {
-                    setList([]);
-                    setTotalPages(0); // Đặt số trang về 0 nếu không có kết quả
-                    toast.error("Không tìm thấy người dùng");
-                }
+    const handleSearch = useCallback(
+        debounce(() => {
+            if (searchTerm.trim() === '') {
+                setList(list);
             } else {
-                setList([]);
-                toast.error("Tìm kiếm thất bại");
+                const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
+                const filteredList = list.filter(contact =>
+                    removeAccents(contact.username.toLowerCase()).includes(normalizedSearchTerm) ||
+                    contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                setList(filteredList);
             }
-        } catch (error) {
-            console.log(response.data.status)
-            setList([]); // Gán giá trị rỗng khi xảy ra lỗi
-            setTotalPages(0);
-            toast.error("Lỗi trong quá trình tìm kiếm");
-        }
-    };
+        }, 300), //mili seconds
+        [searchTerm, list, setList]
+    );
 
     const removeUser = async (userId) => {
-        try {
-            const response = await axios.delete(`${url}/v1/api/profile/admin/deleteUser/${userId}`);
-            if (response.data.status) {
-                toast.success(response.data.message);
-                await fetchList(currentPage);
-            } else {
-                toast.error('Error deleting user');
-            }
-        } catch (error) {
-            toast.error('Error deleting user');
+        const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
+        if (response.data.status) {
+            toast.success(response.data.message);
+            await fetchList(currentPage);
         }
     };
 
@@ -135,24 +103,11 @@ const ListUser = () => {
         }
     };
 
-    const handlePageClick = (event) => {
-        setCurrentPage(+event.selected + 1);
-    };
-
-    const sortByName = () => {
-        const newOrder = sortNameOrder === 'asc' ? 'desc' : 'asc';
-        setSortNameOrder(newOrder);
+    const sortBy = (field) => {
+        const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
+        setSortOrder({ ...sortOrder, [field]: newOrder });
         const sortedList = [...list].sort((a, b) =>
-            newOrder === 'asc' ? a.username.localeCompare(b.username) : b.username.localeCompare(a.username)
-        );
-        setList(sortedList);
-    };
-
-    const sortByEmail = () => {
-        const newOrder = sortEmailOrder === 'asc' ? 'desc' : 'asc';
-        setSortEmailOrder(newOrder);
-        const sortedList = [...list].sort((a, b) =>
-            newOrder === 'asc' ? a.email.localeCompare(b.email) : b.email.localeCompare(a.email)
+            newOrder === 'asc' ? a[field].localeCompare(b[field]) : b[field].localeCompare(a[field])
         );
         setList(sortedList);
     };
@@ -160,8 +115,6 @@ const ListUser = () => {
     const handleInputChange = (e) => {
         setCurrentUser({ ...currentUser, [e.target.name]: e.target.value });
     };
-
-
 
     return (
         <div className="user-list-container">
@@ -171,7 +124,7 @@ const ListUser = () => {
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search..."
+                        placeholder="Tìm kiếm..."
                         className="search-input"
                     />
                     <button onClick={handleSearch} className="btn-search">
@@ -182,11 +135,11 @@ const ListUser = () => {
 
             <div className="user-list-table">
                 <div className="table-header">
-                    <div onClick={sortByName} className="col-tk" style={{ cursor: 'pointer' }}>
-                        Tài Khoản {sortNameOrder === 'asc' ? '↑' : '↓'}
+                    <div onClick={() => sortBy('username')} className="col-tk" style={{ cursor: 'pointer' }}>
+                        Tài Khoản {sortOrder.username === 'asc' ? '↑' : '↓'}
                     </div>
-                    <div onClick={sortByEmail} className="col-email" style={{ cursor: 'pointer' }}>
-                        Email {sortEmailOrder === 'asc' ? '↑' : '↓'}
+                    <div onClick={() => sortBy('email')} className="col-email" style={{ cursor: 'pointer' }}>
+                        Email {sortOrder.email === 'asc' ? '↑' : '↓'}
                     </div>
                     <div className="col-date">Ngày tạo</div>
                     <div className="col-address">Số lượng địa chỉ</div>
@@ -216,11 +169,10 @@ const ListUser = () => {
                 ))}
             </div>
 
-
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
-                onPageChange={handlePageClick}
+                onPageChange={(e) => setCurrentPage(e.selected + 1)}
                 pageRangeDisplayed={5}
                 pageCount={totalPages}
                 previousLabel="<"

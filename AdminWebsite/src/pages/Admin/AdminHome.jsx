@@ -15,6 +15,7 @@ import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 import Staff from '../../pages/Admin/Staff';
+import AddSupplier from '../../pages/Supplier/AddSupplier'
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -53,6 +54,9 @@ const Admin = () => {
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
                                 <Route path="staff" element={<Staff />} />
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
+
+                                {/* Nhập Hàng */}
+                                <Route path="add-supplier" element={<AddSupplier />} />
                             </Routes>
                         </div>
                     </div>

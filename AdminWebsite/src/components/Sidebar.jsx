@@ -76,7 +76,7 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/trash-product" className="submenu-item">
+                  <NavLink to="/trash" className="submenu-item">
                     Thùng rác
                   </NavLink>
                 </li>
@@ -122,7 +122,7 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/trash-nhap-hang" className="submenu-item">
+                  <NavLink to="/trash" className="submenu-item">
                     Thùng rác
                   </NavLink>
                 </li>
@@ -147,7 +147,7 @@ const Sidebar = () => {
             {openMenus.nhaCungcap && (
               <ul className="sidebar-submenu">
                 <li>
-                  <NavLink to="/nhap-hang" className="submenu-item">
+                  <NavLink to="/add-supplier" className="submenu-item">
                     Thêm nhà cung cấp
                   </NavLink>
                 </li>

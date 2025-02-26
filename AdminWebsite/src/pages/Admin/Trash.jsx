@@ -7,8 +7,8 @@ import ReactPaginate from 'react-paginate';
 // import { StoreContext } from '../../../context/StoreContext';
 // import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash,faRotateRight } from '@fortawesome/free-solid-svg-icons';
-import { fakeProducts, stats } from "../../data/Enviroment"; 
+import { faTrash, faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { fakeProducts, stats } from "../../data/Enviroment";
 
 const ListProduct = () => {
     // const { url, url2, product_list } = useContext(StoreContext)
@@ -57,7 +57,7 @@ const ListProduct = () => {
         setList((prevList) => prevList.filter(product => product._id !== productId));
         toast.success("Sản phẩm đã được xóa!");
     };
-    
+
 
     // const handleSearch = async () => {
     //     if (searchTerm.trim() === '') {
@@ -167,21 +167,13 @@ const ListProduct = () => {
     return (
         <div className='listproduct add flex-col'>
             <div className='dashboard-product'>
-                    <div className="das-body">
-                        {stats.map((stat, index) => (
-                            <div key={index} className="box">
-                            <p className="label">{stat.label}</p>
-                            <p className="value">{stat.value.toString().padStart(2, "0")} + </p>
-                            </div>
-                        ))}
-                        </div>
-                </div>
-                <div className='top-list-tiltle'>
-                
+            </div>
+            <div className='top-list-tiltle'>
+
                 <div className='col-lg-4 tittle-right'>
                 </div>
                 <div className='col-lg-8 list-left'>
-                    <div className='search-right'>
+                    {/* <div className='search-right'>
                         <div className="sort-container">
                             <select id="sort" onChange={handleSortChange} value={sort}>
                                 <option value="Sort By">Sắp xếp</option>
@@ -200,7 +192,7 @@ const ListProduct = () => {
                                 <option value="KTV 5D">KTV 5D</option>
                             </select>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='search-left'>
                         <div className='search'>
@@ -212,12 +204,9 @@ const ListProduct = () => {
                                     placeholder="Search..."
                                     className='search-input'
                                 />
-                                <button  className='btn-search'>
+                                <button className='btn-search'>
                                     Tìm kiếm
                                 </button>
-                                {/* <button onClick={handleSearch} className='btn-search'>
-                                    <i className="fas fa-search"></i>
-                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -249,6 +238,9 @@ const ListProduct = () => {
                         <div className='button-product'>
                             <button onClick={() => removeProduct(item._id)} className='cursor1' >
                                 <FontAwesomeIcon icon={faRotateRight} />
+                            </button>
+                            <button className="btn btn-danger">
+                                <FontAwesomeIcon icon={faTrash} />
                             </button>
                         </div>
                     </div>

@@ -549,7 +549,7 @@ body.popup-open {
 
   /* CSS cho popup Supplier */
 
-  .supplier-popup {
+  /* .supplier-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -635,7 +635,7 @@ body.popup-open {
   
   .supplier-popup .btn-cancel {
     background: #ccc;
-  }
+  } */
   
 
   /* CSS cho trang Login Admin */

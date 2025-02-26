@@ -35,14 +35,13 @@ const ListUser = () => {
         document.body.classList.remove('popup-open');
     };
 
-    const fetchList = async (page = 1) => {
+    const fetchList = async (page = 1, limit = 6) => {
         try {
-            const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=5`);
+            const response = await axios.get(`${url}/v1/api/profile/account/trash/paginate?page=${page}&limit=${limit}`);
             if (response.data.message) {
                 setList(response.data.metadata.account);
                 setTotalUser(response.data.metadata.limit);
                 setTotalPages(response.data.metadata.totalPages);
-                console.log("account: ", response.data.metadata.account)
             } else {
                 toast.error('Lấy dữ liệu thất bại');
             }
@@ -215,7 +214,6 @@ const ListUser = () => {
                     </div>
                 ))}
             </div>
-
 
             <ReactPaginate
                 breakLabel="..."

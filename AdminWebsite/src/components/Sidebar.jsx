@@ -4,21 +4,16 @@ import "./Styles/Styles.css";
 import { assets } from "../assets/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSignOutAlt,
-  faChevronDown,
-  faPlusCircle,
-  faListUl,
-  faUser,
-  faBoxOpen,
-  faHeadset,
-  faChartBar,
-  faInbox,
-  faBarcode,
+  faSignOutAlt, faChevronDown, faPlusCircle, faListUl,
+  faUser, faBoxOpen, faHeadset, faChartBar, faInbox, faBarcode,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenAccount, setIsOpenAccount] = useState(false);
+  const [isOpenOrder, setIsOpenOrder] = useState(false);
   const [isOpenContact, setIsOpenContact] = useState(false);
+
 
   return (
     <div className="section-sidebar">
@@ -53,15 +48,39 @@ const Sidebar = () => {
             )}
           </div>
 
-          <NavLink to="/user" className="sidebar-option">
-            <FontAwesomeIcon icon={faUser} />
-            <p>Tài Khoản</p>
-          </NavLink>
+          {/* Tài khoản */}
+          <div className="sidebar-dropdown">
+            <div className="sidebar-option sidebar-main" onClick={() => setIsOpenAccount(!isOpenAccount)}>
+              <div className="dad-menu sidebar-title">
+                <FontAwesomeIcon icon={faUser} />
+                <p>Tài khoản</p>
+              </div>
+              <FontAwesomeIcon icon={faChevronDown} className={`sidebar-icon ${isOpenAccount ? "rotate" : ""}`} />
+            </div>
+            {isOpenAccount && (
+              <ul className="sidebar-submenu">
+                <li><NavLink to="/user" className="submenu-item">Danh sách tài khoản</NavLink></li>
+                <li><NavLink to="/user/trash" className="submenu-item">Thùng rác</NavLink></li>
+              </ul>
+            )}
+          </div>
 
-          <NavLink to="/orders" className="sidebar-option">
-            <FontAwesomeIcon icon={faBoxOpen} />
-            <p>Hóa Đơn</p>
-          </NavLink>
+          {/* Hóa đơn */}
+          <div className="sidebar-dropdown">
+            <div className="sidebar-option sidebar-main" onClick={() => setIsOpenOrder(!isOpenOrder)}>
+              <div className="dad-menu sidebar-title">
+                <FontAwesomeIcon icon={faBoxOpen} />
+                <p>Hóa đơn</p>
+              </div>
+              <FontAwesomeIcon icon={faChevronDown} className={`sidebar-icon ${isOpenOrder ? "rotate" : ""}`} />
+            </div>
+            {isOpenOrder && (
+              <ul className="sidebar-submenu">
+                <li><NavLink to="/orders" className="submenu-item">Danh sách Hóa đơn</NavLink></li>
+                <li><NavLink to="/orders/trash" className="submenu-item">Thùng rác</NavLink></li>
+              </ul>
+            )}
+          </div>
 
           {/* Liên hệ CSKH */}
           <div className="sidebar-dropdown">

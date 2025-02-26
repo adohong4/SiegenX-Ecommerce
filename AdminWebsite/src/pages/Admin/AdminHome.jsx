@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
-import ListUser from '../Admin/ListUser';
-import ListProduct from '../Admin/Product';
-import Contact from '../Admin/Contact';
-import AddProduct from '../Admin/AddProducts';
+import ListUser from '../Account/ListUser';
+import UserTrash from '../Account/UserTrash';
+import ListProduct from '../Product/Product';
+import Contact from '../Contact/Contact';
+import AddProduct from '../Product/AddProducts';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
-import Orders from '../Admin/Cart';
+import Orders from '../Order/Cart';
 import DashBoard from '../Admin/DashBoard';
-import ProductTrash from '../Admin/Trash';
-import ContactTrash from '../Admin/Trash/ContactTrash';
-import ImportProducts from '../Admin/ImportProducts';
-import ImportProductsDetails from '../../pages/Admin/ImportProductsDetails';
+import ProductTrash from '../Product/Trash';
+import ContactTrash from '../Contact/ContactTrash';
+import ImportProducts from '../InvoiceInput/ImportProducts';
+import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 import Cookies from 'js-cookie';
@@ -55,7 +56,11 @@ const Admin = () => {
 
                                 {/* Route User */}
                                 <Route path="user" element={<ListUser />} />
+                                <Route path="user/trash" element={<UserTrash />} />
+
+                                {/* Route Order */}
                                 <Route path="orders" element={<Orders />} />
+                                <Route path="orders/trash" element={<Orders />} />
 
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />

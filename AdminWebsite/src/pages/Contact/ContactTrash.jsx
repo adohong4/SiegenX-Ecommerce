@@ -1,12 +1,12 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import '../../styles/styles.css';
+import '../styles/styles.css';
 import axios from 'axios';
-import { formatDayTime, formatTime, formatHourDayTime } from '../../../lib/utils'
+import { formatDayTime, formatTime, formatHourDayTime } from '../../lib/utils'
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash'
-import ContactPopup from '../../../components/Popup/ContactPopup';
+import ContactPopup from '../../components/Popup/ContactPopup';
 import ReactPaginate from 'react-paginate';
-import { StoreContext } from '../../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faRotateRight, faEye, faEyeSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 

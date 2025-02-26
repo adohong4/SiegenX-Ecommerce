@@ -69,6 +69,18 @@ class AccountController {
         }
     }
 
+    paginateAccountTrash = async (req, res, next) => {
+        try {
+            const result = await AccountService.paginateAccountTrash(req, res)
+            new OK({
+                message: 'Lấy danh sách thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
+    }
+
     searchByEmail = async (req, res, next) => {
         try {
             const { email } = req.params;

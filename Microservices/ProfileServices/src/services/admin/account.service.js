@@ -68,13 +68,41 @@ class AccountService {
             const limit = parseInt(req.query.limit) || 10;
             const skip = (page - 1) * limit;
 
-            const account = await accountModel.find()
-                .select('username email role address cartData createdAt')
+            const account = await accountModel.find({ active: true })
+                .select('username email role address cartData createdAt active')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
-            const totalAccount = await accountModel.countDocuments();
+            const totalAccount = await accountModel.countDocuments({ active: true });
+            const totalPages = Math.ceil(totalAccount / limit);
+            return {
+                metadata: {
+                    account,
+                    currentPage: page,
+                    totalPages,
+                    totalAccount,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
+    static paginateAccountTrash = async (req, res) => {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
+
+            const account = await accountModel.find({ active: false })
+                .select('username email role address cartData createdAt active')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalAccount = await accountModel.countDocuments({ active: false });
             const totalPages = Math.ceil(totalAccount / limit);
             return {
                 metadata: {

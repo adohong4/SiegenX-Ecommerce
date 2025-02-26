@@ -16,16 +16,20 @@ import ImportProducts from '../InvoiceInput/ImportProducts';
 import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
+import Staff from '../../pages/Admin/Staff';
+import AddSupplier from '../../pages/Supplier/AddSupplier';
+import Supplier from '../../pages/Supplier/Supplier';
+import TrashSupplier from '../../pages/Supplier/TrashSupplier';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!token) {
-            navigate("/admin-login");
-        }
-    }, [token, navigate]);
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigate("/admin-login");
+    //     }
+    // }, [token, navigate]);
     return (
         <div className="admin-container">
             <Routes>
@@ -64,7 +68,13 @@ const Admin = () => {
 
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+                                <Route path="staff" element={<Staff />} />
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
+
+                                {/* Nhập Hàng */}
+                                <Route path="add-supplier" element={<AddSupplier />} />
+                                <Route path="supplier" element={<Supplier />} />
+                                <Route path="trash-supplier" element={<TrashSupplier />} />
                             </Routes>
                         </div>
                     </div>

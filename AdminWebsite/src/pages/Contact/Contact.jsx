@@ -85,7 +85,7 @@ const Contact = () => {
                 );
                 setList(filteredList);
             }
-        }, 300),
+        }, 300), //mili seconds
         [searchTerm, list, setList]
     );
 

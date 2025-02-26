@@ -23,9 +23,6 @@ const ImportOrders = () => {
   return (
     <div className="nhap-hang-page">
       <div className="header">
-        <button className="btn btn-primary" onClick={() => setIsSupplierPopupOpen(true)}>
-          + Thêm nhà cung cấp
-        </button>
         <button className="btn btn-primary" onClick={() => navigate("/tao-don-nhap-hang")}>
           + Thêm mới đơn hàng nhập
         </button>
@@ -67,15 +64,6 @@ const ImportOrders = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Popup Nhà Cung Cấp */}
-      <SupplierPopup
-        isOpen={isSupplierPopupOpen}
-        onClose={() => setIsSupplierPopupOpen(false)}
-        newSupplier={newSupplier}
-        setNewSupplier={setNewSupplier}
-        handleAddSupplier={handleAddSupplier}
-      />
     </div>
   );
 };

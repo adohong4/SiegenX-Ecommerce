@@ -19,11 +19,11 @@ const Admin = () => {
     const token = Cookies.get("token");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!token) {
-            navigate("/admin-login");
-        }
-    }, [token, navigate]);
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigate("/admin-login");
+    //     }
+    // }, [token, navigate]);
     return (
         <div className="admin-container">
             <Routes>

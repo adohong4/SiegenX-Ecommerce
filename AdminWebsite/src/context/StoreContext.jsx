@@ -15,7 +15,7 @@ const StoreContextProvider = (props) => {
 
     const [token, setToken] = useState("")
     const [product_list, setProductList] = useState([])
-    const [account_list, setAccountList] = useState([])
+    const [account_list, setAccount] = useState([])
     const [product_id, setProductId] = useState(null);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
@@ -66,6 +66,16 @@ const StoreContextProvider = (props) => {
         return totalAmount;
     }
 
+    const fetchStaff = async () => {
+        const response = await axios.get(`${url}/v1/api/staff/getProfile`);
+        setAccount(response.data.metadata);
+    };
+
+    const updateStaff = async (data) => {
+        const response = await axios.put(`${url}/v1/api/staff/updateProfile`, data);
+        setAccount(response.data.metadata);
+    };
+
     const fetchProductList = async () => {
         const response = await axios.get(`${url}/v1/api/product/getAll`);
         setProductList(response.data.metadata);
@@ -88,6 +98,7 @@ const StoreContextProvider = (props) => {
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
+            await fetchStaff();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -102,6 +113,7 @@ const StoreContextProvider = (props) => {
         product_id,
         cartItems,
         account_list,
+        updateStaff,
         setCartItems,
         addToCart,
         addQuantityToCart,

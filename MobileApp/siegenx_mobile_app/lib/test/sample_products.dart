@@ -63,7 +63,7 @@ List<Product> sampleProducts = [
     description: "Áo hoodie phong cách thể thao.",
     isFavorite: false,
     imageUrl: "assets/products/product6.png",
-    quantity: 0,
+    quantity: 2,
   ),
   Product(
     id: 7,
@@ -83,6 +83,6 @@ List<Product> sampleProducts = [
     description: "Laptop mạnh mẽ cho công việc và giải trí.",
     isFavorite: true,
     imageUrl: "assets/products/product8.png",
-    quantity: 0,
+    quantity: 2,
   ),
 ];

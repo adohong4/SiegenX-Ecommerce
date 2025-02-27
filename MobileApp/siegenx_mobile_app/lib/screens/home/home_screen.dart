@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/screens/cart/cart_main_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/banner_widget.dart';
-import 'package:siegenx_mobile_app/screens/home/cart_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/cart_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/featured_products.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.shopping_cart), // Icon giỏ hàng
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartScreen()));
+                  MaterialPageRoute(builder: (context) => CartMainScreen()));
             },
           ),
         ],

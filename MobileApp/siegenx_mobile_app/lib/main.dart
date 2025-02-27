@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ManagerScreen(), // Đổi thành màn hình đăng nhập
+      home: const LoginScreen(), // Đổi thành màn hình đăng nhập
     );
   }
 }

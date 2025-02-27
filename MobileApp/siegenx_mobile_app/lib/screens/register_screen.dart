@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/screens/login_screen.dart';
+import 'package:siegenx_mobile_app/screens/manager_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -81,9 +83,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Xử lý đăng ký
-                      }
+                      // if (_formKey.currentState?.validate() ?? false) {
+                      //   // Xử lý đăng ký
+                      // }
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ManagerScreen(),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -98,6 +107,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextButton(
                       onPressed: () {
                         // Chuyển sang màn hình đăng nhập
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
                       },
                       child: const Text(
                         'ĐĂNG NHẬP',

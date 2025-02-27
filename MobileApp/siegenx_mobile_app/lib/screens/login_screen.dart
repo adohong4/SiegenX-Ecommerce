@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/auth_controller.dart';
+import 'package:siegenx_mobile_app/screens/manager_screen.dart';
+import 'package:siegenx_mobile_app/screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -77,6 +82,8 @@ class _FormContent extends StatefulWidget {
 }
 
 class __FormContentState extends State<_FormContent> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -95,6 +102,7 @@ class __FormContentState extends State<_FormContent> {
               height: 10,
             ),
             TextFormField(
+              controller: _emailController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Vui lòng nhập tài khoản';
@@ -127,6 +135,8 @@ class __FormContentState extends State<_FormContent> {
             ),
             _gap(),
             TextFormField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Vui lòng nhập mật khẩu';
@@ -136,7 +146,6 @@ class __FormContentState extends State<_FormContent> {
                 }
                 return null;
               },
-              obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
                 labelText: 'Mật khẩu',
                 labelStyle: TextStyle(color: Color(0xff00B98E)),
@@ -200,8 +209,19 @@ class __FormContentState extends State<_FormContent> {
                   ),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Xử lý đăng nhập
+                  // if (_formKey.currentState?.validate() ?? false) {
+                  //   // Xử lý đăng nhập
+                  // }
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ManagerScreen(),
+                  //   ),
+                  // );
+
+                  if (_formKey.currentState!.validate()) {
+                    AuthController.login(context, _emailController.text,
+                        _passwordController.text);
                   }
                 },
               ),
@@ -290,6 +310,10 @@ class __FormContentState extends State<_FormContent> {
                 TextButton(
                   onPressed: () {
                     // Xử lý khi nhấn vào nút "ĐĂNG KÝ NGAY"
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    );
                   },
                   child: const Text(
                     'ĐĂNG KÝ NGAY',

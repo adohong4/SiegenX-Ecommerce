@@ -1,6 +1,6 @@
 'use strict'
 
-const _ = require('lodash')
+// const _ = require('lodash')
 const { Types } = require('mongoose')
 
 const convertToObjectIdMongodb = id => Types.ObjectId(id)

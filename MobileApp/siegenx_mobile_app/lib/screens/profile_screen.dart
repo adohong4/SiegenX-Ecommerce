@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:siegenx_mobile_app/providers/auth_provider.dart';
+import 'package:siegenx_mobile_app/controllers/view_profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -9,54 +12,97 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class ProfilePage1 extends StatelessWidget {
+class ProfilePage1 extends StatefulWidget {
   const ProfilePage1({Key? key}) : super(key: key);
 
   @override
+  _ProfilePage1State createState() => _ProfilePage1State();
+}
+
+class _ProfilePage1State extends State<ProfilePage1> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ViewProfileController>(context, listen: false)
+          .fetchProfile(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const Expanded(flex: 2, child: _TopPortion()),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      "Nguyễn Hoàng",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
+    return Consumer<ViewProfileController>(
+      builder: (context, controller, child) {
+        return Scaffold(
+          body: controller.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    const Expanded(flex: 2, child: _TopPortion()),
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                controller.username ?? "Không có tên",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: _ProfileDetails(email: controller.email),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  const _ProfileDetails(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }
 
-class _ProfileDetails extends StatelessWidget {
-  const _ProfileDetails({Key? key}) : super(key: key);
+class _ProfileDetails extends StatefulWidget {
+  final String? email;
 
-  final List<Map<String, String>> _details = const [
-    {"label": "Email", "value": "user@gmail.com"},
-    {"label": "Số điện thoại", "value": "0912.234.568"},
-    {"label": "Ngày sinh", "value": "01/01/2024"},
-    {"label": "Giới tính", "value": "Nam"},
-  ];
+  const _ProfileDetails({Key? key, this.email}) : super(key: key);
+
+  @override
+  _ProfileDetailsState createState() => _ProfileDetailsState();
+}
+
+class _ProfileDetailsState extends State<_ProfileDetails> {
+  bool _isTokenExpanded = false; // Trạng thái mở rộng token
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final String? userId = authProvider.userId;
+    final String? token = authProvider.token;
+
+    // Xử lý token: hiển thị ngắn gọn hoặc đầy đủ
+    const int maxLength = 50; // Giới hạn ký tự khi thu gọn
+    final String shortToken =
+        token != null && token.length > maxLength && !_isTokenExpanded
+            ? '${token.substring(0, maxLength)}...'
+            : token ?? "N/A";
+
+    final List<Map<String, String>> _details = [
+      {"label": "User ID", "value": userId ?? "N/A"},
+      {"label": "Email", "value": widget.email ?? "N/A"},
+      {"label": "Token", "value": shortToken},
+    ];
+
     return Column(
       children: [
         ..._details
@@ -64,17 +110,55 @@ class _ProfileDetails extends StatelessWidget {
               (detail) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      detail["label"]!,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    Expanded(
+                      flex: 4, // Tỉ lệ 4 cho label
+                      child: Text(
+                        detail["label"]!,
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 14),
+                      ),
                     ),
-                    Text(
-                      detail["value"]!,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
+                    Expanded(
+                      flex: 6, // Tỉ lệ 6 cho value
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              detail["value"]!,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              overflow: _isTokenExpanded &&
+                                      detail["label"] == "Token"
+                                  ? TextOverflow
+                                      .visible // Hiển thị toàn bộ token khi mở rộng
+                                  : TextOverflow.clip, // Cắt ngắn khi thu gọn
+                              maxLines:
+                                  _isTokenExpanded && detail["label"] == "Token"
+                                      ? null
+                                      : 1, // Nhiều dòng khi mở rộng
+                            ),
+                          ),
+                          if (detail["label"] == "Token" &&
+                              token != null &&
+                              token.length > maxLength)
+                            IconButton(
+                              icon: Icon(
+                                _isTokenExpanded
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isTokenExpanded =
+                                      !_isTokenExpanded; // Chuyển đổi trạng thái
+                                });
+                              },
+                            ),
+                        ],
                       ),
                     ),
                   ],
@@ -140,11 +224,9 @@ class _TopPortion extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              // Nút đăng xuất ở góc phải trên cùng
               Positioned(
-                top:
-                    40, // Điều chỉnh vị trí xuống một chút để tránh bị che khuất
-                right: 16, // Cách mép phải 16px
+                top: 40,
+                right: 16,
                 child: IconButton(
                   icon: const Icon(Icons.logout, color: Colors.white, size: 28),
                   onPressed: () {
@@ -169,21 +251,20 @@ class _TopPortion extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(
-                          'assets/avatars/cat.png'), // Đường dẫn đến ảnh trong assets
+                      image: AssetImage('assets/avatars/cat.png'),
                     ),
                   ),
                 ),
                 Positioned(
-                  bottom: 0, // Dịch xuống một chút để trông cân đối hơn
-                  right: 0, // Dịch sang phải để chồng lên avatar
+                  bottom: 0,
+                  right: 0,
                   child: CircleAvatar(
-                    radius: 20, // Tăng kích thước lớn hơn
-                    backgroundColor: Color(0xffE1E2E3), // Màu nền trắng
+                    radius: 20,
+                    backgroundColor: Color(0xffE1E2E3),
                     child: Icon(
-                      Icons.edit, // Icon chỉnh sửa
-                      color: Colors.black, // Màu icon
-                      size: 20, // Kích thước icon
+                      Icons.edit,
+                      color: Colors.black,
+                      size: 20,
                     ),
                   ),
                 ),

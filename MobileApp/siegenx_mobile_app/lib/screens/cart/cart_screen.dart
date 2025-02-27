@@ -48,10 +48,6 @@ class CartScreen extends StatelessWidget {
         calculateTotalDiscount(); // Tính tổng số tiền đã giảm
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Giỏ hàng ($quantityCount)"),
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

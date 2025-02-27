@@ -1,1 +1,0 @@
-// tôi muốn tách hàm đó ra 1 file khác được không, tôi muốn đổi cái checkbox tất cả sản phẩm đó nó sẽ đếm từng checkbox từng sản phẩm, nếu đủ thì checkbox tất cả hiển thị là true, nếu không đủ thì false, còn nếu bấm checkbox tất cả là là true thì các checkbox thành phần cũng thay đổi theo

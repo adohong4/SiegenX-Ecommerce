@@ -200,11 +200,11 @@ const Contact = () => {
                                 </button>
                             </div>
                             <div className="col-actions">
-                                <button onClick={(e) => { e.stopPropagation(); removeContact(item._id); }} className="btn-delete">
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
                                 <button onClick={() => openPopup(item._id)} className="btn-info">
                                     <FontAwesomeIcon icon={faBook} />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); removeContact(item._id); }} className="btn-delete">
+                                    <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </div>
                         </div>

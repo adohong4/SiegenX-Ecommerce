@@ -125,7 +125,6 @@ const Cart = () => {
 
     useEffect(() => {
         if (searchTerm.trim()) {
-            // nofi = false
             handleSearch();
         } else {
             fetchListpage(currentPage);

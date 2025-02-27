@@ -3,7 +3,7 @@
 const productModel = require('../models/product.model');
 const fs = require('fs')
 const path = require('path');
-const { BadRequestError } = require('../core/error.response');
+const { BadRequestError, AuthFailureError } = require('../core/error.response');
 
 class ProductService {
     static createProduct = async (req, res, next) => {
@@ -112,8 +112,12 @@ class ProductService {
         }
     };
 
-    static deleteProduct = async (id) => {
+    static deleteProduct = async (req, res) => {
         try {
+            const { id } = req.params;
+            const userRole = req.role;
+            if (userRole != 'ADMIN') throw new AuthFailureError("Tài khoản không phải quản lý")
+
             const product = await productModel.findById(id);
 
             if (!product) {
@@ -197,14 +201,44 @@ class ProductService {
             const limit = parseInt(req.query.limit) || 10;
             const skip = (page - 1) * limit;
 
-            const products = await productModel.find()
+            const products = await productModel.find({ active: true })
                 .select('title nameProduct product_slug price images category quantity active')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
-            const totalProducts = await productModel.countDocuments();
+            const totalProducts = await productModel.countDocuments({ active: true });
+            const totalPages = Math.ceil(totalProducts / limit);
+
+            return {
+                metadata: {
+                    products,
+                    currentPage: page,
+                    totalPages,
+                    totalProducts,
+                    limit
+                }
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static paginateProductTrash = async (req, res) => {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
+
+            const products = await productModel.find({ active: false })
+                .select('title nameProduct product_slug price images category quantity active')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+
+            const totalProducts = await productModel.countDocuments({ active: false });
             const totalPages = Math.ceil(totalProducts / limit);
 
             return {

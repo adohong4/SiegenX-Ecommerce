@@ -16,14 +16,9 @@ const StoreContextProvider = (props) => {
     const [token, setToken] = useState("")
     const [product_list, setProductList] = useState([])
     const [account_list, setAccountList] = useState([])
-    const [product_slug, setProductSlug] = useState(null);
+    const [product_id, setProductId] = useState(null);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
-
-    const fetchAccountList = async (page = 1) => {
-        const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=5`);
-        setAccountList(response.data.metadata);
-    };
 
     const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {
@@ -76,24 +71,26 @@ const StoreContextProvider = (props) => {
         setProductList(response.data.metadata);
     };
 
-    const fetchProductSlug = async (slug) => {
-        const response = await axios.get(`${url}/v1/api/product/getBySlug/${slug}`);
-        setProductSlug(response.data.metadata);
+    const fetchProductId = async (productId) => {
+        const response = await axios.get(`${url}/v1/api/product/getById/${productId}`);
+        setProductId(response.data.metadata);
     };
 
-    const loadCartData = async () => {
-        const response = await axios.get(`${url}/v1/api/profile/cart/get`);
-        setCartItems(response.data.metadata);
+    const updateProductId = async (productId, data) => {
+        console.log("data: ", data)
+        console.log("productId: ", productId)
+        const response = await axios.post(`${url}/v1/api/product/updateProduct/${productId}`, data);
+        console.log("response: ", response)
+        setProductId(response.data.metadata);
     };
+
 
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
-            await fetchAccountList();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);
-                await loadCartData(cookieToken);
             }
         }
         loadData();
@@ -102,7 +99,7 @@ const StoreContextProvider = (props) => {
 
     const contextValue = {
         product_list,
-        product_slug,
+        product_id,
         cartItems,
         account_list,
         setCartItems,
@@ -110,7 +107,8 @@ const StoreContextProvider = (props) => {
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount,
-        fetchProductSlug,
+        fetchProductId,
+        updateProductId,
         url,
         setToken,
         token

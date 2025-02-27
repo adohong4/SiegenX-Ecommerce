@@ -103,18 +103,7 @@ const ProductTrash = () => {
 
     return (
         <div className='listproduct add flex-col'>
-            <div className='dashboard-product'>
-                <div className="das-body">
-                    {stats.map((stat, index) => (
-                        <div key={index} className="box">
-                            <p className="label">{stat.label}</p>
-                            <p className="value">{stat.value.toString().padStart(2, "0")} + </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
             <div className='top-list-tiltle'>
-
                 <div className='col-lg-4 tittle-right'>
                 </div>
                 <div className='col-lg-8 list-left'>

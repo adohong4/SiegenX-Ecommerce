@@ -4,8 +4,9 @@ import Sidebar from '../../components/Sidebar';
 import ListUser from '../Account/ListUser';
 import UserTrash from '../Account/UserTrash';
 import ListProduct from '../Product/Product';
-import Contact from '../Contact/Contact';
 import AddProduct from '../Product/AddProducts';
+import ProductDetail from '../Product/ProductDetail';
+import Contact from '../Contact/Contact';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
 import Orders from '../Order/Cart';
@@ -54,6 +55,7 @@ const Admin = () => {
                                 <Route path="add" element={<AddProduct />} />
                                 <Route path="product" element={<ListProduct />} />
                                 <Route path="product/trash" element={<ProductTrash />} />
+                                <Route path="product/:id" element={<ProductDetail />} />
 
                                 {/* Route Contact */}
                                 <Route path="contact" element={<Contact />} />

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from "axios";
 import { toast } from 'react-toastify';
+import { formatDayTime, formatHourDayTime } from '../../lib/utils';
 import { StoreContext } from '../../context/StoreContext';
 
 const ProductPopup = ({ isOpen, onClose, productId }) => {
@@ -94,11 +95,35 @@ const ProductPopup = ({ isOpen, onClose, productId }) => {
                         </div>
                     </div>
                 </div>
-                <div className="form-products-actions">
+                {/* <div className="form-products-actions">
                     <button className="save-button" onClick={handleSave}>
                         Lưu Thay Đổi
                     </button>
-                </div>
+                </div> */}
+                {/* Bảng lịch sử hoạt động từ contact.creator */}
+                {updatedProduct.creator && updatedProduct.creator.length > 0 && (
+                    <>
+                        <h5 className="creator-title">Lịch sử liên hệ</h5>
+                        <table className="popup-table">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    <th>Mô tả</th>
+                                    <th>Thời gian</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {updatedProduct.creator.map((entry) => (
+                                    <tr key={entry._id}>
+                                        <td>{entry.createdName}</td>
+                                        <td>{entry.description}</td>
+                                        <td>{formatHourDayTime(entry.createdAt)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useContext, useState, useCallback } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -22,6 +23,7 @@ const ListProduct = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sort, setSort] = useState('Sort By');
+    const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
     const removeAccents = (str) => {
@@ -90,6 +92,12 @@ const ListProduct = () => {
         setIsPopupOpen(false);
         setSelectedRow(null);
         document.body.classList.remove('popup-open');
+    };
+
+    const handleProductClick = (productId) => {
+        console.log(productId);
+
+        navigate(`/product/${productId}`);
     };
 
     return (
@@ -173,7 +181,7 @@ const ListProduct = () => {
                         <p className='price-product'>{(item.price).toLocaleString()}</p>
                         <p className=''>{item.quantity}</p>
                         <div className='button-product'>
-                            <button onClick={() => openPopup(item._id)} className="btn-info">
+                            <button onClick={() => handleProductClick(item._id)} className="btn-info">
                                 <FontAwesomeIcon icon={faBook} />
                             </button>
                             <button onClick={() => removeProduct(item._id)} className='cursor1' >

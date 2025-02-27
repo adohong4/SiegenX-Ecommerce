@@ -3,11 +3,22 @@ const cors = require('cors');
 const connectDB = require('./config/config.db.mongo');
 const cookieParser = require('cookie-parser');
 const app = express();
-
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, origin);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Cho phép gửi cookie/token
+    })
+);
 app.use(cookieParser());
 // Init db
 connectDB();
@@ -15,9 +26,9 @@ connectDB();
 // Serve static files
 
 // Init router
- app.use('', require('./routes'));
+app.use('', require('./routes'));
 
- //app.use('/images', express.static('upload'));
+//app.use('/images', express.static('upload'));
 
 // Handling errors
 app.use((req, res, next) => {

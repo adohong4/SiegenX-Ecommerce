@@ -8,10 +8,10 @@ class ApiService {
   static const String product = "$baseUrl/product";
   static const String contact = "$baseUrl/contact";
 
-  // Các API cụ thể (ví dụ: đăng nhập, đăng ký, lấy sản phẩm, v.v.)
+  // Các API cụ thể
   static const String login = "$identity/login";
   static const String register = "$identity/register";
-  static const String userProfile = "$profile/me";
+  static const String userProfile = "$profile/getProfile";
   static const String productList = "$product/list";
   static const String contactSupport = "$contact/support";
 }

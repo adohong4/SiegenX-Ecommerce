@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken')
 const { Types } = require('mongoose');
 const { asyncHandler } = require('../helpers/asyncHandler');
-const { request } = require('../app');
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
     const { token } = req.headers;
@@ -21,20 +20,19 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const checkTokenCookie = asyncHandler(async (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
-        //console.log('token: ',token)
+        const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized - No Token Provided" });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Role: ', decoded.Role);
         if (!decoded) {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
 
-        req.user = new Types.ObjectId(decoded.userId);
-        req.role = decoded.Role ;
+        req.user = new Types.ObjectId(decoded.id);
+        req.role = decoded.Role;
+        req.staffName = decoded.StaffName;
         next();
     } catch (error) {
         console.log(error);

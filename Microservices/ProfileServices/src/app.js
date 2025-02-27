@@ -1,40 +1,57 @@
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db.mongodb');
-const cookieParser = require('cookie-parser');
-const path = require('path');
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db.mongodb");
+const cookieParser = require("cookie-parser");
 
 const app = express();
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
-// Init middlewares
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(cookieParser());
 
-// Init db
-connectDB();
+// Cấu hình CORS
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, origin);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Cho phép gửi cookie/token
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 
-// Serve static files
-
-// Init router
-app.use('', require('./routes'));
-app.use('/images', express.static('upload'));
-
-// Handling errors
-app.use((req, res, next) => {
-    const error = new Error('Not Found');
-    error.status = 404;
-    next(error);
+// Xử lý preflight request (OPTIONS)
+app.options("*", (req, res) => {
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.sendStatus(200);
 });
 
+// Kết nối database
+connectDB();
+
+// Khởi tạo router
+app.use("", require("./routes"));
+app.use("/images", express.static("upload"));
+
+// Xử lý lỗi 404
+app.use((req, res, next) => {
+    next({ status: 404, message: "Not Found" });
+});
+
+// Xử lý lỗi chung
 app.use((error, req, res, next) => {
-    const statusCode = error.status || 500;
-    return res.status(statusCode).json({
-        status: 'error',
-        code: statusCode,
-        stack: error.stack,
-        message: error.message || 'Internal Server Error'
+    res.status(error.status || 500).json({
+        status: "error",
+        code: error.status || 500,
+        message: error.message || "Internal Server Error",
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
 });
 

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
 // import { GoogleLogin } from '@react-oauth/google'
-// import { StoreContext } from '../../context/StoreContext'
+import { StoreContext } from '../../context/StoreContext'
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
 const Login = () => {
-    // const { url, setToken } = useContext(StoreContext)
+    const { url, setToken } = useContext(StoreContext)
     const navigate = useNavigate();
     const [currState, setCurrState] = useState('Đăng nhập');
 
@@ -49,7 +49,7 @@ const Login = () => {
 
     const onLogin = async (event) => {
         event.preventDefault()
-        let newUrl = "http://localhost:9001";
+        let newUrl = url;
 
         if (currState === 'Đăng nhập') {
             newUrl += "/v1/api/identity/login"
@@ -60,8 +60,7 @@ const Login = () => {
         try {
             const response = await axios.post(newUrl, data);
             if (response.data.status) {
-                // Lưu token vào cookie
-                Cookies.set('jwt', response.data.metadata.token, { expires: 7 }); // Thời gian sống của cookie là 7 ngày
+                Cookies.set("jwt", response.data.metadata.token,);
                 toast.success(currState === 'Đăng ký' ? 'Đăng ký thành công!' : 'Đăng nhập thành công!');
             }
 

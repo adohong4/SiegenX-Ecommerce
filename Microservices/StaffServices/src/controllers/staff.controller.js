@@ -1,4 +1,4 @@
- 'use strict'
+'use strict'
 const StaffService = require("../services/staff.service");
 const { CREATED, OK, SuccessResponse, NOCONTENT } = require('../core/success.response');
 const { rest } = require("lodash");
@@ -7,7 +7,7 @@ class StaffController {
 
     createStaff = async (req, res, next) => {
         try {
-            const result = await StaffService.createStaff(req, res, next); 
+            const result = await StaffService.createStaff(req, res, next);
             if (result) {
                 new CREATED({
                     message: 'Đa them nhan vien moi ',
@@ -27,7 +27,7 @@ class StaffController {
                     message: 'get staff OK',
                     metadata: result.staff
                 }).send(res);
-            } 
+            }
         } catch (error) {
             next(error);
         }
@@ -75,8 +75,8 @@ class StaffController {
 
     toggleStaffStatusActive = async (req, res, next) => {
         try {
-            const staffId = req.user ;  
-            const staffRole = req.role ;
+            const staffId = req.user;
+            const staffRole = req.role;
             const { id } = req.params; // Lấy ID từ URL
             const result = await StaffService.toggleStaffStatusActive(id, staffId, staffRole);
 
@@ -92,7 +92,6 @@ class StaffController {
     Login = async (req, res, next) => {
         try {
             const result = await StaffService.LoginStaff(req, res);
-
             new OK({
                 message: 'Đăng nhập thành công',
                 metadata: result
@@ -114,10 +113,18 @@ class StaffController {
         }
     }
 
-    
-
-
+    LogOutStaff = async (req, res, next) => {
+        try {
+            const result = await StaffService.LogOutStaff(req, res);
+            new OK({
+                message: "Đăng xuất thành công",
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 
 }
 
-module.exports = new StaffController() ;
+module.exports = new StaffController();

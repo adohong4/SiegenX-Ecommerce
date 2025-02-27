@@ -42,19 +42,16 @@ class ContactController {
 
     updateContactIsCheck = async (req, res, next) => {
         try {
-            const { id } = req.params; // ID của liên hệ từ URL
-            const { isCheck } = req.body; // Giá trị mới cho isCheck từ body
-
-            const updatedContact = await ContactService.updateIsCheck(id, isCheck);
-
-            res.status(200).json({
+            const updatedContact = await ContactService.updateIsCheck(req, res);
+            new OK({
                 message: "Cập nhật trạng thái isCheck thành công",
                 metadata: updatedContact
-            });
+            }).send(res);
         } catch (error) {
             next(error);
         }
-    }
+    };
+
 
     getContactsByEmail = async (req, res, next) => {
         try {
@@ -80,35 +77,35 @@ class ContactController {
 
     getContactWithPagination = async (req, res, next) => {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 20;
-            const skip = (page - 1) * limit;
+            const result = await ContactService.paginateContactTrue(req, res);
+            new OK({
+                message: 'Get contact with pagination OK',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    };
 
-            const totalContacts = await ContactService.countDocuments();
-            const contacts = await ContactService.find(limit, skip);
-
-            res.status(200).json({
-                message: 'Contacts fetched successfully',
-                data: contacts,
-                pagination: {
-                    total: totalContacts,
-                    currentPage: page,
-                    totalContacts: Math.ceil(totalContacts / limit),
-                    limit,
-                },
-            });
-
+    paginateContact = async (req, res, next) => {
+        try {
+            const result = await ContactService.paginateContactFalse(req, res);
+            new OK({
+                message: 'Get contact with Active Status is false',
+                metadata: result.metadata
+            }).send(res);
         } catch (error) {
             next(error);
         }
     };
 
 
+
     deleteContact = async (req, res, next) => {
         try {
-            const result = await ContactService.deleteContact(req.params.id);
+            const result = await ContactService.deleteContact(req, res);
             new OK({
-                message: 'Deleted Successfully!',
+                message: 'Xóa thành công',
                 metadata: result
             }).send(res);
 
@@ -116,6 +113,18 @@ class ContactController {
             next(error);
         }
     }
+
+    toggleContactStatus = async (req, res, next) => {
+        try {
+            const result = await ContactService.toggleContactStatus(req, res);
+            new OK({
+                message: `Trạng thái liên hệ đã được ${result.StatusActive ? 'hoạt động' : 'xóa'}.`,
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    };
 
 }
 

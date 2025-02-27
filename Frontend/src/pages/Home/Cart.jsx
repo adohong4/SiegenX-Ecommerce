@@ -2,55 +2,14 @@ import React, { useContext } from 'react';
 import '../styles/styles.css';
 // import ScrollToTop from '../../components/ScrollToTop/ScrollToTop';
 import { useNavigate } from 'react-router-dom';
-// import { StoreContext } from '../../context/StoreContext';
-
-
-export const product_list = [
-    {
-        _id: "1",
-        nameProduct: "Laptop Dell XPS 15",
-        price: 35000000,
-        images: ["laptop1.jpg", "laptop2.jpg", "laptop3.jpg"]
-    },
-    {
-        _id: "2",
-        nameProduct: "MacBook Pro M2",
-        price: 42000000,
-        images: ["macbook1.jpg", "macbook2.jpg", "macbook3.jpg"]
-    }
-];
-
-export const cartItems = {
-    "1": 2, // 2 sản phẩm Laptop Dell XPS 15
-    "2": 1  // 1 sản phẩm MacBook Pro M2
-};
+import { StoreContext } from '../../context/StoreContext';
 
 export const Fee = 50000;
 
 const Cart = () => {
 
-    // const { cartItems, product_list, removeFromCart, getTotalCartAmount, url, url2 } = useContext(StoreContext)
-
+    const { cartItems, product_list, removeFromCart, getTotalCartAmount, url, url2 } = useContext(StoreContext)
     const navigate = useNavigate();
-
-    // Giả lập hàm tính tổng giá trị giỏ hàng
-    const getTotalCartAmount = () => {
-        return product_list.reduce((total, item) => {
-            if (cartItems[item._id]) {
-                return total + item.price * cartItems[item._id];
-            }
-            return total;
-        }, 0);
-    };
-
-    // Giả lập hàm xóa sản phẩm khỏi giỏ hàng
-    const removeFromCart = (productId) => {
-        setCartItems((prevCartItems) => {
-            const updatedCartItems = { ...prevCartItems };
-            delete updatedCartItems[productId];
-            return updatedCartItems;
-        });
-    };
 
     return (
         <div className="cart">
@@ -73,7 +32,7 @@ const Cart = () => {
                                 return (
                                     <div key={item._id} className="cart-item">
                                         {/* <img src={`${url2}/images/${item.images[0]}`} className="cart-item-image" /> */}
-                                        <img src={`https://example.com/images/${item.images[0]}`} className="cart-item-image" alt={item.nameProduct} />
+                                        <img src={`http://localhost:9003/images/${item.images[0]}`} className="cart-item-image" alt={item.nameProduct} />
                                         <p>{item.nameProduct}</p>
                                         <p>{(item.price).toLocaleString()} đ</p>
                                         <p>{cartItems[item._id]}</p>
@@ -109,7 +68,7 @@ const Cart = () => {
                         <p> - Do chính sách vận chuyển, đơn hàng của quý khách sẽ được cộng thêm 50.000 VND phí vận chuyển.</p>
                         <p> - Mọi thắc mắc vui lòng liên hệ với chúng tôi.</p>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

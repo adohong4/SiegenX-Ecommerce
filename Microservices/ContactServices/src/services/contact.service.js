@@ -38,33 +38,41 @@ class ContactService {
 
     static GetDetailContact = async (id) => {
         try {
-            const contacts = await contactModel.findById(id);
-            if (!contacts) {
-                throw new BadRequestError('Không tìm thấy id contact.');
+            const contacts = await contactModel.findById(id)
+                .lean();
+            if (contacts.creator) {
+                contacts.creator = contacts.creator.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             }
-            return {
-                contacts
-            }
+            return { contacts }
         } catch (error) {
             throw error;
         }
     }
 
-    
-    static updateIsCheck = async (contactId, isCheckValue) => {
+    static updateIsCheck = async (req, res) => {
         try {
-            // Tìm và cập nhật trường isCheck
-            const updatedContact = await contactModel.findByIdAndUpdate(
-                contactId,
-                { isCheck: isCheckValue },
-                { new: true, runValidators: true } // Trả về tài liệu đã cập nhật
-            );
+            const contactId = req.params.id;
+            const userId = req.user;
+            const staffName = req.staffName;
 
-            return updatedContact;
+            const contact = await contactModel.findById(contactId);
+            const newActiveStatus = !contact.isCheck;
+            const actionDescription = newActiveStatus ? "Đã liên hệ" : "Chưa liên hệ";
+
+            contact.isCheck = newActiveStatus;
+            contact.creator.push({
+                createdBy: userId,
+                createdName: staffName,
+                description: actionDescription
+            })
+            await contact.save();
+            return { metadata: contact }
         } catch (error) {
             throw error;
         }
     };
+
+
 
     static findByEmail = async (email) => {
         const contacts = await contactModel.find({ email: { $regex: email, $options: 'i' } });
@@ -83,8 +91,13 @@ class ContactService {
             .sort({ createdAt: -1 });
     }
 
-    static deleteContact = async (id) => {
+    static deleteContact = async (req, res) => {
         try {
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== "ADMIN") {
+                throw new ForbiddenError("Tài khoản bị giới hạn chức năng.")
+            }
             const contact = await contactModel.findById(id);
 
             if (!contact) {
@@ -103,7 +116,85 @@ class ContactService {
     }
 
 
+    static paginateContactTrue = async (req, res) => {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
 
+            const contact = await contactModel.find({ StatusActive: true })
+                .select('username email phone content isCheck createdAt StatusActive')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalContact = await contactModel.countDocuments({ StatusActive: true });
+            const totalPages = Math.ceil(totalContact / limit);
+            return {
+                metadata: {
+                    contact,
+                    currentPage: page,
+                    totalPages,
+                    totalContact,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
+    static paginateContactFalse = async (req, res) => {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
+
+            const contact = await contactModel.find({ StatusActive: false })
+                .select('username email phone content isCheck createdAt StatusActive')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalContact = await contactModel.countDocuments({ StatusActive: false });
+            const totalPages = Math.ceil(totalContact / limit);
+            return {
+                metadata: {
+                    contact,
+                    currentPage: page,
+                    totalPages,
+                    totalContact,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
+
+    static toggleContactStatus = async (req, res) => {
+        try {
+            const contactId = req.params.id;
+            const userId = req.user;
+            const staffName = req.staffName;
+
+            const contact = await contactModel.findById(contactId);
+            const newStatus = !contact.StatusActive;
+            const actionDes = newStatus ? "Hồi phục liên hệ" : "Đã xóa liên hệ";
+
+            contact.StatusActive = newStatus;
+            contact.creator.push({
+                createdBy: userId,
+                createdName: staffName,
+                description: actionDes
+            })
+            await contact.save();
+            return contact;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = ContactService;  // xuất class

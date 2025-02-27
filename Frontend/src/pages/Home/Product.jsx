@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
+import { StoreContext } from '../../context/StoreContext'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { assets } from '../../assets/assets';
 import '../styles/styles.css';
 
-// import { StoreContext } from "../../../context/StoreContext";
-import { product } from "../../data/Enviroment";
 const Products = () => {
-    // const { product_list, url, url2 } = useContext(StoreContext);
+    const { product_list, url, url2 } = useContext(StoreContext);
     const [searchParams] = useSearchParams(); // Lấy các tham số từ URL
     const [selectedCategory, setSelectedCategory] = useState(null); // Category được chọn
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,8 +24,8 @@ const Products = () => {
 
     // Lọc sản phẩm theo category
     const filteredProducts = selectedCategory
-        ? product.filter((product) => product.category === selectedCategory)
-        : product;
+        ? product_list.filter((product) => product.category === selectedCategory)
+        : product_list;
 
     const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
     const currentProducts = filteredProducts.slice(
@@ -100,127 +99,127 @@ const Products = () => {
                 </div>
                 <div className="products-list">
                     <div className="container">
-                    {/* List Category */}
-                    <div className="menu-container">
-                        <div className="menu-columns">
-                            {columns.map((column, index) => (
-                                <div
-                                    key={index}
-                                    className="menu-column"
-                                    onClick={() => handleCategoryClick(column.category)} // Chuyển category khi click
-                                >
-                                    <div className="menu-title">{column.title}</div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="menu-columns-rep">
-                            {columns_Rep.map((column, index) => (
-                                <div
-                                    key={index}
-                                    className="menu-column"
-                                    onClick={() => handleCategoryClick(column.category)} // Chuyển category khi click
-                                >
-                                    <div className="menu-title">{column.title}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <h2 className="section-title">
-                        {selectedCategory ? `Danh mục: ${selectedCategory}` : "Tất cả sản phẩm"}
-                    </h2>
-
-                    <div className="products-content ">
-                        <div className="productlist-banner col-4">
-                            <img src={assets.Banner} alt="" />
-                        </div>
-
-                        {filteredProducts.length === 0 ? (
-                            <p>Không có sản phẩm nào trong danh mục này!</p>
-                        ) : (
-                            <div className="productlist-grid col-8">
-                                {currentProducts.map((product) => ( // duyệt qua các sản phẩm được hiển thị trong 1 page vidu: (0,9), (9,18), (18, 27)
+                        {/* List Category */}
+                        <div className="menu-container">
+                            <div className="menu-columns">
+                                {columns.map((column, index) => (
                                     <div
-                                        className="productlist-card"
-                                        key={product.product_slug}
-                                        onClick={() => handleProductClick(product.product_slug)}
+                                        key={index}
+                                        className="menu-column"
+                                        onClick={() => handleCategoryClick(column.category)} // Chuyển category khi click
                                     >
-                                        <div className="productlist-img-container">
-                                            {/* <img src={`${url2}/images/${product.images[0]}`} alt=""
-                                                className="productlist-image"
-                                            /> */}
-                                            {/* Fake data cho hình ảnh */}
-                <img src={`/images/${product.images[0]}`} alt="" className="productlist-image" />
-
-                                            <div className="cart-icon">
-                                                <i className="fas fa-shopping-cart"></i>
-                                            </div>
-                                        </div>
-                                        <h3 className="productlist-title">{product.nameProduct}</h3>
-                                        <div className="productlist-actions">
-                                            <button
-                                                className="productlist-price-btn"
-                                                onClick={(e) => navigate("/lien-he")}
-                                            >
-                                                LIÊN HỆ
-                                            </button>
-                                            <button
-                                                className="productlist-btn"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleProductClick(product.product_slug);
-                                                }}
-                                            >
-                                                XEM NGAY
-                                            </button>
-                                        </div>
+                                        <div className="menu-title">{column.title}</div>
                                     </div>
                                 ))}
-
-                                {/* Add empty placeholders to fill the grid */}
-                                {emptyProducts.map((_, index) => (
-                                    <div className="productlist-card empty" key={index}></div>
+                            </div>
+                            <div className="menu-columns-rep">
+                                {columns_Rep.map((column, index) => (
+                                    <div
+                                        key={index}
+                                        className="menu-column"
+                                        onClick={() => handleCategoryClick(column.category)} // Chuyển category khi click
+                                    >
+                                        <div className="menu-title">{column.title}</div>
+                                    </div>
                                 ))}
                             </div>
-                        )}
-
-                    </div>
-
-                    {filteredProducts.length > 0 && (
-                        <div className="pagination">
-                            <button
-                                className="pagination-btn"
-                                onClick={() => handlePageChange(currentPage - 1)}
-                                disabled={currentPage === 1}
-                            >
-                                &lt;
-                            </button>
-
-                            {generatePageNumbers().map((page, index) => (
-                                <button
-                                    key={index}
-                                    className={`pagination-btn ${currentPage === page ? "active" : ""}`}
-                                    onClick={() => typeof page === "number" && handlePageChange(page)}
-                                    disabled={page === "..."}
-                                >
-                                    {page}
-                                </button>
-                            ))}
-
-                            <button
-                                className="pagination-btn"
-                                onClick={() => handlePageChange(currentPage + 1)}
-                                disabled={currentPage === totalPages}
-                            >
-                                &gt;
-                            </button>
                         </div>
-                    )}
-                    <div className="productlist-banner-foot">
-                        <img src={assets.bannerProductList} alt="" />
+
+                        <h2 className="section-title">
+                            {selectedCategory ? `Danh mục: ${selectedCategory}` : "Tất cả sản phẩm"}
+                        </h2>
+
+                        <div className="products-content ">
+                            <div className="productlist-banner col-4">
+                                <img src={assets.Banner} alt="" />
+                            </div>
+
+                            {filteredProducts.length === 0 ? (
+                                <p>Không có sản phẩm nào trong danh mục này!</p>
+                            ) : (
+                                <div className="productlist-grid col-8">
+                                    {currentProducts.map((product) => ( // duyệt qua các sản phẩm được hiển thị trong 1 page vidu: (0,9), (9,18), (18, 27)
+                                        <div
+                                            className="productlist-card"
+                                            key={product.product_slug}
+                                            onClick={() => handleProductClick(product.product_slug)}
+                                        >
+                                            <div className="productlist-img-container">
+                                                <img src={`http://localhost:9003/images/${product.images[0]}`} alt=""
+                                                    className="productlist-image"
+                                                />
+                                                {/* Fake data cho hình ảnh */}
+                                                <img src={`/images/${product.images[0]}`} alt="" className="productlist-image" />
+
+                                                <div className="cart-icon">
+                                                    <i className="fas fa-shopping-cart"></i>
+                                                </div>
+                                            </div>
+                                            <h3 className="productlist-title">{product.nameProduct}</h3>
+                                            <div className="productlist-actions">
+                                                <button
+                                                    className="productlist-price-btn"
+                                                    onClick={(e) => navigate("/lien-he")}
+                                                >
+                                                    LIÊN HỆ
+                                                </button>
+                                                <button
+                                                    className="productlist-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleProductClick(product.product_slug);
+                                                    }}
+                                                >
+                                                    XEM NGAY
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    {/* Add empty placeholders to fill the grid */}
+                                    {emptyProducts.map((_, index) => (
+                                        <div className="productlist-card empty" key={index}></div>
+                                    ))}
+                                </div>
+                            )}
+
+                        </div>
+
+                        {filteredProducts.length > 0 && (
+                            <div className="pagination">
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    &lt;
+                                </button>
+
+                                {generatePageNumbers().map((page, index) => (
+                                    <button
+                                        key={index}
+                                        className={`pagination-btn ${currentPage === page ? "active" : ""}`}
+                                        onClick={() => typeof page === "number" && handlePageChange(page)}
+                                        disabled={page === "..."}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+
+                                <button
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    &gt;
+                                </button>
+                            </div>
+                        )}
+                        <div className="productlist-banner-foot">
+                            <img src={assets.bannerProductList} alt="" />
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </main>
     );

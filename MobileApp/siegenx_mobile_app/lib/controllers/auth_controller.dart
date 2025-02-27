@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
+import 'package:siegenx_mobile_app/widgets/custom_snackbar.dart';
+import 'package:siegenx_mobile_app/widgets/success_animation.dart';
 import '../screens/manager_screen.dart'; // Màn hình sau khi đăng nhập thành công
 import '../services/api_service.dart'; // Import đường dẫn API
 
@@ -24,22 +27,26 @@ class AuthController {
           data['message'] ?? "Lỗi không xác định"; // Lấy message từ API
 
       if (response.statusCode == 200) {
-        final String token = data['metadata']['token']; // Lấy token từ response
+        final String token = data['metadata']['token'];
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)), // Hiển thị message từ API
-        );
-
-        // Chuyển hướng đến màn hình chính
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ManagerScreen()),
+        // Hiển thị animation thành công
+        showDialog(
+          context: context,
+          barrierDismissible:
+              false, // Không cho tắt dialog bằng cách click bên ngoài
+          builder: (context) => SuccessAnimation(
+            onComplete: () {
+              // Khi animation hoàn tất, chuyển sang ManagerScreen
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => ManagerScreen()),
+                (route) => false,
+              );
+            },
+          ),
         );
       } else {
-        // Hiển thị lỗi từ API nếu đăng nhập thất bại
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)), // Hiển thị message lỗi từ API
-        );
+        // ❌ Gọi CustomSnackBar (Lỗi đăng nhập)
+        CustomSnackBar.show(context, message, Icons.error, Colors.red);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

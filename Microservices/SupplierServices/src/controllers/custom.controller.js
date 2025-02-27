@@ -7,7 +7,7 @@ class CustomController {
 
     paginate = async (req, res, next) => {
         try {
-            const result = await CustomService.paginate();
+            const result = await CustomService.paginate(req, res);
             new OK({
                 message: "Get supplier successfully",
                 metadata: result.metadata

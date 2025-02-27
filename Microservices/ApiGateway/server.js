@@ -9,6 +9,7 @@ const routes = {
     '/v1/api/profile': 'http://localhost:9002',
     '/v1/api/product': 'http://localhost:9003',
     '/v1/api/contact': 'http://localhost:9004',
+    '/v1/api/supplier': 'http://localhost:9005',
     '/v1/api/staff': 'http://localhost:9006',
 };
 
@@ -38,6 +39,7 @@ const proxy = createProxyMiddleware({
         '^/v1/api/profile': '/v1/api/profile',
         '^/v1/api/product': '/v1/api/product',
         '^/v1/api/contact': '/v1/api/contact',
+        '^/v1/api/supplier': '/v1/api/supplier',
         '^/v1/api/staff': '/v1/api/staff',
     },
     router: (req) => {

@@ -36,13 +36,13 @@ const Sidebar = () => {
         <div className="logo-sidebar">
           <img className="logo" src={assets.logo_footer} alt="Logo" />
         </div>
-
-        <div className="sidebar-options">
-          <NavLink to="/dashboard" className="sidebar-option">
-            <FontAwesomeIcon icon={faChartBar} />
-            <p>Tổng quan</p>
-          </NavLink>
-
+        <div className="sidebar-dropdown">
+          <div className="sidebar-options">
+            <NavLink to="/dashboard" className="sidebar-option">
+              <FontAwesomeIcon icon={faChartBar} />
+              <p>Tổng quan</p>
+            </NavLink>
+          </div>
           {/* Sản phẩm */}
           <div className="sidebar-dropdown">
             <div
@@ -231,11 +231,13 @@ const Sidebar = () => {
               </ul>
             )}
           </div>
-          <NavLink to="/staff" className="sidebar-option">
-            <FontAwesomeIcon icon={faUserTie} />
-            <p>Nhân viên</p>
-          </NavLink>
-        </div >
+          <div className="sidebar-options">
+            <NavLink to="/staff" className="sidebar-option">
+              <FontAwesomeIcon icon={faUserTie} />
+              <p>Nhân viên</p>
+            </NavLink>
+          </div >
+        </div>
 
         <div className="log-out-btn">
           <NavLink to="http://localhost:5173/" className="sidebar-option-logout">

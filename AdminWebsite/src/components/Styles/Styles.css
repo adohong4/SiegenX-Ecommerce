@@ -72,7 +72,6 @@
     color: #fff;
     margin-bottom: 0px !important;
     transition: color 0.3s ease;
-    font-size: 0.8em;
     margin-top: 0;
 }
 
@@ -82,17 +81,14 @@
 }
 
 .sidebar-options {
-    /* padding: 20px; */
     display: flex;
     flex-direction: column;
-    /* gap: 20px; */
     justify-content: flex-start;
-    /* Căn giữa các mục trong sidebar */
     align-items: center;
     height: 100%;
 }
 
-.sidebar-option {
+.sidebar-dropdown .sidebar-option {
     display: flex;
     align-items: center;
     padding: 15px;
@@ -100,10 +96,21 @@
     cursor: pointer;
     opacity: 1;
     gap:10px;
-    justify-content: flex-start;
+    justify-content: space-between;
     text-align: left;
     width: 100%;
     transition: all 0.1s ease-in-out;
+}
+.sidebar-dropdown .sidebar-option p{
+  margin-bottom: 0;
+  font-weight: 400;
+}
+.sidebar-dropdown ul.sidebar-submenu li a {
+  text-transform:none;
+}
+.sidebar-options .sidebar-option:first-child,
+.sidebar-options .sidebar-option:last-child{
+  justify-content: flex-start;
 }
 .sidebar-dropdown{
     width: 100%;
@@ -206,7 +213,8 @@ swal2-html-container {
     align-items: center;
     justify-content: center;
     border-top: 1px solid #fff;
-    width: 10vw;
+    width: 180px;
+    background-color: #1d2327;
     color: #fff;
     transition: all 0.3s ease-in-out;
 }

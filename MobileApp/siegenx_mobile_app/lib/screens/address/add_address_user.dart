@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
@@ -29,8 +30,10 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final String? token = authProvider.token;
+    final String? userId =
+        authProvider.userId; // Giả sử AuthProvider có userId, bạn cần kiểm tra
 
-    if (token == null) {
+    if (token == null || userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Vui lòng đăng nhập để thêm địa chỉ')),
       );
@@ -42,31 +45,36 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
     });
 
     try {
+      final address = AddressModel(
+        userId: userId, // Thêm userId từ authProvider
+        fullname: _fullnameController.text,
+        phone: _phoneController.text,
+        street: _streetController.text,
+        precinct: _precinctController.text,
+        city: _cityController.text,
+        province: _provinceController.text,
+      );
+
       final response = await http.post(
-        Uri.parse('${ApiService.profile}/address/add'),
+        Uri.parse(ApiService.addAddress), // Sử dụng endpoint đúng
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          'fullname': _fullnameController.text,
-          'phone': _phoneController.text,
-          'street': _streetController.text,
-          'precinct': _precinctController.text,
-          'city': _cityController.text,
-          'province': _provinceController.text,
-          'isDefault': isDefault,
-        }),
+        body: jsonEncode(address.toJson()),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 201) {
+        final addressResponse =
+            AddressResponse.fromJson(jsonDecode(response.body));
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Thêm địa chỉ thành công')),
+          SnackBar(content: Text(addressResponse.message)),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi khi thêm địa chỉ')),
+          SnackBar(
+              content: Text('Lỗi khi thêm địa chỉ: ${response.statusCode}')),
         );
       }
     } catch (e) {

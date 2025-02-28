@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
+import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
@@ -30,8 +31,7 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final String? token = authProvider.token;
-    final String? userId =
-        authProvider.userId; // Giả sử AuthProvider có userId, bạn cần kiểm tra
+    final String? userId = authProvider.userId;
 
     if (token == null || userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +46,7 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
 
     try {
       final address = AddressModel(
-        userId: userId, // Thêm userId từ authProvider
+        userId: userId,
         fullname: _fullnameController.text,
         phone: _phoneController.text,
         street: _streetController.text,
@@ -56,7 +56,7 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
       );
 
       final response = await http.post(
-        Uri.parse(ApiService.addAddress), // Sử dụng endpoint đúng
+        Uri.parse(ApiService.addAddress),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -70,7 +70,11 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(addressResponse.message)),
         );
-        Navigator.pop(context);
+        // Chuyển sang màn hình danh sách địa chỉ
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AddressListScreen()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

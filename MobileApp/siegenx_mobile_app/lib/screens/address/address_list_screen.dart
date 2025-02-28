@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/screens/address/add_address_user.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
@@ -15,7 +16,7 @@ class AddressListScreen extends StatefulWidget {
 }
 
 class _AddressListScreenState extends State<AddressListScreen> {
-  List<Map<String, dynamic>> addresses = [];
+  List<AddressModel> addresses = [];
   bool isLoading = true;
 
   @override
@@ -38,9 +39,13 @@ class _AddressListScreenState extends State<AddressListScreen> {
       return;
     }
 
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       final response = await http.get(
-        Uri.parse('${ApiService.profile}/address/getList'),
+        Uri.parse(ApiService.listAddresses), // Sử dụng endpoint từ ApiService
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -49,9 +54,10 @@ class _AddressListScreenState extends State<AddressListScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final List<dynamic> addressList = data['metadata']['addresses'];
         setState(() {
           addresses =
-              List<Map<String, dynamic>>.from(data['metadata']['addresses']);
+              addressList.map((json) => AddressModel.fromJson(json)).toList();
           isLoading = false;
         });
       } else {
@@ -59,7 +65,9 @@ class _AddressListScreenState extends State<AddressListScreen> {
           isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi khi lấy danh sách địa chỉ')),
+          SnackBar(
+              content: Text(
+                  'Lỗi khi lấy danh sách địa chỉ: ${response.statusCode}')),
         );
       }
     } catch (e) {
@@ -74,11 +82,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
 
   // Hàm định dạng số điện thoại: hiển thị 2 số đầu, 2 số cuối, giữa là *
   String _formatPhoneNumber(String phone) {
-    if (phone.length < 4) return phone; // Nếu số quá ngắn, trả về nguyên gốc
-    String firstTwo = phone.substring(0, 2); // 2 số đầu
-    String lastTwo = phone.substring(phone.length - 2); // 2 số cuối
-    int hiddenLength = phone.length - 4; // Số lượng số cần ẩn
-    String hiddenPart = '*' * hiddenLength; // Tạo chuỗi * để ẩn
+    if (phone.length < 4) return phone;
+    String firstTwo = phone.substring(0, 2);
+    String lastTwo = phone.substring(phone.length - 2);
+    int hiddenLength = phone.length - 4;
+    String hiddenPart = '*' * hiddenLength;
     return '(+84) $firstTwo$hiddenPart$lastTwo';
   }
 
@@ -113,7 +121,8 @@ class _AddressListScreenState extends State<AddressListScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddAddressUserScreen()),
-                          );
+                          ).then(
+                              (_) => _fetchAddresses()); // Reload khi quay lại
                         },
                         child: Container(
                           child: Row(
@@ -155,7 +164,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${address['fullname']}',
+                                              address.fullname,
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
@@ -163,8 +172,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              _formatPhoneNumber(address[
-                                                  'phone']), // Định dạng số điện thoại
+                                              _formatPhoneNumber(address.phone),
                                               style: TextStyle(fontSize: 14),
                                             ),
                                           ],
@@ -182,11 +190,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                   ),
                                   SizedBox(height: 8),
                                   Text(
-                                    '${address['street']}, ${address['precinct']}',
+                                    '${address.street}, ${address.precinct}',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                   Text(
-                                    '${address['city']}, ${address['province']}',
+                                    '${address.city}, ${address.province}',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                   if (index < addresses.length - 1)
@@ -244,7 +252,9 @@ class _EmptyAddressWidget extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddAddressUserScreen()),
-                );
+                ).then((_) => context
+                    .read<_AddressListScreenState?>()
+                    ?._fetchAddresses());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

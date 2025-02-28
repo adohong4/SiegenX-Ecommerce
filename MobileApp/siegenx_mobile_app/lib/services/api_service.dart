@@ -14,6 +14,7 @@ class ApiService {
   static const String userProfile = "$profile/getProfile";
   static const String productList = "$product/list";
   static const String contactSupport = "$contact/support";
-  static const String addAddress =
-      "$profile/address/create"; // Thêm endpoint này
+  static const String addAddress = "$profile/address/create";
+  static const String listAddresses =
+      "$profile/address/getList"; // Thêm endpoint này
 }

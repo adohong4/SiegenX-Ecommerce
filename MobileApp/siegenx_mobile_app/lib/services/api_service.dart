@@ -11,7 +11,8 @@ class ApiService {
   // Các API cụ thể
   static const String login = "$identity/login";
   static const String register = "$identity/register";
-  static const String userProfile = "$profile/getProfile";
+  static const String userProfile =
+      "$profile/getProfile"; // Sửa thành /getProfile
   static const String productList = "$product/list";
   static const String contactSupport = "$contact/support";
 }

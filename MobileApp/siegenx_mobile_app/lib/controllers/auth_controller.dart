@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
+import 'package:siegenx_mobile_app/screens/manager_screen.dart';
+import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/widgets/custom_snackbar.dart';
 import 'package:siegenx_mobile_app/widgets/success_animation.dart';
-import '../screens/manager_screen.dart'; // Màn hình sau khi đăng nhập thành công
-import '../services/api_service.dart'; // Import đường dẫn API
+import '../screens/profile_screen.dart'; // Import ProfileScreen
 
 class AuthController {
   static Future<void> login(
@@ -32,11 +33,10 @@ class AuthController {
         final String userId = data['metadata']['user']['id'];
         final String emailFromResponse = data['metadata']['user']['email'];
 
-        // Thêm "jwt " vào token trước khi lưu
-        final String formattedToken = "$token";
-
         Provider.of<AuthProvider>(context, listen: false)
-            .setAuthData(userId, formattedToken, email: emailFromResponse);
+            .setAuthData(userId, token, email: emailFromResponse);
+
+        print('Login Success - Token: $token');
 
         showDialog(
           context: context,
@@ -44,7 +44,9 @@ class AuthController {
           builder: (context) => SuccessAnimation(
             onComplete: () {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => ManagerScreen()),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ManagerScreen()), // Chuyển sang ProfileScreen
                 (route) => false,
               );
             },

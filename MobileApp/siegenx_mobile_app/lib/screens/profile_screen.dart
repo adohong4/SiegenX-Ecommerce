@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/controllers/view_profile_controller.dart';
+import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart'; // Import file mới
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -82,7 +83,7 @@ class _ProfileDetails extends StatefulWidget {
 }
 
 class _ProfileDetailsState extends State<_ProfileDetails> {
-  bool _isTokenExpanded = false; // Trạng thái mở rộng token
+  bool _isTokenExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,17 +91,9 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
     final String? userId = authProvider.userId;
     final String? token = authProvider.token;
 
-    // Xử lý token: hiển thị ngắn gọn hoặc đầy đủ
-    const int maxLength = 50; // Giới hạn ký tự khi thu gọn
-    final String shortToken =
-        token != null && token.length > maxLength && !_isTokenExpanded
-            ? '${token.substring(0, maxLength)}...'
-            : token ?? "N/A";
-
     final List<Map<String, String>> _details = [
       {"label": "User ID", "value": userId ?? "N/A"},
       {"label": "Email", "value": widget.email ?? "N/A"},
-      {"label": "Token", "value": shortToken},
     ];
 
     return Column(
@@ -112,7 +105,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 4, // Tỉ lệ 4 cho label
+                      flex: 4,
                       child: Text(
                         detail["label"]!,
                         style:
@@ -120,45 +113,11 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                       ),
                     ),
                     Expanded(
-                      flex: 6, // Tỉ lệ 6 cho value
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              detail["value"]!,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
-                              overflow: _isTokenExpanded &&
-                                      detail["label"] == "Token"
-                                  ? TextOverflow
-                                      .visible // Hiển thị toàn bộ token khi mở rộng
-                                  : TextOverflow.clip, // Cắt ngắn khi thu gọn
-                              maxLines:
-                                  _isTokenExpanded && detail["label"] == "Token"
-                                      ? null
-                                      : 1, // Nhiều dòng khi mở rộng
-                            ),
-                          ),
-                          if (detail["label"] == "Token" &&
-                              token != null &&
-                              token.length > maxLength)
-                            IconButton(
-                              icon: Icon(
-                                _isTokenExpanded
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isTokenExpanded =
-                                      !_isTokenExpanded; // Chuyển đổi trạng thái
-                                });
-                              },
-                            ),
-                        ],
+                      flex: 6,
+                      child: Text(
+                        detail["value"]!,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 14),
                       ),
                     ),
                   ],
@@ -176,16 +135,28 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
               style: TextStyle(fontSize: 14),
             ),
             const Spacer(),
-            Text(
-              "Thay đổi địa chỉ",
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF00B98E),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddressListScreen()),
+                );
+              },
+              child: Row(
+                children: [
+                  Text(
+                    "Thay đổi địa chỉ",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF00B98E),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_forward_ios,
+                      color: Color(0xFF00B98E), size: 14),
+                ],
               ),
             ),
-            const SizedBox(width: 4),
-            const Icon(Icons.arrow_forward_ios,
-                color: Color(0xFF00B98E), size: 14),
           ],
         ),
         const SizedBox(height: 8),
@@ -271,7 +242,7 @@ class _TopPortion extends StatelessWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

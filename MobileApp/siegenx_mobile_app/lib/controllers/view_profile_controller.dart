@@ -1,4 +1,3 @@
-// controllers/view_profile_controller.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -26,14 +25,15 @@ class ViewProfileController extends ChangeNotifier {
       return;
     }
 
-    print('Fetching profile with Token in cookie: $token');
+    print('Fetching profile with Token: $token'); // Debug token
 
     try {
       final response = await http.get(
-        Uri.parse(ApiService.userProfile),
+        Uri.parse(ApiService
+            .userProfile), // http://localhost:4001/v1/api/profile/getProfile
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'token', // Gửi token trong header
+          'Authorization': 'Bearer $token',
         },
       );
 

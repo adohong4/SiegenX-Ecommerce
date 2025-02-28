@@ -20,7 +20,14 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const checkTokenCookie = asyncHandler(async (req, res, next) => {
     try {
-        const token = req.cookies.token;
+        // Lấy token từ cookie hoặc header Authorization
+        let token = req.cookies.jwt;
+        const authHeader = req.headers.authorization;
+
+        if (!token && authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.split(' ')[1]; // Lấy token từ "Bearer <token>"
+        }
+
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized - No Token Provided" });
         }
@@ -29,7 +36,8 @@ const checkTokenCookie = asyncHandler(async (req, res, next) => {
         if (!decoded) {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
-        req.user = new Types.ObjectId(decoded.id);
+
+        req.user = new Types.ObjectId(decoded.userId);
         req.role = decoded.Role;
         req.staffName = decoded.StaffName;
         next();
@@ -37,7 +45,7 @@ const checkTokenCookie = asyncHandler(async (req, res, next) => {
         console.log(error);
         res.status(401).json({ success: false, message: "Invalid token" });
     }
-})
+});
 
 module.exports = {
     authMiddleware, checkTokenCookie

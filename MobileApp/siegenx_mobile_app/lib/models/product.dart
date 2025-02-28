@@ -1,7 +1,7 @@
 class Product {
   final int id; // ✅ ID sản phẩm
   final String name;
-  final double price;
+  final int price;
   final int discountPercentage;
   final String description;
   final bool isFavorite;

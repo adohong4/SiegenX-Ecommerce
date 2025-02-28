@@ -13,8 +13,8 @@ router.get("/staff/getall", checkTokenCookie, asyncHandler(StaffController.getAl
 router.post("/staff/update/:id", checkTokenCookie, asyncHandler(StaffController.updateStaff))
 router.get("/staff/getById/:id", asyncHandler(StaffController.getStaffById));
 
-router.get("/staff/paginate", asyncHandler(StaffController.getStaffByPage));
-router.get("/staff/trash/paginate", asyncHandler(StaffController.paginateStaffTrash));
+router.get("/staff/paginate", checkTokenCookie, asyncHandler(StaffController.getStaffByPage));
+router.get("/staff/trash/paginate", checkTokenCookie, asyncHandler(StaffController.paginateStaffTrash));
 
 router.delete("/staff/toggleStaffStatusActive/:id", checkTokenCookie, asyncHandler(StaffController.toggleStaffStatusActive));
 router.delete("/staff/delete/:id", checkTokenCookie, asyncHandler(StaffController.deleteStaff));

@@ -1,57 +1,97 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
+import { StoreContext } from '../../context/StoreContext';
+import axios from 'axios';
+import { formatDayTime, formatCurrency } from '../../lib/utils'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-const suppliers = [
-    { id: "NCC001", name: "Nhà cung cấp A", email: "a@supplier.com", phone: "0123456789" },
-    { id: "NCC002", name: "Nhà cung cấp B", email: "b@supplier.com", phone: "0987654321" }
-];
-
-const products = [
-    { id: "SP001", name: "Laptop Dell", image: "https://via.placeholder.com/50" },
-    { id: "SP002", name: "Chuột Logitech", image: "https://via.placeholder.com/50" }
-];
-
 const CreateImportOrder = () => {
+    const { url, product_list, supplier_list } = useContext(StoreContext);
     const navigate = useNavigate();
     const [selectedSupplier, setSelectedSupplier] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState("Chờ đợi");
     const [selectedProducts, setSelectedProducts] = useState([]);
-    const [createdDate, setCreatedDate] = useState("");
+    const [createdDate, setCreatedDate] = useState(""); const [searchTerm, setSearchTerm] = useState("");
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
         setCreatedDate(today);
     }, []);
 
+    // Xử lý tìm kiếm
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        if (value.trim() === "") {
+            setFilteredProducts([]);
+        } else {
+            const filtered = product_list.filter(product =>
+                product.nameProduct.toLowerCase().includes(value.toLowerCase())
+            );
+            setFilteredProducts(filtered);
+        }
+    };
+
     const handleProductChange = (productId, field, value) => {
         setSelectedProducts((prevProducts) =>
             prevProducts.map((product) =>
-                product.id === productId ? { ...product, [field]: value } : product
+                product._id === productId ? { ...product, [field]: value } : product
             )
         );
     };
 
     const handleAddProduct = (product) => {
-        if (!selectedProducts.find((p) => p.id === product.id)) {
+        if (!selectedProducts.find((p) => p._id === product._id)) {
             setSelectedProducts([...selectedProducts, { ...product, quantity: 1, price: 0, discount: 0, tax: 10 }]);
         }
+        setSearchTerm("");
+        setFilteredProducts([]);
     };
-    const handleSaveOrder = () => {
+
+    const handleSaveOrder = async () => {
         if (!selectedSupplier) {
-          alert("Vui lòng chọn nhà cung cấp!");
-          return;
+            alert("Vui lòng chọn nhà cung cấp!");
+            return;
         }
         if (selectedProducts.length === 0) {
-          alert("Vui lòng thêm ít nhất một sản phẩm!");
-          return;
+            alert("Vui lòng thêm ít nhất một sản phẩm!");
+            return;
         }
-        alert("Đơn hàng đã được thêm thành công!");
-        navigate(-1);
-      };
-    
+
+        const requestData = {
+            statusPayment: paymentStatus === "Chờ đợi" ? "pending" :
+                paymentStatus === "Thanh toán 1 nửa" ? "partial payment" :
+                    "completed",
+            supplierId: {
+                supplierId: selectedSupplier._id
+            },
+            productIds: selectedProducts.map(product => ({
+                productId: product._id,
+                count: product.quantity,
+                priceInput: product.price,
+                tax: product.tax / 100
+            }))
+        };
+
+        try {
+            const response = await axios.post(`${url}/v1/api/product/invoice/create`, requestData);
+            if (response.status === 201 || response.status === 200) {
+                alert("Đơn hàng đã được thêm thành công!");
+                navigate(-1);
+            } else {
+                alert("Có lỗi xảy ra khi tạo đơn hàng!");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tạo đơn hàng:", error);
+            alert("Lỗi khi tạo đơn hàng, vui lòng thử lại!");
+        }
+    };
+
+
     const calculateTotal = () => {
         return selectedProducts.reduce((total, product) => {
             const totalPrice = (product.quantity * product.price) - product.discount + ((product.quantity * product.price) * (product.tax / 100));
@@ -68,23 +108,30 @@ const CreateImportOrder = () => {
             <div className="create-import-order-grid">
                 <div className="create-import-order-card create-import-order-span-2 col-9">
                     <h3>Sản phẩm</h3>
-                    <select className="create-import-order-input" onChange={(e) => {
-                        const product = products.find(p => p.id === e.target.value);
-                        if (product) handleAddProduct(product);
-                    }}>
-                        <option value="">Chọn sản phẩm</option>
-                        {products.map(product => (
-                            <option key={product.id} value={product.id}>{product.name}</option>
-                        ))}
-                    </select>
+                    <input
+                        type="text"
+                        className="create-import-order-input"
+                        placeholder="Tìm kiếm sản phẩm..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                    {filteredProducts.length > 0 && (
+                        <ul className="search-suggestions">
+                            {filteredProducts.map(product => (
+                                <li key={product._id} onClick={() => handleAddProduct(product)}>
+                                    <img src={`http://localhost:9003/images/${product.images[0]}`} width="50" alt={product.nameProduct} />
+                                    {product.nameProduct}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
 
                     {selectedProducts.length > 0 && (
                         <table className="create-import-order-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Ảnh</th>
                                     <th>Tên</th>
+                                    <th>Ảnh</th>
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Thuế</th>
@@ -92,33 +139,34 @@ const CreateImportOrder = () => {
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody >
-                                {selectedProducts.map(product => (
-                                    <tr key={product.id} >
-                                        <td>{product.id}</td>
-                                        <td><img src={product.image} alt={product.name} width="50" /></td>
-                                        <td>{product.name}</td>
-                                        <td style={{display:'flex', gap:'10px', justifyContent:'center', alignItems:'center', marginTop:'10px'}}>
-                                            <button onClick={() => handleProductChange(product.id, "quantity", Math.max(1, product.quantity - 1))} style={{color:'green'}}>-</button>
-                                            {product.quantity}
-                                            <button onClick={() => handleProductChange(product.id, "quantity", product.quantity + 1)} style={{color:'red'}}>+</button>
+                            <tbody>
+                                {selectedProducts.map((product) => (
+                                    <tr key={product._id}>
+                                        <td>{product.nameProduct}</td>
+                                        <td><img src={`http://localhost:9003/images/${product.images[0]}`} width="50" alt={product.nameProduct} /></td>
+                                        <td style={{ display: "flex", gap: "10px", justifyContent: "center", alignItems: "center" }}>
+                                            <button onClick={() => handleProductChange(product._id, "quantity", Math.max(1, product.quantity - 1))} style={{ color: "green" }}>-</button>
+                                            <span>{product.quantity}</span>
+                                            <button onClick={() => handleProductChange(product._id, "quantity", product.quantity + 1)} style={{ color: "red" }}>+</button>
                                         </td>
-                                        <td><input type="number" value={product.price} onChange={(e) => handleProductChange(product.id, "price", parseFloat(e.target.value))} style={{width:'fit-content', padding:' 0px 10px'}}/></td>                                        <td>
-                                            <select value={product.tax} onChange={(e) => handleProductChange(product.id, "tax", parseFloat(e.target.value))} style={{width:'fit-content', padding:' 0px 10px'}}>
-                                                <option value={5}>5%</option>
-                                                <option value={10}>10%</option>
-                                                <option value={15}>15%</option>
-                                            </select>
+                                        <td><input type="number" value={product.price} onChange={(e) => handleProductChange(product._id, "price", parseFloat(e.target.value))} style={{ width: "fit-content", padding: "0px 10px" }} /></td>
+                                        <td>
+                                            <input type="number" value={product.tax} min="0" max="100"
+                                                onChange={(e) => handleProductChange(product._id, "tax", parseFloat(e.target.value))}
+                                                style={{ width: "60px", padding: "5px", textAlign: "right" }}
+                                            />%
                                         </td>
-                                        <td className="col-2">{(product.quantity * product.price) + ((product.quantity * product.price) * (product.tax / 100))}đ</td>
-                                        <td><FontAwesomeIcon icon={faTrash} onClick={() => setSelectedProducts(selectedProducts.filter(p => p.id !== product.id))} className="btn-delete-product-details"/></td>
+                                        <td className="col-2">{formatCurrency(product.quantity * product.price + (product.quantity * product.price * (product.tax / 100)))} đ</td>
+                                        <td><FontAwesomeIcon icon={faTrash} onClick={() => setSelectedProducts(selectedProducts.filter((p) => p._id !== product._id))} className="btn-delete-product-details" />
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
+
                         </table>
                     )}
                     <div className="total-import-product">
-                        <h3>Tổng giá trị đơn hàng: {calculateTotal()}đ</h3>
+                        <h3>Tổng giá trị đơn hàng: {formatCurrency(calculateTotal())}đ</h3>
                     </div>
                 </div>
 
@@ -126,21 +174,21 @@ const CreateImportOrder = () => {
                     <div className="create-import-order-card">
                         <h3>Nhà cung cấp</h3>
                         <select className="create-import-order-input" onChange={(e) => {
-                            const supplier = suppliers.find(s => s.id === e.target.value);
+                            const supplier = supplier_list.find(s => s._id === e.target.value);
                             setSelectedSupplier(supplier);
                         }}>
                             <option value="">Chọn nhà cung cấp</option>
-                            {suppliers.map(supplier => (
-                                <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                            {supplier_list.map(supplier => (
+                                <option key={supplier._id} value={supplier._id}>{supplier.supplierName}</option>
                             ))}
                         </select>
 
                         {selectedSupplier && (
                             <div className="create-import-order-supplier-info">
-                                <p><strong>ID:</strong> {selectedSupplier.id}</p>
-                                <p><strong>Tên:</strong> {selectedSupplier.name}</p>
+                                <p><strong>ID:</strong> {selectedSupplier._id}</p>
+                                <p><strong>Tên:</strong> {selectedSupplier.supplierName}</p>
                                 <p><strong>Email:</strong> {selectedSupplier.email}</p>
-                                <p><strong>Điện thoại:</strong> {selectedSupplier.phone}</p>
+                                <p><strong>Điện thoại:</strong> {selectedSupplier.numberPhone}</p>
                             </div>
                         )}
                     </div>

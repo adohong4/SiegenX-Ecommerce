@@ -46,8 +46,8 @@ class SupplierService {
 
     static getSupplier = async () => {
         try {
-            const supplier = await supplierModel.find({})
-                .select('supplierName email numberPhone status taxCode description lane area city addressOthers');
+            const supplier = await supplierModel.find({ active: true })
+                .select('supplierName email numberPhone taxCode active');
             return { metadata: supplier }
         } catch (error) {
             throw error;

@@ -17,6 +17,7 @@ const StoreContextProvider = (props) => {
     const [product_list, setProductList] = useState([])
     const [account_list, setAccount] = useState([])
     const [product_id, setProductId] = useState(null);
+    const [supplier_list, setSupplierList] = useState([])
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
@@ -112,10 +113,17 @@ const StoreContextProvider = (props) => {
         await axios.delete(`${url}/v1/api/product/invoice/active/${invoiceId}`);
     };
 
+    //----------api Supplier
+    const fetchSupplierList = async () => {
+        const response = await axios.get(`${url}/v1/api/supplier/get`);
+        setSupplierList(response.data.metadata);
+    };
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
             await fetchStaff();
+            await fetchSupplierList();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -126,10 +134,7 @@ const StoreContextProvider = (props) => {
 
 
     const contextValue = {
-        product_list,
-        product_id,
-        cartItems,
-        account_list,
+        product_list, product_id, cartItems, account_list, supplier_list,
         updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
         setCartItems,
         addToCart,

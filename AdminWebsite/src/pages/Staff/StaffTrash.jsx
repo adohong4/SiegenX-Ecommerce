@@ -25,7 +25,8 @@ const EmployeeTrashList = () => {
                 setTotalPages(response.data.metadata.totalPages);
             }
         } catch (error) {
-            console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ', error);
+            // console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ', error);
+            alert("Tài khoản bị giới hạn")
         }
     };
 

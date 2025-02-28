@@ -66,12 +66,10 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     };
 
     // Tìm kiếm nhà cung cấp
-    const handleSearch = (value) => {
-        const filteredData = list.filter(supplier =>
-            supplier.supplierName.toLowerCase().includes(value.toLowerCase())
-        );
-        setList(filteredData);
-    };
+    // const filteredData = list.filter(supplier =>
+    //     supplier.StaffName.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
+
 
     // Cột bảng
     const columns = [
@@ -86,7 +84,7 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
             dataIndex: "status",
             key: "status",
             render: (status) => (
-                <span>{status ? "Hoạt động" : "Không hoạt động"}</span>
+                <span>{!status ? "Hoạt động" : "Không hoạt động"}</span>
             ),
         },
         {
@@ -106,8 +104,14 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     return (
         <div className="supplier-list-container">
             <h2>Danh Sách Nhà Cung Cấp</h2>
-            <Search placeholder="Tìm kiếm nhà cung cấp" onSearch={handleSearch} style={{ marginBottom: 16, width: "300px" }} />
-            <Table columns={columns} dataSource={list} pagination={{ pageSize: limit, current: currentPage, total: totalItems, onChange: (page) => setCurrentPage(page) }} />
+            <Search placeholder="Tìm kiếm nhà cung cấp"
+                onSearch={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: 16, width: "300px" }} />
+            <Table
+                columns={columns}
+                dataSource={list.map(item => ({ ...item, key: item._id }))}
+                pagination={{ pageSize: limit, current: currentPage, total: totalItems, onChange: (page) => setCurrentPage(page) }}
+            />
 
             {/* Popup Cập nhật */}
             <Modal title="Cập Nhật Nhà Cung Cấp" visible={isModalOpen} onCancel={handleCancel} footer={null}>

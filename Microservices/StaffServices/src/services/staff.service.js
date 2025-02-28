@@ -153,11 +153,11 @@ class StaffService {
 
     static getStaffByPage = async (req, res) => {
         try {
+            const userRole = req.role;
             const page = req.query.page || 1;
             const limit = req.query.limit || 10;
             const skip = (page - 1) * limit;
-
-            // Lấy danh sách sản phẩm với phân trang
+            if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
             const staffs = await staffModel.find({ StatusActive: true })
                 .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
                 .sort({ createdAt: -1 })
@@ -165,12 +165,8 @@ class StaffService {
                 .limit(limit)
                 .exec();
 
-            // Lấy tổng số sản phẩm để tính số trang
             const totalStaff = await staffModel.countDocuments({ StatusActive: true });
-
-            // Tính toán số trang
             const totalPages = Math.ceil(totalStaff / limit);
-
             return {
                 metadata: {
                     staffs,
@@ -187,9 +183,11 @@ class StaffService {
 
     static paginateStaffTrash = async (req, res) => {
         try {
+            const userRole = req.role;
             const page = req.query.page || 1;
             const limit = req.query.limit || 10;
             const skip = (page - 1) * limit;
+            if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
             const staffs = await staffModel.find({ StatusActive: false })
                 .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
                 .sort({ createdAt: -1 })

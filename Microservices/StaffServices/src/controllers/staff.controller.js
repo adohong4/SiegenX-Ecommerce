@@ -162,7 +162,6 @@ class StaffController {
             next(error);
         }
     }
-
 }
 
 module.exports = new StaffController();

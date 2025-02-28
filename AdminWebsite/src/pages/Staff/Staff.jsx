@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Table, Input, Button, Popconfirm, Modal, Form, Checkbox, Select } from "antd";
+import { Table, Input, Button, Popconfirm, Modal, Form, Checkbox, Select, notification } from "antd";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 
@@ -30,7 +30,12 @@ const EmployeeList = () => {
         setTotalPages(response.data.metadata.totalPages);
       }
     } catch (error) {
-      console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ', error);
+      // console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
+      notification.error({
+        message: 'Lỗi',
+        description: 'Tài khoản bị giới hạn',
+        placement: 'topRight',
+      });
     }
   };
 

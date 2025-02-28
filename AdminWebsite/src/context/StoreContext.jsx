@@ -65,7 +65,7 @@ const StoreContextProvider = (props) => {
         }
         return totalAmount;
     }
-
+    //---------api Staff
     const fetchStaff = async () => {
         const response = await axios.get(`${url}/v1/api/staff/getProfile`);
         setAccount(response.data.metadata);
@@ -76,6 +76,19 @@ const StoreContextProvider = (props) => {
         setAccount(response.data.metadata);
     };
 
+    const updateStaffById = async (staffId, data) => {
+        await axios.post(`${url}/v1/api/staff/update/${staffId}`, data);
+    };
+
+    const deleteRestoreStaff = async (staffId) => {
+        await axios.delete(`${url}/v1/api/staff/toggleStaffStatusActive/${staffId}`);
+    };
+
+    const deleteStaff = async (staffId) => {
+        await axios.delete(`${url}/v1/api/staff/delete/${staffId}`);
+    };
+
+    //---------api Product
     const fetchProductList = async () => {
         const response = await axios.get(`${url}/v1/api/product/getAll`);
         setProductList(response.data.metadata);
@@ -113,7 +126,7 @@ const StoreContextProvider = (props) => {
         product_id,
         cartItems,
         account_list,
-        updateStaff,
+        updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
         setCartItems,
         addToCart,
         addQuantityToCart,

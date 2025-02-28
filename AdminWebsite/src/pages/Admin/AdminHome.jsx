@@ -18,7 +18,8 @@ import ImportProducts from '../InvoiceInput/ImportProducts';
 import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
-import Staff from '../../pages/Admin/Staff';
+import Staff from '../../pages/Staff/Staff';
+import StaffTrash from '../../pages/Staff/StaffTrash';
 import AddSupplier from '../../pages/Supplier/AddSupplier';
 import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
@@ -71,7 +72,11 @@ const Admin = () => {
 
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+
+                                {/* Route Staff */}
                                 <Route path="staff" element={<Staff />} />
+                                <Route path="staff/trash" element={<StaffTrash />} />
+
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
 
                                 {/* Nhập Hàng */}

@@ -20,6 +20,7 @@ const Sidebar = () => {
     nhapHang: false,
     chienDich: false,
     nhaCungcap: false,
+    nhanVien: false
   });
 
   // Hàm toggle menu
@@ -231,13 +232,37 @@ const Sidebar = () => {
               </ul>
             )}
           </div>
-          <div className="sidebar-options">
-            <NavLink to="/staff" className="sidebar-option">
-              <FontAwesomeIcon icon={faUserTie} />
-              <p>Nhân viên</p>
-            </NavLink>
-          </div >
-        </div>
+          <div className="sidebar-dropdown">
+            <div
+              className="sidebar-option sidebar-main"
+              onClick={() => toggleMenu("nhanVien")}
+            >
+              <div className="dad-menu sidebar-title">
+                <FontAwesomeIcon icon={faUserTie} />
+                <p>Nhân viên</p>
+              </div>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`sidebar-icon ${openMenus.nhanVien ? "rotate" : ""}`}
+              />
+            </div>
+
+            {openMenus.nhanVien && (
+              <ul className="sidebar-submenu">
+                <li>
+                  <NavLink to="/staff" className="submenu-item">
+                    Danh sách nhân viên
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/staff/trash" className="submenu-item">
+                    Thùng rác
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </div>
+        </div >
 
         <div className="log-out-btn">
           <NavLink to="http://localhost:5173/" className="sidebar-option-logout">

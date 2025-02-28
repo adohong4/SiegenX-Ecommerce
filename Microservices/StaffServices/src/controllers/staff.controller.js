@@ -125,6 +125,18 @@ class StaffController {
         }
     }
 
+    updateStaffProfile = async (req, res, next) => {
+        try {
+            const result = await StaffService.updateStaffProfile(req, res);
+            new OK({
+                message: "Cập nhật tài khoản thành công",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new StaffController();

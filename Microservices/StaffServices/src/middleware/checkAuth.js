@@ -20,7 +20,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const checkTokenCookie = asyncHandler(async (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
+        const token = req.cookies.token;
         //console.log('token: ',token)
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized - No Token Provided" });

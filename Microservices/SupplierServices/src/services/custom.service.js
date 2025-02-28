@@ -4,24 +4,27 @@ const supplierModel = require('../models/supplier.model');
 const { BadRequestError, AuthFailureError, ConflictRequestError, NotFoundError, ForbiddenError } = require('../core/error.response');
 
 class CustomService {
-    static paginate = async (page = 1, pageSize = 5) => {
+    static paginate = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
 
             const supplier = await supplierModel.find()
-                .select('supplierName email numberPhone status taxCode description lane area city addressOthers')
+                .select('supplierName email numberPhone status taxCode description lane area city addressOthers active')
+                .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
             const totalSupplier = await supplierModel.countDocuments();
-            const totalPages = Math.ceil(totalSupplier / pageSize);
+            const totalPages = Math.ceil(totalSupplier / limit);
             return {
                 metadata: {
                     supplier,
                     currentPage: page,
                     totalPages,
-                    totalSupplier
+                    totalSupplier,
+                    limit
                 }
             }
         } catch (error) {

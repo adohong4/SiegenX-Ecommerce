@@ -159,7 +159,6 @@ class StaffService {
 
     static async toggleStaffStatusActive(id, staffId, staffRole) {
         try {
-            console.log(staffRole);
             if (staffRole != 'ADMIN') {
                 throw new BadRequestError('Bạn không có quyền truy cập');
             }
@@ -200,7 +199,7 @@ class StaffService {
                 throw new BadRequestError("Mật khẩu không chính xác");
             }
 
-            const { _id: staffId } = staff;
+            const staffId = staff._id;
             const role = staff.Role;
             const staffName = staff.StaffName
             // console.log('role: ', role);
@@ -222,13 +221,13 @@ class StaffService {
     static getProfile = async (req, res) => {
         try {
             const staffId = req.user;
-            console.log("staffId: ", staffId);
 
             if (!staffId) {
                 throw new BadRequestError("Thiếu thông tin tài khoản");
             }
-            const profile = await staffModel.findById(staffId);
-            console.log("profile: ", profile);
+            const profile = await staffModel.findById(staffId)
+                .select('StaffName Username Email Password Numberphone Tax Role createdAt')
+                .exec();
 
             if (!profile) {
                 throw new BadRequestError("Tài khoản không tồn tại");
@@ -243,7 +242,6 @@ class StaffService {
     static LogOutStaff = async (req, res) => {
         try {
             const staffId = req.user;
-            console.log("staffId: ", staffId);
 
             if (!staffId) {
                 throw new Error("Thiếu thông tin tài khoản");
@@ -258,7 +256,32 @@ class StaffService {
         }
     }
 
+    static updateStaffProfile = async (req, res) => {
+        try {
+            const { StaffName, Username, Password, Numberphone, Tax, HashedPassword } = req.body;
+            const staffId = req.user;
 
+            const updates = { StaffName, Username, Password, Numberphone, Tax, HashedPassword }
+
+            if (Password) {
+                if (Password.length < 8) {
+                    throw new BadRequestError("Mật khẩu phải dài ít nhất 8 ký tự");
+                }
+                const salt = await bcrypt.genSalt(10);
+                updates.HashedPassword = await bcrypt.hash(Password, salt);
+            }
+
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+
+            const updatedStaff = await staffModel.findByIdAndUpdate(staffId, updates, { new: true });
+
+            if (!updatedStaff) throw new BadRequestError("Cập nhật không thành công");
+
+            return { metadata: updatedStaff };
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 
 }
 

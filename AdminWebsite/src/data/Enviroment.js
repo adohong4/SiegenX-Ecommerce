@@ -397,3 +397,51 @@ export const orders = [
     { id: 9, code: "ABDKC130", date: "26/11/2024", types: 8, value: "40.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
   ];
   
+
+//   fake data cho campain
+
+export const campainlist = [
+    {
+      name: "Ngày quốc tế phụ nữ",
+      description: "Chương trình giảm giá ngày quốc tế phụ nữ.",
+      type: "percentage",
+      value: 20,
+      code: "WOMANDAY83",
+      startDate: "2025-03-05",
+      endDate: "2025-03-15",
+      maxValue: 1000000,
+      appliesTo: "items",
+      productIds: [
+        "6777cebdc3d18219bb6b0fc0",
+        "676b7ebd899914bf0bea74e0",
+        "67696a18e7ee9e89c3b45e5c",
+      ],
+      status: false,
+    },
+    {
+      name: "Mua 2 sản phẩm, tặng 1 voucher 10k",
+      description: "Khuyến mãi khi mua 2 sản phẩm bất kỳ.",
+      type: "fixed",
+      value: 10000,
+      code: "BUY2GET10",
+      startDate: "2025-04-01",
+      endDate: "2025-04-10",
+      maxValue: 500000,
+      appliesTo: "orders",
+      productIds: [],
+      status: false,
+    },
+    {
+      name: "Giảm 10k / 1 sản phẩm nhân dịp chào mừng năm mới",
+      description: "Ưu đãi đặc biệt mừng năm mới.",
+      type: "fixed",
+      value: 10000,
+      code: "NEWYEAR10",
+      startDate: "2025-01-01",
+      endDate: "2025-01-10",
+      maxValue: 300000,
+      appliesTo: "items",
+      productIds: ["678123abcd456efg789hij"],
+      status: false,
+    },
+  ];

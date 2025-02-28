@@ -23,6 +23,7 @@ import StaffTrash from '../../pages/Staff/StaffTrash';
 import AddSupplier from '../../pages/Supplier/AddSupplier';
 import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
+import ListCampain from '../../pages/Campain/Listcampain';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -78,7 +79,8 @@ const Admin = () => {
                                 <Route path="staff/trash" element={<StaffTrash />} />
 
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
-
+                                {/* Campain */}
+                                <Route path="list-campain" element={<ListCampain />} />
                                 {/* Nhập Hàng */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
                                 <Route path="supplier" element={<Supplier />} />

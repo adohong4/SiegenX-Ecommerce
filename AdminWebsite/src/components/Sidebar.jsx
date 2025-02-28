@@ -220,7 +220,7 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/product" className="submenu-item">
+                  <NavLink to="/list-campain" className="submenu-item">
                     Danh sách chiến dịch
                   </NavLink>
                 </li>

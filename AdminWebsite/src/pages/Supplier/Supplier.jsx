@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Table, Button, Popconfirm, Modal, Form, Input, List } from "antd";
 import "../styles/styles.css";
-import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 

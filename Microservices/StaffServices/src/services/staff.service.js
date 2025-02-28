@@ -1,7 +1,7 @@
 'use strict';
 
 const staffModel = require('../models/staff.model');
-const { BadRequestError } = require('../core/error.response');
+const { BadRequestError, AuthFailureError } = require('../core/error.response');
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const { createToken } = require("../middleware/authUtils")
@@ -11,10 +11,11 @@ class StaffService {
     static createStaff = async (req, res, next) => {
         try {
             const staffId = req.user;
+            const userName = req.staffName;
             //console.log('Id: ',staffId)
             const staffRole = req.role;
-            if (staffRole != 'ADMIN') {
-                throw new BadRequestError('Bạn không có quyền truy cập');
+            if (staffRole !== 'ADMIN') {
+                throw new BadRequestError('Tài khoản bị giới hạn');
             }
             const { Email, Password, Username, Tax, StaffName, Numberphone } = req.body;
 
@@ -55,7 +56,8 @@ class StaffService {
 
                 creator: {
                     createdBy: staffId,
-                    description: "Created new campaign"
+                    createdName: userName,
+                    description: "Tạo mới"
                 }
             });
 
@@ -70,9 +72,6 @@ class StaffService {
 
     static getstaff = async (req, res) => {
         try {
-            // const staffId = req.user;
-            // console.log('Id: ',staffId)
-
             const staff = await staffModel.find({});
             return {
                 staff
@@ -85,34 +84,61 @@ class StaffService {
     static updateStaffs = async (req, res, next) => {
         try {
             const staffId = req.params.id;
+            const userName = req.staffName;
+            const userId = req.user;
+            const userRole = req.role;
+            const { StaffName, Username, Password, HashedPassword, Numberphone, Tax, Role } = req.body
+            const updates = { StaffName, Username, Password, Numberphone, Tax, HashedPassword, Role }
             const staff = await staffModel.findById(staffId);
-
-            if (!staff) {
-                throw new BadRequestError('nhan vien không tồn tại');
+            if (userRole !== 'ADMIN') throw new AuthFailureError("Tài khoản bị giới hạn")
+            if (Password) {
+                if (Password.length < 8) {
+                    throw new BadRequestError("Mật khẩu phải dài ít nhất 8 ký tự");
+                }
+                const salt = await bcrypt.genSalt(10);
+                updates.HashedPassword = await bcrypt.hash(Password, salt);
             }
-
-            // Cập nhật thông tin nhan vien
-            const updates = {
-                Username: req.body.Username,
-                StaffName: req.body.StaffName,
-                Email: req.body.Email,
-                Password: req.body.Password,
-                Numberphone: req.body.Numberphone,
-                Tax: req.body.Tax,
-                Role: req.body.Role,
-                StatusActive: req.body.StatusActive,
-
-            };
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
             const updatedStaff = await staffModel.findByIdAndUpdate(staffId, updates, { new: true });
-
-            return {
-                staff: updatedStaff
-            }
+            staff.creator.push({
+                createdBy: userId,
+                createdName: userName,
+                description: "Cập nhật tài khoản"
+            })
+            await staff.save();
+            return { metadata: updatedStaff };
         } catch (error) {
             throw error;
         }
     };
+
+    static updateStaffProfile = async (req, res) => {
+        try {
+            const { StaffName, Username, Password, Numberphone, Tax, HashedPassword } = req.body;
+            const staffId = req.user;
+
+            const updates = { StaffName, Username, Password, Numberphone, Tax, HashedPassword }
+
+            if (Password) {
+                if (Password.length < 8) {
+                    throw new BadRequestError("Mật khẩu phải dài ít nhất 8 ký tự");
+                }
+                const salt = await bcrypt.genSalt(10);
+                updates.HashedPassword = await bcrypt.hash(Password, salt);
+            }
+
+            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
+
+            const updatedStaff = await staffModel.findByIdAndUpdate(staffId, updates, { new: true });
+
+            if (!updatedStaff) throw new BadRequestError("Cập nhật không thành công");
+
+            return { metadata: updatedStaff };
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 
     static getStaffById = async (id) => {
         try {
@@ -125,22 +151,25 @@ class StaffService {
         }
     }
 
-    static getStaffByPage = async (page = 1, pageSize = 5) => {
+    static getStaffByPage = async (req, res) => {
         try {
-            // Tính toán vị trí bắt đầu và số lượng sản phẩm cần lấy
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
+            const skip = (page - 1) * limit;
 
             // Lấy danh sách sản phẩm với phân trang
-            const staffs = await staffModel.find()
-                .skip(skip)        // Bỏ qua các sản phẩm đã được truy vấn trước đó
-                .limit(limit);     // Giới hạn số lượng sản phẩm mỗi trang
+            const staffs = await staffModel.find({ StatusActive: true })
+                .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
 
             // Lấy tổng số sản phẩm để tính số trang
-            const totalStaff = await staffModel.countDocuments();
+            const totalStaff = await staffModel.countDocuments({ StatusActive: true });
 
             // Tính toán số trang
-            const totalPages = Math.ceil(totalStaff / pageSize);
+            const totalPages = Math.ceil(totalStaff / limit);
 
             return {
                 metadata: {
@@ -148,6 +177,7 @@ class StaffService {
                     currentPage: page,
                     totalPages,
                     totalStaff,
+                    limit
                 }
             };
         } catch (error) {
@@ -155,32 +185,67 @@ class StaffService {
         }
     }
 
+    static paginateStaffTrash = async (req, res) => {
+        try {
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
+            const skip = (page - 1) * limit;
+            const staffs = await staffModel.find({ StatusActive: false })
+                .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
 
+            const totalStaff = await staffModel.countDocuments({ StatusActive: false });
+            const totalPages = Math.ceil(totalStaff / limit);
+            return {
+                metadata: {
+                    staffs,
+                    currentPage: page,
+                    totalPages,
+                    totalStaff,
+                    limit
+                }
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
 
-    static async toggleStaffStatusActive(id, staffId, staffRole) {
+    static async toggleStaffStatusActive(id, staffId, staffRole, staffName) {
         try {
             if (staffRole != 'ADMIN') {
                 throw new BadRequestError('Bạn không có quyền truy cập');
             }
-            // Tìm nhân viên theo ID
             const staff = await staffModel.findById(id);
             if (!staff) {
                 throw new Error("Nhân viên không tồn tại!");
             }
-
-            // Đảo ngược trạng thái StatusActive
             const newStatus = !staff.StatusActive;
-            const actionDes = newStatus ? "restored staff" : "deleted Staff";
-            // Cập nhật lại giá trị trong DB
+            const actionDes = newStatus ? "Hồi phục" : "Xóa tài khoản";
             staff.StatusActive = newStatus;
             staff.creator.push({
                 createdBy: staffId,
+                createdName: staffName,
                 description: actionDes
             })
             await staff.save();
-            return staff; // Trả về thông tin sau khi cập nhật
+            return staff;
         } catch (error) {
             throw error;
+        }
+    }
+
+    static deleteStaff = async (req, res) => {
+        try {
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== 'ADMIN') throw new AuthFailureError("Tài khoản bị giới hạn")
+            await staffModel.findByIdAndDelete(id);
+            return;
+        } catch (error) {
+            throw new BadRequestError(error);
         }
     }
 
@@ -253,33 +318,6 @@ class StaffService {
             return { message: "Đăng xuất thành công" };
         } catch (error) {
             throw new Error("Lỗi khi đăng xuất: " + error.message);
-        }
-    }
-
-    static updateStaffProfile = async (req, res) => {
-        try {
-            const { StaffName, Username, Password, Numberphone, Tax, HashedPassword } = req.body;
-            const staffId = req.user;
-
-            const updates = { StaffName, Username, Password, Numberphone, Tax, HashedPassword }
-
-            if (Password) {
-                if (Password.length < 8) {
-                    throw new BadRequestError("Mật khẩu phải dài ít nhất 8 ký tự");
-                }
-                const salt = await bcrypt.genSalt(10);
-                updates.HashedPassword = await bcrypt.hash(Password, salt);
-            }
-
-            Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
-
-            const updatedStaff = await staffModel.findByIdAndUpdate(staffId, updates, { new: true });
-
-            if (!updatedStaff) throw new BadRequestError("Cập nhật không thành công");
-
-            return { metadata: updatedStaff };
-        } catch (error) {
-            throw new Error(error);
         }
     }
 

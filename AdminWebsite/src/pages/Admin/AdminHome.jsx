@@ -16,6 +16,7 @@ import ProductTrash from '../Product/Trash';
 import ContactTrash from '../Contact/ContactTrash';
 import ImportProducts from '../InvoiceInput/ImportProducts';
 import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
+import InvoiceTrash from '../InvoiceInput/InvoiceTrash';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 import Staff from '../../pages/Staff/Staff';
@@ -70,8 +71,10 @@ const Admin = () => {
                                 <Route path="orders" element={<Orders />} />
                                 <Route path="orders/trash" element={<OrderTrash />} />
 
+                                {/* Route Invoice */}
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+                                <Route path="invoice/trash" element={<InvoiceTrash />} />
 
                                 {/* Route Staff */}
                                 <Route path="staff" element={<Staff />} />

@@ -193,25 +193,55 @@ class InvoiceInputService {
         return { metadata: invoice }
     }
 
-    static paginateInvoice = async (page = 1, pageSize = 5) => {
+    static paginateInvoice = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = req.query.page;
+            const limit = req.query.limit;
+            const skip = (page - 1) * limit;
 
-            const invoice = await invoiceInputModel.find()
-                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+            const invoice = await invoiceInputModel.find({ active: true })
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status active')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
-            const totalInvoice = await invoiceInputModel.countDocuments();
-            const totalPages = Math.ceil(totalInvoice / pageSize);
+            const totalInvoice = await invoiceInputModel.countDocuments({ active: true });
+            const totalPages = Math.ceil(totalInvoice / limit);
             return {
                 metadata: {
                     invoice,
                     currentPage: page,
                     totalPages,
-                    totalInvoice
+                    totalInvoice,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    static paginateInvoiceTrash = async (req, res) => {
+        try {
+            const page = req.query.page;
+            const limit = req.query.limit;
+            const skip = (page - 1) * limit;
+
+            const invoice = await invoiceInputModel.find({ active: false })
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status active')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalInvoice = await invoiceInputModel.countDocuments({ active: false });
+            const totalPages = Math.ceil(totalInvoice / limit);
+            return {
+                metadata: {
+                    invoice,
+                    currentPage: page,
+                    totalPages,
+                    totalInvoice,
+                    limit
                 }
             }
         } catch (error) {

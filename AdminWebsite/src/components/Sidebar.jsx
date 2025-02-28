@@ -154,7 +154,7 @@ const Sidebar = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/trash" className="submenu-item">
+                    <NavLink to="/invoice/trash" className="submenu-item">
                       Thùng rác
                     </NavLink>
                   </li>

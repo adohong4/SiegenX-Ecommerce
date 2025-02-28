@@ -107,6 +107,10 @@ const StoreContextProvider = (props) => {
         setProductId(response.data.metadata);
     };
 
+    //---------api Invoice Input
+    const deleteSoftInvoice = async (invoiceId) => {
+        await axios.delete(`${url}/v1/api/product/invoice/active/${invoiceId}`);
+    };
 
     useEffect(() => {
         async function loadData() {
@@ -132,6 +136,7 @@ const StoreContextProvider = (props) => {
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount,
+        deleteSoftInvoice,
         fetchProductId,
         updateProductId,
         url,

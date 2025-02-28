@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/screens/address/add_address_user.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
 class AddressListScreen extends StatefulWidget {
   const AddressListScreen({Key? key}) : super(key: key);
@@ -71,6 +72,16 @@ class _AddressListScreenState extends State<AddressListScreen> {
     }
   }
 
+  // Hàm định dạng số điện thoại: hiển thị 2 số đầu, 2 số cuối, giữa là *
+  String _formatPhoneNumber(String phone) {
+    if (phone.length < 4) return phone; // Nếu số quá ngắn, trả về nguyên gốc
+    String firstTwo = phone.substring(0, 2); // 2 số đầu
+    String lastTwo = phone.substring(phone.length - 2); // 2 số cuối
+    int hiddenLength = phone.length - 4; // Số lượng số cần ẩn
+    String hiddenPart = '*' * hiddenLength; // Tạo chuỗi * để ẩn
+    return '(+84) $firstTwo$hiddenPart$lastTwo';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,20 +107,31 @@ class _AddressListScreenState extends State<AddressListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (!addresses.isEmpty) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.add, color: Colors.black),
-                          SizedBox(width: 8),
-                          Text(
-                            'Thêm địa chỉ',
-                            style: TextStyle(fontSize: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddAddressUserScreen()),
+                          );
+                        },
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Icon(Icons.add, color: Colors.black),
+                              SizedBox(width: 8),
+                              Text(
+                                'Thêm địa chỉ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Spacer(),
+                              Icon(Icons.arrow_forward_ios,
+                                  color: Colors.grey, size: 16),
+                            ],
                           ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios,
-                              color: Colors.grey, size: 16),
-                        ],
+                        ),
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 10),
                       Divider(color: Colors.grey.withOpacity(0.3)),
                       SizedBox(height: 16),
                     ],
@@ -135,13 +157,14 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                             Text(
                                               '${address['fullname']}',
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              '${address['phone']}',
+                                              _formatPhoneNumber(address[
+                                                  'phone']), // Định dạng số điện thoại
                                               style: TextStyle(fontSize: 14),
                                             ),
                                           ],
@@ -150,8 +173,8 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                       Text(
                                         'Chỉnh sửa',
                                         style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.red,
+                                          fontSize: 16,
+                                          color: AppColors.primaryColor,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -159,7 +182,11 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                   ),
                                   SizedBox(height: 8),
                                   Text(
-                                    '${address['street']}, ${address['precinct']}, ${address['city']}, ${address['province']}',
+                                    '${address['street']}, ${address['precinct']}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    '${address['city']}, ${address['province']}',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                   if (index < addresses.length - 1)
@@ -185,12 +212,10 @@ class _EmptyAddressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height -
-          kToolbarHeight -
-          0, // Trừ chiều cao AppBar
+      height: MediaQuery.of(context).size.height - kToolbarHeight - 0,
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Căn giữa dọc
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/icons/no_location.png',
@@ -222,17 +247,16 @@ class _EmptyAddressWidget extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white, // Nền trắng
-                side: BorderSide(color: Colors.grey.shade400), // Viền xám
+                backgroundColor: Colors.white,
+                side: BorderSide(color: Colors.grey.shade400),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(3), // Bo góc 3
+                  borderRadius: BorderRadius.circular(3),
                 ),
-                padding: EdgeInsets.symmetric(
-                    horizontal: 100, vertical: 22), // Tăng kích thước
+                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 22),
               ),
               child: Text(
                 'Thêm',
-                style: TextStyle(fontSize: 16, color: Colors.black), // Chữ đen
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
           ],

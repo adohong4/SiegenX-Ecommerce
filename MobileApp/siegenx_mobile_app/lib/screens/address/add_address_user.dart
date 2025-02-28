@@ -22,7 +22,7 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _provinceController = TextEditingController();
   bool isLoading = false;
-  bool isDefault = false; // Trạng thái công tắc "Đặt làm mặc định"
+  bool isDefault = false;
 
   Future<void> _addAddress() async {
     if (!_formKey.currentState!.validate()) return;
@@ -55,7 +55,7 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
           'precinct': _precinctController.text,
           'city': _cityController.text,
           'province': _provinceController.text,
-          'isDefault': isDefault, // Gửi trạng thái mặc định lên server
+          'isDefault': isDefault,
         }),
       );
 
@@ -94,74 +94,109 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2F3F4), // Màu nền toàn bộ F2F3F4
+      backgroundColor: Color(0xFFF2F3F4),
       appBar: AppBar(
         title: Text(
           'Thêm địa chỉ mới',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        elevation: 0, // Bỏ bóng để hòa với nền
-        backgroundColor: Colors.transparent, // Bỏ màu xanh
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Thông tin liên hệ
-                Text(
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Thông tin liên hệ
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
                   'Thông tin liên hệ',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontWeight: FontWeight.w500, // Bold nhẹ
+                    fontWeight: FontWeight.w500,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                      bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _fullnameController,
-                        decoration:
-                            InputDecoration(labelText: 'Tên người nhận'),
-                        validator: (value) => value!.isEmpty
-                            ? 'Vui lòng nhập tên người nhận'
-                            : null,
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _phoneController,
-                        decoration: InputDecoration(labelText: 'Số điện thoại'),
-                        keyboardType: TextInputType.phone,
-                        validator: (value) => value!.isEmpty
-                            ? 'Vui lòng nhập số điện thoại'
-                            : null,
-                      ),
-                    ],
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                    bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
                   ),
                 ),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _fullnameController,
+                      decoration: InputDecoration(
+                        hintText: 'Tên người nhận',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      validator: (value) => value!.isEmpty
+                          ? 'Vui lòng nhập tên người nhận'
+                          : null,
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        hintText: 'Số điện thoại',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng nhập số điện thoại' : null,
+                    ),
+                  ],
+                ),
+              ),
 
-                // Khoảng cách và Thông tin địa chỉ
-                SizedBox(height: 10),
-                Text(
+              const SizedBox(
+                height: 20,
+              ),
+
+              // Thông tin địa chỉ
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
                   'Thông tin địa chỉ',
                   style: TextStyle(
                     color: Colors.grey,
@@ -169,54 +204,119 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                      bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _streetController,
-                        decoration: InputDecoration(labelText: 'Đường'),
-                        validator: (value) => value!.isEmpty
-                            ? 'Vui lòng nhập địa chỉ đường'
-                            : null,
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _precinctController,
-                        decoration: InputDecoration(labelText: 'Phường/Xã'),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Vui lòng nhập phường/xã' : null,
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _cityController,
-                        decoration: InputDecoration(labelText: 'Thành phố'),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Vui lòng nhập thành phố' : null,
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _provinceController,
-                        decoration: InputDecoration(labelText: 'Tỉnh'),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Vui lòng nhập tỉnh' : null,
-                      ),
-                    ],
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                    bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
                   ),
                 ),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _streetController,
+                      decoration: InputDecoration(
+                        hintText: 'Đường',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng nhập địa chỉ đường' : null,
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _precinctController,
+                      decoration: InputDecoration(
+                        hintText: 'Phường/Xã',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng nhập phường/xã' : null,
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _cityController,
+                      decoration: InputDecoration(
+                        hintText: 'Thành phố',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng nhập thành phố' : null,
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _provinceController,
+                      decoration: InputDecoration(
+                        hintText: 'Tỉnh',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey[400]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Vui lòng nhập tỉnh' : null,
+                    ),
+                  ],
+                ),
+              ),
 
-                // Khoảng cách và Cài đặt
-                SizedBox(height: 10),
-                Text(
+              const SizedBox(
+                height: 20,
+              ),
+
+              // Cài đặt
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
                   'Cài đặt',
                   style: TextStyle(
                     color: Colors.grey,
@@ -224,58 +324,64 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                      bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Đặt làm mặc định',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      Switch(
-                        value: isDefault,
-                        onChanged: (value) {
-                          setState(() {
-                            isDefault = value;
-                          });
-                        },
-                        activeColor: Colors.green, // Màu khi bật (giống iPhone)
-                      ),
-                    ],
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                    bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Đặt làm mặc định',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Switch(
+                      value: isDefault,
+                      onChanged: (value) {
+                        setState(() {
+                          isDefault = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                    ),
+                  ],
+                ),
+              ),
 
-                // Khoảng cách và Nút Lưu
-                SizedBox(height: 24),
-                isLoading
+              // Nút Lưu
+              SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: isLoading
                     ? Center(child: CircularProgressIndicator())
                     : SizedBox(
-                        width: double.infinity, // Phủ gần hết chiều ngang
+                        width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _addAddress,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                AppColors.primaryColor, // Giữ màu xanh
+                            backgroundColor: AppColors.primaryColor,
                             padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(5), // Bo góc 5
+                            ),
                           ),
                           child: Text(
                             'Lưu',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+                            style: TextStyle(fontSize: 20, color: Colors.white),
                           ),
                         ),
                       ),
-              ],
-            ),
+              ),
+              SizedBox(height: 24),
+            ],
           ),
         ),
       ),

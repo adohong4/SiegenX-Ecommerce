@@ -1,190 +1,124 @@
 
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useCallback } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { debounce } from 'lodash'
 import ReactPaginate from 'react-paginate';
-// import { StoreContext } from '../../../context/StoreContext';
-// import ProductPopup from '../../components/Popup/ProductsPopup';
+import { StoreContext } from '../../context/StoreContext';
+import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faBook, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment";
 
-const ListProduct = () => {
-    // const { url, url2, product_list } = useContext(StoreContext)
+const ProductTrash = () => {
+    const { url } = useContext(StoreContext)
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0); // Theo dõi tổng số trang
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [list, setList] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sort, setSort] = useState('Sort By');
+    axios.defaults.withCredentials = true;
 
-
-    const handleRowClick = (product) => {
-        setSelectedProduct(product); // Truyền toàn bộ sản phẩm vào state
-        setIsPopupVisible(true);
+    const removeAccents = (str) => {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
 
+    const handleSearch = useCallback(
+        debounce(() => {
+            if (searchTerm.trim() === '') {
+                setList(list);
+            } else {
+                const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
+                const filteredList = list.filter(product => removeAccents(product.title.toLowerCase()).includes(normalizedSearchTerm));
+                setList(filteredList);
+            }
+        }, 300), //mili seconds
+        [searchTerm, list, setList]
+    );
 
-    const handlePageClick = (event) => {
-        const newPage = +event.selected + 1;
-        setCurrentPage(newPage);
-
-        // Phân biệt giữa tìm kiếm và hiển thị toàn bộ danh sách
-        if (searchTerm.trim()) {
-            handleSearch(newPage);
+    const removeProduct = async (productId) => {
+        const response = await axios.delete(`${url}/v1/api/product/deleteProduct/${productId}`);  // delete
+        if (response.data.status) {
+            alert(response.data.message);
+            await fetchList(currentPage);
         } else {
-            fetchList(newPage);
+            alert('Error deleting product');
         }
     };
 
-
-    // Hàm xóa sản phẩm
-    // const removeProduct = async (productId) => {
-    //     const response = await axios.delete(`${url}/v1/api/product/delete/${productId}`);
-    //     if (response.data.status) {
-    //         toast.success(response.data.message);
-    //         await fetchList(currentPage);
-    //     } else {
-    //         toast.error('Error deleting product');
-    //     }
-    // };
-
-    // Fake data cho hàm xóa sản phẩm
-    const removeProduct = async (productId) => {
-        setList((prevList) => prevList.filter(product => product._id !== productId));
-        toast.success("Sản phẩm đã được xóa!");
+    const restoreProduct = async (productId) => {
+        const response = await axios.delete(`${url}/v1/api/product/delete/${productId}`);  // soft delete
+        if (response.data.status) {
+            alert(response.data.message);
+            await fetchList(currentPage);
+        } else {
+            alert('Error deleting product');
+        }
     };
 
+    const fetchList = async (page = 1, limit = 5) => {
+        const response = await axios.get(`${url}/v1/api/product/trash/paginate?page=${page}&limit=${limit}`);
+        if (response.data.message) {
+            setList(response.data.metadata.products);
 
-    // const handleSearch = async () => {
-    //     if (searchTerm.trim() === '') {
-    //         await fetchList(page); // Quay lại danh sách đầy đủ nếu không nhập gì
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await axios.get(`${url}/v1/api/products/title`, {
-    //             params: { title: searchTerm, page: currentPage, limit: 10 },
-    //         });
-
-    //         if (response.data.status) {
-    //             if (Array.isArray(response.data.data)) {
-    //                 setList(response.data.data);
-    //                 setTotalPages(response.data.pagination.totalPages); // Cập nhật tổng số trang
-    //                 // toast.success(response.data.message);
-    //             } else {
-    //                 console.log(response.data.status)
-    //                 setList([]);
-    //                 setTotalPages(0); // Đặt số trang về 0 nếu không có kết quả
-    //                 toast.error("Không tìm thấy sản phẩm");
-    //             }
-    //         } else {
-    //             console.log(response.data.status)
-    //             setList([]);
-    //             setTotalPages(0);
-    //             toast.error("Tìm kiếm thất bại");
-    //         }
-    //     } catch (error) {
-    //         setList([]);
-    //         setTotalPages(0);
-    //         toast.error("Lỗi trong quá trình tìm kiếm");
-    //     }
-    // };
-
-
-    // const handleUpdateProduct = async (updatedProduct) => {
-    //     try {
-    //         const response = await axios.put(`${url}/v1/api/product/update/${updatedProduct._id}`, updatedProduct);
-
-    //         if (response.data.status) {
-    //             setList((prevList) =>
-    //                 prevList.map((product) =>
-    //                     product._id === updatedProduct._id ? updatedProduct : product
-    //                 )
-    //             );
-    //             fetchList(currentPage);
-    //             toast.success(response.data.message);
-    //         } else {
-    //             toast.error(error);
-    //         }
-    //     } catch (error) {
-    //         toast.error(error);
-    //     }
-    // };
-
-
-    const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value);
-    };
-
-    const handleSortChange = (e) => {
-        setSort(e.target.value);
+            setTotalProducts(response.data.metadata.totalProducts);
+            setTotalPages(response.data.metadata.totalPages);
+        } else {
+            toast.error('Lỗi khi lấy danh sách sản phẩm');
+        }
     };
 
     const sortedList = [...list]
         .filter(item => selectedCategory === 'All' || item.category === selectedCategory)
         .sort((a, b) => {
-            if (sort === 'Asc') {
-                return a.price - b.price;
-            } else if (sort === 'Desc') {
-                return b.price - a.price;
-            }
+            if (sort === 'Asc') return a.price - b.price;
+            if (sort === 'Desc') return b.price - a.price;
             return 0;
         });
 
-    // const fetchList = async (page = 1) => {
-    //     const response = await axios.get(`${url}/v1/api/product/pagination?page=${page}&limit=10`);
-    //     if (response.data.message) {
-    //         setList(response.data.data);
-    //         setList(fakeProducts);
-    //         setTotalPages(response.data.pagination.totalPages);
-    //     } else {
-    //         toast.error('Lỗi khi lấy danh sách sản phẩm');
-    //     }
-    // };
-
-    // Fake data cho fetchList
-
-    const fetchList = async (page = 1) => {
-        setTimeout(() => {
-            setList(fakeProducts);
-            setTotalPages(1);
-        }, 500);
-    };
-
     useEffect(() => {
         if (searchTerm.trim()) {
-            // nofi = false
-            handleSearch(); // Nếu có từ khóa tìm kiếm, thực hiện tìm kiếm
+            handleSearch();
         } else {
-            fetchList(currentPage); // Nếu không, tải danh sách mặc định
+            fetchList(currentPage);
         }
-    }, [currentPage, searchTerm]); // Thêm searchTerm vào dependency
+    }, [currentPage, searchTerm]);
+
+    const openPopup = (productId) => {
+        setSelectedRow(productId);
+        setIsPopupOpen(true);
+        document.body.classList.add('popup-open');
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+        setSelectedRow(null);
+        document.body.classList.remove('popup-open');
+    };
 
     return (
         <div className='listproduct add flex-col'>
-            <div className='dashboard-product'>
-            </div>
             <div className='top-list-tiltle'>
-
                 <div className='col-lg-4 tittle-right'>
                 </div>
                 <div className='col-lg-8 list-left'>
-                    {/* <div className='search-right'>
+                    <div className='search-right'>
                         <div className="sort-container">
-                            <select id="sort" onChange={handleSortChange} value={sort}>
-                                <option value="Sort By">Sắp xếp</option>
+                            <select id="sort" onChange={(e) => setSort(e.target.value)} value={sort}>
+                                <option value="Sort By">Sắp xếp theo </option>
                                 <option value="Asc">Tăng dần</option>
                                 <option value="Desc">Giảm dần</option>
                             </select>
                         </div>
 
                         <div className="selected-container">
-                            <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
-                                <option value="All">Lọc</option>
+                            <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                <option value="All">Danh mục sản phẩm</option>
                                 <option value="Màn hình LED">Màn hình LED</option>
                                 <option value="MH tương tác">MH tương tác</option>
                                 <option value="MH quảng cáo LCD">MH quảng cáo LCD</option>
@@ -192,7 +126,7 @@ const ListProduct = () => {
                                 <option value="KTV 5D">KTV 5D</option>
                             </select>
                         </div>
-                    </div> */}
+                    </div>
 
                     <div className='search-left'>
                         <div className='search'>
@@ -201,7 +135,7 @@ const ListProduct = () => {
                                     type="text"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    placeholder="Search..."
+                                    placeholder="Tìm kiếm..."
                                     className='search-input'
                                 />
                                 <button className='btn-search'>
@@ -219,27 +153,31 @@ const ListProduct = () => {
                     <b>Mã sản phẩm</b>
                     <b>Tên Sản Phẩm</b>
                     <b>Danh Mục</b>
-                    <b>Chi tiết</b>
+                    <b>Trạng thái</b>
                     <b>Giá</b>
                     <b>Số Lượng</b>
-                    <b>Khôi phục</b>
+                    <b>Tùy Chỉnh</b>
                 </div>
 
                 {sortedList.map((item, index) => (
-                    <div key={index} className='list-table-format' onClick={() => handleRowClick(item)} style={{ cursor: 'pointer' }}>
-                        {/* <img src={`${url2}/images/${item.images[0]}`} alt="" /> */}
-                        <p> Đây là ảnh fake data</p>
+                    <div key={index} className='list-table-format' style={{ cursor: 'pointer' }}>
+                        <img src={`http://localhost:9003/images/${item.images[0]}`} alt="" />
                         <p className='id-product'>{item._id}</p>
                         <p className='name-product'>{item.title}</p>
                         <p className='category-product'>{item.category}</p>
-                        <p></p>
+                        <p className='quantity-product'>
+                            {item.quantity <= 0 ? 'Hết hàng' : "Còn hàng"}
+                        </p>
                         <p className='price-product'>{(item.price).toLocaleString()}</p>
                         <p className=''>{item.quantity}</p>
                         <div className='button-product'>
-                            <button onClick={() => removeProduct(item._id)} className='cursor1' >
+                            <button onClick={() => openPopup(item._id)} className="btn-info">
+                                <FontAwesomeIcon icon={faBook} />
+                            </button>
+                            <button onClick={() => restoreProduct(item._id)} className="btn-info">
                                 <FontAwesomeIcon icon={faRotateRight} />
                             </button>
-                            <button className="btn btn-danger">
+                            <button onClick={() => removeProduct(item._id)} className='cursor1' >
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
                         </div>
@@ -250,7 +188,7 @@ const ListProduct = () => {
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
-                onPageChange={handlePageClick}
+                onPageChange={(e) => setCurrentPage(e.selected + 1)}
                 pageRangeDisplayed={5}
                 pageCount={totalPages}
                 previousLabel="<"
@@ -267,19 +205,16 @@ const ListProduct = () => {
                 activeClassName="active"
             />
 
+            <ProductPopup
+                isOpen={isPopupOpen}
+                onClose={closePopup}
+                productId={selectedRow}
+            />
 
-            {isPopupVisible && (
-                <ProductPopup
-                    product={selectedProduct}
-                    onClose={() => setIsPopupVisible(false)}
-                    url={url}
-                    onUpdate={handleUpdateProduct}
-                />
-            )}
         </div>
 
 
     )
 }
 
-export default ListProduct;
+export default ProductTrash;

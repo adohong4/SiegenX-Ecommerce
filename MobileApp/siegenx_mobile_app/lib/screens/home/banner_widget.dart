@@ -25,7 +25,9 @@ class _BannerWidgetState extends State<BannerWidget> {
   @override
   void initState() {
     super.initState();
-    _startAutoSlide();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoSlide();
+    });
   }
 
   void _startAutoSlide() {
@@ -38,13 +40,16 @@ class _BannerWidgetState extends State<BannerWidget> {
           _currentIndex = 0;
         }
 
-        _pageController.animateToPage(
-          _currentIndex,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
+        if (_pageController.hasClients) {
+          // Kiểm tra trước khi gọi animateToPage
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
 
-        setState(() {});
+          setState(() {}); // Cập nhật UI
+        }
       }
     });
   }
@@ -62,7 +67,9 @@ class _BannerWidgetState extends State<BannerWidget> {
   @override
   void dispose() {
     _timer?.cancel();
-    _pageController.dispose();
+    if (_pageController.hasClients) {
+      _pageController.dispose();
+    }
     super.dispose();
   }
 

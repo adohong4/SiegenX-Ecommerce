@@ -7,9 +7,12 @@ const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+// Cấu hình CORS
 app.use(
     cors({
-        origin: function (origin, callback) {
+        origin: (origin, callback) => {
             if (!origin || allowedOrigins.includes(origin)) {
                 callback(null, origin);
             } else {
@@ -17,9 +20,16 @@ app.use(
             }
         },
         credentials: true, // Cho phép gửi cookie/token
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
-app.use(cookieParser());
+
+// Xử lý preflight request (OPTIONS)
+app.options("*", (req, res) => {
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.sendStatus(200);
+});
 // Init db
 connectDB();
 

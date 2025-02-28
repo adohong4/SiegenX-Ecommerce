@@ -8,6 +8,7 @@ class IdentityController {
         const { email, password } = req.body;
         const result = await IdentityService.login(req, { email, password });
         new OK({
+            message: 'Đăng nhập thành công',
             metadata: result,
         }).send(res)
     }

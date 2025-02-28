@@ -5,9 +5,8 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { fakeCart } from "../../data/Enviroment";
+import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { formatHourDayTime } from '../../lib/utils';
 const Cart = () => {
     const { url, order_list, fetchOrder } = useContext(StoreContext);
     const [list, setList] = useState([]);
@@ -19,6 +18,7 @@ const Cart = () => {
     const [selectedRow, setSelectedRow] = useState(null); // Lưu thông tin hàng được chọn
     const [isPopupOpen, setIsPopupOpen] = useState(false); // Trạng thái mở/đóng popup
     const popupRef = useRef(null); // Tạo ref cho popup
+    axios.defaults.withCredentials = true;
 
     const handlePrint = () => {
         if (popupRef.current) {
@@ -69,7 +69,7 @@ const Cart = () => {
     const statusHandler = async (event, orderId) => {
         const selectedValue = event.target.value;
 
-        const response = await axios.put(url + "/v1/api/profile/order/updateStatus", {
+        const response = await axios.put(url + "/v1/api/profile/order/update", {
             orderId,
             status: selectedValue
         });
@@ -80,10 +80,10 @@ const Cart = () => {
     };
 
     const removeOrder = async (id) => {
-        const response = await axios.delete(`${url}/v1/api/profile/order/delete/${id}`);
+        const response = await axios.delete(`${url}/v1/api/profile/order/status/${id}`);
         if (response.data.status) {
             toast.success(response.data.message);
-            fetchListpage();
+            fetchListpage(currentPage);
         }
     };
 
@@ -101,9 +101,7 @@ const Cart = () => {
         });
         setList(sortedList);
     };
-    const handlePageClick = (event) => {
-        setCurrentPage(+event.selected + 1);
-    };
+
     const openPopup = (row) => {
         setSelectedRow(row);
         setIsPopupOpen(true);
@@ -117,21 +115,16 @@ const Cart = () => {
     };
 
     const fetchListpage = async (page = 1, limit = 10) => {
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
-            if (response.data.message) {
-                setList(response.data.metadata.order);
-                setTotalOrder(response.data.metadata.limit);
-                setTotalPages(response.data.metadata.totalPages);
-            }
-        } catch (error) {
-            toast.error('Error fetching data');
+        const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
+        if (response.data.message) {
+            setList(response.data.metadata.order);
+            setTotalOrder(response.data.metadata.limit);
+            setTotalPages(response.data.metadata.totalPages);
         }
     };
 
     useEffect(() => {
         if (searchTerm.trim()) {
-            // nofi = false
             handleSearch();
         } else {
             fetchListpage(currentPage);
@@ -162,8 +155,8 @@ const Cart = () => {
                         <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Mã hóa đơn {sortOrder._id === 'asc' ? '↑' : '↓'}
                         </th>
-                        <th onClick={() => sortBy('date')} style={{ cursor: 'pointer', textAlign: 'center' }}>
-                            Thời gian {sortOrder.date === 'asc' ? '↑' : '↓'}
+                        <th onClick={() => sortBy('createdAt')} style={{ cursor: 'pointer', textAlign: 'center' }}>
+                            Thời gian {sortOrder.createdAt === 'asc' ? '↑' : '↓'}
                         </th>
                         <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer', textAlign: 'center' }}>
                             Khách hàng {sortOrder['address.fullname'] === 'asc' ? '↑' : '↓'}
@@ -181,7 +174,7 @@ const Cart = () => {
                     {list.map((item) => (
                         <tr key={item._id} className='table-row'>
                             <td>{item._id}</td>
-                            <td>{item.date}</td>
+                            <td>{formatHourDayTime(item.createdAt)}</td>
                             <td>{item.address.fullname}</td>
                             <td>{item.paymentMethod}</td>
                             <td>{(item.amount).toLocaleString()} đ</td>
@@ -218,7 +211,7 @@ const Cart = () => {
             <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
-                onPageChange={handlePageClick}
+                onPageChange={(e) => setCurrentPage(e.selected + 1)}
                 pageRangeDisplayed={5}
                 pageCount={totalPages}
                 previousLabel="<"

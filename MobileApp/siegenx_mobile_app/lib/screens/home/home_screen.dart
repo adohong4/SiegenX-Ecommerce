@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/screens/cart/cart_main_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/banner_widget.dart';
-import 'package:siegenx_mobile_app/screens/home/cart_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/cart_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/featured_products.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.shopping_cart), // Icon giỏ hàng
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CartScreen()));
+                  MaterialPageRoute(builder: (context) => CartMainScreen()));
             },
           ),
         ],
@@ -44,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   hintText: "Tìm kiếm...",
                   hintStyle: TextStyle(color: Colors.grey), // Màu chữ gợi ý
                   prefixIcon: Icon(Icons.search,
-                      color: Color(0xFF00B98E)), // Đổi màu icon
+                      color: AppColors.primaryColor), // Đổi màu icon
                   filled: true,
                   fillColor: Color(0xFFF0F0F0), // Màu nền trắng
                   contentPadding:

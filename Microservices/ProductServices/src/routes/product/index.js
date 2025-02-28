@@ -33,8 +33,9 @@ router.delete("/product/delete/:id", checkTokenCookie, asyncHandler(ProductContr
 
 router.get("/product/getProductByName/:nameProduct", asyncHandler(ProductController.getProductByName));
 router.get("/product/getCountProduct", asyncHandler(ProductController.getCountProduct));
-router.get("/product/paginate", asyncHandler(ProductController.getProductsByPage));
 
+router.get("/product/paginate", asyncHandler(ProductController.getProductsByPage));
+router.get("/product/trash/paginate", asyncHandler(ProductController.paginateProductTrash)); //trash
 
 
 

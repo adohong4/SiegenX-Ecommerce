@@ -4,11 +4,13 @@ import Sidebar from '../../components/Sidebar';
 import ListUser from '../Account/ListUser';
 import UserTrash from '../Account/UserTrash';
 import ListProduct from '../Product/Product';
-import Contact from '../Contact/Contact';
 import AddProduct from '../Product/AddProducts';
+import ProductDetail from '../Product/ProductDetail';
+import Contact from '../Contact/Contact';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
 import Orders from '../Order/Cart';
+import OrderTrash from '../Order/OrderTrash';
 import DashBoard from '../Admin/DashBoard';
 import ProductTrash from '../Product/Trash';
 import ContactTrash from '../Contact/ContactTrash';
@@ -53,6 +55,7 @@ const Admin = () => {
                                 <Route path="add" element={<AddProduct />} />
                                 <Route path="product" element={<ListProduct />} />
                                 <Route path="product/trash" element={<ProductTrash />} />
+                                <Route path="product/:id" element={<ProductDetail />} />
 
                                 {/* Route Contact */}
                                 <Route path="contact" element={<Contact />} />
@@ -64,7 +67,7 @@ const Admin = () => {
 
                                 {/* Route Order */}
                                 <Route path="orders" element={<Orders />} />
-                                <Route path="orders/trash" element={<Orders />} />
+                                <Route path="orders/trash" element={<OrderTrash />} />
 
                                 <Route path="nhap-hang" element={<ImportProducts />} />
                                 <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />

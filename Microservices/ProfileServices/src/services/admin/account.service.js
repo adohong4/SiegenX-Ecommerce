@@ -62,6 +62,22 @@ class AccountService {
         }
     }
 
+    static deleteAccountById = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const userRole = req.role;
+            if (userRole !== 'ADMIN') throw new AuthFailureError("Bạn không có quyền thực hiện chức năng này");
+
+            const account = await accountModel.findById(id);
+            if (!account) throw new NotFoundError("Không tìm thấy tài khoản");
+
+            await accountModel.findByIdAndDelete(id);
+            return { metadata: account }
+        } catch (error) {
+            throw new BadRequestError(error);
+        }
+    }
+
     static paginateAccount = async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1;

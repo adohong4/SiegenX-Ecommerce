@@ -75,7 +75,7 @@ class ProductController {
 
     deleteProduct = async (req, res, next) => {
         try {
-            const result = await ProductService.deleteProduct(req.params.id);
+            const result = await ProductService.deleteProduct(req, res);
 
             new OK({
                 message: 'Xóa thành công',
@@ -88,7 +88,7 @@ class ProductController {
 
     softRestoreProduct = async (req, res, next) => {
         const staffId = req.user;
-        const staffName = req.req.staffName;
+        const staffName = req.staffName;
         const { id } = req.params;
         const result = await ProductService.softRestoreProduct(staffId, staffName, id);
         new CREATED({
@@ -124,10 +124,23 @@ class ProductController {
 
     getProductsByPage = async (req, res, next) => {
         try {
-            const result = await ProductService.getProductsByPage();
+            const result = await ProductService.getProductsByPage(req, res);
 
             new OK({
                 message: 'get Product By Page OK',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    paginateProductTrash = async (req, res, next) => {
+        try {
+            const result = await ProductService.paginateProductTrash(req, res);
+
+            new OK({
+                message: 'get Product Trash',
                 metadata: result.metadata
             }).send(res);
         } catch (error) {

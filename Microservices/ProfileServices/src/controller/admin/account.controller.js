@@ -57,6 +57,18 @@ class AccountController {
         }
     }
 
+    deleteAccountById = async (req, res, next) => {
+        try {
+            const result = await AccountService.deleteAccountById(req, res)
+            new CREATED({
+                message: 'Xóa thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
+    }
+
     paginateAccount = async (req, res, next) => {
         try {
             const result = await AccountService.paginateAccount(req, res)

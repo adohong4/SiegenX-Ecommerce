@@ -50,7 +50,8 @@ const checkTokenCookieAdmin = asyncHandler(async (req, res, next) => {
         if (!decoded) {
             return res.status(401).json({ message: "Unauthorized - Invalid Token" });
         }
-        req.user = new Types.ObjectId(decoded.id);
+
+        req.user = new Types.ObjectId(decoded.userId);
         req.role = decoded.Role;
         req.staffName = decoded.StaffName;
         next();
@@ -58,7 +59,7 @@ const checkTokenCookieAdmin = asyncHandler(async (req, res, next) => {
         console.log(error);
         res.status(401).json({ success: false, message: "Invalid token" });
     }
-})
+});
 
 module.exports = {
     authMiddleware, checkTokenCookie, checkTokenCookieAdmin

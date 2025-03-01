@@ -28,6 +28,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Kiểm tra token ngay khi app khởi động
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    print('Initial Token in MyApp: ${authProvider.token}');
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Tắt banner debug
       title: 'SiegenX Mobile App', // Tiêu đề ứng dụng

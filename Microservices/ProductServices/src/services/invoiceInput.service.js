@@ -11,7 +11,7 @@ class InvoiceInputService {
         try {
             const staffId = req.user;
             const staffName = req.staffName;
-            const { statusPayment, statusInput, status, supplierId, productIds } = req.body;
+            const { statusPayment, statusInput, status, supplierId, productIds, partialPayment } = req.body;
 
             // Lấy tổng số hóa đơn hiện có
             const countInvoices = await invoiceInputModel.countDocuments();
@@ -46,9 +46,9 @@ class InvoiceInputService {
             };
 
             // Tính tổng giá trị hóa đơn
-            const valueInvoice = newProductIds.reduce((total, product) => {
-                return total + product.value + (product.tax || 0); // Cộng thuế nếu có
-            }, 0);
+            const valueInvoices = newProductIds.reduce((total, product) => total + product.value, 0);
+
+            const finalPartialPayment = statusPayment === 'completed' ? valueInvoices : (partialPayment || 0);
 
             const newInvoice = new invoiceInputModel({
                 invoiceId,
@@ -56,9 +56,10 @@ class InvoiceInputService {
                 statusPayment,
                 statusInput,
                 status,
+                partialPayment: finalPartialPayment,
                 supplierId: newSupplier,
                 inputDate: new Date(),
-                valueInvoice: valueInvoice,
+                valueInvoice: valueInvoices,
                 creator: [{
                     createdBy: staffId,
                     createdName: staffName,
@@ -82,27 +83,40 @@ class InvoiceInputService {
             const staffId = req.user;
             const staffName = req.staffName;
             const { id } = req.params;
-            const { statusPayment, status } = req.body;
+            const { statusPayment, status, partialPayment } = req.body;
 
-            const updates = { statusPayment, status }
+            const invoice = await invoiceInputModel.findById(id);
+            if (!invoice) {
+                throw new BadRequestError('Invoice not found');
+            }
+            const updates = { statusPayment, status };
+
+            if (statusPayment === 'completed') {
+                updates.partialPayment = invoice.valueInvoice;
+            } else if (statusPayment === 'partial payment') {
+                updates.partialPayment = invoice.partialPayment + (partialPayment || 0);
+                if (updates.partialPayment === 0) {
+                    updates.statusPayment = 'pending';
+                }
+            } else {
+                updates.partialPayment = 0;
+            }
+
             Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
             const updatedInvoice = await invoiceInputModel.findByIdAndUpdate(id, updates, { new: true });
-            if (!updatedInvoice) {
-                throw new BadRequestError('Invoice not found');
-            }
             updatedInvoice.creator.push({
                 createdBy: staffId,
                 createdName: staffName,
                 description: "Cập nhật hóa đơn nhập"
             });
             await updatedInvoice.save();
-
             return { metadata: updatedInvoice };
         } catch (error) {
             throw error;
         }
     }
+
 
     static getAllInvoice = async () => {
         try {

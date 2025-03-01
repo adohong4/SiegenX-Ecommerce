@@ -9,14 +9,15 @@ import ProductDetail from '../Product/ProductDetail';
 import Contact from '../Contact/Contact';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
-import Orders from '../Order/Cart';
+import Orders from '../Order/Cart'; //Order
 import OrderTrash from '../Order/OrderTrash';
 import DashBoard from '../Admin/DashBoard';
 import ProductTrash from '../Product/Trash';
 import ContactTrash from '../Contact/ContactTrash';
-import ImportProducts from '../InvoiceInput/ImportProducts';
-import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
+import ImportProducts from '../InvoiceInput/ImportProducts'; //Invoice
 import InvoiceTrash from '../InvoiceInput/InvoiceTrash';
+import CreateImportOrder from '../InvoiceInput/CreateInvoice';
+import InvoiceDetail from '../InvoiceInput/InvoiceDetail';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
 import Staff from '../../pages/Staff/Staff';
@@ -72,9 +73,10 @@ const Admin = () => {
                                 <Route path="orders/trash" element={<OrderTrash />} />
 
                                 {/* Route Invoice */}
-                                <Route path="nhap-hang" element={<ImportProducts />} />
-                                <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+                                <Route path="invoice" element={<ImportProducts />} />
+                                <Route path="invoice/create" element={<CreateImportOrder />} />
                                 <Route path="invoice/trash" element={<InvoiceTrash />} />
+                                <Route path="invoice/:id" element={<InvoiceDetail />} />
 
                                 {/* Route Staff */}
                                 <Route path="staff" element={<Staff />} />

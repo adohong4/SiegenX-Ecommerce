@@ -149,7 +149,7 @@ const Sidebar = () => {
               openMenus.nhapHang && (
                 <ul className="sidebar-submenu">
                   <li>
-                    <NavLink to="/nhap-hang" className="submenu-item">
+                    <NavLink to="/invoice" className="submenu-item">
                       Danh sách nhập hàng
                     </NavLink>
                   </li>

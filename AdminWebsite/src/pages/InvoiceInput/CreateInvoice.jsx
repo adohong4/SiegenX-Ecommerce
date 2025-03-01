@@ -11,10 +11,11 @@ const CreateImportOrder = () => {
     const { url, product_list, supplier_list } = useContext(StoreContext);
     const navigate = useNavigate();
     const [selectedSupplier, setSelectedSupplier] = useState(null);
-    const [paymentStatus, setPaymentStatus] = useState("Chờ đợi");
+    const [paymentStatus, setPaymentStatus] = useState("pending");
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [createdDate, setCreatedDate] = useState(""); const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [partialPayment, setPartialPayment] = useState(0);
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
@@ -53,19 +54,8 @@ const CreateImportOrder = () => {
     };
 
     const handleSaveOrder = async () => {
-        if (!selectedSupplier) {
-            alert("Vui lòng chọn nhà cung cấp!");
-            return;
-        }
-        if (selectedProducts.length === 0) {
-            alert("Vui lòng thêm ít nhất một sản phẩm!");
-            return;
-        }
-
         const requestData = {
-            statusPayment: paymentStatus === "Chờ đợi" ? "pending" :
-                paymentStatus === "Thanh toán 1 nửa" ? "partial payment" :
-                    "completed",
+            statusPayment: paymentStatus,
             supplierId: {
                 supplierId: selectedSupplier._id
             },
@@ -74,7 +64,8 @@ const CreateImportOrder = () => {
                 count: product.quantity,
                 priceInput: product.price,
                 tax: product.tax / 100
-            }))
+            })),
+            partialPayment: partialPayment
         };
 
         try {
@@ -200,10 +191,23 @@ const CreateImportOrder = () => {
                     <div className="create-import-order-card">
                         <h3>Trạng thái thanh toán</h3>
                         <select className="create-import-order-input" value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value)}>
-                            <option value="Chờ đợi">Chờ đợi</option>
-                            <option value="Thanh toán 1 nửa">Thanh toán 1 nửa</option>
-                            <option value="Thanh toán">Thanh toán</option>
+                            <option value="pending">Chưa xử lý</option>
+                            <option value="partial payment">Thanh toán một phần</option>
+                            <option value="completed">Đã thanh toán</option>
                         </select>
+                        {paymentStatus === "partial payment" && (
+                            <div className="partial-payment-input">
+                                <label htmlFor="partialPayment">Số tiền đã thanh toán:</label>
+                                <input
+                                    type="number"
+                                    id="partialPayment"
+                                    value={partialPayment}
+                                    onChange={(e) => setPartialPayment(parseFloat(e.target.value))}
+                                    placeholder="Nhập số tiền"
+                                    className="create-import-order-input"
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 

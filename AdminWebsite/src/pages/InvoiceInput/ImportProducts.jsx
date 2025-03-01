@@ -75,13 +75,12 @@ const ImportOrders = () => {
   };
 
   useEffect(() => {
-    fetchInvoiceList(currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchTerm, handleSearch]);
-
+    if (searchTerm.trim()) {
+      handleSearch();
+    } else {
+      fetchInvoiceList(currentPage);
+    }
+  }, [currentPage, searchTerm, handleSearch]);
 
   return (
     <div className="nhap-hang-page">
@@ -93,7 +92,7 @@ const ImportOrders = () => {
             placeholder="Tìm kiếm..."
             className='search-input' />
         </div>
-        <button className="btn btn-primary" onClick={() => navigate("/tao-don-nhap-hang")}>
+        <button className="btn btn-primary" onClick={() => navigate("/invoice/create")}>
           + Thêm mới đơn hàng nhập
         </button>
 
@@ -147,7 +146,7 @@ const ImportOrders = () => {
                               order.status === 'draft' ? "Đang ở dạng nháp" : ""}
                 </td>
                 <td className="actions">
-                  <button className="btn btn-info">
+                  <button className="btn btn-info" onClick={() => navigate(`/invoice/${order._id}`)}>
                     <FontAwesomeIcon icon={faInfoCircle} className="icon" />
                   </button>
                   <button className="btn btn-danger" onClick={() => handleSoftDeletion(order._id)}>

@@ -215,7 +215,7 @@ const Sidebar = () => {
             {openMenus.chienDich && (
               <ul className="sidebar-submenu">
                 <li>
-                  <NavLink to="/nhap-hang" className="submenu-item">
+                  <NavLink to="/add-campain" className="submenu-item">
                     Thêm chiến dịch
                   </NavLink>
                 </li>

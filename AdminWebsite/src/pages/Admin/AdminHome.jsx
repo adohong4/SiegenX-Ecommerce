@@ -25,6 +25,7 @@ import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
 import ListCampain from '../../pages/Campain/Listcampain';
 import AddCampaign from '../../pages/Campain/Addcampain';
+import TrashCampain from '../../pages/Campain/Trashcampain';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -83,6 +84,7 @@ const Admin = () => {
                                 {/* Campain */}
                                 <Route path="list-campain" element={<ListCampain />} />
                                 <Route path="add-campain" element={<AddCampaign />} />
+                                <Route path="trash-campain" element={<TrashCampain />} />
                                 {/* Nhập Hàng */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
                                 <Route path="supplier" element={<Supplier />} />

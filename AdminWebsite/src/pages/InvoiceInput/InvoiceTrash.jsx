@@ -82,8 +82,12 @@ const ImportOrders = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        handleSearch();
-    }, [searchTerm, handleSearch]);
+        if (searchTerm.trim()) {
+            handleSearch();
+        } else {
+            setList(initialList);
+        }
+    }, [searchTerm, initialList]);
 
 
     return (

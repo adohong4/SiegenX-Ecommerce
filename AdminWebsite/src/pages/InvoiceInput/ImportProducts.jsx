@@ -46,7 +46,7 @@ const ImportOrders = () => {
 
   const handleSearch = useCallback(
     debounce(() => {
-      if (searchTerm.trim() === '') {
+      if (!searchTerm.trim()) {
         setList(initialList);
       } else {
         const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
@@ -75,6 +75,10 @@ const ImportOrders = () => {
     });
     setList(sortedList);
   };
+
+  useEffect(() => {
+    fetchInvoiceList(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (searchTerm.trim()) {

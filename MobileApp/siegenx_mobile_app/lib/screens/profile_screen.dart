@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
+import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/controllers/view_profile_controller.dart';
-import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart'; // Import file mới
+import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -56,6 +60,9 @@ class _ProfilePage1State extends State<ProfilePage1> {
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Expanded(
                               child: SingleChildScrollView(
                                 child: _ProfileDetails(email: controller.email),
@@ -83,13 +90,64 @@ class _ProfileDetails extends StatefulWidget {
 }
 
 class _ProfileDetailsState extends State<_ProfileDetails> {
-  bool _isTokenExpanded = false;
+  List<AddressModel> addresses = [];
+  String? defaultAddressId;
+  bool isLoadingAddresses = true;
+  final AddAddressController _addAddressController = AddAddressController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDefaultAddress();
+    _fetchAddresses();
+  }
+
+  Future<void> _loadDefaultAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      defaultAddressId = prefs.getString('defaultAddressId');
+    });
+  }
+
+  Future<void> _fetchAddresses() async {
+    setState(() {
+      isLoadingAddresses = true;
+    });
+
+    final fetchedAddresses =
+        await _addAddressController.fetchAddresses(context);
+    if (mounted) {
+      setState(() {
+        addresses = fetchedAddresses;
+        isLoadingAddresses = false;
+      });
+    }
+  }
+
+  AddressModel? _getDefaultAddress() {
+    if (addresses.isEmpty) return null;
+    return addresses.firstWhere(
+      (address) => address.id == defaultAddressId,
+      orElse: () =>
+          addresses.first, // Lấy địa chỉ đầu tiên nếu không tìm thấy mặc định
+    );
+  }
+
+  String _formatPhoneNumber(String phone) {
+    if (phone.length < 4) return phone;
+    String firstTwo = phone.substring(0, 2);
+    String lastTwo = phone.substring(phone.length - 2);
+    int hiddenLength = phone.length - 4;
+    String hiddenPart = '*' * hiddenLength;
+    return '(+84) $firstTwo$hiddenPart$lastTwo';
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final String? userId = authProvider.userId;
     final String? token = authProvider.token;
+    final defaultAddress = _getDefaultAddress();
 
     final List<Map<String, String>> _details = [
       {"label": "User ID", "value": userId ?? "N/A"},
@@ -128,7 +186,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
         const Divider(),
         Row(
           children: [
-            const Icon(Icons.local_shipping_outlined, color: Colors.black),
+            const Icon(Icons.location_on, color: AppColors.primaryColor),
             const SizedBox(width: 8),
             const Text(
               "Địa chỉ nhận hàng",
@@ -140,7 +198,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AddressListScreen()),
-                );
+                ).then((_) => _fetchAddresses());
               },
               child: Row(
                 children: [
@@ -160,12 +218,53 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
           ],
         ),
         const SizedBox(height: 8),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            "136 Đốc Ngữ, Liễu Giai, Vĩnh Phú, Ba Đình, Hà Nội",
-            style: TextStyle(fontSize: 14, color: Color(0xff808B96)),
-          ),
+          child: isLoadingAddresses
+              ? Text(
+                  'Đang tải địa chỉ...',
+                  style: TextStyle(fontSize: 14, color: Color(0xff808B96)),
+                )
+              : defaultAddress == null
+                  ? Text(
+                      'Chưa có địa chỉ mặc định',
+                      style: TextStyle(fontSize: 14, color: Color(0xff808B96)),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    defaultAddress.fullname,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    _formatPhoneNumber(defaultAddress.phone),
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          '${defaultAddress.street}, ${defaultAddress.precinct}, ${defaultAddress.city}, ${defaultAddress.province}',
+                          style:
+                              TextStyle(fontSize: 14, color: Color(0xff808B96)),
+                        ),
+                      ],
+                    ),
         ),
       ],
     );
@@ -177,6 +276,8 @@ class _TopPortion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -200,8 +301,11 @@ class _TopPortion extends StatelessWidget {
                 right: 16,
                 child: IconButton(
                   icon: const Icon(Icons.logout, color: Colors.white, size: 28),
-                  onPressed: () {
-                    // Xử lý đăng xuất tại đây
+                  onPressed: () async {
+                    // await authProvider.logout(context);
+                    // if (authProvider.token == null) {
+                    //   Navigator.pushReplacementNamed(context, '/login');
+                    // }
                   },
                 ),
               ),

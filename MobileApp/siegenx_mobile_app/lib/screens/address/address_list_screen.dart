@@ -1,11 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
+import 'package:siegenx_mobile_app/controllers/deleta_address_controller.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
-import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/screens/address/add_address_user.dart';
-import 'package:siegenx_mobile_app/services/api_service.dart';
+import 'package:siegenx_mobile_app/screens/profile_screen.dart'; // Thêm import ProfileScreen
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
 class AddressListScreen extends StatefulWidget {
@@ -18,69 +18,54 @@ class AddressListScreen extends StatefulWidget {
 class _AddressListScreenState extends State<AddressListScreen> {
   List<AddressModel> addresses = [];
   bool isLoading = true;
+  String? defaultAddressId;
+  final AddAddressController _addAddressController = AddAddressController();
+  final DeleteAddressController _deleteAddressController =
+      DeleteAddressController();
 
   @override
   void initState() {
     super.initState();
+    _loadDefaultAddress();
     _fetchAddresses();
   }
 
+  Future<void> _loadDefaultAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      defaultAddressId = prefs.getString('defaultAddressId');
+    });
+  }
+
+  Future<void> _setDefaultAddress(String addressId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('defaultAddressId', addressId);
+    setState(() {
+      defaultAddressId = addressId;
+    });
+    // Quay về trang trước đó
+    Navigator.pop(context);
+  }
+
   Future<void> _fetchAddresses() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final String? token = authProvider.token;
-
-    if (token == null) {
-      setState(() {
-        isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Vui lòng đăng nhập để xem danh sách địa chỉ')),
-      );
-      return;
-    }
-
     setState(() {
       isLoading = true;
     });
 
-    try {
-      final response = await http.get(
-        Uri.parse(ApiService.listAddresses), // Sử dụng endpoint từ ApiService
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final List<dynamic> addressList = data['metadata']['addresses'];
-        setState(() {
-          addresses =
-              addressList.map((json) => AddressModel.fromJson(json)).toList();
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Lỗi khi lấy danh sách địa chỉ: ${response.statusCode}')),
-        );
-      }
-    } catch (e) {
+    final fetchedAddresses =
+        await _addAddressController.fetchAddresses(context);
+    if (mounted) {
       setState(() {
+        addresses = fetchedAddresses;
         isLoading = false;
+        if (defaultAddressId == null && addresses.isNotEmpty) {
+          _setDefaultAddress(
+              addresses.first.id!); // Chọn mặc định và quay lại ProfileScreen
+        }
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi kết nối: $e')),
-      );
     }
   }
 
-  // Hàm định dạng số điện thoại: hiển thị 2 số đầu, 2 số cuối, giữa là *
   String _formatPhoneNumber(String phone) {
     if (phone.length < 4) return phone;
     String firstTwo = phone.substring(0, 2);
@@ -96,9 +81,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
       appBar: AppBar(
         title: Text(
           'Danh sách địa chỉ',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -121,8 +104,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddAddressUserScreen()),
-                          ).then(
-                              (_) => _fetchAddresses()); // Reload khi quay lại
+                          ).then((_) => _fetchAddresses());
                         },
                         child: Container(
                           child: Row(
@@ -151,60 +133,147 @@ class _AddressListScreenState extends State<AddressListScreen> {
                             children: addresses.asMap().entries.map((entry) {
                               final index = entry.key;
                               final address = entry.value;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              address.fullname,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                              final isDefault = defaultAddressId == address.id;
+                              return GestureDetector(
+                                onTap: () {
+                                  _setDefaultAddress(address
+                                      .id!); // Chọn và quay lại ProfileScreen
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                address.fullname,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              _formatPhoneNumber(address.phone),
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ],
+                                              SizedBox(height: 8),
+                                              Text(
+                                                _formatPhoneNumber(
+                                                    address.phone),
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        'Chỉnh sửa',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: AppColors.primaryColor,
-                                          fontWeight: FontWeight.bold,
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (dialogContext) =>
+                                                  AlertDialog(
+                                                title: Text('Xác nhận xóa'),
+                                                content: Text(
+                                                    'Bạn có chắc chắn muốn xóa địa chỉ này?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            dialogContext),
+                                                    child: Text('Hủy'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      Navigator.pop(
+                                                          dialogContext);
+                                                      final success =
+                                                          await _deleteAddressController
+                                                              .deleteAddress(
+                                                                  context,
+                                                                  address.id!);
+                                                      if (mounted && success) {
+                                                        if (isDefault) {
+                                                          _setDefaultAddress(
+                                                              addresses.length >
+                                                                      1
+                                                                  ? addresses[1]
+                                                                      .id!
+                                                                  : '');
+                                                        } else {
+                                                          _fetchAddresses();
+                                                        }
+                                                      }
+                                                    },
+                                                    child: Text('Xóa',
+                                                        style: TextStyle(
+                                                            color: Colors.red)),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Xóa',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.redAccent,
+                                                  // fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(width: 3),
+                                              Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                                size: 22,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    '${address.street}, ${address.precinct}',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  Text(
-                                    '${address.city}, ${address.province}',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  if (index < addresses.length - 1)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Divider(
-                                          color: Colors.grey.withOpacity(0.3)),
+                                      ],
                                     ),
-                                ],
+                                    SizedBox(height: 8),
+                                    Text(
+                                      '${address.street}, ${address.precinct}',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      '${address.city}, ${address.province}',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    if (isDefault)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 4.0),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: Text(
+                                            'Chọn mặc định',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (index < addresses.length - 1)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: Divider(
+                                            color:
+                                                Colors.grey.withOpacity(0.3)),
+                                      ),
+                                  ],
+                                ),
                               );
                             }).toList(),
                           ),
@@ -233,10 +302,7 @@ class _EmptyAddressWidget extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Chưa có thông tin vận chuyển',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 8),
@@ -260,8 +326,7 @@ class _EmptyAddressWidget extends StatelessWidget {
                 backgroundColor: Colors.white,
                 side: BorderSide(color: Colors.grey.shade400),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(3),
-                ),
+                    borderRadius: BorderRadius.circular(3)),
                 padding: EdgeInsets.symmetric(horizontal: 100, vertical: 22),
               ),
               child: Text(

@@ -39,6 +39,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
+// Giữ nguyên _Logo và _FormContent như code của bạn
 class _Logo extends StatelessWidget {
   const _Logo({Key? key}) : super(key: key);
 
@@ -98,9 +99,7 @@ class __FormContentState extends State<_FormContent> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             TextFormField(
               controller: _emailController,
               validator: (value) {
@@ -119,18 +118,17 @@ class __FormContentState extends State<_FormContent> {
                 labelText: 'Tài khoản',
                 labelStyle: TextStyle(color: Color(0xff00B98E)),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.all(12.0), // Căn chỉnh icon
+                  padding: EdgeInsets.all(12.0),
                   child: Image(
                     image: AssetImage('assets/icons/user.png'),
-                    width: 24, // Điều chỉnh kích thước icon
+                    width: 24,
                     height: 24,
                   ),
                 ),
                 filled: true,
                 fillColor: Color(0xffF2F3F4),
                 border: InputBorder.none,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 16.0), // Tăng chiều cao
+                contentPadding: EdgeInsets.symmetric(vertical: 16.0),
               ),
             ),
             _gap(),
@@ -153,15 +151,14 @@ class __FormContentState extends State<_FormContent> {
                 fillColor: Color(0xffF2F3F4),
                 border: InputBorder.none,
                 prefixIcon: Padding(
-                  padding: EdgeInsets.all(12.0), // Căn chỉnh icon
+                  padding: EdgeInsets.all(12.0),
                   child: Image(
                     image: AssetImage('assets/icons/lock.png'),
-                    width: 24, // Điều chỉnh kích thước icon
+                    width: 24,
                     height: 24,
                   ),
                 ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 16.0), // Tăng chiều cao
+                contentPadding: EdgeInsets.symmetric(vertical: 16.0),
                 suffixIcon: IconButton(
                   icon: Icon(_isPasswordVisible
                       ? Icons.visibility_off
@@ -198,7 +195,7 @@ class __FormContentState extends State<_FormContent> {
                   ),
                 ),
                 child: const Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   child: Text(
                     'ĐĂNG NHẬP',
                     style: TextStyle(
@@ -209,16 +206,6 @@ class __FormContentState extends State<_FormContent> {
                   ),
                 ),
                 onPressed: () {
-                  // if (_formKey.currentState?.validate() ?? false) {
-                  //   // Xử lý đăng nhập
-                  // }
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => ManagerScreen(),
-                  //   ),
-                  // );
-
                   if (_formKey.currentState!.validate()) {
                     AuthController.login(context, _emailController.text,
                         _passwordController.text);
@@ -226,9 +213,7 @@ class __FormContentState extends State<_FormContent> {
                 },
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -237,18 +222,14 @@ class __FormContentState extends State<_FormContent> {
                   thickness: 1,
                   endIndent: 8,
                 )),
-
-                // Dòng chữ "Đăng nhập với"
                 const Text(
                   "Đăng nhập với",
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
-                    fontWeight: FontWeight.w500, // độ đậm trung bình
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-
-                // Đường kẻ bên phải
                 Expanded(
                     child: Divider(
                   color: Colors.grey.shade400,
@@ -257,49 +238,36 @@ class __FormContentState extends State<_FormContent> {
                 ))
               ],
             ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            // 3 logo facebook, google, apple
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: () {
-                    // xử lý đăng nhập google
+                    // Xử lý đăng nhập Facebook
                   },
                   child: Image.asset('assets/icons/facebook.png',
                       width: 40, height: 40),
                 ),
-                const SizedBox(
-                  width: 30,
-                ),
+                const SizedBox(width: 30),
                 GestureDetector(
                   onTap: () {
-                    // xử lý đăng nhập google
+                    // Xử lý đăng nhập Google
                   },
                   child: Image.asset('assets/icons/google.png',
                       width: 40, height: 40),
                 ),
-                const SizedBox(
-                  width: 30,
-                ),
+                const SizedBox(width: 30),
                 GestureDetector(
                   onTap: () {
-                    // xử lý đăng nhập google
+                    // Xử lý đăng nhập Apple
                   },
                   child: Image.asset('assets/icons/apple.png',
                       width: 40, height: 40),
                 ),
               ],
             ),
-
-            const SizedBox(
-              height: 30,
-            ),
-
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -309,7 +277,6 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Xử lý khi nhấn vào nút "ĐĂNG KÝ NGAY"
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RegisterScreen()),

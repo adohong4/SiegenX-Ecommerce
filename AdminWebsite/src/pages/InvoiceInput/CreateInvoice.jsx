@@ -16,12 +16,17 @@ const CreateImportOrder = () => {
     const [createdDate, setCreatedDate] = useState(""); const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [partialPayment, setPartialPayment] = useState(0);
+    const [valueInvoice, setValueInvoice] = useState(0);
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
         setCreatedDate(today);
     }, []);
+
+    useEffect(() => {
+        setValueInvoice(calculateTotal()); // Cập nhật giá trị hóa đơn khi danh sách sản phẩm thay đổi
+    }, [selectedProducts]);
 
     // Xử lý tìm kiếm
     const handleSearchChange = (e) => {
@@ -47,7 +52,7 @@ const CreateImportOrder = () => {
 
     const handleAddProduct = (product) => {
         if (!selectedProducts.find((p) => p._id === product._id)) {
-            setSelectedProducts([...selectedProducts, { ...product, quantity: 1, price: 0, discount: 0, tax: 10 }]);
+            setSelectedProducts([...selectedProducts, { ...product, quantity: 1, price: 0, tax: 10 }]);
         }
         setSearchTerm("");
         setFilteredProducts([]);
@@ -65,7 +70,8 @@ const CreateImportOrder = () => {
                 priceInput: product.price,
                 tax: product.tax / 100
             })),
-            partialPayment: partialPayment
+            partialPayment: partialPayment,
+            valueInvoice: valueInvoice
         };
 
         try {
@@ -78,14 +84,14 @@ const CreateImportOrder = () => {
             }
         } catch (error) {
             console.error("Lỗi khi tạo đơn hàng:", error);
-            alert("Lỗi khi tạo đơn hàng, vui lòng thử lại!");
+            alert(error.response.data.message);
         }
     };
 
 
     const calculateTotal = () => {
         return selectedProducts.reduce((total, product) => {
-            const totalPrice = (product.quantity * product.price) - product.discount + ((product.quantity * product.price) * (product.tax / 100));
+            const totalPrice = (product.quantity * product.price) + ((product.quantity * product.price) * (product.tax / 100));
             return total + totalPrice;
         }, 0);
     };
@@ -157,7 +163,7 @@ const CreateImportOrder = () => {
                         </table>
                     )}
                     <div className="total-import-product">
-                        <h3>Tổng giá trị đơn hàng: {formatCurrency(calculateTotal())}đ</h3>
+                        <h3>Tổng giá trị đơn hàng: {formatCurrency(valueInvoice)}đ</h3>
                     </div>
                 </div>
 

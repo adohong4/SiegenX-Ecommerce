@@ -22,5 +22,5 @@ router.put('/product/invoice/update/:id', checkTokenCookie, asyncHandler(invoice
 router.put('/product/invoice/push/:id', checkTokenCookie, asyncHandler(invoiceController.pushNumberOfProduct)) // push the number of product from invoice to product
 
 router.delete('/product/invoice/active/:id', checkTokenCookie, asyncHandler(invoiceController.softDeleteRestoreInvoice)) //delete && restore
-
+router.delete('/product/invoice/delete/:id', checkTokenCookie, asyncHandler(invoiceController.deleteInvoice))
 module.exports = router;

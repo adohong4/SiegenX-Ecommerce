@@ -52,6 +52,22 @@ const InvoiceDetail = () => {
         }, 0);
     };
 
+    const handlePushTheNumberOfProduct = async () => {
+        try {
+            console.log("Đầu");
+            const response = await axios.put(`${url}/v1/api/product/invoice/push/${id}`);
+            console.log("giữa");
+            if (response.status === 200 || response.status === 201) {
+                alert("Số lượng nhập kho thành công thành công!");
+                navigate(-1);
+            } else {
+                alert("Có lỗi xảy ra khi cập nhật đơn hàng!");
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+    }
+
     const handleSaveOrder = async () => {
         if (!selectedSupplier) {
             alert("Vui lòng chọn nhà cung cấp!");
@@ -78,7 +94,7 @@ const InvoiceDetail = () => {
             }
         } catch (error) {
             console.error("Lỗi khi cập nhật đơn hàng:", error);
-            alert("Lỗi khi cập nhật đơn hàng, vui lòng thử lại!");
+            alert(error.response.data.message);
         }
     };
 
@@ -141,7 +157,7 @@ const InvoiceDetail = () => {
                         <h3>Tổng giá trị đơn hàng: {formatCurrency(calculateTotal())}đ</h3>
                     </div>
                     <div>
-                        <button>Nhập hàng</button>
+                        <button onClick={handlePushTheNumberOfProduct}>Nhập hàng</button>
                     </div>
                     <div>
                         <h3>Lịch sử thay đổi</h3>
@@ -217,6 +233,7 @@ const InvoiceDetail = () => {
                     <div className="create-import-order-card">
                         <h3>Trạng thái đơn hàng</h3>
                         <select className="create-import-order-input" value={invoiceStatus} onChange={(e) => setStatus(e.target.value)}>
+                            <option value="completed">Vận chuyển thành công</option>
                             <option value="active">Đang vận chuyển</option>
                             <option value="paused">Tạm dừng</option>
                             <option value="pending">Chờ xử lý</option>

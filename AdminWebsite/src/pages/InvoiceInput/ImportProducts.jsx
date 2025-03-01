@@ -31,7 +31,7 @@ const ImportOrders = () => {
         setTotalPages(response.data.metadata.totalPages);
       }
     } catch (error) {
-      console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
+      console.error(error.response.data.message);
     }
   };
 
@@ -121,13 +121,13 @@ const ImportOrders = () => {
           </thead>
           <tbody>
             {list.map((order) => (
-              <tr key={order.id}>
+              <tr key={order._id}>
                 <td>{order.invoiceId}</td>
                 <td>{formatDayTime(order.inputDate)}</td>
                 <td>
                   {order.statusPayment === 'pending' ? 'Chờ xử lý' :
                     order.statusPayment === 'partial payment' ? 'Thanh toán một phần' :
-                      order.statusPayment === 'completed' ? 'Hoàn thành' : ''}
+                      order.statusPayment === 'completed' ? 'Đã thanh toán' : ''}
                 </td>
                 <td>
                   {order.statusInput === 'not imported' ? 'Chưa nhập' :
@@ -137,9 +137,9 @@ const ImportOrders = () => {
                 <td>{order.creator[0].createdName}</td>
                 <td>{formatCurrency(order.valueInvoice)} đ</td>
                 <td>
-                  {order.status === 'active' ? "Hoạt động" :
+                  {order.status === 'active' ? "Đang vận chuyển" :
                     order.status === 'paused' ? "Tạm dừng" :
-                      order.status === 'completed' ? "Đã hoàn thành" :
+                      order.status === 'completed' ? "Đã nhận hàng" :
                         order.status === 'pending' ? "Đang chờ xử lý" :
                           order.status === 'cancelled' ? "Đã bị hủy" :
                             order.status === 'failed' ? "Không thành công" :

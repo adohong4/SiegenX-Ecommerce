@@ -3,7 +3,7 @@
 const productModel = require('../models/product.model');
 const invoiceInputModel = require('../models/invoiceInput.model');
 const supplierModel = require('../models/supplier.model')
-const { BadRequestError } = require('../core/error.response');
+const { BadRequestError, AuthFailureError } = require('../core/error.response');
 
 
 class InvoiceInputService {
@@ -11,21 +11,28 @@ class InvoiceInputService {
         try {
             const staffId = req.user;
             const staffName = req.staffName;
-            const { statusPayment, statusInput, status, supplierId, productIds, partialPayment } = req.body;
+            const { statusPayment, statusInput, status, supplierId, productIds, partialPayment, valueInvoice } = req.body;
 
             // Lấy tổng số hóa đơn hiện có
-            const countInvoices = await invoiceInputModel.countDocuments();
-            const stt = String(countInvoices + 1).padStart(3, '0'); // Tạo số thứ tự dạng '001', '002', ...
-            const invoiceId = `HDN${stt}`; // Tạo mã hóa đơn
+            let countInvoices = await invoiceInputModel.countDocuments();
+            let stt = String(countInvoices + 1).padStart(3, '0'); // Tạo số thứ tự dạng '001', '002', ...
+            let invoiceId = `HDN${stt}`; // Tạo mã hóa đơn
+            let invoiceIdExist = await invoiceInputModel.findOne({ invoiceId });
+            while (invoiceIdExist) {
+                countInvoices++;
+                stt = String(countInvoices + 1).padStart(3, '0');
+                invoiceId = `HDN${stt}`;
+                invoiceIdExist = await invoiceInputModel.findOne({ invoiceId });
+            }
 
-            // get info product from productIds
+            // Get info product from productIds
             const products = await Promise.all(
                 productIds.map(async (productId) => {
                     return await productModel.findById(productId.productId);
                 })
             );
 
-            // create array of product for invoice
+            // Create array of product for invoice
             const newProductIds = products.map((product, index) => ({
                 nameProduct: product.nameProduct,
                 imageProduct: product.images[0],
@@ -36,7 +43,7 @@ class InvoiceInputService {
                 value: productIds[index].count * productIds[index].priceInput
             }));
 
-            //create Supplier
+            // Create Supplier
             const supplier = await supplierModel.findById(supplierId.supplierId); // Thêm await
             const newSupplier = {
                 nameSupplier: supplier.supplierName,
@@ -45,10 +52,7 @@ class InvoiceInputService {
                 numberPhone: supplier.numberPhone,
             };
 
-            // Tính tổng giá trị hóa đơn
-            const valueInvoices = newProductIds.reduce((total, product) => total + product.value, 0);
-
-            const finalPartialPayment = statusPayment === 'completed' ? valueInvoices : (partialPayment || 0);
+            const finalPartialPayment = statusPayment === 'completed' ? valueInvoice : (partialPayment || 0);
 
             const newInvoice = new invoiceInputModel({
                 invoiceId,
@@ -59,7 +63,7 @@ class InvoiceInputService {
                 partialPayment: finalPartialPayment,
                 supplierId: newSupplier,
                 inputDate: new Date(),
-                valueInvoice: valueInvoices,
+                valueInvoice: valueInvoice,
                 creator: [{
                     createdBy: staffId,
                     createdName: staffName,
@@ -69,7 +73,6 @@ class InvoiceInputService {
 
             const invoiceInput = await newInvoice.save();
 
-            //Đẩy id invoice vô orderData của supplierModel
             await supplierModel.findByIdAndUpdate(supplier._id, { $push: { orderData: invoiceInput._id } });
 
             return invoiceInput;
@@ -77,6 +80,7 @@ class InvoiceInputService {
             throw error;
         }
     }
+
 
     static updateInvoiceById = async (req, res) => {
         try {
@@ -91,12 +95,23 @@ class InvoiceInputService {
             }
             const updates = { statusPayment, status };
 
+            if (invoice.status === 'completed' && invoice.statusInput === 'imported')
+                throw new BadRequestError('Sản phẩm nhập kho, không thể đổi trạng thái đơn hàng');
+
             if (statusPayment === 'completed') {
                 updates.partialPayment = invoice.valueInvoice;
             } else if (statusPayment === 'partial payment') {
-                updates.partialPayment = invoice.partialPayment + (partialPayment || 0);
-                if (updates.partialPayment === 0) {
-                    updates.statusPayment = 'pending';
+                if (partialPayment > invoice.valueInvoice) {
+                    throw new BadRequestError("Số tiền thanh toán không thể lớn hơn giá trị hóa đơn");
+                } else if (partialPayment === invoice.partialPayment) {
+                    updates.statusPayment = 'completed';
+                } else {
+                    updates.partialPayment = invoice.partialPayment + (partialPayment || 0);
+                    if (updates.partialPayment >= invoice.valueInvoice) {
+                        updates.statusPayment = 'completed';
+                    } else if (updates.partialPayment === 0) {
+                        updates.statusPayment = 'pending';
+                    }
                 }
             } else {
                 updates.partialPayment = 0;
@@ -149,9 +164,8 @@ class InvoiceInputService {
                 .select('productIds.productId productIds.count status statusInput creator')
                 .exec();
 
-            if (invoice.status !== 'completed' || invoice.statusInput !== 'not imported') {
-                throw new BadRequestError('Đơn hàng nhập chưa hoàn tất')
-            }
+            if (invoice.status !== 'completed') throw new BadRequestError('Đơn hàng nhập chưa hoàn tất')
+            if (invoice.statusInput !== 'not imported') throw new BadRequestError('Đơn hàng đã nhập kho')
 
             const results = [];
 
@@ -194,6 +208,9 @@ class InvoiceInputService {
 
     static softDeleteRestoreInvoice = async (staffId, staffName, id) => {
         const invoice = await invoiceInputModel.findById(id)
+        if (invoice.statusInput === 'imported')
+            throw new BadRequestError('Đã nhập kho, không thể xóa');
+
         const newActiveStatus = !invoice.active;
         const actionDescription = newActiveStatus ? "Hồi phục hóa đơn nhập" : "Xóa hóa đơn nhập";
 
@@ -205,6 +222,18 @@ class InvoiceInputService {
         })
         await invoice.save();
         return { metadata: invoice }
+    }
+
+    static deleteInvoice = async (req, res) => {
+        try {
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
+            await invoiceInputModel.findByIdAndDelete(id);
+            return;
+        } catch (error) {
+            throw error;
+        }
     }
 
     static paginateInvoice = async (req, res) => {

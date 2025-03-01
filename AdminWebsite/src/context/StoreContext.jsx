@@ -141,9 +141,20 @@ const StoreContextProvider = (props) => {
     // API Invoice
     const deleteSoftInvoice = async (invoiceId) => {
         try {
-            await axios.delete(`${url}/v1/api/product/invoice/active/${invoiceId}`);
+            const response = await axios.delete(`${url}/v1/api/product/invoice/active/${invoiceId}`);
         } catch (error) {
-            console.error("Lỗi khi xóa mềm hóa đơn nhập:", error);
+            alert(error.response.data.message);
+        }
+    };
+
+    const deleteInvoice = async (invoiceId) => {
+        try {
+            const response = await axios.delete(`${url}/v1/api/product/invoice/delete/${invoiceId}`);
+            if (response.data.status) {
+                alert('Xóa thành công');
+            }
+        } catch (error) {
+            alert(error.response.data.message);
         }
     };
 
@@ -182,9 +193,9 @@ const StoreContextProvider = (props) => {
     const contextValue = {
         product_list, product_id, cartItems, account_list, supplier_list, invoice, token,
         updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
-        fetchInvoiceId, fetchProductId, updateProductId,
+        fetchInvoiceId, deleteSoftInvoice, deleteInvoice,
         setCartItems, addToCart, addQuantityToCart, removeFromCart, getTotalCartAmount,
-        deleteSoftInvoice, setToken, url
+        fetchProductId, updateProductId, setToken, url
     };
 
     return (

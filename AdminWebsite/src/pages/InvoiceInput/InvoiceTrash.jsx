@@ -5,11 +5,11 @@ import { debounce } from 'lodash'
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faInfoCircle, faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 
 const ImportOrders = () => {
-    const { url, deleteSoftInvoice } = useContext(StoreContext);
+    const { url, deleteSoftInvoice, deleteInvoice } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [initialList, setInitialList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +39,11 @@ const ImportOrders = () => {
 
     const handleSoftDeletion = async (id) => {
         deleteSoftInvoice(id);
+        fetchInvoiceList();
+    }
+
+    const handleDelete = async (id) => {
+        deleteInvoice(id);
         fetchInvoiceList();
     }
 
@@ -142,12 +147,13 @@ const ImportOrders = () => {
                                                             order.status === 'draft' ? "Đang ở dạng nháp" : ""}
                                 </td>
                                 <td className="actions">
-                                    <button className="btn btn-info">
-                                        <FontAwesomeIcon icon={faInfoCircle} className="icon" />
+                                    <button className="btn btn-info" onClick={() => handleSoftDeletion(order._id)}>
+                                        <FontAwesomeIcon icon={faRotateRight} />
                                     </button>
-                                    <button className="btn btn-danger" onClick={() => handleSoftDeletion(order._id)}>
-                                        <FontAwesomeIcon icon={faTrash} />
+                                    <button className="btn btn-danger">
+                                        <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(order._id)} className="icon" />
                                     </button>
+
                                 </td>
                             </tr>
                         ))}

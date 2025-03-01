@@ -68,7 +68,9 @@ const ImportOrders = () => {
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         return newOrder === 'asc' ? aValue - bValue : bValue - aValue;
       } else {
-        return newOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        const aString = String(aValue).toLowerCase();
+        const bString = String(bValue).toLowerCase();
+        return newOrder === 'asc' ? aString.localeCompare(bString) : bString.localeCompare(aString);
       }
     });
     setList(sortedList);
@@ -78,9 +80,9 @@ const ImportOrders = () => {
     if (searchTerm.trim()) {
       handleSearch();
     } else {
-      fetchInvoiceList(currentPage);
+      setList(initialList);
     }
-  }, [currentPage, searchTerm, handleSearch]);
+  }, [searchTerm, initialList]);
 
   return (
     <div className="nhap-hang-page">

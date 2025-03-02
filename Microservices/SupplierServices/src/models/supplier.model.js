@@ -15,7 +15,7 @@ const SupplierSchema = new Schema({
     supplierName: { type: String, required: true },
     email: { type: String, required: true },
     numberPhone: { type: String, required: true },
-    // status: { type: String, required: true },
+    status: { type: Boolean, default: true },
     taxCode: { type: String, required: true },
     description: { type: String },
     lane: { type: String }, //đường

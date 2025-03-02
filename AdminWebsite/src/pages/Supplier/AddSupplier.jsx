@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext, useState } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
 import "../styles/styles.css";
+import axios from 'axios';
+import { StoreContext } from '../../context/StoreContext';
 
 const SupplierForm = () => {
+    axios.defaults.withCredentials = true;
+    const { url, product_list } = useContext(StoreContext);
     const [formData, setFormData] = useState({
         supplierName: "",
         phone: "",
@@ -12,6 +17,7 @@ const SupplierForm = () => {
         area: "",
         city: ""
     });
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
@@ -19,33 +25,30 @@ const SupplierForm = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = () => {
-        if (!formData.supplierName) {
-            setError("Tên nhà cung cấp là bắt buộc.");
-            setSuccess("");
-            return;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${url}/v1/api/supplier/create`, formData);
+            if (response.data.status) {
+                setSuccess(response.data.message);
+                handleCancel();
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Đã xảy ra lỗi khi tạo mới nhà cung cấp.");
+            }
         }
-        setError("");
-        setSuccess("Nhà cung cấp đã được thêm thành công!");
-
-        setTimeout(() => {
-            setSuccess("");
-        }, 3000);
     };
+
 
     const handleCancel = () => {
         setFormData({
-            supplierName: "",
-            phone: "",
-            email: "",
-            address: "",
-            taxCode: "",
-            street: "",
-            area: "",
-            city: ""
+            supplierName: "", description: "",
+            numberPhone: "", lane: "", addressOthers: "",
+            email: "", address: "", taxCode: "", street: "", area: "", city: ""
         });
-        setError("");
-        setSuccess("");
     };
 
     return (
@@ -58,43 +61,50 @@ const SupplierForm = () => {
                     </div>
                 </div>
             )}
+            <div>
+                <button className="btn-cancel" onClick={() => navigate("/supplier")}>← Quay lại</button>
+            </div>
             <div className="supplier-form-body">
                 <div className="supplier-form-section col-6">
                     <h3>Thông tin chung</h3>
                     <div className="form-group">
-                        <label>Tên nhà cung cấp *</label>
+                        <label>Tên nhà cung cấp:</label>
                         <input type="text" name="supplierName" placeholder="Nhập tên nhà cung cấp" value={formData.supplierName} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Số điện thoại</label>
-                        <input type="text" name="phone" placeholder="Nhập số điện thoại" value={formData.phone} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
+                        <label>Email:</label>
                         <input type="email" name="email" placeholder="Nhập email" value={formData.email} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Địa chỉ cụ thể</label>
-                        <input type="text" name="address" placeholder="Nhập địa chỉ cụ thể" value={formData.address} onChange={handleChange} />
+                        <label>Số điện thoại:</label>
+                        <input type="text" name="numberPhone" placeholder="Nhập số điện thoại" value={formData.numberPhone} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>Mô tả nhà cung cấp:</label>
+                        <input type="text" name="description" placeholder="Nhập mô tả" value={formData.description} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>Mã số thuế:</label>
+                        <input type="text" name="taxCode" placeholder="Mã số thuế" value={formData.taxCode} onChange={handleChange} />
                     </div>
                 </div>
                 <div className="supplier-form-section col-6">
                     <h3>Địa chỉ</h3>
                     <div className="form-group">
-                        <label>Mã số thuế</label>
-                        <input type="text" name="taxCode" placeholder="Nhập mã số thuế" value={formData.taxCode} onChange={handleChange} />
+                        <label>Đường:</label>
+                        <input type="text" name="lane" placeholder="Nhập tên đường" value={formData.lane} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Đường</label>
-                        <input type="text" name="street" placeholder="Nhập tên đường" value={formData.street} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label>Khu vực</label>
+                        <label>Khu vực:</label>
                         <input type="text" name="area" placeholder="Nhập khu vực" value={formData.area} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Thành phố</label>
+                        <label>Thành phố:</label>
                         <input type="text" name="city" placeholder="Nhập thành phố" value={formData.city} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>Địa chỉ khác:</label>
+                        <input type="text" name="addressOthers" placeholder="Nhập mã số thuế" value={formData.addressOthers} onChange={handleChange} />
                     </div>
                 </div>
             </div>

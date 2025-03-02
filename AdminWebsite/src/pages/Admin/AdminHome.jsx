@@ -25,6 +25,7 @@ import StaffTrash from '../../pages/Staff/StaffTrash';
 import AddSupplier from '../../pages/Supplier/AddSupplier';
 import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
+import SupplierInfo from '../../pages/Supplier/SupplierInfo';
 import ListCampain from '../../pages/Campaign/ListCampaign';
 import AddCampaign from '../../pages/Campaign/AddCampaign';
 import CampaignInfo from '../../pages/Campaign/CampaignInfo';
@@ -87,16 +88,18 @@ const Admin = () => {
                                 <Route path="staff/trash" element={<StaffTrash />} />
 
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
-                                {/* Campain */}
+
+                                {/* Campaign */}
                                 <Route path="list-campaign" element={<ListCampain />} />
                                 <Route path="add-campaign" element={<AddCampaign />} />
                                 <Route path="list-campaign/:id" element={<CampaignInfo />} />
                                 <Route path="trash-campaign" element={<TrashCampain />} />
 
-                                {/* Nhập Hàng */}
+                                {/* Supplier */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
                                 <Route path="supplier" element={<Supplier />} />
                                 <Route path="trash-supplier" element={<TrashSupplier />} />
+                                <Route path="supplier/:id" element={<SupplierInfo />} />
                             </Routes>
                         </div>
                     </div>

@@ -71,6 +71,7 @@ class SupplierService {
                 throw new BadRequestError('Không đúng định dạng email');
 
             const existingSupplier = await supplierModel.findOne({
+                _id: { $ne: id },
                 $or: [{ email }, { taxCode }]
             });
 
@@ -102,7 +103,7 @@ class SupplierService {
         }
     }
 
-    static deleteSupplier = async (staffId, staffName, id) => {
+    static activeSupplier = async (staffId, staffName, id) => {
         try {
             const supplier = await supplierModel.findById(id);
             if (!supplier) {
@@ -124,6 +125,19 @@ class SupplierService {
             return {
                 metadata: supplier
             }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static deleteSupplier = async (req, res) => {
+        try {
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn');
+
+            await supplierModel.findByIdAndDelete(id)
+            return;
         } catch (error) {
             throw error;
         }

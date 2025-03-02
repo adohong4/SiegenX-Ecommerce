@@ -136,7 +136,7 @@ class InvoiceInputService {
     static getAllInvoice = async () => {
         try {
             const invoice = await invoiceInputModel.find()
-                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status createdAt updatedAt')
                 .sort({ createdAt: -1 })
                 .exec()
 

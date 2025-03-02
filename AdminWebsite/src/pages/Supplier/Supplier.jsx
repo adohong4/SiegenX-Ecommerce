@@ -1,5 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Table, Button, Popconfirm, Modal, Form, Input, List } from "antd";
+import { Table, Button, Popconfirm, Modal, Form, Input, List, Row, Col } from "antd";
+import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
@@ -12,10 +14,12 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     const [list, setList] = useState([]);
     const [limit, setLimit] = useState(7);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
     const [totalPages, setTotalPages] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSupplier, setEditingSupplier] = useState(null);
+    const navigate = useNavigate();
 
     const fetchListSupplier = async (page = 1, limit = 7) => {
         try {
@@ -36,11 +40,9 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     }, [currentPage]);
 
     // Xóa nhà cung cấp (chuyển vào Trash)
-    const handleDelete = (key) => {
-        const deletedSupplier = list.find(supplier => supplier._id === key); // Sử dụng _id thay vì key
-        setTrashSuppliers([...trashSuppliers, deletedSupplier]);  // Thêm vào Trash
-        const updatedList = list.filter(supplier => supplier._id !== key);
-        setList(updatedList);
+    const handleDelete = async (key) => {
+        await axios.delete(`${url}/v1/api/supplier/active/${key}`);
+        fetchListSupplier(currentPage)
     };
 
     // Mở Modal cập nhật
@@ -56,29 +58,49 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     };
 
     // Cập nhật nhà cung cấp
-    const handleUpdate = (values) => {
-        const updatedList = list.map(supplier =>
-            supplier._id === editingSupplier._id ? { ...editingSupplier, ...values } : supplier
-        );
-        setList(updatedList);
-        setIsModalOpen(false);
-        setEditingSupplier(null);
+    const handleUpdate = async (key, values) => {
+        try {
+            const response = await axios.put(`${url}/v1/api/supplier/update/${key}`, values);
+            if (response.data.status) {
+                alert(response.data.message);
+                setIsModalOpen(false);
+                setEditingSupplier(null);
+                fetchListSupplier(currentPage);
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+
     };
 
     // Tìm kiếm nhà cung cấp
-    // const filteredData = list.filter(supplier =>
-    //     supplier.StaffName.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+    const filteredData = list.filter(supplier =>
+        supplier.supplierName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 
     // Cột bảng
     const columns = [
-        { title: "Mã nhà cung cấp", dataIndex: "_id", key: "_id" },
-        { title: "Tên nhà cung cấp", dataIndex: "supplierName", key: "supplierName" },
-        { title: "Số điện thoại", dataIndex: "numberPhone", key: "numberPhone" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Địa chỉ", dataIndex: "city", key: "city" },
-        { title: "Mã số thuế", dataIndex: "taxCode", key: "taxCode" },
+        {
+            title: "Tên nhà cung cấp", dataIndex: "supplierName", key: "supplierName",
+            sorter: (a, b) => a.supplierName.localeCompare(b.supplierName),
+        },
+        {
+            title: "Số điện thoại", dataIndex: "numberPhone", key: "numberPhone",
+            sorter: (a, b) => a.numberPhone.localeCompare(b.numberPhone),
+        },
+        {
+            title: "Email", dataIndex: "email", key: "email",
+            sorter: (a, b) => a.email.localeCompare(b.email),
+        },
+        {
+            title: "Địa chỉ", dataIndex: "city", key: "city",
+            sorter: (a, b) => a.city.localeCompare(b.city),
+        },
+        {
+            title: "Mã số thuế", dataIndex: "taxCode", key: "taxCode",
+            sorter: (a, b) => a.taxCode.localeCompare(b.taxCode),
+        },
         {
             title: "Trạng thái",
             dataIndex: "status",
@@ -92,6 +114,7 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
             key: "action",
             render: (text, record) => (
                 <>
+                    <Button onClick={() => navigate(record._id)} style={{ marginRight: 8 }}>Xem</Button>
                     <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }}>Cập nhật</Button>
                     <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => handleDelete(record._id)} okText="Có" cancelText="Không">
                         <Button danger>Xóa</Button>
@@ -102,30 +125,72 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
     ];
 
     return (
-        <div className="supplier-list-container">
+        <div className="supplier-list-container" style={{ padding: 20 }}>
             <h2>Danh Sách Nhà Cung Cấp</h2>
-            <Search placeholder="Tìm kiếm nhà cung cấp"
-                onSearch={(e) => setSearchTerm(e.target.value)}
-                style={{ marginBottom: 16, width: "300px" }} />
+            <Input
+                placeholder="Tìm kiếm nhân viên..."
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: 20, width: "300px" }}
+            />
+            <Button type="primary" icon={<PlusOutlined />} style={{ marginLeft: 8 }} onClick={() => navigate("/add-supplier")}>
+                Thêm mới chiến dịch
+            </Button>
             <Table
                 columns={columns}
-                dataSource={list.map(item => ({ ...item, key: item._id }))}
+                dataSource={filteredData.map(item => ({ ...item, key: item._id }))}
                 pagination={{ pageSize: limit, current: currentPage, total: totalItems, onChange: (page) => setCurrentPage(page) }}
             />
 
             {/* Popup Cập nhật */}
-            <Modal title="Cập Nhật Nhà Cung Cấp" visible={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Form layout="vertical" onFinish={handleUpdate} initialValues={editingSupplier}>
-                    <Form.Item name="supplierName" label="Tên nhà cung cấp" rules={[{ required: true, message: "Vui lòng nhập tên nhà cung cấp!" }]}>
+            <Modal title="Cập Nhật Nhà Cung Cấp" open={isModalOpen} onCancel={handleCancel} footer={null}>
+                <Form layout="vertical" onFinish={(values) => handleUpdate(editingSupplier._id, values)} initialValues={editingSupplier}>
+                    <Form.Item name="_id" hidden>
                         <Input />
                     </Form.Item>
-                    <Form.Item name="numberPhone" label="Số điện thoại">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="email" label="Email">
-                        <Input type="email" />
-                    </Form.Item>
-                    <Form.Item name="city" label="Địa chỉ">
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item name="supplierName" label="Tên nhà cung cấp:"
+                                rules={[{ required: true, message: "Vui lòng nhập tên nhà cung cấp!" }]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="email" label="Email:"
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập email!" },
+                                    { type: "email", message: "Email không hợp lệ!" }
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="numberPhone" label="Số điện thoại">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="taxCode" label="Mã số thuế"
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập mã số thuế!" },
+                                    { pattern: /^[0-9]+$/, message: "Mã số thuế chỉ được chứa số!" },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="lane" label="Đường">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="area" label="Khu vực">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="city" label="Thành phố">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="addressOthers" label="Địa chỉ">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item name="description" label="Mô tả nhà cung cấp">
                         <Input />
                     </Form.Item>
                     <Form.Item>

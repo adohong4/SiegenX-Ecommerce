@@ -139,6 +139,15 @@ const StoreContextProvider = (props) => {
     };
 
     // API Invoice
+    const fectchInvoice = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/product/invoice/get`);
+            setInvoice(response.data.metadata);
+        } catch (error) {
+            console.error("Lỗi khi cập nhật sản phẩm:", error);
+        }
+    }
+
     const deleteSoftInvoice = async (invoiceId) => {
         try {
             const response = await axios.delete(`${url}/v1/api/product/invoice/active/${invoiceId}`);
@@ -196,6 +205,7 @@ const StoreContextProvider = (props) => {
             await fetchProductList();
             await fetchStaff();
             await fetchSupplierList();
+            await fectchInvoice();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);

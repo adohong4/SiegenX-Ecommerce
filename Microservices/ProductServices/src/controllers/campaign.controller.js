@@ -72,9 +72,30 @@ class CampaignController {
         }).send(res)
     }
 
+    deleteCampaign = async (req, res, next) => {
+        const staffRole = req.role;
+        const { id } = req.params;
+        await CampaignService.deleteCampaign(staffRole, id)
+        new OK({
+            message: 'Xóa thành công',
+        }).send(res)
+    }
+
     paginateCampaign = async (req, res, next) => {
         try {
-            const result = await CustomCampaignService.paginateCampaign()
+            const result = await CustomCampaignService.paginateCampaign(req, res)
+            new CREATED({
+                message: 'phân trang thành công',
+                metadata: result.metadata
+            }).send(res)
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    paginateCampaignTrash = async (req, res, next) => {
+        try {
+            const result = await CustomCampaignService.paginateCampaignTrash(req, res)
             new CREATED({
                 message: 'phân trang thành công',
                 metadata: result.metadata

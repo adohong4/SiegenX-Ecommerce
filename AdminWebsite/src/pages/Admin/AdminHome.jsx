@@ -25,9 +25,10 @@ import StaffTrash from '../../pages/Staff/StaffTrash';
 import AddSupplier from '../../pages/Supplier/AddSupplier';
 import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
-import ListCampain from '../../pages/Campain/Listcampain';
-import AddCampaign from '../../pages/Campain/Addcampain';
-import TrashCampain from '../../pages/Campain/Trashcampain';
+import ListCampain from '../../pages/Campaign/ListCampaign';
+import AddCampaign from '../../pages/Campaign/AddCampaign';
+import CampaignInfo from '../../pages/Campaign/CampaignInfo';
+import TrashCampain from '../../pages/Campaign/TrashCampaign';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -87,9 +88,11 @@ const Admin = () => {
 
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
                                 {/* Campain */}
-                                <Route path="list-campain" element={<ListCampain />} />
-                                <Route path="add-campain" element={<AddCampaign />} />
-                                <Route path="trash-campain" element={<TrashCampain />} />
+                                <Route path="list-campaign" element={<ListCampain />} />
+                                <Route path="add-campaign" element={<AddCampaign />} />
+                                <Route path="list-campaign/:id" element={<CampaignInfo />} />
+                                <Route path="trash-campaign" element={<TrashCampain />} />
+
                                 {/* Nhập Hàng */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
                                 <Route path="supplier" element={<Supplier />} />

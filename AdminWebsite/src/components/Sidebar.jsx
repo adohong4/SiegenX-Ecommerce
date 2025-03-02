@@ -215,17 +215,17 @@ const Sidebar = () => {
             {openMenus.chienDich && (
               <ul className="sidebar-submenu">
                 <li>
-                  <NavLink to="/add-campain" className="submenu-item">
+                  <NavLink to="/add-campaign" className="submenu-item">
                     Thêm chiến dịch
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/list-campain" className="submenu-item">
+                  <NavLink to="/list-campaign" className="submenu-item">
                     Danh sách chiến dịch
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/trash-campain" className="submenu-item">
+                  <NavLink to="/trash-campaign" className="submenu-item">
                     Thùng rác
                   </NavLink>
                 </li>

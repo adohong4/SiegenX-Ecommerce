@@ -177,6 +177,20 @@ const StoreContextProvider = (props) => {
         }
     };
 
+    //----------API Campaign
+    const activeCampaign = async (id) => {
+        await axios.delete(`${url}/v1/api/product/campaign/active/${id}`);
+    };
+
+    const deleteCampaign = async (id) => {
+        try {
+            const response = await axios.delete(`${url}/v1/api/product/campaign/delete/${id}`);
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+
+    };
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
@@ -195,6 +209,7 @@ const StoreContextProvider = (props) => {
         updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
         fetchInvoiceId, deleteSoftInvoice, deleteInvoice,
         setCartItems, addToCart, addQuantityToCart, removeFromCart, getTotalCartAmount,
+        activeCampaign, deleteCampaign,
         fetchProductId, updateProductId, setToken, url
     };
 

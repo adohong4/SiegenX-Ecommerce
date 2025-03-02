@@ -4,6 +4,7 @@ import "../styles/styles.css";
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
 import { formatDayTime, formatCurrency } from '../../lib/utils';
+import { campainlist } from "../../data/Enviroment";
 
 const InvoiceDetail = () => {
     const { id } = useParams();
@@ -16,6 +17,7 @@ const InvoiceDetail = () => {
     const [invoice, setInvoice] = useState(null);
     const [createdDate, setCreatedDate] = useState("");
     const [partialPayment, setPartialPayment] = useState(0);
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const fetchInvoiceId = async () => {

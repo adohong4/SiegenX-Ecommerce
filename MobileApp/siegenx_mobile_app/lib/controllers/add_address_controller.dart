@@ -23,9 +23,12 @@ class AddAddressController {
         Uri.parse(ApiService.listAddresses),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Cookie': 'jwt=$token', // Gửi token qua header Cookie đúng định dạng
         },
       );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

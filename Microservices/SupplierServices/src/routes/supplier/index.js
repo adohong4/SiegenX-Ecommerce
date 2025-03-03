@@ -10,13 +10,17 @@ const router = express.Router()
 //Supplier
 router.post('/supplier/create', checkTokenCookie, asyncHandler(supplierController.createSupplier))
 
-router.get('/supplier/get', checkTokenCookie, asyncHandler(supplierController.getSupplier))
-router.get('/supplier/get/:id', checkTokenCookie, asyncHandler(supplierController.getSupplierById))
+router.get('/supplier/get', asyncHandler(supplierController.getSupplier))
+router.get('/supplier/get/:id', asyncHandler(supplierController.getSupplierById))
+
 router.get('/supplier/paginate', asyncHandler(CustomController.paginate)) //pagination
-router.get('/supplier/search/:name', checkTokenCookie, asyncHandler(CustomController.searchByName)) //search by name
+router.get('/supplier/trash/paginate', asyncHandler(CustomController.paginateTrash)) //trash
+
+router.get('/supplier/search/:name', asyncHandler(CustomController.searchByName)) //search by name
 
 router.put('/supplier/update/:id', checkTokenCookie, asyncHandler(supplierController.updateSupplier))
 
+router.delete('/supplier/active/:id', checkTokenCookie, asyncHandler(supplierController.activeSupplier)) //delete&&restore
 router.delete('/supplier/delete/:id', checkTokenCookie, asyncHandler(supplierController.deleteSupplier))
 
 module.exports = router;

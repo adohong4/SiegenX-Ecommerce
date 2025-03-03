@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class FavoritesManager {
   // Thêm sản phẩm vào danh sách yêu thích

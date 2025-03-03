@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { checkTokenCookie } = require('../../middleware/checkAuth');
+const { checkTokenCookie, checkTokenCookieAdmin } = require('../../middleware/checkAuth');
 const { asyncHandler } = require('../../helpers/asyncHandler')
 const OrderUserController = require('../../controller/user/order.controller');
 const OrderAdminController = require('../../controller/admin/order.controller');
@@ -20,9 +20,9 @@ router.get('/profile/order/trash/paginate', asyncHandler(OrderAdminController.pa
 
 router.get('/profile/order/search/:id', asyncHandler(OrderAdminController.searchById));
 
-router.put('/profile/order/update', checkTokenCookie, asyncHandler(OrderAdminController.updateStatusOrder));
+router.put('/profile/order/update', checkTokenCookieAdmin, asyncHandler(OrderAdminController.updateStatusOrder));
 
-router.delete('/profile/order/delete/:id', checkTokenCookie, asyncHandler(OrderAdminController.deleteOrder));
-router.delete('/profile/order/status/:id', checkTokenCookie, asyncHandler(OrderAdminController.toggleOrderStatus)); //delete && restore
+router.delete('/profile/order/delete/:id', checkTokenCookieAdmin, asyncHandler(OrderAdminController.deleteOrder));
+router.delete('/profile/order/status/:id', checkTokenCookieAdmin, asyncHandler(OrderAdminController.toggleOrderStatus)); //delete && restore
 
 module.exports = router;

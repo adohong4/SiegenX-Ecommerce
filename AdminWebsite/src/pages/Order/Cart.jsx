@@ -4,20 +4,24 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
+import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Select } from "antd";
+import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
-import { formatHourDayTime } from '../../lib/utils';
+import { formatHourDayTime, formatCurrency } from '../../lib/utils';
 const Cart = () => {
     const { url, order_list, fetchOrder } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalOrder, setTotalOrder] = useState(0);
+    const [limit, setLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(0); // Theo dõi tổng số trang
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState({ 'address.fullname': 'asc', amount: 'asc' });
-    const [selectedRow, setSelectedRow] = useState(null); // Lưu thông tin hàng được chọn
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // Trạng thái mở/đóng popup
+    const [viewingCampaign, setViewingCampaign] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const popupRef = useRef(null); // Tạo ref cho popup
+    const [selectedType, setSelectedType] = useState("");
+    const [selectedStatus, setSelectedStatus] = useState("");
     axios.defaults.withCredentials = true;
 
     const handlePrint = () => {
@@ -31,38 +35,6 @@ const Cart = () => {
             // Khôi phục nội dung ban đầu
             document.body.innerHTML = originalContent;
             window.location.reload(); // Reload lại trang sau khi in xong
-        }
-    };
-
-    const handleSearch = async () => {
-        if (searchTerm.trim() === '') {
-            await fetchListpage();
-            return;
-        }
-
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/order/id`, {
-                params: { id: searchTerm, page: currentPage, limit: 10 }
-            });
-
-            if (response.data.status) {
-                if (Array.isArray(response.data.data)) {
-                    setList(response.data.data);
-                    setTotalPages(response.data.pagination.totalPages); // Cập nhật tổng số trang
-                    // toast.success(response.data.message);
-                } else {
-                    setList([]);
-                    setTotalPages(0); // Đặt số trang về 0 nếu không có kết quả
-                    toast.error("Không tìm thấy hóa đơn");
-                }
-            } else {
-                setList([]);
-                toast.error("Tìm kiếm thất bại");
-            }
-        } catch (error) {
-            setList([]); // Gán giá trị rỗng khi xảy ra lỗi
-            setTotalPages(0);
-            // toast.error("Lỗi trong quá trình tìm kiếm");
         }
     };
 
@@ -87,218 +59,222 @@ const Cart = () => {
         }
     };
 
-    const sortBy = (field) => {
-        const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
-        setSortOrder({ ...sortOrder, [field]: newOrder });
-        const sortedList = [...list].sort((a, b) => {
-            const aValue = field.includes('.') ? field.split('.').reduce((o, i) => o[i], a) : a[field];
-            const bValue = field.includes('.') ? field.split('.').reduce((o, i) => o[i], b) : b[field];
-            if (typeof aValue === 'number' && typeof bValue === 'number') {
-                return newOrder === 'asc' ? aValue - bValue : bValue - aValue;
-            } else {
-                return newOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-            }
-        });
-        setList(sortedList);
-    };
-
-    const openPopup = (row) => {
-        setSelectedRow(row);
-        setIsPopupOpen(true);
-        document.body.classList.add('popup-open');
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setSelectedRow(null);
-        document.body.classList.remove('popup-open');
-    };
-
     const fetchListpage = async (page = 1, limit = 10) => {
         const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
         if (response.data.message) {
             setList(response.data.metadata.order);
-            setTotalOrder(response.data.metadata.limit);
-            setTotalPages(response.data.metadata.totalPages);
+            setTotalOrder(response.data.metadata.totalOrder);
+            // setTotalPages(response.data.metadata.totalPages);
         }
     };
 
+    const showViewModal = (campaign) => {
+        setViewingCampaign(campaign);
+        setIsViewModalOpen(true);
+    };
+
     useEffect(() => {
-        if (searchTerm.trim()) {
-            handleSearch();
-        } else {
-            fetchListpage(currentPage);
-        }
-    }, [currentPage, searchTerm]);
+        fetchListpage(currentPage, limit);
+    }, [currentPage, limit]);
+
+    const filteredOrders = list.filter((order) => {
+        return (
+            order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.address.fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedType ? order.paymentMethod === selectedType : true) &&
+            (selectedStatus ? order.status === selectedStatus : true)
+        )
+    });
+
+    const columns = [
+        {
+            title: "Mã hóa đơn", dataIndex: "_id", key: "_id",
+            render: (text) => (
+                text.length > 15 ? text.slice(0, 15) + '...' : text
+            ),
+            sorter: (a, b) => a._id.localeCompare(b._id)
+        },
+        {
+            title: "Thời gian", dataIndex: "createdAt", key: "createdAt",
+            render: (startDate, record) => formatHourDayTime(record.createdAt),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        },
+        {
+            title: "Khách hàng", dataIndex: "address", key: "address",
+            render: (text, record) => `${record.address.fullname}`
+        },
+        { title: "Hình thức thanh toán", dataIndex: "paymentMethod", key: "paymentMethod", sorter: (a, b) => a.paymentMethod.localeCompare(b.paymentMethod) },
+        {
+            title: "Giá trị hóa đơn", dataIndex: "amount", key: "amount",
+            render: (text, record) => formatCurrency(record.amount),
+            sorter: (a, b) => a.amount - b.amount
+        },
+        {
+            title: "Địa chỉ", dataIndex: "address", key: "address", render: (text, record) => {
+                const { street, state, country, zipcode } = record.address;
+                const addressParts = [street, state, country, zipcode].filter(part => part);
+                const fullAddress = addressParts.length > 0 ? addressParts.join(', ') : 'Không có địa chỉ';
+                return fullAddress.length > 30 ? `${fullAddress.slice(0, 20)}...` : fullAddress;
+            }
+        },
+        {
+            title: "Trạng thái", dataIndex: "status", key: "status",
+            render: (text, record) => (
+                <select
+                    onChange={(event) => statusHandler(event, record._id)}
+                    value={record.status}
+                    style={{
+                        backgroundColor: record.status === "Đợi xác nhận" ? "#2c3e50" :
+                            record.status === "Đang chuẩn bị hàng" ? "#d35400" :
+                                record.status === "Đang giao hàng" ? "#f39c12" :
+                                    record.status === "Giao hàng thành công" ? "#27ae60" : "#ecf0f1",
+                        color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black"
+                    }}
+                >
+                    <option value="Đợi xác nhận">Đợi xác nhận</option>
+                    <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
+                    <option value="Đang giao hàng">Đang giao hàng</option>
+                    <option value="Giao hàng thành công">Giao hàng thành công</option>
+                </select>
+            ),
+        },
+
+        {
+            title: "Tùy chỉnh",
+            key: "action",
+            render: (_, record) => (
+                <>
+                    <Button type="primary" icon={<BookFilled />} onClick={() => showViewModal(record)} />
+                    <Popconfirm title="Xóa hóa đơn này?" onConfirm={() => removeOrder(record._id)} okText="Xóa" cancelText="Hủy">
+                        <Button type="primary" icon={<DeleteOutlined />} danger />
+                    </Popconfirm>
+                </>
+            ),
+        },
+    ];
+
+    const columnsItem = [
+        {
+            title: 'Tên hàng', dataIndex: 'title', key: 'title',
+            render: (text) => (
+                text.length > 15 ? text.slice(0, 15) + '...' : text
+            ),
+        },
+        { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+        { title: 'Đơn giá', dataIndex: 'price', key: 'price', render: (text, record) => formatCurrency(record.price) },
+        {
+            title: 'Thành tiền',
+            dataIndex: '',
+            key: 'total',
+            render: (text, record) => formatCurrency(record.price * record.quantity)
+        },
+    ];
+
+    const columnsCreator = [
+        { title: 'Người tạo', dataIndex: 'createdName', key: 'createdName' },
+        { title: 'Mô tả', dataIndex: 'description', key: 'description' },
+        { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt', render: (text) => new Date(text).toLocaleString() },
+    ];
 
     return (
         <div className='order-list-container'>
 
-            <div className='search'>
-                <div className='search-CSKH'>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Tìm kiếm ..."
-                        className='search-input'
-                    />
-                    <button onClick={handleSearch} className='btn-search'>
-                        Tìm kiếm
-                    </button>
-                </div>
-            </div>
-
-            <table className="order-list-table">
-                <thead>
-                    <tr className="table-header">
-                        <th onClick={() => sortBy('_id')} style={{ cursor: 'pointer', textAlign: 'center' }}>
-                            Mã hóa đơn {sortOrder._id === 'asc' ? '↑' : '↓'}
-                        </th>
-                        <th onClick={() => sortBy('createdAt')} style={{ cursor: 'pointer', textAlign: 'center' }}>
-                            Thời gian {sortOrder.createdAt === 'asc' ? '↑' : '↓'}
-                        </th>
-                        <th onClick={() => sortBy('address.fullname')} style={{ cursor: 'pointer', textAlign: 'center' }}>
-                            Khách hàng {sortOrder['address.fullname'] === 'asc' ? '↑' : '↓'}
-                        </th>
-                        <th>Hình thức thanh toán</th>
-                        <th onClick={() => sortBy('amount')} style={{ cursor: 'pointer', textAlign: 'center' }}>
-                            Giá trị hóa đơn {sortOrder.amount === 'asc' ? '↑' : '↓'}
-                        </th>
-                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Địa chỉ</th>
-                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Trạng thái</th>
-                        <th style={{ cursor: 'pointer', textAlign: 'center' }}>Chức năng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {list.map((item) => (
-                        <tr key={item._id} className='table-row'>
-                            <td>{item._id}</td>
-                            <td>{formatHourDayTime(item.createdAt)}</td>
-                            <td>{item.address.fullname}</td>
-                            <td>{item.paymentMethod}</td>
-                            <td>{(item.amount).toLocaleString()} đ</td>
-                            <td>{item.address.street}, {item.address.state}, {item.address.country}, {item.address.zipcode}</td>
-                            <td><select
-                                onChange={(event) => statusHandler(event, item._id)}
-                                value={item.status}
-                                style={{
-                                    backgroundColor: item.status === "Đợi xác nhận" ? "#2c3e50" :
-                                        item.status === "Đang chuẩn bị hàng" ? "#d35400" :
-                                            item.status === "Đang giao hàng" ? "#f39c12" :
-                                                item.status === "Giao hàng thành công" ? "#27ae60" : "#ecf0f1",
-                                    color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(item.status) ? "white" : "black"
-                                }}
-                            >
-                                <option value="Đợi xác nhận">Đợi xác nhận</option>
-                                <option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</option>
-                                <option value="Đang giao hàng">Đang giao hàng</option>
-                                <option value="Giao hàng thành công">Giao hàng thành công</option>
-                            </select></td>
-                            <td className="btn-order" style={{ display: "flex", justifyContent: "space-around", alignItems: "center", verticalAlign: "middle", padding: '15px 0px' }}>
-                                <button onClick={(e) => { e.stopPropagation(); removeOrder(item._id); }} className='btn-delete'>
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
-                                <button type="button" onClick={() => openPopup(item)} className='btn-info'>
-                                    <FontAwesomeIcon icon={faEye} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={(e) => setCurrentPage(e.selected + 1)}
-                pageRangeDisplayed={5}
-                pageCount={totalPages}
-                previousLabel="<"
-                renderOnZeroPageCount={null}
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
+            <Input
+                placeholder="Tìm kiếm hóa đơn..."
+                style={{ width: 200, marginBottom: 16 }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Select
+                placeholder="Hình thức thanh toán"
+                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                value={selectedType}
+                onChange={(value) => setSelectedType(value)}
+                allowClear
+            >
+                <Option value="Thanh toán trực tuyến">Thanh toán trực tuyến</Option>
+                <Option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</Option>
+            </Select>
+            <Select
+                placeholder="Trạng thái"
+                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                value={selectedStatus}
+                onChange={(value) => setSelectedStatus(value)}
+                allowClear
+            >
+                <Option value="Đợi xác nhận">Đợi xác nhận</Option>
+                <Option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</Option>
+                <Option value="Đang giao hàng">Đang giao hàng</Option>
+                <Option value="Giao hàng thành công">Giao hàng thành công</Option>
+            </Select>
+            <Table
+                columns={columns}
+                dataSource={filteredOrders.map((order, index) => ({ ...order, key: order._id || index }))}
+                rowKey="key"
+                pagination={false} // Ẩn phân trang mặc định của Table
+            />
+            <Pagination
+                current={currentPage}
+                total={totalOrder}
+                pageSize={limit}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger
+                pageSizeOptions={['5', '10', '20', '30']}
+                onShowSizeChange={(current, size) => {
+                    setLimit(size);
+                    setCurrentPage(1);
+                }}
+                style={{ marginTop: 16, textAlign: 'right' }}
             />
 
-
-            {isPopupOpen && selectedRow && (
-                <div className="popup-overlay" onClick={closePopup}>
-                    <div className="popup-content-cskh" onClick={(e) => e.stopPropagation()}
-                        ref={popupRef}>
-                        <button className="close-popup" onClick={closePopup}>×</button>
-                        <div className="popup-header">
-                            <h3>Chi tiết hóa đơn</h3>
+            {/* Modal thông tin hóa đơn */}
+            <Modal
+                open={isViewModalOpen}
+                onCancel={() => setIsViewModalOpen(false)}
+                footer={null}
+            >
+                {viewingCampaign && (
+                    <>
+                        <div ref={popupRef}>
+                            <Descriptions title="Thông tin Đơn hàng" column={1} bordered className="custom-descriptions">
+                                <Descriptions.Item label="Mã hóa đơn">: {viewingCampaign._id}</Descriptions.Item>
+                                <Descriptions.Item label="Khách hàng">: {viewingCampaign.address.fullname}</Descriptions.Item>
+                                <Descriptions.Item label="Đơn giá">: {formatCurrency(viewingCampaign.amount)}{' VNĐ'}</Descriptions.Item>
+                                <Descriptions.Item label="Ngày đặt hàng">: {formatHourDayTime(viewingCampaign.createdAt)}</Descriptions.Item>
+                                <Descriptions.Item label="Thanh toán">: {viewingCampaign.paymentMethod}</Descriptions.Item>
+                                <Descriptions.Item label="Trạng thái">: {viewingCampaign.status}</Descriptions.Item>
+                                <Descriptions.Item label="Địa chỉ">:
+                                    {viewingCampaign.address.street}, {viewingCampaign.address.precinct},{viewingCampaign.address.city},{viewingCampaign.address.province}
+                                </Descriptions.Item>
+                            </Descriptions>
+                            <Table
+                                columns={columnsItem}
+                                dataSource={viewingCampaign.items?.map((item, index) => ({
+                                    ...item,
+                                    key: item.id || index
+                                }))}
+                                rowKey={(record) => record.key}
+                                pagination={false}
+                            />
+                            <Button type="primary" onClick={handlePrint}>
+                                In Đơn Hàng
+                            </Button>
                         </div>
-                        <div className="popup-body">
-                            <div className="popup-info">
-                                <label><strong>Mã hóa đơn:</strong></label>
-                                <p>{selectedRow._id}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Thời gian:</strong></label>
-                                <p>{selectedRow.date}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Khách hàng:</strong></label>
-                                <p>{selectedRow.address?.fullname || 'Không có thông tin'}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Hình thức thanh toán:</strong></label>
-                                <p>{selectedRow.paymentMethod || 'Không có thông tin'}</p>
-                            </div>
-                            <div className="popup-info">
-                                <label><strong>Giá trị đơn hàng:</strong></label>
-                                <p>{(selectedRow.amount).toLocaleString()} VND</p>
-                            </div>
-                            <div className="popup-info" style={{ display: 'block' }}>
-                                <label><strong>Địa chỉ:</strong></label>
-                                <p>
-                                    {selectedRow.address?.street}, {selectedRow.address?.state}, {selectedRow.address?.country}, {selectedRow.address?.zipcode}
-                                </p>
-                            </div>
-                            <div className="popup-info" style={{ display: 'block' }}>
-                                <label><strong>Sản phẩm đã mua:</strong></label>
-                                {selectedRow.items && selectedRow.items.length > 0 ? (
-                                    <table className="product-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tên sản phẩm</th>
-                                                <th>Số lượng</th>
-                                                <th>Giá</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedRow.items.map((item, index) => (
-                                                <tr key={index}>
-                                                    <td>{item.nameProduct}</td>
-                                                    <td style={{ textAlign: 'center' }} >{item.quantity}</td>
-                                                    <td style={{ textAlign: 'center' }}>{item.price.toLocaleString()} </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <p>Không có sản phẩm nào.</p>
-                                )}
-                            </div>
-                            <div className="popup-footer">
-                                <div className="popup-printf">
-                                    <button onClick={handlePrint} className="popup-print-btn">In hóa đơn</button>
-                                </div>
-                            </div>
-
+                        <div>
+                            <h3>Lịch sử thay đổi</h3>
+                            <Table
+                                columns={columnsCreator}
+                                dataSource={viewingCampaign.creator?.map((item, index) => ({
+                                    ...item,
+                                    key: `${item.createdBy || 'unknown'}-${index}`,
+                                }))}
+                                pagination={{ pageSize: 4 }}
+                                rowKey={(record) => record.key}
+                            />
                         </div>
-                    </div>
-                </div>
-            )}
+                    </>
+                )}
+            </Modal>
 
         </div>
     );

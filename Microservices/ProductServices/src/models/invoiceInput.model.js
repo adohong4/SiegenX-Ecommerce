@@ -48,6 +48,7 @@ const InvoiceInputSchema = new Schema(
         },
         supplierId: [SupplierSchema],
         valueInvoice: { type: Number, required: true },
+        partialPayment: { type: Number, default: 0 },
         creator: [HistorySchema],
         active: { type: Boolean, default: true },
     }, { minimize: false, timestamps: true }

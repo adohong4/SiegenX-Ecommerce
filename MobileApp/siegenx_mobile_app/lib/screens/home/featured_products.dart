@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/all_products.dart';
-import 'package:siegenx_mobile_app/test/sample_products.dart';
 import 'package:siegenx_mobile_app/widgets/product_grid.dart';
 
 class FeaturedProducts extends StatelessWidget {

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import "./Styles/Styles.css";
 import { assets } from '../assets/assets';
 import { motion } from "framer-motion";
+import { StoreContext } from '../context/StoreContext';
 import Cookies from 'js-cookie';
 
 const Sidebar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-
+    const { account_list, updateStaff } = useContext(StoreContext);
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
@@ -35,7 +36,7 @@ const Sidebar = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
                     >
-                        Xin chào Admin !
+                        Xin chào {account_list.StaffName} !
                     </motion.p>
                 </motion.div>
                 <motion.div
@@ -47,7 +48,7 @@ const Sidebar = () => {
                     <div className="profile-container">
                         <img
                             className="logo profile-pic"
-                            src={assets.avt}
+                            src={account_list.StaffPic || assets.avt}
                             alt="avt"
                             onClick={toggleMenu}
                         />

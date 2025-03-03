@@ -1,42 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:siegenx_mobile_app/controllers/favorites_manager.dart';
 import 'package:siegenx_mobile_app/widgets/facorite_product_grid.dart';
 import 'package:siegenx_mobile_app/services/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
+import 'package:siegenx_mobile_app/providers/favorites_provider.dart';
 
-class FavoriteProductsScreen extends StatefulWidget {
-  @override
-  _FavoriteProductsScreenState createState() => _FavoriteProductsScreenState();
-}
-
-class _FavoriteProductsScreenState extends State<FavoriteProductsScreen> {
-  late Future<List<Product>> _productsFuture;
-  List<int> favoriteProductIds = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _productsFuture = ProductService.fetchAllProducts();
-    _loadFavorites();
-  }
-
-  Future<void> _loadFavorites() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = authProvider.userId ?? "guest";
-    final favorites = await FavoritesManager.getFavorites(userId);
-    setState(() {
-      favoriteProductIds = favorites;
-    });
-  }
+class FavoriteProductsScreen extends StatelessWidget {
+  const FavoriteProductsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final userId = authProvider.userId ?? "guest";
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: FutureBuilder<List<Product>>(
-          future: _productsFuture,
+          future: ProductService.fetchAllProducts(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text("Sản phẩm yêu thích (Đang tải...)");
@@ -46,8 +28,9 @@ class _FavoriteProductsScreenState extends State<FavoriteProductsScreen> {
               return Text("Sản phẩm yêu thích (0)");
             }
 
+            final favorites = favoritesProvider.getFavorites(userId);
             int favoriteCount = snapshot.data!
-                .where((product) => favoriteProductIds.contains(product.id))
+                .where((product) => favorites.contains(product.id))
                 .length;
 
             return Text("Sản phẩm yêu thích ($favoriteCount)");

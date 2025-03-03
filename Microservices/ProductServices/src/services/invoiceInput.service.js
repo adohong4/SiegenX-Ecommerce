@@ -3,7 +3,7 @@
 const productModel = require('../models/product.model');
 const invoiceInputModel = require('../models/invoiceInput.model');
 const supplierModel = require('../models/supplier.model')
-const { BadRequestError } = require('../core/error.response');
+const { BadRequestError, AuthFailureError } = require('../core/error.response');
 
 
 class InvoiceInputService {
@@ -11,21 +11,28 @@ class InvoiceInputService {
         try {
             const staffId = req.user;
             const staffName = req.staffName;
-            const { statusPayment, statusInput, status, supplierId, productIds } = req.body;
+            const { statusPayment, statusInput, status, supplierId, productIds, partialPayment, valueInvoice } = req.body;
 
             // Lấy tổng số hóa đơn hiện có
-            const countInvoices = await invoiceInputModel.countDocuments();
-            const stt = String(countInvoices + 1).padStart(3, '0'); // Tạo số thứ tự dạng '001', '002', ...
-            const invoiceId = `HDN${stt}`; // Tạo mã hóa đơn
+            let countInvoices = await invoiceInputModel.countDocuments();
+            let stt = String(countInvoices + 1).padStart(3, '0'); // Tạo số thứ tự dạng '001', '002', ...
+            let invoiceId = `HDN${stt}`; // Tạo mã hóa đơn
+            let invoiceIdExist = await invoiceInputModel.findOne({ invoiceId });
+            while (invoiceIdExist) {
+                countInvoices++;
+                stt = String(countInvoices + 1).padStart(3, '0');
+                invoiceId = `HDN${stt}`;
+                invoiceIdExist = await invoiceInputModel.findOne({ invoiceId });
+            }
 
-            // get info product from productIds
+            // Get info product from productIds
             const products = await Promise.all(
                 productIds.map(async (productId) => {
                     return await productModel.findById(productId.productId);
                 })
             );
 
-            // create array of product for invoice
+            // Create array of product for invoice
             const newProductIds = products.map((product, index) => ({
                 nameProduct: product.nameProduct,
                 imageProduct: product.images[0],
@@ -36,7 +43,7 @@ class InvoiceInputService {
                 value: productIds[index].count * productIds[index].priceInput
             }));
 
-            //create Supplier
+            // Create Supplier
             const supplier = await supplierModel.findById(supplierId.supplierId); // Thêm await
             const newSupplier = {
                 nameSupplier: supplier.supplierName,
@@ -45,10 +52,7 @@ class InvoiceInputService {
                 numberPhone: supplier.numberPhone,
             };
 
-            // Tính tổng giá trị hóa đơn
-            const valueInvoice = newProductIds.reduce((total, product) => {
-                return total + product.value + (product.tax || 0); // Cộng thuế nếu có
-            }, 0);
+            const finalPartialPayment = statusPayment === 'completed' ? valueInvoice : (partialPayment || 0);
 
             const newInvoice = new invoiceInputModel({
                 invoiceId,
@@ -56,6 +60,7 @@ class InvoiceInputService {
                 statusPayment,
                 statusInput,
                 status,
+                partialPayment: finalPartialPayment,
                 supplierId: newSupplier,
                 inputDate: new Date(),
                 valueInvoice: valueInvoice,
@@ -68,7 +73,6 @@ class InvoiceInputService {
 
             const invoiceInput = await newInvoice.save();
 
-            //Đẩy id invoice vô orderData của supplierModel
             await supplierModel.findByIdAndUpdate(supplier._id, { $push: { orderData: invoiceInput._id } });
 
             return invoiceInput;
@@ -77,37 +81,62 @@ class InvoiceInputService {
         }
     }
 
+
     static updateInvoiceById = async (req, res) => {
         try {
             const staffId = req.user;
             const staffName = req.staffName;
             const { id } = req.params;
-            const { statusPayment, status } = req.body;
+            const { statusPayment, status, partialPayment } = req.body;
 
-            const updates = { statusPayment, status }
+            const invoice = await invoiceInputModel.findById(id);
+            if (!invoice) {
+                throw new BadRequestError('Invoice not found');
+            }
+            const updates = { statusPayment, status };
+
+            if (invoice.status === 'completed' && invoice.statusInput === 'imported')
+                throw new BadRequestError('Sản phẩm nhập kho, không thể đổi trạng thái đơn hàng');
+
+            if (statusPayment === 'completed') {
+                updates.partialPayment = invoice.valueInvoice;
+            } else if (statusPayment === 'partial payment') {
+                if (partialPayment > invoice.valueInvoice) {
+                    throw new BadRequestError("Số tiền thanh toán không thể lớn hơn giá trị hóa đơn");
+                } else if (partialPayment === invoice.partialPayment) {
+                    updates.statusPayment = 'completed';
+                } else {
+                    updates.partialPayment = invoice.partialPayment + (partialPayment || 0);
+                    if (updates.partialPayment >= invoice.valueInvoice) {
+                        updates.statusPayment = 'completed';
+                    } else if (updates.partialPayment === 0) {
+                        updates.statusPayment = 'pending';
+                    }
+                }
+            } else {
+                updates.partialPayment = 0;
+            }
+
             Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
             const updatedInvoice = await invoiceInputModel.findByIdAndUpdate(id, updates, { new: true });
-            if (!updatedInvoice) {
-                throw new BadRequestError('Invoice not found');
-            }
             updatedInvoice.creator.push({
                 createdBy: staffId,
                 createdName: staffName,
                 description: "Cập nhật hóa đơn nhập"
             });
             await updatedInvoice.save();
-
             return { metadata: updatedInvoice };
         } catch (error) {
             throw error;
         }
     }
 
+
     static getAllInvoice = async () => {
         try {
             const invoice = await invoiceInputModel.find()
-                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status createdAt updatedAt')
                 .sort({ createdAt: -1 })
                 .exec()
 
@@ -135,9 +164,8 @@ class InvoiceInputService {
                 .select('productIds.productId productIds.count status statusInput creator')
                 .exec();
 
-            if (invoice.status !== 'completed' || invoice.statusInput !== 'not imported') {
-                throw new BadRequestError('Đơn hàng nhập chưa hoàn tất')
-            }
+            if (invoice.status !== 'completed') throw new BadRequestError('Đơn hàng nhập chưa hoàn tất')
+            if (invoice.statusInput !== 'not imported') throw new BadRequestError('Đơn hàng đã nhập kho')
 
             const results = [];
 
@@ -180,6 +208,9 @@ class InvoiceInputService {
 
     static softDeleteRestoreInvoice = async (staffId, staffName, id) => {
         const invoice = await invoiceInputModel.findById(id)
+        if (invoice.statusInput === 'imported')
+            throw new BadRequestError('Đã nhập kho, không thể xóa');
+
         const newActiveStatus = !invoice.active;
         const actionDescription = newActiveStatus ? "Hồi phục hóa đơn nhập" : "Xóa hóa đơn nhập";
 
@@ -193,25 +224,67 @@ class InvoiceInputService {
         return { metadata: invoice }
     }
 
-    static paginateInvoice = async (page = 1, pageSize = 5) => {
+    static deleteInvoice = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const userRole = req.role;
+            const { id } = req.params;
+            if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
+            await invoiceInputModel.findByIdAndDelete(id);
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
 
-            const invoice = await invoiceInputModel.find()
-                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status')
+    static paginateInvoice = async (req, res) => {
+        try {
+            const page = req.query.page;
+            const limit = req.query.limit;
+            const skip = (page - 1) * limit;
+
+            const invoice = await invoiceInputModel.find({ active: true })
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status active')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
-            const totalInvoice = await invoiceInputModel.countDocuments();
-            const totalPages = Math.ceil(totalInvoice / pageSize);
+            const totalInvoice = await invoiceInputModel.countDocuments({ active: true });
+            const totalPages = Math.ceil(totalInvoice / limit);
             return {
                 metadata: {
                     invoice,
                     currentPage: page,
                     totalPages,
-                    totalInvoice
+                    totalInvoice,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    static paginateInvoiceTrash = async (req, res) => {
+        try {
+            const page = req.query.page;
+            const limit = req.query.limit;
+            const skip = (page - 1) * limit;
+
+            const invoice = await invoiceInputModel.find({ active: false })
+                .select('invoiceId inputDate statusPayment statusInput supplierId valueInvoice creator.createdName creator.description status active')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalInvoice = await invoiceInputModel.countDocuments({ active: false });
+            const totalPages = Math.ceil(totalInvoice / limit);
+            return {
+                metadata: {
+                    invoice,
+                    currentPage: page,
+                    totalPages,
+                    totalInvoice,
+                    limit
                 }
             }
         } catch (error) {

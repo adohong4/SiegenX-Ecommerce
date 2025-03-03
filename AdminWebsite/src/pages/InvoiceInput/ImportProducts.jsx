@@ -1,69 +1,171 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../styles/styles.css";
+import { formatDayTime, formatCurrency } from '../../lib/utils'
+import { debounce } from 'lodash'
+import ReactPaginate from 'react-paginate';
+import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Table, Switch, Modal, Button, Pagination, Select, Input, Popconfirm, Descriptions } from "antd";
+import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { orders as initialOrders } from "../../data/Enviroment"; 
-import SupplierPopup from "../../components/Popup/SupplierPopup"; 
+import axios from 'axios';
 
 const ImportOrders = () => {
-  const [orders, setOrders] = useState(initialOrders); 
-  const [isSupplierPopupOpen, setIsSupplierPopupOpen] = useState(false);
-  const [newSupplier, setNewSupplier] = useState("");
+  const { url, deleteSoftInvoice } = useContext(StoreContext);
+  const [list, setList] = useState([]);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); // Hook để điều hướng
+  axios.defaults.withCredentials = true;
 
-  const handleAddSupplier = () => {
-    if (newSupplier.trim() !== "") {
-      alert(`Nhà cung cấp ${newSupplier} đã được thêm!`);
-      setNewSupplier("");
-      setIsSupplierPopupOpen(false);
+  const fetchInvoiceList = async (page = 1, limit = 5) => {
+    try {
+      const response = await axios.get(`${url}/v1/api/product/invoice/paginate?page=${page}&limit=${limit}`);
+      if (response.data.message) {
+        setList(response.data.metadata.invoice);
+        setTotalItems(response.data.metadata.totalInvoice);
+        setTotalPages(response.data.metadata.totalPages);
+      }
+    } catch (error) {
+      console.error(error.response.data.message);
     }
   };
+
+  const handleSoftDeletion = async (id) => {
+    deleteSoftInvoice(id);
+    fetchInvoiceList();
+  }
+
+  useEffect(() => {
+    fetchInvoiceList(currentPage, limit);
+  }, [currentPage, limit]);
+
+  const filtered = list.filter((invoice) =>
+    invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const columns = [
+    {
+      title: "Mã đơn nhập",
+      dataIndex: "invoiceId",
+      key: "invoiceId",
+      sorter: (a, b) => a.invoiceId.localeCompare(b.invoiceId),
+    },
+    {
+      title: "Ngày nhập",
+      dataIndex: "inputDate", // Đổi từ createdAt thành inputDate
+      key: "inputDate",
+      render: (inputDate, record) => formatDayTime(record.inputDate),
+      sorter: (a, b) => new Date(a.inputDate) - new Date(b.inputDate),
+    },
+    {
+      title: "Trạng thái thanh toán",
+      dataIndex: "statusPayment",
+      key: "statusPayment",
+      render: (statusPayment) => {
+        return statusPayment === 'pending' ? 'Chờ xử lý' :
+          statusPayment === 'partial payment' ? 'Thanh toán một phần' :
+            statusPayment === 'completed' ? 'Đã thanh toán' : '';
+      },
+    },
+    {
+      title: "Trạng thái nhập",
+      dataIndex: "statusInput",
+      key: "statusInput",
+      render: (statusInput) => {
+        return statusInput === 'not imported' ? 'Chưa nhập' :
+          statusInput === 'imported' ? 'Đã nhập' : '';
+      },
+    },
+    {
+      title: "Nhà cung cấp",
+      dataIndex: "supplierId",
+      key: "supplierId",
+      render: (supplierId, record) => record.supplierId[0]?.nameSupplier || 'Không xác định',
+      sorter: (a, b) => a.supplierId[0]?.nameSupplier.localeCompare(b.supplierId[0]?.nameSupplier),
+    },
+    {
+      title: "Nhân viên tạo",
+      dataIndex: "creator",
+      key: "creator",
+      render: (creator, record) => record.creator[0]?.createdName || 'Không xác định',
+      sorter: (a, b) => a.creator[0]?.createdName.localeCompare(b.creator[0]?.createdName),
+    },
+    {
+      title: "Giá trị",
+      dataIndex: "valueInvoice", // Đổi từ value thành valueInvoice
+      key: "valueInvoice",
+      render: (valueInvoice) => `${formatCurrency(valueInvoice)} đ`,
+      sorter: (a, b) => a.valueInvoice - b.valueInvoice,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        return status === 'active' ? "Đang vận chuyển" :
+          status === 'paused' ? "Tạm dừng" :
+            status === 'completed' ? "Đã nhận hàng" :
+              status === 'pending' ? "Đang chờ xử lý" :
+                status === 'cancelled' ? "Đã bị hủy" :
+                  status === 'failed' ? "Không thành công" :
+                    status === 'draft' ? "Đang ở dạng nháp" : "";
+      },
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <Button type="primary" icon={<BookFilled />} onClick={() => navigate(`/invoice/${record._id}`)} />
+          <Popconfirm title="Xóa chiến dịch này?" onConfirm={() => handleSoftDeletion(record._id)} okText="Xóa" cancelText="Hủy">
+            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+          </Popconfirm>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="nhap-hang-page">
       <div className="header">
-        <button className="btn btn-primary" onClick={() => navigate("/tao-don-nhap-hang")}>
+
+        <Input
+          placeholder="Tìm kiếm tài khoản..."
+          style={{ width: 200, marginBottom: 16 }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <button className="btn btn-primary" onClick={() => navigate("/invoice/create")}>
           + Thêm mới đơn hàng nhập
         </button>
+
       </div>
-      <div className="table-container">
-        <table className="order-table">
-          <thead>
-            <tr>
-              <th>Mã đơn nhập</th>
-              <th>Ngày nhập hàng</th>
-              <th>Số loại sản phẩm</th>
-              <th>Giá trị nhập</th>
-              <th>Trạng thái</th>
-              <th>Nhà cung cấp</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.code}</td>
-                <td>{order.date}</td>
-                <td>{order.types}</td>
-                <td className="value">{order.value}</td>
-                <td className={order.completed ? "status completed" : "status pending"}>
-                  {order.status}
-                </td>
-                <td>{order.supplier}</td>
-                <td className="actions">
-                  <button className="btn btn-info">
-                    <FontAwesomeIcon icon={faInfoCircle} className="icon" /> Chi tiết
-                  </button>
-                  <button className="btn btn-danger">
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+      <Table
+        columns={columns}
+        dataSource={filtered.map((order, index) => ({ ...order, key: order._id || index }))}
+        rowKey="key"
+        pagination={false} // Ẩn phân trang mặc định của Table
+      />
+      <Pagination
+        current={currentPage}
+        total={totalItems}
+        pageSize={limit}
+        onChange={(page) => setCurrentPage(page)}
+        showSizeChanger
+        pageSizeOptions={['5', '10', '20', '30']}
+        onShowSizeChange={(current, size) => {
+          setLimit(size);
+          setCurrentPage(1);
+        }}
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
     </div>
   );
 };

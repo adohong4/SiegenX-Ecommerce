@@ -75,8 +75,23 @@ class InvoiceInputController {
         }).send(res);
     }
 
+    deleteInvoice = async (req, res, next) => {
+        await InvoiceInputService.deleteInvoice(req, res)
+        new OK({
+            message: 'Xóa thành công',
+        }).send(res);
+    }
+
     paginateInvoice = async (req, res, next) => {
-        const result = await InvoiceInputService.paginateInvoice()
+        const result = await InvoiceInputService.paginateInvoice(req, res)
+        new OK({
+            message: 'Phân trang thành công',
+            metadata: result.metadata
+        }).send(res);
+    }
+
+    paginateInvoiceTrash = async (req, res, next) => {
+        const result = await InvoiceInputService.paginateInvoiceTrash(req, res)
         new OK({
             message: 'Phân trang thành công',
             metadata: result.metadata

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/cart/cart_main_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/banner_widget.dart';
-import 'package:siegenx_mobile_app/screens/cart/cart_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/featured_products.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 

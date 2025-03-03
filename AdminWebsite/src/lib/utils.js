@@ -38,7 +38,11 @@ export function formatDayTime(date) {
     month: "2-digit",
     year: "numeric",
   });
+}
 
+export function formatCurrency(price) {
+  const integerPart = Math.floor(price);
+  return integerPart.toLocaleString()
 }
 
 

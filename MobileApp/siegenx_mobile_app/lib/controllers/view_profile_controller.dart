@@ -18,6 +18,7 @@ class ViewProfileController extends ChangeNotifier {
     if (token == null) {
       isLoading = false;
       email = initialEmail ?? "N/A";
+      username = "Không có tên";
       notifyListeners();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Không có token được cung cấp')),
@@ -29,11 +30,10 @@ class ViewProfileController extends ChangeNotifier {
 
     try {
       final response = await http.get(
-        Uri.parse(ApiService
-            .userProfile), // http://localhost:4001/v1/api/profile/getProfile
+        Uri.parse(ApiService.userProfile),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Cookie': 'jwt=$token', // Gửi token qua header Cookie đúng định dạng
         },
       );
 
@@ -51,6 +51,7 @@ class ViewProfileController extends ChangeNotifier {
       } else {
         isLoading = false;
         email = initialEmail ?? "N/A";
+        username = "Không có tên";
         final data = jsonDecode(response.body);
         final errorMessage = data['message'] ?? 'Lỗi không xác định';
         ScaffoldMessenger.of(context).showSnackBar(
@@ -60,6 +61,7 @@ class ViewProfileController extends ChangeNotifier {
     } catch (e) {
       isLoading = false;
       email = initialEmail ?? "N/A";
+      username = "Không có tên";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi kết nối: ${e.toString()}')),
       );

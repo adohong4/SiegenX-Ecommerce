@@ -8,7 +8,7 @@ import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/widgets/custom_snackbar.dart';
 import 'package:siegenx_mobile_app/widgets/success_animation.dart';
-import '../screens/profile_screen.dart'; // Import ProfileScreen
+import '../screens/profile/profile_screen.dart'; // Import ProfileScreen
 
 class AuthController {
   static Future<void> login(

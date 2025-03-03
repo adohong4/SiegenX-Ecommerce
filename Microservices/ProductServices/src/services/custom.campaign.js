@@ -5,25 +5,56 @@ const productModel = require('../models/product.model')
 const { BadRequestError, ConflictRequestError } = require('../core/error.response');
 
 class CampaignService {
-    static paginateCampaign = async (page = 1, pageSize = 7) => {
+    static paginateCampaign = async (req, res) => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
+            const skip = (page - 1) * limit;
 
-            const campaign = await campaignModel.find()
-                .select('name description value code startDate endDate status maxValue appliesTo productIds active')
+            const campaign = await campaignModel.find({ active: true })
+                .select('name description type value code startDate endDate status maxValue appliesTo productIds active creator')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
-            const totalCampaign = await campaignModel.countDocuments();
-            const totalPages = Math.ceil(totalCampaign / pageSize);
+
+            const totalCampaign = await campaignModel.countDocuments({ active: true });
+            const totalPages = Math.ceil(totalCampaign / limit);
             return {
                 metadata: {
                     campaign,
                     currentPage: page,
                     totalPages,
-                    totalCampaign
+                    totalCampaign,
+                    limit
+                }
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    static paginateCampaignTrash = async (req, res) => {
+        try {
+            const page = req.query.page || 1;
+            const limit = req.query.limit || 10;
+            const skip = (page - 1) * limit;
+
+            const campaign = await campaignModel.find({ active: false })
+                .select('name description type value code startDate endDate status maxValue appliesTo productIds active')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            const totalCampaign = await campaignModel.countDocuments({ active: false });
+            const totalPages = Math.ceil(totalCampaign / limit);
+            return {
+                metadata: {
+                    campaign,
+                    currentPage: page,
+                    totalPages,
+                    totalCampaign,
+                    limit
                 }
             }
         } catch (error) {

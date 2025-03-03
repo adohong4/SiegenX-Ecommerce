@@ -1,7 +1,7 @@
 'use strict';
 
 const campaignModel = require('../models/campaign.model')
-const { BadRequestError, ConflictRequestError } = require('../core/error.response');
+const { BadRequestError, ConflictRequestError, AuthFailureError } = require('../core/error.response');
 
 class CampaignService {
     static createCampaign = async (
@@ -44,7 +44,7 @@ class CampaignService {
                 creator: {
                     createdBy: userId,
                     createdName: staffName,
-                    description: "Created new campaign"
+                    description: "Tạo mới chiến dịch"
                 }
             })
 
@@ -58,7 +58,7 @@ class CampaignService {
 
     static getAllCampaign = async () => {
         const campaign = await campaignModel.find()
-            .select('name description value code startDate endDate status maxValue appliesTo productIds active')
+            .select('name description value code startDate endDate status maxValue appliesTo productIds active type')
             .sort({ createdAt: -1 })
             .exec();
         return { metadata: campaign }
@@ -89,13 +89,23 @@ class CampaignService {
             if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
             if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
 
+            //Kiểm tra trạng thái
+            if (status === 'active' && now < new Date(startDate) || status === 'active' && now > new Date(endDate))
+                throw new BadRequestError('Lỗi trạng thái Hoạt động không phù hợp với thời gian chiến dịch');
+
             // Kiểm tra CODE
-            const foundCampaign = await campaignModel.findOne({ code });
+            const foundCampaign = await campaignModel.findOne({ code, _id: { $ne: id } });
             if (foundCampaign && foundCampaign.active) throw new BadRequestError('CODE exist!');
 
-            // Cập nhật appliesTo && productIds
-            if (appliesTo !== 'items') {
-                productIds = [];
+            /// Cập nhật appliesTo và productIds
+            if (appliesTo === 'all') {
+                updates.productIds = [];
+            } else if (appliesTo === 'items' && (!productIds || productIds.length === 0)) {
+                throw new BadRequestError('Vui lòng chọn sản phẩm áp dụng khuyến mãi');
+            }
+
+            if (type === 'fixed_amount') {
+                updates.maxValue = null;
             }
 
             // Xóa các trường không có giá trị
@@ -113,7 +123,7 @@ class CampaignService {
             updatedCampaign.creator.push({
                 createdBy: userId,
                 createdName: staffName,
-                description: "Updated campaign"
+                description: "Cập nhật chiến dịch"
             });
             await updatedCampaign.save();
 
@@ -127,7 +137,7 @@ class CampaignService {
         try {
             const campaign = await campaignModel.findById(id)
             const newActiveStatus = !campaign.active;
-            const actionDescription = newActiveStatus ? "Restored supplier" : "Deleted supplier";
+            const actionDescription = newActiveStatus ? "Phục hồi chiến dịch" : "Xóa chiến dịch";
 
             campaign.active = newActiveStatus;
             campaign.creator.push({
@@ -142,6 +152,15 @@ class CampaignService {
         }
     }
 
+    static deleteCampaign = async (staffRole, id) => {
+        try {
+            if (staffRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
+            await campaignModel.findByIdAndDelete(id)
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 

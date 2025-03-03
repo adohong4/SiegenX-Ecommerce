@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/favorite_products_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/home_screen.dart';
 import 'package:siegenx_mobile_app/screens/messenger_screen.dart';
-import 'package:siegenx_mobile_app/screens/profile_screen.dart';
+import 'package:siegenx_mobile_app/screens/profile/profile_screen.dart';
 
 class ManagerScreen extends StatefulWidget {
   const ManagerScreen({super.key});

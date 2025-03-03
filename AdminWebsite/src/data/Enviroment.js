@@ -7,7 +7,7 @@ export const fakeProducts = [
         category: "Màn hình LED",
         price: 25000000,
         quantity: 10,
-        
+
         images: ["led1.jpg"],
     },
     {
@@ -154,13 +154,13 @@ export const fakeContacts = [
 // Fake data của ListUser
 
 export const fakeListUser = [
-        { _id: 1, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
-        { _id: 2, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
-        { _id: 3, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } },
-        { _id: 4, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
-        { _id: 5, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
-        { _id: 6, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } }
-    ];
+    { _id: 1, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
+    { _id: 2, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
+    { _id: 3, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } },
+    { _id: 4, username: "Nguyen Van A", email: "a@gmail.com", createdAt: "2024-02-10", address: ["Ha Noi"], cartData: { item1: 1, item2: 2 } },
+    { _id: 5, username: "Tran Thi B", email: "b@gmail.com", createdAt: "2024-02-11", address: ["Hai Phong"], cartData: { item1: 1 } },
+    { _id: 6, username: "Le Van C", email: "c@gmail.com", createdAt: "2024-02-12", address: ["Da Nang"], cartData: { item2: 3 } }
+];
 
 
 
@@ -368,12 +368,12 @@ export const fakeOrderData = {
 };
 
 
-export  const stats = [
+export const stats = [
     { label: "Tổng số sản phẩm", value: 20 },
     { label: "Sản phẩm hết hàng", value: 3 },
     { label: "Sản phẩm còn hàng", value: 17 },
     { label: "Sản phẩm bị ẩn", value: 0 },
-  ];
+];
 
 
 export const fakeCustomerData = [
@@ -381,8 +381,8 @@ export const fakeCustomerData = [
     { title: "Khách hàng đã liên hệ", value: 3 },
     { title: "Khách hàng chưa liên hệ", value: 17 },
     { title: "Số khách hàng trong ngày", value: 12 }
-  ];
-  
+];
+
 
 //   Data cho trang nhập Hàng
 export const orders = [
@@ -395,5 +395,56 @@ export const orders = [
     { id: 7, code: "ABDKC128", date: "24/11/2024", types: 2, value: "10.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
     { id: 8, code: "ABDKC129", date: "25/11/2024", types: 5, value: "25.000.000", status: "Chưa hoàn tất", supplier: "NSX SiegenX", completed: false },
     { id: 9, code: "ABDKC130", date: "26/11/2024", types: 8, value: "40.000.000", status: "Hoàn tất", supplier: "NSX SiegenX", completed: true },
-  ];
-  
+];
+
+
+//   fake data cho campain
+
+export const campainlist = [
+    {
+        _id: "67b6d5ac35d13b959296faee",
+        name: "Ngày quốc tế phụ nữ",
+        description: "Chương trình giảm giá ngày quốc tế phụ nữ.",
+        type: "percentage",
+        value: 20,
+        code: "WOMANDAY83",
+        startDate: "2025-03-05",
+        endDate: "2025-03-15",
+        maxValue: 1000000,
+        appliesTo: "items",
+        productIds: [
+            "6777cebdc3d18219bb6b0fc0",
+            "676b7ebd899914bf0bea74e0",
+            "67696a18e7ee9e89c3b45e5c",
+        ],
+        status: false,
+    },
+    {
+        _id: "67b6cf3ca8452f193a459782",
+        name: "Mua 2 sản phẩm, tặng 1 voucher 10k",
+        description: "Khuyến mãi khi mua 2 sản phẩm bất kỳ.",
+        type: "fixed",
+        value: 10000,
+        code: "BUY2GET10",
+        startDate: "2025-04-01",
+        endDate: "2025-04-10",
+        maxValue: 500000,
+        appliesTo: "orders",
+        productIds: [],
+        status: false,
+    },
+    {
+        _id: "67b4560691f5c51fd3a720c2",
+        name: "Giảm 10k / 1 sản phẩm nhân dịp chào mừng năm mới",
+        description: "Ưu đãi đặc biệt mừng năm mới.",
+        type: "fixed",
+        value: 10000,
+        code: "NEWYEAR10",
+        startDate: "2025-01-01",
+        endDate: "2025-01-10",
+        maxValue: 300000,
+        appliesTo: "items",
+        productIds: ["678123abcd456efg789hij"],
+        status: false,
+    },
+];

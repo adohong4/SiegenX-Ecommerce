@@ -17,7 +17,7 @@ class SupplierController {
             );
 
             new CREATED({
-                message: "Supplier created successfully",
+                message: "Tạo mới thành công",
                 metadata: result.metadata
             }).send(res);
         } catch (error) {
@@ -63,7 +63,22 @@ class SupplierController {
             );
 
             new OK({
-                message: "Supplier updated successfully",
+                message: "Cập nhật thành công",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    activeSupplier = async (req, res, next) => {
+        try {
+            const staffId = req.user;
+            const staffName = req.staffName;
+            const { id } = req.params;
+            const result = await SupplierService.activeSupplier(staffId, staffName, id);
+            new OK({
+                message: "Thành công",
                 metadata: result.metadata
             }).send(res);
         } catch (error) {
@@ -73,13 +88,9 @@ class SupplierController {
 
     deleteSupplier = async (req, res, next) => {
         try {
-            const staffId = req.user;
-            const staffName = req.staffName;
-            const { id } = req.params;
-            const result = await SupplierService.deleteSupplier(staffId, staffName, id);
+            const result = await SupplierService.deleteSupplier(req, res);
             new OK({
                 message: "Supplier deleted successfully",
-                metadata: result.metadata
             }).send(res);
         } catch (error) {
             next(error);

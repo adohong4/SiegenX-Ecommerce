@@ -20,6 +20,7 @@ const Sidebar = () => {
     nhapHang: false,
     chienDich: false,
     nhaCungcap: false,
+    nhanVien: false
   });
 
   // Hàm toggle menu
@@ -148,12 +149,12 @@ const Sidebar = () => {
               openMenus.nhapHang && (
                 <ul className="sidebar-submenu">
                   <li>
-                    <NavLink to="/nhap-hang" className="submenu-item">
+                    <NavLink to="/invoice" className="submenu-item">
                       Danh sách nhập hàng
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/trash" className="submenu-item">
+                    <NavLink to="/invoice/trash" className="submenu-item">
                       Thùng rác
                     </NavLink>
                   </li>
@@ -214,30 +215,54 @@ const Sidebar = () => {
             {openMenus.chienDich && (
               <ul className="sidebar-submenu">
                 <li>
-                  <NavLink to="/nhap-hang" className="submenu-item">
+                  <NavLink to="/add-campaign" className="submenu-item">
                     Thêm chiến dịch
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/product" className="submenu-item">
+                  <NavLink to="/list-campaign" className="submenu-item">
                     Danh sách chiến dịch
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/trash" className="submenu-item">
+                  <NavLink to="/trash-campaign" className="submenu-item">
                     Thùng rác
                   </NavLink>
                 </li>
               </ul>
             )}
           </div>
-          <div className="sidebar-options">
-            <NavLink to="/staff" className="sidebar-option">
-              <FontAwesomeIcon icon={faUserTie} />
-              <p>Nhân viên</p>
-            </NavLink>
-          </div >
-        </div>
+          <div className="sidebar-dropdown">
+            <div
+              className="sidebar-option sidebar-main"
+              onClick={() => toggleMenu("nhanVien")}
+            >
+              <div className="dad-menu sidebar-title">
+                <FontAwesomeIcon icon={faUserTie} />
+                <p>Nhân viên</p>
+              </div>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`sidebar-icon ${openMenus.nhanVien ? "rotate" : ""}`}
+              />
+            </div>
+
+            {openMenus.nhanVien && (
+              <ul className="sidebar-submenu">
+                <li>
+                  <NavLink to="/staff" className="submenu-item">
+                    Danh sách nhân viên
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/staff/trash" className="submenu-item">
+                    Thùng rác
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </div>
+        </div >
 
         <div className="log-out-btn">
           <NavLink to="http://localhost:5173/" className="sidebar-option-logout">

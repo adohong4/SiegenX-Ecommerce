@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class AddressModel {
   final String? userId; // Thêm userId nếu cần thiết
   final String fullname;

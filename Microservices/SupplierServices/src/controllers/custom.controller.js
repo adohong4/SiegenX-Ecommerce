@@ -17,6 +17,18 @@ class CustomController {
         }
     }
 
+    paginateTrash = async (req, res, next) => {
+        try {
+            const result = await CustomService.paginateTrash(req, res);
+            new OK({
+                message: "Get supplier successfully",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     searchByName = async (req, res, next) => {
         try {
             const { name } = req.params;

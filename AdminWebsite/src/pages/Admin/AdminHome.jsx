@@ -9,19 +9,27 @@ import ProductDetail from '../Product/ProductDetail';
 import Contact from '../Contact/Contact';
 import '../styles/styles.css';
 import Headeradmin from '../../components/Headeradmin';
-import Orders from '../Order/Cart';
+import Orders from '../Order/Cart'; //Order
 import OrderTrash from '../Order/OrderTrash';
 import DashBoard from '../Admin/DashBoard';
 import ProductTrash from '../Product/Trash';
 import ContactTrash from '../Contact/ContactTrash';
-import ImportProducts from '../InvoiceInput/ImportProducts';
-import ImportProductsDetails from '../InvoiceInput/ImportProductsDetails';
+import ImportProducts from '../InvoiceInput/ImportProducts'; //Invoice
+import InvoiceTrash from '../InvoiceInput/InvoiceTrash';
+import CreateImportOrder from '../InvoiceInput/CreateInvoice';
+import InvoiceDetail from '../InvoiceInput/InvoiceDetail';
 import LoginAdmin from '../../pages/Admin/LoginAdmin';
 import ProfileAdmin from '../../pages/Admin/ProfileAdmin';
-import Staff from '../../pages/Admin/Staff';
+import Staff from '../../pages/Staff/Staff';
+import StaffTrash from '../../pages/Staff/StaffTrash';
 import AddSupplier from '../../pages/Supplier/AddSupplier';
 import Supplier from '../../pages/Supplier/Supplier';
 import TrashSupplier from '../../pages/Supplier/TrashSupplier';
+import SupplierInfo from '../../pages/Supplier/SupplierInfo';
+import ListCampain from '../../pages/Campaign/ListCampaign';
+import AddCampaign from '../../pages/Campaign/AddCampaign';
+import CampaignInfo from '../../pages/Campaign/CampaignInfo';
+import TrashCampain from '../../pages/Campaign/TrashCampaign';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -69,15 +77,29 @@ const Admin = () => {
                                 <Route path="orders" element={<Orders />} />
                                 <Route path="orders/trash" element={<OrderTrash />} />
 
-                                <Route path="nhap-hang" element={<ImportProducts />} />
-                                <Route path="tao-don-nhap-hang" element={<ImportProductsDetails />} />
+                                {/* Route Invoice */}
+                                <Route path="invoice" element={<ImportProducts />} />
+                                <Route path="invoice/create" element={<CreateImportOrder />} />
+                                <Route path="invoice/trash" element={<InvoiceTrash />} />
+                                <Route path="invoice/:id" element={<InvoiceDetail />} />
+
+                                {/* Route Staff */}
                                 <Route path="staff" element={<Staff />} />
+                                <Route path="staff/trash" element={<StaffTrash />} />
+
                                 <Route path="profile-admin" element={<ProfileAdmin />} />
 
-                                {/* Nhập Hàng */}
+                                {/* Campaign */}
+                                <Route path="list-campaign" element={<ListCampain />} />
+                                <Route path="add-campaign" element={<AddCampaign />} />
+                                <Route path="list-campaign/:id" element={<CampaignInfo />} />
+                                <Route path="trash-campaign" element={<TrashCampain />} />
+
+                                {/* Supplier */}
                                 <Route path="add-supplier" element={<AddSupplier />} />
                                 <Route path="supplier" element={<Supplier />} />
                                 <Route path="trash-supplier" element={<TrashSupplier />} />
+                                <Route path="supplier/:id" element={<SupplierInfo />} />
                             </Routes>
                         </div>
                     </div>

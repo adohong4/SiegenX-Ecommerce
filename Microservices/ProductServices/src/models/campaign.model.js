@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const DOCUMENT_NAME = 'Campaigns';
 
 const HistorySchema = new Schema({
-    createdBy: { type: String, required: true }, //id
-    createdName: { type: String, required: true },
-    description: { type: String, required: true },
+    createdBy: { type: String, }, //id
+    createdName: { type: String, },
+    description: { type: String, },
     createdAt: { type: Date, default: Date.now },
 })
 
@@ -31,7 +31,7 @@ const CampaignSchema = new Schema(
                 'draft'            // Chiến dịch đang ở dạng nháp
             ], default: 'active'
         },
-        maxValue: { type: Number, required: true },
+        maxValue: { type: Number },
         appliesTo: { type: String, required: true, enum: ['all', 'category', 'items'] },
         // productCategory: { type: Array, default: [] },
         productIds: { type: Array, default: [] }, // so san pham duoc ap dung

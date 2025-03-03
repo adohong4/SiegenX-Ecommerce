@@ -39,7 +39,7 @@ class StaffController {
 
             new CREATED({
                 message: 'Cập nhật thành công!',
-                metadata: result.staff
+                metadata: result.metadata
             }).send(res);
         } catch (error) {
             next(error);
@@ -62,7 +62,20 @@ class StaffController {
 
     getStaffByPage = async (req, res, next) => {
         try {
-            const result = await StaffService.getStaffByPage();
+            const result = await StaffService.getStaffByPage(req, res);
+
+            new OK({
+                message: 'get Staff By Page OK',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    paginateStaffTrash = async (req, res, next) => {
+        try {
+            const result = await StaffService.paginateStaffTrash(req, res);
 
             new OK({
                 message: 'get Staff By Page OK',
@@ -77,8 +90,9 @@ class StaffController {
         try {
             const staffId = req.user;
             const staffRole = req.role;
+            const staffName = req.staffName;
             const { id } = req.params; // Lấy ID từ URL
-            const result = await StaffService.toggleStaffStatusActive(id, staffId, staffRole);
+            const result = await StaffService.toggleStaffStatusActive(id, staffId, staffRole, staffName);
 
             new OK({
                 message: `Trạng thái nhân viên đã được cập nhật thành ${result.StatusActive}`,
@@ -88,6 +102,18 @@ class StaffController {
             next(error);
         }
     };
+
+    deleteStaff = async (req, res, next) => {
+        try {
+            const result = await StaffService.deleteStaff(req, res);
+            new OK({
+                message: 'Xóa thành công',
+                metadata: result
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 
     Login = async (req, res, next) => {
         try {
@@ -136,7 +162,6 @@ class StaffController {
             next(error);
         }
     }
-
 }
 
 module.exports = new StaffController();

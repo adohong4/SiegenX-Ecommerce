@@ -1,51 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:siegenx_mobile_app/controllers/favorites_manager.dart';
+import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
 import 'package:siegenx_mobile_app/services/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
+import 'package:siegenx_mobile_app/providers/favorites_provider.dart';
 
-class FavoriteProductGrid extends StatefulWidget {
+class FavoriteProductGrid extends StatelessWidget {
   const FavoriteProductGrid({Key? key}) : super(key: key);
 
   @override
-  _FavoriteProductGridState createState() => _FavoriteProductGridState();
-}
-
-class _FavoriteProductGridState extends State<FavoriteProductGrid> {
-  List<int> favoriteProductIds = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavorites();
-  }
-
-  Future<void> _loadFavorites() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = authProvider.userId ?? "guest";
-    final favorites = await FavoritesManager.getFavorites(userId);
-    setState(() {
-      favoriteProductIds = favorites;
-    });
-  }
-
-  Future<void> _toggleFavorite(int productId) async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = authProvider.userId ?? "guest";
-    if (favoriteProductIds.contains(productId)) {
-      await FavoritesManager.removeFavorite(userId, productId);
-    } else {
-      await FavoritesManager.addFavorite(userId, productId);
-    }
-    await _loadFavorites();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
+    final favoriteProductIds =
+        favoritesProvider.getFavorites(authProvider.userId ?? "guest");
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: FutureBuilder<List<Product>>(
@@ -73,7 +46,6 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
             itemCount: favoriteProducts.length,
             itemBuilder: (context, index) {
               final product = favoriteProducts[index];
-              final isFavorite = favoriteProductIds.contains(product.id);
 
               return GestureDetector(
                 onLongPress: () {
@@ -128,20 +100,7 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
                                   ),
                                 ),
                                 SizedBox(width: 3),
-                                GestureDetector(
-                                  onTap: () async {
-                                    await _toggleFavorite(product.id);
-                                  },
-                                  child: Icon(
-                                    isFavorite
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: isFavorite
-                                        ? Color(0xFFEC7063)
-                                        : Colors.grey[400],
-                                    size: 20,
-                                  ),
-                                ),
+                                FavoriteIcon(productId: product.id),
                               ],
                             ),
                             SizedBox(height: 4),

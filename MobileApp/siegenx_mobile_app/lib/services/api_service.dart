@@ -1,16 +1,12 @@
 class ApiService {
-  static const String baseUrl =
-      "http://localhost:4001/v1/api"; // Cổng API Gateway
-  static const String imageBaseUrl =
-      "http://localhost:9003/images/"; // Đường dẫn hình ảnh
+  static const String baseUrl = "http://localhost:4001/v1/api";
+  static const String imageBaseUrl = "http://localhost:9003/images/";
 
-  // Định nghĩa các endpoint cho từng service
   static const String identity = "$baseUrl/identity";
   static const String profile = "$baseUrl/profile";
   static const String product = "$baseUrl/product";
   static const String contact = "$baseUrl/contact";
 
-  // Các API cụ thể
   static const String login = "$identity/login";
   static const String register = "$identity/register";
   static const String userProfile = "$profile/getProfile";
@@ -21,7 +17,5 @@ class ApiService {
   static const String logout = "$identity/logout";
   static const String deleteAddress = "$profile/address/delete";
 
-  // Endpoint cho sản phẩm
-  static const String getAllProducts =
-      "$product/getAll"; // Lấy danh sách sản phẩm
+  static const String getAllProducts = "$product/getAll";
 }

@@ -6,27 +6,27 @@ import { debounce } from 'lodash'
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Table, Switch, Modal, Button, Pagination, Select, Input, Popconfirm, Descriptions } from "antd";
+import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 
 const ImportOrders = () => {
   const { url, deleteSoftInvoice } = useContext(StoreContext);
   const [list, setList] = useState([]);
-  const [initialList, setInitialList] = useState([]);
+  const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-  const [sortOrder, setSortOrder] = useState({ name: 'asc', email: 'asc' });
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate(); // Hook để điều hướng
   axios.defaults.withCredentials = true;
 
-  const fetchInvoiceList = async (page = 1, limit = 8) => {
+  const fetchInvoiceList = async (page = 1, limit = 5) => {
     try {
       const response = await axios.get(`${url}/v1/api/product/invoice/paginate?page=${page}&limit=${limit}`);
       if (response.data.message) {
         setList(response.data.metadata.invoice);
-        setInitialList(response.data.metadata.invoice);
         setTotalItems(response.data.metadata.totalInvoice);
         setTotalPages(response.data.metadata.totalPages);
       }
@@ -35,157 +35,137 @@ const ImportOrders = () => {
     }
   };
 
-  const removeAccents = (str) => {
-    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  };
-
   const handleSoftDeletion = async (id) => {
     deleteSoftInvoice(id);
     fetchInvoiceList();
   }
 
-  const handleSearch = useCallback(
-    debounce(() => {
-      if (!searchTerm.trim()) {
-        setList(initialList);
-      } else {
-        const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
-        const filteredList = initialList.filter(invoice =>
-          removeAccents(invoice.invoiceId.toLowerCase()).includes(normalizedSearchTerm)
-        );
-        setList(filteredList);
-      }
-    }, 300),
-    [searchTerm, initialList]
+  useEffect(() => {
+    fetchInvoiceList(currentPage, limit);
+  }, [currentPage, limit]);
+
+  const filtered = list.filter((invoice) =>
+    invoice.invoiceId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const sortBy = (field) => {
-    const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
-    setSortOrder({ ...sortOrder, [field]: newOrder });
-    const sortedList = [...list].sort((a, b) => {
-      const aValue = field.includes('.') ? field.split('.').reduce((o, i) => o[i], a) : a[field];
-      const bValue = field.includes('.') ? field.split('.').reduce((o, i) => o[i], b) : b[field];
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return newOrder === 'asc' ? aValue - bValue : bValue - aValue;
-      } else {
-        const aString = String(aValue).toLowerCase();
-        const bString = String(bValue).toLowerCase();
-        return newOrder === 'asc' ? aString.localeCompare(bString) : bString.localeCompare(aString);
-      }
-    });
-    setList(sortedList);
-  };
-
-  useEffect(() => {
-    fetchInvoiceList(currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch();
-    } else {
-      setList(initialList);
-    }
-  }, [searchTerm, initialList]);
+  const columns = [
+    {
+      title: "Mã đơn nhập",
+      dataIndex: "invoiceId",
+      key: "invoiceId",
+      sorter: (a, b) => a.invoiceId.localeCompare(b.invoiceId),
+    },
+    {
+      title: "Ngày nhập",
+      dataIndex: "inputDate", // Đổi từ createdAt thành inputDate
+      key: "inputDate",
+      render: (inputDate, record) => formatDayTime(record.inputDate),
+      sorter: (a, b) => new Date(a.inputDate) - new Date(b.inputDate),
+    },
+    {
+      title: "Trạng thái thanh toán",
+      dataIndex: "statusPayment",
+      key: "statusPayment",
+      render: (statusPayment) => {
+        return statusPayment === 'pending' ? 'Chờ xử lý' :
+          statusPayment === 'partial payment' ? 'Thanh toán một phần' :
+            statusPayment === 'completed' ? 'Đã thanh toán' : '';
+      },
+    },
+    {
+      title: "Trạng thái nhập",
+      dataIndex: "statusInput",
+      key: "statusInput",
+      render: (statusInput) => {
+        return statusInput === 'not imported' ? 'Chưa nhập' :
+          statusInput === 'imported' ? 'Đã nhập' : '';
+      },
+    },
+    {
+      title: "Nhà cung cấp",
+      dataIndex: "supplierId",
+      key: "supplierId",
+      render: (supplierId, record) => record.supplierId[0]?.nameSupplier || 'Không xác định',
+      sorter: (a, b) => a.supplierId[0]?.nameSupplier.localeCompare(b.supplierId[0]?.nameSupplier),
+    },
+    {
+      title: "Nhân viên tạo",
+      dataIndex: "creator",
+      key: "creator",
+      render: (creator, record) => record.creator[0]?.createdName || 'Không xác định',
+      sorter: (a, b) => a.creator[0]?.createdName.localeCompare(b.creator[0]?.createdName),
+    },
+    {
+      title: "Giá trị",
+      dataIndex: "valueInvoice", // Đổi từ value thành valueInvoice
+      key: "valueInvoice",
+      render: (valueInvoice) => `${formatCurrency(valueInvoice)} đ`,
+      sorter: (a, b) => a.valueInvoice - b.valueInvoice,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => {
+        return status === 'active' ? "Đang vận chuyển" :
+          status === 'paused' ? "Tạm dừng" :
+            status === 'completed' ? "Đã nhận hàng" :
+              status === 'pending' ? "Đang chờ xử lý" :
+                status === 'cancelled' ? "Đã bị hủy" :
+                  status === 'failed' ? "Không thành công" :
+                    status === 'draft' ? "Đang ở dạng nháp" : "";
+      },
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <Button type="primary" icon={<BookFilled />} onClick={() => navigate(`/invoice/${record._id}`)} />
+          <Popconfirm title="Xóa chiến dịch này?" onConfirm={() => handleSoftDeletion(record._id)} okText="Xóa" cancelText="Hủy">
+            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+          </Popconfirm>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="nhap-hang-page">
       <div className="header">
-        <div className='search-invoice'>
-          <input type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Tìm kiếm..."
-            className='search-input' />
-        </div>
+
+        <Input
+          placeholder="Tìm kiếm tài khoản..."
+          style={{ width: 200, marginBottom: 16 }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
         <button className="btn btn-primary" onClick={() => navigate("/invoice/create")}>
           + Thêm mới đơn hàng nhập
         </button>
 
       </div>
 
-      <div className="table-container">
-        <table className="order-table">
-          <thead>
-            <tr>
-              <th onClick={() => sortBy('invoiceId')} className="col-tk" style={{ cursor: 'pointer' }}>
-                Mã đơn nhập {sortOrder.invoiceId === 'asc' ? '↑' : '↓'}
-              </th>
-              <th onClick={() => sortBy('inputDate')} className="col-tk" style={{ cursor: 'pointer' }}>
-                Ngày nhập {sortOrder.inputDate === 'asc' ? '↑' : '↓'}
-              </th>
-              <th>Trạng thái thanh toán</th>
-              <th>Trạng thái nhập</th>
-              <th>Nhà cung cấp</th>
-              <th>Nhân viên tạo</th>
-              <th onClick={() => sortBy('valueInvoice')} className="col-tk" style={{ cursor: 'pointer' }}>
-                Giá trị {sortOrder.valueInvoice === 'asc' ? '↑' : '↓'}
-              </th>
-              <th>Trạng thái</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((order) => (
-              <tr key={order._id}>
-                <td>{order.invoiceId}</td>
-                <td>{formatDayTime(order.inputDate)}</td>
-                <td>
-                  {order.statusPayment === 'pending' ? 'Chờ xử lý' :
-                    order.statusPayment === 'partial payment' ? 'Thanh toán một phần' :
-                      order.statusPayment === 'completed' ? 'Đã thanh toán' : ''}
-                </td>
-                <td>
-                  {order.statusInput === 'not imported' ? 'Chưa nhập' :
-                    order.statusInput === 'imported' ? 'Đã nhập' : ''}
-                </td>
-                <td>{order.supplierId[0].nameSupplier}</td>
-                <td>{order.creator[0].createdName}</td>
-                <td>{formatCurrency(order.valueInvoice)} đ</td>
-                <td>
-                  {order.status === 'active' ? "Đang vận chuyển" :
-                    order.status === 'paused' ? "Tạm dừng" :
-                      order.status === 'completed' ? "Đã nhận hàng" :
-                        order.status === 'pending' ? "Đang chờ xử lý" :
-                          order.status === 'cancelled' ? "Đã bị hủy" :
-                            order.status === 'failed' ? "Không thành công" :
-                              order.status === 'draft' ? "Đang ở dạng nháp" : ""}
-                </td>
-                <td className="actions">
-                  <button className="btn btn-info" onClick={() => navigate(`/invoice/${order._id}`)}>
-                    <FontAwesomeIcon icon={faInfoCircle} className="icon" />
-                  </button>
-                  <button className="btn btn-danger" onClick={() => handleSoftDeletion(order._id)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="pagination-container">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel=">"
-          onPageChange={(e) => setCurrentPage(e.selected + 1)}
-          pageRangeDisplayed={5}
-          pageCount={totalPages}
-          previousLabel="<"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-        />
-      </div>
+      <Table
+        columns={columns}
+        dataSource={filtered.map((order, index) => ({ ...order, key: order._id || index }))}
+        rowKey="key"
+        pagination={false} // Ẩn phân trang mặc định của Table
+      />
+      <Pagination
+        current={currentPage}
+        total={totalItems}
+        pageSize={limit}
+        onChange={(page) => setCurrentPage(page)}
+        showSizeChanger
+        pageSizeOptions={['5', '10', '20', '30']}
+        onShowSizeChange={(current, size) => {
+          setLimit(size);
+          setCurrentPage(1);
+        }}
+        style={{ marginTop: 16, textAlign: 'right' }}
+      />
     </div>
   );
 };

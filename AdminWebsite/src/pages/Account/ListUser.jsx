@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions } from "antd";
+import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Form } from "antd";
 import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { StoreContext } from '../../context/StoreContext';
 import { formatDayTime, formatCurrency } from '../../lib/utils';
@@ -16,6 +16,10 @@ const ListUser = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [viewingAccount, setViewingAccount] = useState(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [editingAccount, setEditingAccount] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [createForm] = Form.useForm();
+    const [form] = Form.useForm();
     axios.defaults.withCredentials = true;
 
     const fetchList = async (page = 1, limit = 10) => {
@@ -48,8 +52,30 @@ const ListUser = () => {
         }
     };
 
-    const showViewModal = (campaign) => {
-        setViewingAccount(campaign);
+    const handleEditSubmit = async () => {
+        const values = await form.validateFields();
+        console.log(editingAccount._id);
+        try {
+            const response = await axios.put(`${url}/v1/api/profile/account/update/${editingAccount._id}`, values);
+            if (response.data.status) {
+                toast.success(response.data.message);
+                fetchList();
+                setIsModalOpen(false);
+                fetchStaffList();
+            }
+        } catch (error) {
+            toast.error('Xóa tài khoản thất bại');
+        }
+    };
+
+    const showEditModal = (account) => {
+        setEditingAccount(account);
+        form.setFieldsValue(account);
+        setIsModalOpen(true);
+    };
+
+    const showViewModal = (account) => {
+        setViewingAccount(account);
         setIsViewModalOpen(true);
     };
 
@@ -70,7 +96,7 @@ const ListUser = () => {
             render: (_, record) => (
                 <>
                     <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />
-                    <Button type="primary" icon={<EditFilled />} />
+                    <Button onClick={() => showEditModal(record)} type="primary" icon={<EditFilled />} />
                     <Popconfirm title="Xóa tài khoản này?" onConfirm={() => removeUser(record._id)} okText="Xóa" cancelText="Hủy">
                         <Button type="primary" icon={<DeleteOutlined />} danger />
                     </Popconfirm>
@@ -141,6 +167,27 @@ const ListUser = () => {
                         />
                     </div>
                 )}
+            </Modal>
+
+            {/* Modal cập nhật tài khoản người dùng */}
+            <Modal
+                title="Chỉnh sửa tài khoản"
+                open={isModalOpen}
+                onOk={handleEditSubmit}
+                onCancel={() => setIsModalOpen(false)}
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item name="username" label="Tài khoản"
+                        rules={[
+                            { pattern: /^[^\s]+$/, message: "Tài khoản không được chứa khoảng trắng" },
+                            { pattern: /^[a-zA-Z0-9]+$/, message: "Tài khoản chỉ được chứa chữ cái và số" }
+                        ]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="password" label="Mật khẩu">
+                        <Input />
+                    </Form.Item>
+                </Form>
             </Modal>
         </div>
     );

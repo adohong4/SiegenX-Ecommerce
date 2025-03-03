@@ -85,7 +85,7 @@ class AccountService {
             const skip = (page - 1) * limit;
 
             const account = await accountModel.find({ active: true })
-                .select('username email role address cartData createdAt active')
+                .select('fullName username email gender numberPhone role cartData createdAt active creator createdAt updatedAt')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)

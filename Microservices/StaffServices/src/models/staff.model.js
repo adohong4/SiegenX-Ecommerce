@@ -21,6 +21,7 @@ const StaffSchema = new Schema(
         Numberphone: { type: String },
         Tax: { type: String, required: true, unique: true },
         Role: { type: String, enum: ['ADMIN', 'STAFF'], default: "STAFF" },
+        StaffPic: { type: String },
         StatusActive: { type: Boolean, default: true },
         creator: [HistorySchema],
 

@@ -974,6 +974,7 @@ textarea {
 
 .header-admin .header-admin-right img {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 2px solid #00B98E;
 }
@@ -991,6 +992,17 @@ textarea {
     background-color: #fff;
 }
 
+.profile-auth input {
+    border: none !important;
+    background-color: #fff;
+}
+
+.profile-auth {
+    border: 1px solid #b5b5b5;
+    padding: 5px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
 
 /* CSS cho ListUser */
 

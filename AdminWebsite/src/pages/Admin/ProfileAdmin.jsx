@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import "../styles/styles.css";
 import axios from 'axios';
+import { assets } from '../../assets/assets';
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { StoreContext } from '../../context/StoreContext';
@@ -9,7 +10,7 @@ import { formatHourDayTime } from '../../lib/utils'
 const ProfileAdmin = () => {
     const { account_list, updateStaff } = useContext(StoreContext);
     const [isEditing, setIsEditing] = useState(false);
-
+    const [images, setImage] = useState([]);
     const [editProfile, setEditProfile] = useState({ ...account_list });
 
     const handleChange = (e) => {
@@ -34,6 +35,18 @@ const ProfileAdmin = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
+
+            <div className="profile-auth col-6">
+
+                <input type="file" accept="image/*" onChange={(e) => (e)} className="imageStaff-upload-input col-9" />
+                <img
+                    className="logo profile-pic col-3"
+                    src={account_list.StaffPic || assets.staffImage}
+                    alt="avt"
+                    onClick={(e) => (e)}
+                />
+            </div>
+
             <div className="profile-admin-grid">
                 {/* Cột 1 - Bảng hiển thị thông tin */}
                 <div className="profile-admin-column">

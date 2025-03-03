@@ -289,7 +289,7 @@ class StaffService {
                 throw new BadRequestError("Thiếu thông tin tài khoản");
             }
             const profile = await staffModel.findById(staffId)
-                .select('StaffName Username Email Password Numberphone Tax Role createdAt')
+                .select('StaffName Username Email Password Numberphone Tax Role createdAt StaffPic')
                 .exec();
 
             if (!profile) {

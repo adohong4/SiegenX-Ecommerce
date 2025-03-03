@@ -88,7 +88,7 @@ const StoreContextProvider = (props) => {
 
     const updateStaffById = async (staffId, data) => {
         try {
-            await axios.put(`${url}/v1/api/staff/update/${staffId}`, data);
+            await axios.post(`${url}/v1/api/staff/update/${staffId}`, data);
         } catch (error) {
             console.error("Lỗi khi cập nhật nhân viên:", error);
         }

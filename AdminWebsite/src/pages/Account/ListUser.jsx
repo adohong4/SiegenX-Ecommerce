@@ -1,201 +1,147 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
-import { debounce } from 'lodash'
 import { toast } from 'react-toastify';
-import ReactPaginate from 'react-paginate';
+import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions } from "antd";
+import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { StoreContext } from '../../context/StoreContext';
-import PopupUser from '../../components/Popup/PopupUser';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { formatDayTime } from '../../lib/utils';
+import { formatDayTime, formatCurrency } from '../../lib/utils';
 
 const ListUser = () => {
     const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
-    const [currentUser, setCurrentUser] = useState(null);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [limit, setLimit] = useState(10);
     const [totalUser, setTotalUser] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState({ name: 'asc', email: 'asc' });
+    const [viewingAccount, setViewingAccount] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     axios.defaults.withCredentials = true;
 
-    const removeAccents = (str) => {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    };
-
-    const openUpdatePopup = (user) => {
-        setCurrentUser(user);
-        setIsPopupOpen(true);
-        document.body.classList.add('popup-open');
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setCurrentUser(null);
-        document.body.classList.remove('popup-open');
-    };
-
-    const fetchList = async (page = 1, limit = 6) => {
-        const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=${limit}`);
-        if (response.data.message) {
-            setList(response.data.metadata.account);
-            setTotalUser(response.data.metadata.limit);
-            setTotalPages(response.data.metadata.totalPages);
-        } else {
-            toast.error('Lấy dữ liệu thất bại');
+    const fetchList = async (page = 1, limit = 10) => {
+        try {
+            const response = await axios.get(`${url}/v1/api/profile/account/paginate?page=${page}&limit=${limit}`);
+            if (response.data.metadata) {
+                setList(response.data.metadata.account);
+                setTotalUser(response.data.metadata.totalAccount); // Cập nhật tổng số tài khoản
+            } else {
+                toast.error('Lấy dữ liệu thất bại');
+            }
+        } catch (error) {
+            toast.error('Có lỗi xảy ra khi lấy dữ liệu');
         }
     };
 
     useEffect(() => {
-        if (searchTerm.trim()) {
-            handleSearch();
-        } else {
-            fetchList(currentPage);
-        }
-    }, [currentPage, searchTerm]);
-
-    const handleSearch = useCallback(
-        debounce(() => {
-            if (searchTerm.trim() === '') {
-                setList(list);
-            } else {
-                const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
-                const filteredList = list.filter(contact =>
-                    removeAccents(contact.username.toLowerCase()).includes(normalizedSearchTerm) ||
-                    contact.email.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                setList(filteredList);
-            }
-        }, 300), //mili seconds
-        [searchTerm, list, setList]
-    );
+        fetchList(currentPage, limit);
+    }, [currentPage, limit]);
 
     const removeUser = async (userId) => {
-        const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
-        if (response.data.status) {
-            toast.success(response.data.message);
-            await fetchList(currentPage);
-        }
-    };
-
-    const handleUpdate = async () => {
         try {
-            const formData = {
-                username: currentUser.username,
-                email: currentUser.email,
-                password: currentUser.password ? currentUser.password : undefined,
-            };
-            const response = await axios.put(`${url}/v1/api/profile/admin/changeInfo/${currentUser._id}`, formData);
+            const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
             if (response.data.status) {
                 toast.success(response.data.message);
-                await fetchList();
-                closePopup();
-            } else {
-                toast.error(response.data.message);
+                fetchList(currentPage, limit);
             }
         } catch (error) {
-            toast.error('Mật khẩu cần ít nhất 8 ký tự');
+            toast.error('Xóa tài khoản thất bại');
         }
     };
 
-    const sortBy = (field) => {
-        const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
-        setSortOrder({ ...sortOrder, [field]: newOrder });
-        const sortedList = [...list].sort((a, b) =>
-            newOrder === 'asc' ? a[field].localeCompare(b[field]) : b[field].localeCompare(a[field])
-        );
-        setList(sortedList);
+    const showViewModal = (campaign) => {
+        setViewingAccount(campaign);
+        setIsViewModalOpen(true);
     };
 
-    const handleInputChange = (e) => {
-        setCurrentUser({ ...currentUser, [e.target.name]: e.target.value });
-    };
+    const filteredUsers = list.filter((user) =>
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const columns = [
+        { title: "Họ và tên", dataIndex: "fullName", key: "fullName", sorter: (a, b) => a.fullName.localeCompare(b.fullName) },
+        { title: "Tài khoản", dataIndex: "username", key: "username", sorter: (a, b) => a.username.localeCompare(b.username) },
+        { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => a.email.localeCompare(b.email) },
+        { title: "Giới tính", dataIndex: "gender", key: "gender", sorter: (a, b) => a.gender.localeCompare(b.gender) },
+        { title: "Số lượng đơn hàng", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
+        { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt", render: (createdAt) => formatDayTime(createdAt) },
+        {
+            title: "Tùy chỉnh",
+            key: "action",
+            render: (_, record) => (
+                <>
+                    <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />
+                    <Button type="primary" icon={<EditFilled />} />
+                    <Popconfirm title="Xóa tài khoản này?" onConfirm={() => removeUser(record._id)} okText="Xóa" cancelText="Hủy">
+                        <Button type="primary" icon={<DeleteOutlined />} danger />
+                    </Popconfirm>
+                </>
+            ),
+        },
+    ];
+
+    const columnsCreator = [
+        { title: 'Người tạo', dataIndex: 'createdName', key: 'createdName' },
+        { title: 'Mô tả', dataIndex: 'description', key: 'description' },
+        { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt', render: (text) => new Date(text).toLocaleString() },
+    ];
 
     return (
         <div className="user-list-container">
-            <div className="search">
-                <div className="search-CSKH">
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Tìm kiếm..."
-                        className="search-input"
-                    />
-                    <button onClick={handleSearch} className="btn-search">
-                        Tìm kiếm
-                    </button>
-                </div>
-            </div>
-
-            <div className="user-list-table">
-                <div className="table-header">
-                    <div onClick={() => sortBy('username')} className="col-tk" style={{ cursor: 'pointer' }}>
-                        Tài Khoản {sortOrder.username === 'asc' ? '↑' : '↓'}
-                    </div>
-                    <div onClick={() => sortBy('email')} className="col-email" style={{ cursor: 'pointer' }}>
-                        Email {sortOrder.email === 'asc' ? '↑' : '↓'}
-                    </div>
-                    <div className="col-date">Ngày tạo</div>
-                    <div className="col-address">Số lượng địa chỉ</div>
-                    <div className="col-sl">Số lượng đơn hàng</div>
-                    <div className="col-chucnang">Chức năng</div>
-                </div>
-                {list.map((item, index) => (
-                    <div key={index} className="table-row">
-                        <div>{item.username}</div>
-                        <div>{item.email}</div>
-                        <div>{formatDayTime(item.createdAt)}</div>
-                        <div>{item.address.length}</div>
-                        <div>{Object.keys(item.cartData).length}</div>
-                        <div className="actions">
-                            <button onClick={() => removeUser(item._id)} className="btn-delete">
-                                <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                            <button onClick={() => openUpdatePopup(item)} className="btn-update">
-                                <FontAwesomeIcon icon={faPenToSquare} />
-                            </button>
-
-                            <button className="btn-info">
-                                <FontAwesomeIcon icon={faBook} />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={(e) => setCurrentPage(e.selected + 1)}
-                pageRangeDisplayed={5}
-                pageCount={totalPages}
-                previousLabel="<"
-                renderOnZeroPageCount={null}
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
+            <Input
+                placeholder="Tìm kiếm tài khoản..."
+                style={{ width: 200, marginBottom: 16 }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Table
+                columns={columns}
+                dataSource={filteredUsers.map((user, index) => ({ ...user, key: user._id || index }))}
+                rowKey="key"
+                pagination={false} // Ẩn phân trang mặc định của Table
+            />
+            <Pagination
+                current={currentPage}
+                total={totalUser}
+                pageSize={limit}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger
+                pageSizeOptions={['5', '10', '20', '30']}
+                onShowSizeChange={(current, size) => {
+                    setLimit(size);
+                    setCurrentPage(1);
+                }}
+                style={{ marginTop: 16, textAlign: 'right' }}
             />
 
-            <PopupUser
-                isOpen={isPopupOpen}
-                onClose={closePopup}
-                userData={currentUser}
-                onChange={handleInputChange}
-                onSave={handleUpdate}
-            />
+            <Modal
+                open={isViewModalOpen}
+                onCancel={() => setIsViewModalOpen(false)}
+                footer={null}
+            >
+                {viewingAccount && (
+                    <div>
+                        <Descriptions title="Thông tin tài khoản" column={1} bordered className="custom-descriptions">
+                            <Descriptions.Item label="Họ và tên">{viewingAccount.fullName}</Descriptions.Item>
+                            <Descriptions.Item label="Tài khoản">{viewingAccount.username}</Descriptions.Item>
+                            <Descriptions.Item label="Email">{viewingAccount.email}</Descriptions.Item>
+                            <Descriptions.Item label="Giới tính">{viewingAccount.gender}</Descriptions.Item>
+                            <Descriptions.Item label="Số điện thoại">{viewingAccount.numberPhone}</Descriptions.Item>
+                            <Descriptions.Item label="Ngày tạo tài khoản">{formatDayTime(viewingAccount.createdAt)}</Descriptions.Item>
+                            <Descriptions.Item label="Cập nhật gần nhất ">{formatDayTime(viewingAccount.updatedAt)}</Descriptions.Item>
+                        </Descriptions>
+                        <h3>Lịch sử thay đổi</h3>
+                        <Table
+                            columns={columnsCreator}
+                            dataSource={viewingAccount.creator?.map((item, index) => ({
+                                ...item,
+                                key: `${item.createdBy || 'unknown'}-${index}`,
+                            }))}
+                            pagination={{ pageSize: 4 }}
+                            rowKey={(record) => record.key}
+                        />
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 };

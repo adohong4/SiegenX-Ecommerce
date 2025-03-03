@@ -56,6 +56,8 @@ const EmployeeList = () => {
 
   const handleEditSubmit = async () => {
     const values = await form.validateFields();
+    console.log(editingEmployee._id);
+
     await updateStaffById(editingEmployee._id, values);
     setIsModalOpen(false);
     fetchStaffList();
@@ -69,7 +71,6 @@ const EmployeeList = () => {
   const handleCreateEmployee = async () => {
     try {
       const values = await createForm.validateFields();
-      console.log(values)
       await axios.post(`${url}/v1/api/staff/add`, values);
       setIsCreateModalOpen(false);
       fetchStaffList();
@@ -84,12 +85,30 @@ const EmployeeList = () => {
   );
 
   const columns = [
-    { title: "Mã nhân viên", dataIndex: "_id", key: "_id" },
-    { title: "Họ và Tên", dataIndex: "StaffName", key: "StaffName" },
-    { title: "Tài khoản", dataIndex: "Username", key: "Username" },
-    { title: "Email", dataIndex: "Email", key: "Email" },
-    { title: "Số điện thoại", dataIndex: "Numberphone", key: "Numberphone" },
-    { title: "Mã số thuế", dataIndex: "Tax", key: "Tax" },
+    {
+      title: "Mã nhân viên", dataIndex: "_id", key: "_id",
+      sorter: (a, b) => a._id.localeCompare(b._id),
+    },
+    {
+      title: "Họ và Tên", dataIndex: "StaffName", key: "StaffName",
+      sorter: (a, b) => a.StaffName.localeCompare(b.StaffName),
+    },
+    {
+      title: "Tài khoản", dataIndex: "Username", key: "Username",
+      sorter: (a, b) => a.Username.localeCompare(b.Username),
+    },
+    {
+      title: "Email", dataIndex: "Email", key: "Email",
+      sorter: (a, b) => a.Email.localeCompare(b.Email),
+    },
+    {
+      title: "Số điện thoại", dataIndex: "Numberphone", key: "Numberphone",
+      sorter: (a, b) => a.Numberphone.localeCompare(b.Numberphone),
+    },
+    {
+      title: "Mã số thuế", dataIndex: "Tax", key: "Tax",
+      sorter: (a, b) => a.Tax.localeCompare(b.Tax),
+    },
     {
       title: "Chức vụ", dataIndex: "Role", key: "Role",
       render: (Role) => (
@@ -114,7 +133,10 @@ const EmployeeList = () => {
   const columnsCreator = [
     { title: 'Người tạo', dataIndex: 'createdName', key: 'createdName' },
     { title: 'Mô tả', dataIndex: 'description', key: 'description' },
-    { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt', render: (text) => new Date(text).toLocaleString() },
+    {
+      title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt', render: (text) => new Date(text).toLocaleString(),
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+    },
   ];
 
   return (

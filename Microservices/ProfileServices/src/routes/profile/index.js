@@ -13,7 +13,6 @@ router.get('/profile/getProfile', checkTokenCookie, asyncHandler(profileControll
 router.post('/profile/upload', checkTokenCookie, upload.single("profile"), asyncHandler(profileController.uploadImageProfile)) //Upload image profile
 router.put('/profile/update', checkTokenCookie, asyncHandler(profileController.updateProfile))
 
-
 //Address
 router.post('/profile/address/create', checkTokenCookie, asyncHandler(addressController.createAddress))
 router.get('/profile/address/getList', checkTokenCookie, asyncHandler(addressController.getListAddress))

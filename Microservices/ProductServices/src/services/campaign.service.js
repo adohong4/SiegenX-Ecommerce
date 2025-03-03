@@ -2,7 +2,6 @@
 
 const campaignModel = require('../models/campaign.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError } = require('../core/error.response');
-const { deleteCampaign } = require('../controllers/campaign.controller');
 
 class CampaignService {
     static createCampaign = async (

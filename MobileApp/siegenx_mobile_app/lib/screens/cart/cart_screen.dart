@@ -1,52 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
-import 'package:siegenx_mobile_app/test/sample_products.dart';
+import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/utils/format_untils.dart';
 
-class CartScreen extends StatelessWidget {
-  final ValueNotifier<bool> _selectAllNotifier = ValueNotifier(false);
-
+class CartScreen extends StatefulWidget {
   CartScreen({super.key});
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  final ValueNotifier<bool> _selectAllNotifier = ValueNotifier(false);
+  late Future<List<Product>> _productsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = ProductService.fetchAllProducts(); // Gọi API một lần
+  }
 
   void _toggleSelectAll(bool? value) {
     _selectAllNotifier.value = value ?? false;
   }
 
-  // Hàm tính tổng tiền sản phẩm đã giảm giá
-  double calculateTotalPrice() {
-    double total = 0;
-    for (var product in sampleProducts) {
+  // Hàm tính tổng tiền sản phẩm
+  int calculateTotalPrice(List<Product> products) {
+    // Đổi thành int vì price là int
+    int total = 0;
+    for (var product in products) {
       if (product.quantity > 0) {
-        double discountedPrice =
-            product.price * (1 - product.discountPercentage / 100);
-        total += discountedPrice * product.quantity;
+        total += product.price * product.quantity; // Dùng price trực tiếp
       }
     }
     return total;
   }
 
-  // Hàm tính tổng số tiền đã giảm giá
-  double calculateTotalDiscount() {
-    double totalDiscount = 0;
-    for (var product in sampleProducts) {
-      if (product.quantity > 0) {
-        double discountAmount =
-            (product.price * product.discountPercentage / 100) *
-                product.quantity;
-        totalDiscount += discountAmount;
-      }
-    }
-    return totalDiscount;
-  }
-
   @override
   Widget build(BuildContext context) {
-    int quantityCount =
-        sampleProducts.where((product) => product.quantity > 0).length;
-    double totalPrice = calculateTotalPrice();
-    double totalDiscount =
-        calculateTotalDiscount(); // Tính tổng số tiền đã giảm
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -65,89 +57,112 @@ class CartScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Cột 1: Checkbox + Tất cả
-            ValueListenableBuilder<bool>(
-              valueListenable: _selectAllNotifier,
-              builder: (context, selectAll, child) {
-                return Row(
-                  children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Checkbox(
-                        shape: const CircleBorder(),
-                        value: selectAll,
-                        activeColor: Colors.green,
-                        onChanged: _toggleSelectAll,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text("Tất cả"),
-                  ],
-                );
-              },
+      bottomNavigationBar: FutureBuilder<List<Product>>(
+        future: _productsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Center(child: Text('No products in cart')),
+            );
+          }
+
+          final cartProducts =
+              snapshot.data!.where((product) => product.quantity > 0).toList();
+          int quantityCount = cartProducts.length;
+          int totalPrice = calculateTotalPrice(cartProducts); // Đổi thành int
+
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
             ),
-            // Cột 2 + Cột 3: Thông tin giá + Button Thanh toán
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                ValueListenableBuilder<bool>(
+                  valueListenable: _selectAllNotifier,
+                  builder: (context, selectAll, child) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Checkbox(
+                            shape: const CircleBorder(),
+                            value: selectAll,
+                            activeColor: Colors.green,
+                            onChanged: _toggleSelectAll,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text("Tất cả"),
+                      ],
+                    );
+                  },
+                ),
+                Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      formatCurrency(totalPrice.toInt()), // Tổng tiền đã giảm
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const Text("Phí vận chuyển: 0đ"),
-                    Text(
-                      "Giảm ${formatCurrency(totalDiscount.toInt())}", // Tổng tiền đã giảm giá
-                      style: const TextStyle(fontSize: 12, color: Colors.red),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    onPressed: () {},
-                    child: Column(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          "Thanh toán",
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                        ),
                         Text(
-                          "($quantityCount)",
+                          formatCurrency(totalPrice), // Không cần .round()
                           style: const TextStyle(
-                              fontSize: 12, color: Colors.white),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
+                        const Text("Phí vận chuyển: 0đ"),
+                        // Bỏ hiển thị "Giảm giá" vì không còn totalDiscount
                       ],
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onPressed: () {},
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              "Thanh toán",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
+                            ),
+                            Text(
+                              "($quantityCount)",
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,28 +1,32 @@
 class Product {
-  final int id; // ✅ ID sản phẩm
+  final int id;
   final String name;
-  final int price;
-  final int discountPercentage;
+  final int price; // Giá hiện tại
   final String description;
   final bool isFavorite;
-  final String imageUrl;
-  int quantity; // ✅ Số lượng sản phẩm trong giỏ hàng
+  final List<String> imageUrl;
+  final int quantity; // Số lượng hàng
 
   Product({
     required this.id,
     required this.name,
     required this.price,
-    required this.discountPercentage,
     required this.description,
     required this.isFavorite,
     required this.imageUrl,
-    this.quantity = 1, // Mặc định là 1 khi thêm vào giỏ hàng
+    required this.quantity, // Đổi thành required vì luôn có trong API getAll
   });
 
-  // ✅ Hàm tính toán giá sau khi giảm
-  double get discountedPrice {
-    return price * (1 - discountPercentage / 100);
+  // Factory constructor để parse JSON
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: int.parse(json['_id'].substring(0, 8), radix: 16),
+      name: json['title'] as String,
+      price: (json['price'] as num).round(), // Giá hiện tại
+      description: json['title'] as String,
+      isFavorite: false,
+      imageUrl: List<String>.from(json['images'] as List),
+      quantity: json['quantity'] as int, // Lấy số lượng từ API
+    );
   }
-
-  void get isInCart => null;
 }

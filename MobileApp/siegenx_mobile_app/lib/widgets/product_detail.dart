@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
+import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/services/api_service.dart';
+import 'package:siegenx_mobile_app/utils/format_untils.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -20,10 +22,15 @@ class ProductDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                product.imageUrl,
-                height: 250,
+              child: Image.network(
+                '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 120,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -33,14 +40,14 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Price: ${product.price} VND",
+              "Price: ${formatCurrency(product.price)}",
               style: const TextStyle(fontSize: 18, color: Colors.green),
             ),
-            if (product.discountPercentage > 0)
-              Text(
-                "Discount: -${product.discountPercentage}%",
-                style: const TextStyle(fontSize: 16, color: Colors.red),
-              ),
+            const SizedBox(height: 8),
+            Text(
+              "Quantity: ${product.quantity}",
+              style: const TextStyle(fontSize: 16, color: Colors.black54),
+            ),
             const SizedBox(height: 16),
             Text(
               product.description,

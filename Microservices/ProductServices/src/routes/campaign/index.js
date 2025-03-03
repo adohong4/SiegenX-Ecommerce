@@ -24,5 +24,5 @@ router.get('/product/campaign/search/:code', checkTokenCookie, asyncHandler(camp
 router.post('/product/campaign/addToCampaign', checkTokenCookie, asyncHandler(campaignController.addToCampaign))
 router.post('/product/campaign/removeFromCampaign', checkTokenCookie, asyncHandler(campaignController.removeFromCampaign))
 
-router.get('/product/campaign/updateProductPrice', checkTokenCookie, asyncHandler(campaignController.updateProductPricesForCampaign))
+router.get('/product/campaign/updateProductPrice', asyncHandler(campaignController.updateProductPricesForCampaign))
 module.exports = router;

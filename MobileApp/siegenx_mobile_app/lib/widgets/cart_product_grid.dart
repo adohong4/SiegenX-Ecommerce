@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/test/sample_products.dart';
+import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
+import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class CartProductGrid extends StatefulWidget {
   final bool selectAll;
-  final Function(bool) onSelectionChange; // Thêm tham số callback
+  final Function(bool) onSelectionChange;
 
   const CartProductGrid({
     Key? key,
     required this.selectAll,
-    required this.onSelectionChange, // Bắt buộc truyền vào
+    required this.onSelectionChange,
   }) : super(key: key);
 
   @override
@@ -25,197 +27,201 @@ class _CartProductGridState extends State<CartProductGrid> {
     super.didUpdateWidget(oldWidget);
     if (widget.selectAll != oldWidget.selectAll) {
       setState(() {
-        for (int i = 0; i < sampleProducts.length; i++) {
-          _selectedProducts[i] = widget.selectAll;
-        }
+        _selectedProducts.updateAll((key, value) => widget.selectAll);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartProducts =
-        sampleProducts.where((product) => product.quantity > 0).toList();
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: cartProducts.length,
-        itemBuilder: (context, index) {
-          final product = cartProducts[index];
-          _selectedProducts.putIfAbsent(index, () => false);
+      child: FutureBuilder<List<Product>>(
+        future: ProductService.fetchAllProducts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No products in cart'));
+          }
 
-          return Column(
-            children: [
-              GestureDetector(
-                onLongPress: () {
-                  showProductDialog(context, product);
-                },
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 12),
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Checkbox tròn nhỏ hơn
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Checkbox(
-                          shape: CircleBorder(),
-                          value: _selectedProducts[index],
-                          activeColor: Colors.green, // Đổi màu khi true
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _selectedProducts[index] = value ?? false;
+          final cartProducts =
+              snapshot.data!.where((product) => product.quantity > 0).toList();
 
-                              // Kiểm tra nếu tất cả sản phẩm đã được chọn
-                              bool allSelected = _selectedProducts.values
-                                  .every((isSelected) => isSelected);
+          if (cartProducts.isEmpty) {
+            return Center(child: Text('No products in cart'));
+          }
 
-                              // Gửi trạng thái mới lên CartScreen
-                              widget.onSelectionChange(allSelected);
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 8),
+          for (int i = 0; i < cartProducts.length; i++) {
+            _selectedProducts.putIfAbsent(i, () => widget.selectAll);
+          }
 
-                      // Hình ảnh sản phẩm
-                      ClipRRect(
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: cartProducts.length,
+            itemBuilder: (context, index) {
+              final product = cartProducts[index];
+
+              return Column(
+                children: [
+                  GestureDetector(
+                    onLongPress: () {
+                      showProductDialog(context, product);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12),
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          product.imageUrl,
-                          width: 90,
-                          height: 90,
-                          fit: BoxFit.cover,
-                        ),
                       ),
-                      SizedBox(width: 8),
-
-                      // Nội dung sản phẩm
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.name,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              shape: CircleBorder(),
+                              value: _selectedProducts[index],
+                              activeColor: Colors.green,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _selectedProducts[index] = value ?? false;
+                                  bool allSelected = _selectedProducts.values
+                                      .every((isSelected) => isSelected);
+                                  widget.onSelectionChange(allSelected);
+                                });
+                              },
                             ),
-                            SizedBox(height: 2),
-                            Text(
-                              formatCurrency(product.discountedPrice.toInt()),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color(0xFF00B98E),
-                              ),
-                            ), // Đã thêm dấu đóng ngoặc
-                            SizedBox(height: 0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                          SizedBox(width: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.error),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (product.discountPercentage > 0)
-                                  Row(
-                                    children: [
-                                      Text(
-                                        formatCurrency(product.price as int),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                        ),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '-${product.discountPercentage}%',
-                                        style: TextStyle(
-                                          color: Color(0xFFEC7063),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
+                                Text(
+                                  product.name,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
                                   ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(10),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  formatCurrency(product.price),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFF00B98E),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // TODO: Giảm số lượng
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Text('-',
+                                ),
+                                SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Số lượng: ${product.quantity}',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              // setState(() {
+                                              //   if (product.quantity > 1) {
+                                              //     product.quantity--;
+                                              //   }
+                                              // });
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8),
+                                              child: Text('-',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Text(
+                                              product.quantity.toString(),
                                               style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              // setState(() {
+                                              //   product.quantity++;
+                                              // });
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8),
+                                              child: Text('+',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Text(
-                                          product.quantity.toString(),
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          // TODO: Tăng số lượng
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Text('+',
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              // Thêm đường kẻ ngăn cách
-              if (index < cartProducts.length - 1)
-                Divider(
-                  color:
-                      Colors.grey.withOpacity(0.3), // Sửa thành named argument
-                  height: 1, // Sửa thành named argument
-                  thickness: 1, // Sửa thành named argument
-                ),
-            ],
+                  if (index < cartProducts.length - 1)
+                    Divider(
+                      color: Colors.grey.withOpacity(0.3),
+                      height: 1,
+                      thickness: 1,
+                    ),
+                ],
+              );
+            },
           );
         },
       ),

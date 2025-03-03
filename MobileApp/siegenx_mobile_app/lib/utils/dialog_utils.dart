@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/services/api_service.dart';
 import '../utils/format_untils.dart';
 
 void showProductDialog(BuildContext context, dynamic product) {
@@ -15,11 +16,16 @@ void showProductDialog(BuildContext context, dynamic product) {
               // Hình ảnh sản phẩm lớn hơn
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  product.imageUrl,
-                  width: 200,
+                child: Image.network(
+                  '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                  width: 200, // Điều chỉnh kích thước về giá trị hợp lý
                   height: 200,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 120,
+                  ),
                 ),
               ),
               SizedBox(height: 10),
@@ -35,29 +41,20 @@ void showProductDialog(BuildContext context, dynamic product) {
               ),
               SizedBox(height: 5),
 
-              // Giá tiền và giảm giá
+              // Giá tiền và số lượng
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    formatCurrency(product.discountedPrice.toInt()),
+                    formatCurrency(product.price),
                     style: TextStyle(fontSize: 16, color: Color(0xFF00B98E)),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    formatCurrency(product.price as int),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    '-${product.discountPercentage}%',
-                    style: TextStyle(fontSize: 14, color: Color(0xFFEC7063)),
-                  ),
                 ],
+              ),
+              SizedBox(height: 5),
+              Text(
+                'Số lượng: ${product.quantity}',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
               SizedBox(height: 10),
 

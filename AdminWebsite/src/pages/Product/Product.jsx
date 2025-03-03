@@ -4,6 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Form, Select } from "antd";
+import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { debounce } from 'lodash'
 import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
@@ -11,11 +13,13 @@ import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faBook, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment";
+import { formatDayTime, formatCurrency } from '../../lib/utils';
 
 const ListProduct = () => {
     const { url } = useContext(StoreContext)
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(5);
     const [totalProducts, setTotalProducts] = useState(0);
     const [selectedRow, setSelectedRow] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -23,8 +27,11 @@ const ListProduct = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sort, setSort] = useState('Sort By');
+    const [selectedType, setSelectedType] = useState("");
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
+
+    const { Option } = Select;
 
     const removeAccents = (str) => {
         return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -75,12 +82,8 @@ const ListProduct = () => {
         });
 
     useEffect(() => {
-        if (searchTerm.trim()) {
-            handleSearch();
-        } else {
-            fetchList(currentPage);
-        }
-    }, [currentPage, searchTerm]);
+        fetchList(currentPage, limit);
+    }, [currentPage, limit]);
 
     const openPopup = (productId) => {
         setSelectedRow(productId);
@@ -95,10 +98,75 @@ const ListProduct = () => {
     };
 
     const handleProductClick = (productId) => {
-        console.log(productId);
-
         navigate(`/product/${productId}`);
     };
+
+    const filtered = list.filter((product) => {
+        return (
+            product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedType ? product.category === selectedType : true)
+        )
+    });
+
+    const columns = [
+        {
+            title: "Hình ảnh", key: "image",
+            render: (text, record) => (
+                <img src={`http://localhost:9003/images/${record.images[0]}`} alt="" style={{ width: '50px', height: '50px' }} />
+            ),
+        },
+        {
+            title: "Mã sản phẩm", dataIndex: "_id", key: "_id",
+            render: (text) => (
+                text.length > 15 ? text.slice(0, 15) + '...' : text
+            ),
+            sorter: (a, b) => a._id.localeCompare(b._id)
+        },
+        {
+            title: "Tên sản phẩm", dataIndex: "title", key: "title",
+            render: (text) => (
+                text.length > 15 ? text.slice(0, 15) + '...' : text
+            ),
+            sorter: (a, b) => a.title.localeCompare(b.title)
+        },
+        {
+            title: "Danh mục", dataIndex: "category", key: "category",
+            sorter: (a, b) => a.category.localeCompare(b.category)
+        },
+        {
+            title: "Trạng thái",
+            key: "quantity",
+            render: (text, record) => (
+                <p>{record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}</p>
+            ),
+        },
+        {
+            title: "Giá", dataIndex: "price", key: "price",
+            render: (price) => formatCurrency(price),
+            sorter: (a, b) => {
+                return formatCurrency(a.price).localeCompare(formatCurrency(b.price));
+            },
+        },
+        {
+            title: "Số lượng", dataIndex: "quantity", key: "quantityCount",
+            sorter: (a, b) => a.quantity.localeCompare(b.quantity)
+        },
+        {
+            title: "Hành động",
+            key: "action",
+            render: (text, record) => (
+                <div className='button-product'>
+                    <button onClick={() => handleProductClick(record._id)} className="btn-info">
+                        <FontAwesomeIcon icon={faBook} />
+                    </button>
+                    <button onClick={() => removeProduct(record._id)} className='cursor1'>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
 
     return (
         <div className='listproduct add flex-col'>
@@ -113,114 +181,53 @@ const ListProduct = () => {
                 </div>
             </div>
             <div className='top-list-tiltle'>
-
                 <div className='col-lg-4 tittle-right'>
+                    <Input
+                        placeholder="Tìm kiếm sản phẩm..."
+                        style={{ width: 200, marginBottom: 16 }}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
                 <div className='col-lg-8 list-left'>
                     <div className='search-right'>
-                        <div className="sort-container">
-                            <select id="sort" onChange={(e) => setSort(e.target.value)} value={sort}>
-                                <option value="Sort By">Sắp xếp theo </option>
-                                <option value="Asc">Tăng dần</option>
-                                <option value="Desc">Giảm dần</option>
-                            </select>
-                        </div>
-
-                        <div className="selected-container">
-                            <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                                <option value="All">Danh mục sản phẩm</option>
-                                <option value="Màn hình LED">Màn hình LED</option>
-                                <option value="MH tương tác">MH tương tác</option>
-                                <option value="MH quảng cáo LCD">MH quảng cáo LCD</option>
-                                <option value="Quảng cáo 3D (OOH)">Quảng cáo 3D (OOH)</option>
-                                <option value="KTV 5D">KTV 5D</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className='search-left'>
-                        <div className='search'>
-                            <div className='search-CSKH'>
-                                <input
-                                    type="text"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    placeholder="Tìm kiếm..."
-                                    className='search-input'
-                                />
-                                <button className='btn-search'>
-                                    Tìm kiếm
-                                </button>
-                            </div>
-                        </div>
+                        <Select
+                            placeholder="Danh mục sản phẩm"
+                            style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                            value={selectedType}
+                            onChange={(value) => setSelectedType(value)}
+                            allowClear
+                        >
+                            <Option value="Màn hình LED">Màn hình LED</Option>
+                            <Option value="MH tương tác">MH tương tác</Option>
+                            <Option value="MH quảng cáo LCD">MH quảng cáo LCD</Option>
+                            <Option value="Quảng cáo 3D (OOH)">Quảng cáo 3D (OOH)</Option>
+                            <Option value="KTV 5D">KTV 5D</Option>
+                        </Select>
                     </div>
                 </div>
             </div>
 
-            <div className="list-table">
-                <div className="list-table-format title">
-                    <b>Hình ảnh</b>
-                    <b>Mã sản phẩm</b>
-                    <b>Tên Sản Phẩm</b>
-                    <b>Danh Mục</b>
-                    <b>Trạng thái</b>
-                    <b>Giá</b>
-                    <b>Số Lượng</b>
-                    <b>Tùy Chỉnh</b>
-                </div>
-
-                {sortedList.map((item, index) => (
-                    <div key={index} className='list-table-format' style={{ cursor: 'pointer' }}>
-                        <img src={`http://localhost:9003/images/${item.images[0]}`} alt="" />
-                        <p className='id-product'>{item._id}</p>
-                        <p className='name-product'>{item.title}</p>
-                        <p className='category-product'>{item.category}</p>
-                        <p className='quantity-product'>
-                            {item.quantity <= 0 ? 'Hết hàng' : "Còn hàng"}
-                        </p>
-                        <p className='price-product'>{(item.price).toLocaleString()}</p>
-                        <p className=''>{item.quantity}</p>
-                        <div className='button-product'>
-                            <button onClick={() => handleProductClick(item._id)} className="btn-info">
-                                <FontAwesomeIcon icon={faBook} />
-                            </button>
-                            <button onClick={() => removeProduct(item._id)} className='cursor1' >
-                                <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={(e) => setCurrentPage(e.selected + 1)}
-                pageRangeDisplayed={5}
-                pageCount={totalPages}
-                previousLabel="<"
-                renderOnZeroPageCount={null}
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
+            <Table
+                columns={columns}
+                dataSource={filtered.map((contact, index) => ({ ...contact, key: contact._id || index }))}
+                rowKey="key"
+                pagination={false} // Ẩn phân trang mặc định của Table
             />
-
-            <ProductPopup
-                isOpen={isPopupOpen}
-                onClose={closePopup}
-                productId={selectedRow}
+            <Pagination
+                current={currentPage}
+                total={totalProducts}
+                pageSize={limit}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger
+                pageSizeOptions={['5', '10', '20', '30']}
+                onShowSizeChange={(current, size) => {
+                    setLimit(size);
+                    setCurrentPage(1);
+                }}
+                style={{ marginTop: 16, textAlign: 'right' }}
             />
-
         </div>
-
-
     )
 }
 

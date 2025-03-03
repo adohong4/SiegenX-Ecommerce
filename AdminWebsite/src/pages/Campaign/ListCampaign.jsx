@@ -187,7 +187,7 @@ const CampaignPage = () => {
         pagination={{ pageSize: limit }}
       />
 
-      {/* Modal thông tin nhân viên */}
+      {/* Modal thông tin chiến dịch */}
       <Modal
         open={isViewModalOpen}
         onCancel={() => setIsViewModalOpen(false)}

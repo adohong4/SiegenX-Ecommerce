@@ -90,7 +90,7 @@ class OrderService {
             const skip = (page - 1) * limit
 
             const order = await orderModel.find({ statusActive: true })
-                .select('userId amount address status paymentMethod payment createdAt statusActive')
+                .select('userId amount address status paymentMethod payment createdAt statusActive items')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)

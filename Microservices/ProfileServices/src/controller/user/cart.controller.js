@@ -53,7 +53,7 @@ class CartController {
             new OK({
                 message: 'Xoa thanh cong',
                 metadata: cart.cart
-            })
+            }).send(res)
         } catch (error) {
             res.status(500).json({ message: error.message })
         }

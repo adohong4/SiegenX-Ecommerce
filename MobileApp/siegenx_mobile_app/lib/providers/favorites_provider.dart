@@ -4,6 +4,11 @@ import 'package:siegenx_mobile_app/controllers/favorites_manager.dart';
 class FavoritesProvider extends ChangeNotifier {
   Map<String, List<int>> _favorites = {};
 
+  FavoritesProvider() {
+    // Tải dữ liệu yêu thích mặc định cho user "guest" khi khởi tạo
+    loadFavorites("guest");
+  }
+
   List<int> getFavorites(String userId) {
     return _favorites[userId] ?? [];
   }

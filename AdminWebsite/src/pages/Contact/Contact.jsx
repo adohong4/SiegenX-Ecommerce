@@ -9,24 +9,23 @@ import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faTrash, faBook } from '@fortawesome/free-solid-svg-icons';
+import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Select } from "antd";
+import { EyeFilled, EyeOutlined } from "@ant-design/icons";
 import { fakeContacts, fakeCustomerData } from "../../data/Enviroment";
 
 const Contact = () => {
     const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
+    const [limit, setLimit] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState({ name: 'asc', email: 'asc' });
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [viewingAccount, setViewingAccount] = useState(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [filterStatus, setFilterStatus] = useState("All");
+    const [selectedView, setSelectedView] = useState("");
     axios.defaults.withCredentials = true;
-
-    const removeAccents = (str) => {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    };
 
     const handleViewToggle = async (itemId) => {
         await axios.put(`${url}/v1/api/contact/isCheck/${itemId}`);
@@ -39,7 +38,7 @@ const Contact = () => {
         setList(updatedList);
     };
 
-    const fetchListcontact = async (page = 1, limit = 10) => {
+    const fetchListcontact = async (page = 1, limit = 5) => {
         try {
             const response = await axios.get(`${url}/v1/api/contact/pagination?page=${page}&limit=${limit}`);
             if (response.data.message) {
@@ -64,61 +63,103 @@ const Contact = () => {
     };
 
     useEffect(() => {
-        if (searchTerm.trim()) {
-            handleSearch();
-        } else {
-            fetchListcontact(currentPage);
-        }
-    }, [currentPage, filterStatus, searchTerm]);
-
-    const handleSearch = useCallback(
-        debounce(() => {
-            if (searchTerm.trim() === '') {
-                setList(list);
-            } else {
-                const normalizedSearchTerm = removeAccents(searchTerm.toLowerCase());
-                const filteredList = list.filter(contact =>
-                    removeAccents(contact.username.toLowerCase()).includes(normalizedSearchTerm) ||
-                    contact.email.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                setList(filteredList);
-            }
-        }, 300), //mili seconds
-        [searchTerm, list, setList]
-    );
+        fetchListcontact(currentPage, limit);
+    }, [currentPage, limit]);
 
     const removeContact = async (id) => {
         try {
             const response = await axios.delete(`${url}/v1/api/contact/status/${id}`);
             if (response.data.status) {
                 toast.success(response.data.message);
-                fetchListcontact();
+                fetchListcontact(currentPage, limit);
             }
         } catch (error) {
             toast.error("Xảy ra ngoại lệ khi xóa thông tin");
         }
     };
 
-    const sortBy = (field) => {
-        const newOrder = sortOrder[field] === 'asc' ? 'desc' : 'asc';
-        setSortOrder({ ...sortOrder, [field]: newOrder });
-        const sortedList = [...list].sort((a, b) =>
-            newOrder === 'asc' ? a[field].localeCompare(b[field]) : b[field].localeCompare(a[field])
-        );
-        setList(sortedList);
+    const showViewModal = (account) => {
+        setViewingAccount(account);
+        setIsViewModalOpen(true);
     };
 
-    const openPopup = (contactId) => {
-        setSelectedRow(contactId);
-        setIsPopupOpen(true);
-        document.body.classList.add('popup-open');
-    };
+    const filtered = list.filter((contact) =>
+        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (selectedView ? contact.viewed === selectedView : true)
+    );
 
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setSelectedRow(null);
-        document.body.classList.remove('popup-open');
-    };
+    const columns = [
+        {
+            title: "Tên người dùng",
+            dataIndex: "username",
+            key: "username",
+            sorter: (a, b) => a.username.localeCompare(b.username),
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+            sorter: (a, b) => a.email.localeCompare(b.email),
+        },
+        {
+            title: "Số điện thoại",
+            dataIndex: "phone",
+            key: "phone",
+            sorter: (a, b) => a.phone.localeCompare(b.phone),
+        },
+        {
+            title: "Nội dung",
+            dataIndex: "content",
+            key: "content",
+            render: (content) => content,
+        },
+        {
+            title: "Ngày tạo",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (createdAt) => formatDayTime(createdAt),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+        },
+        {
+            title: "Kiểm tra",
+            key: "viewed",
+            render: (text, record) => (
+                <button onClick={() => handleViewToggle(record._id)} className="btn-eye">
+                    {record.viewed ? (
+                        <EyeOutlined style={{ color: "green" }} />
+                    ) : (
+                        <EyeFilled style={{ color: "red" }} />
+                    )}
+                </button>
+            ),
+        },
+        {
+            title: "Hành động",
+            key: "action",
+            render: (text, record) => (
+                <>
+                    <button onClick={() => showViewModal(record)} className="btn-info">
+                        <FontAwesomeIcon icon={faBook} />
+                    </button>
+                    <Popconfirm title="Xóa tài khoản này?" onConfirm={(e) => { e.stopPropagation(); removeContact(record._id); }} okText="Xóa" cancelText="Hủy">
+                        <button className="btn-delete"><FontAwesomeIcon icon={faTrash} /></button>
+                    </Popconfirm>
+
+                </>
+            ),
+        },
+    ];
+
+    const columnsCreator = [
+        { title: 'Người tạo', dataIndex: 'createdName', key: 'createdName' },
+        { title: 'Mô tả', dataIndex: 'description', key: 'description' },
+        {
+            title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt',
+            render: (text) => new Date(text).toLocaleString(),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+        },
+    ];
+
     return (
         <div className='contact-list-container'>
             <section className="section-dashboard-contact">
@@ -132,113 +173,82 @@ const Contact = () => {
             <div className='top-list-tiltle'>
 
                 <div className='col-lg-4 tittle-right'>
+                    <Input
+                        placeholder="Tìm kiếm liên hệ...."
+                        style={{
+                            width: 200,
+                            marginRight: 8,
+                            backgroundColor: '#ffff',
+                            border: '1px solid rgb(134, 134, 134)',
+                        }}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
                 <div className='col-lg-8 list-left'>
-                    <div className='search-right'>
-                        <div className="selected-container">
-                            <select id="isCheck" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                                <option value="All">Danh mục liên hệ</option>
-                                <option value='true'>Đã liên hệ</option>
-                                <option value='false'>Chưa liên hệ</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className='search-left'>
-                        <div className='search'>
-                            <div className='search-CSKH'>
-                                <input
-                                    type="text"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    placeholder="Tìm kiếm..."
-                                    className='search-input'
-                                />
-                                <button className='btn-search'>
-                                    Tìm kiếm
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <Select
+                        placeholder="Danh mục liên hệ"
+                        style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                        value={selectedView}
+                        onChange={(value) => setSelectedView(value)}
+                        allowClear
+                    >
+                        <Option value="true">Đã liên hệ</Option>
+                        <Option value="false">Chưa liên hệ</Option>
+                    </Select>
                 </div>
             </div>
 
-            <div className="contact-list-table">
-                <div className="table-header">
-                    <div onClick={() => sortBy('username')} className="col-tk" style={{ cursor: 'pointer' }}>
-                        Tên {sortOrder.username === 'asc' ? '↑' : '↓'}
-                    </div>
-                    <div onClick={() => sortBy('email')} className="col-email" style={{ cursor: 'pointer' }}>
-                        Email {sortOrder.email === 'asc' ? '↑' : '↓'}
-                    </div>
-                    <div className="col-phone">SĐT</div>
-                    <div className="col-content">Nội dung</div>
-                    <div onClick={() => sortBy('createdAt')} className="col-time" style={{ cursor: 'pointer' }}>
-                        Thời gian {sortOrder.date === 'asc' ? '↑' : '↓'}
-                    </div>
-                    <div className="col-check">Kiểm tra</div>
-                    <div className="col-actions">Tùy chỉnh</div>
-                </div>
-
-                <div className="table-body">
-                    {list.map((item) => (
-                        <div
-                            key={item._id}
-                            className={`table-row ${item.viewed ? 'viewed' : ''}`}
-                        >
-                            <div>{item.username}</div>
-                            <div>{item.email}</div>
-                            <div>{item.phone}</div>
-                            <div>{item.content}</div>
-                            <div>{formatDayTime(item.createdAt)}</div>
-                            <div className="col-check">
-                                <button
-                                    onClick={() => handleViewToggle(item._id)}
-                                    className="btn-eye"
-                                >
-                                    <FontAwesomeIcon icon={item.viewed ? faEyeSlash : faEye} />
-                                </button>
-                            </div>
-                            <div className="col-actions">
-                                <button onClick={() => openPopup(item._id)} className="btn-info">
-                                    <FontAwesomeIcon icon={faBook} />
-                                </button>
-                                <button onClick={(e) => { e.stopPropagation(); removeContact(item._id); }} className="btn-delete">
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="pagination-container">
-                <ReactPaginate
-                    breakLabel="..."
-                    nextLabel=">"
-                    onPageChange={(e) => setCurrentPage(e.selected + 1)}
-                    pageRangeDisplayed={5}
-                    pageCount={totalPages}
-                    previousLabel="<"
-                    renderOnZeroPageCount={null}
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                />
-            </div>
-
-            <ContactPopup
-                isOpen={isPopupOpen}
-                onClose={closePopup}
-                contactId={selectedRow}
+            <Table
+                columns={columns}
+                dataSource={filtered.map((contact, index) => ({ ...contact, key: contact._id || index }))}
+                rowKey="key"
+                pagination={false} // Ẩn phân trang mặc định của Table
             />
+
+            <Pagination
+                current={currentPage}
+                total={totalItems}
+                pageSize={limit}
+                onChange={(page) => setCurrentPage(page)}
+                showSizeChanger
+                pageSizeOptions={['5', '10', '20', '30']}
+                onShowSizeChange={(current, size) => {
+                    setLimit(size);
+                    setCurrentPage(1);
+                }}
+                style={{ marginTop: 16, textAlign: 'right' }}
+            />
+
+            <Modal
+                open={isViewModalOpen}
+                onCancel={() => setIsViewModalOpen(false)}
+                footer={null}
+            >
+                {viewingAccount && (
+                    <div>
+                        <Descriptions title="Thông tin tài khoản" column={1} bordered className="custom-descriptions">
+                            <Descriptions.Item label="Họ và tên">{viewingAccount.username}</Descriptions.Item>
+                            <Descriptions.Item label="Email">{viewingAccount.email}</Descriptions.Item>
+                            <Descriptions.Item label="Số điện thoại">{viewingAccount.phone}</Descriptions.Item>
+                            <Descriptions.Item label="Nội dung">{viewingAccount.content}</Descriptions.Item>
+                            <Descriptions.Item label="Kiểm tra">{viewingAccount.viewed === true ? 'Đã kiểm tra' : 'Chưa kiểm tra'}</Descriptions.Item>
+                            <Descriptions.Item label="Thời gian gửi">{formatDayTime(viewingAccount.createdAt)}</Descriptions.Item>
+                        </Descriptions>
+                        <h3>Lịch sử thay đổi</h3>
+                        <Table
+                            columns={columnsCreator}
+                            dataSource={viewingAccount.creator?.map((item, index) => ({
+                                ...item,
+                                key: `${item.createdBy || 'unknown'}-${index}`,
+                            }))}
+                            pagination={{ pageSize: 4 }}
+                            rowKey={(record) => record.key}
+                        />
+                    </div>
+                )}
+            </Modal>
+
         </div>
     );
 };

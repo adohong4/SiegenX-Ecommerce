@@ -9,8 +9,23 @@ import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/providers/favorites_provider.dart';
 
-class FavoriteProductGrid extends StatelessWidget {
+class FavoriteProductGrid extends StatefulWidget {
   const FavoriteProductGrid({Key? key}) : super(key: key);
+
+  @override
+  _FavoriteProductGridState createState() => _FavoriteProductGridState();
+}
+
+class _FavoriteProductGridState extends State<FavoriteProductGrid> {
+  @override
+  void initState() {
+    super.initState();
+    // Tải danh sách yêu thích khi khởi động
+    final userId =
+        Provider.of<AuthProvider>(context, listen: false).userId ?? "guest";
+    Provider.of<FavoritesProvider>(context, listen: false)
+        .loadFavorites(userId);
+  }
 
   @override
   Widget build(BuildContext context) {

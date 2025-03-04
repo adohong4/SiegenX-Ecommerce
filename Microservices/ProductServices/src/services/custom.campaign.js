@@ -134,22 +134,22 @@ class CampaignService {
                 const updatedProducts = [];
 
                 for (let product of products) {
-                    let oldPrice = product.price;
+                    let newPrice = 0;
                     console.log("activeCampaign.type: ", activeCampaign.type)
                     if (activeCampaign.type === 'percentage') {
                         if ((product.price * activeCampaign.value / 100) > activeCampaign.maxValue) {
-                            product.price = product.price - activeCampaign.maxValue;
+                            newPrice = product.price - activeCampaign.maxValue;
                         } else {
-                            product.price = product.price * (100 - activeCampaign.value) / 100;
+                            newPrice = product.price * (100 - activeCampaign.value) / 100;
                         }
                     }
 
                     if (activeCampaign.type === 'fixed_amount') {
-                        product.price = product.price - activeCampaign.value;
+                        newPrice = product.price - activeCampaign.value;
                     }
 
                     await product.save();
-                    updatedProducts.push({ ...product.toObject(), oldPrice });
+                    updatedProducts.push({ ...product.toObject(), newPrice });
                 }
                 const totalProduct = await productModel.countDocuments();
                 const totalPages = Math.ceil(totalProduct / pageSize);
@@ -178,23 +178,23 @@ class CampaignService {
 
                 for (let product of allProducts) {
                     if (productIdsSet.has(product._id.toString())) {
-                        let oldPrice = product.price;
+                        let newPrice = 0;
                         if (activeCampaign.type === 'percentage') {
                             if ((product.price * activeCampaign.value / 100) > activeCampaign.maxValue) {
-                                product.price = product.price - activeCampaign.maxValue;
+                                newPrice = product.price - activeCampaign.maxValue;
                             } else {
-                                product.price = product.price * (100 - activeCampaign.value) / 100;
+                                newPrice = product.price * (100 - activeCampaign.value) / 100;
                             }
                         }
 
                         if (activeCampaign.type === 'fixed_amount') {
-                            product.price = product.price - activeCampaign.value;
+                            newPrice = product.price - activeCampaign.value;
                         }
 
                         await product.save();
-                        updatedProducts.push({ ...product.toObject(), oldPrice });
+                        updatedProducts.push({ ...product.toObject(), newPrice });
                     } else {
-                        updatedProducts.push({ ...product.toObject(), oldPrice: null });
+                        updatedProducts.push({ ...product.toObject(), newPrice: null });
                     }
                 }
 

@@ -92,7 +92,7 @@ const Navbar = () => {
                                                     <li onClick={() => { navigate('/myorder'); setIsDropdownOpen(false); }}>
                                                         Hóa đơn
                                                     </li>
-                                                    <li onClick={() => { navigate('/ca-nhan'); setIsDropdownOpen(false); }}>
+                                                    <li onClick={() => { navigate('/user'); setIsDropdownOpen(false); }}>
                                                         Cá Nhân
                                                     </li>
                                                     <li onClick={() => { handleLogout(); setIsDropdownOpen(false); }}>

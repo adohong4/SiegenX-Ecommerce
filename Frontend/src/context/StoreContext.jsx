@@ -12,11 +12,13 @@ const StoreContextProvider = (props) => {
     const url2 = "http://localhost:9003";
 
     const [token, setToken] = useState("")
-    const [product_list, setProductList] = useState([])
-    const [product_campaign, setProductCampaign] = useState([])
+    const [product_list, setProductList] = useState([]);
+    const [product_campaign, setProductCampaign] = useState([]);
+    const [updateProduct, setUpdateProduct] = useState([]);
     const [product_slug, setProductSlug] = useState(null);
     const [product_slug_campaign, setProductSlugCampaign] = useState([]);
     const [product_info, setProductInfo] = useState([]);
+    const [address, setAddress] = useState([]);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
@@ -89,6 +91,7 @@ const StoreContextProvider = (props) => {
     const fetchProductUpdateCampaign = async () => {
         const response = await axios.get(`${url}/v1/api/product/campaign/updateProductPrice`);
         setProductCampaign(response.data.metadata);
+        setUpdateProduct(response.data.metadata.updatedProducts);
     };
 
     const fetchProductUpdateCampaignSlug = async (slug) => {
@@ -97,10 +100,16 @@ const StoreContextProvider = (props) => {
         setProductInfo(response.data.metadata.updatedProduct);
     };
 
+    const fetchUserAddress = async () => {
+        const response = await axios.get(`${url}/v1/api/profile/address/getList`);
+        setAddress(response.data.metadata.addresses);
+    }
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
             await fetchProductUpdateCampaign();
+            await fetchUserAddress();
             const cookieToken = Cookies.get("jwt");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -112,15 +121,16 @@ const StoreContextProvider = (props) => {
 
 
     const contextValue = {
-        product_list, product_campaign,
+        product_list, product_campaign, updateProduct,
         product_slug, product_slug_campaign, product_info,
-        cartItems,
+        cartItems, address,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount,
         fetchProductSlug, fetchProductUpdateCampaignSlug,
+        fetchUserAddress,
         url, url2,
         setToken,
         token

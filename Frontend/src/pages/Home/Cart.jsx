@@ -7,11 +7,8 @@ import { StoreContext } from '../../context/StoreContext';
 export const Fee = 50000;
 
 const Cart = () => {
-
     const { cartItems, product_list, removeFromCart, getTotalCartAmount, url, url2, product_campaign } = useContext(StoreContext)
     const navigate = useNavigate();
-
-    console.log(product_campaign);
 
     return (
         <div className="cart">

@@ -7,14 +7,12 @@ import { columns, columns_Rep } from '../../data/data'
 import '../styles/styles.css';
 
 const Products = () => {
-    const { product_list, url, url2, product_campaign } = useContext(StoreContext);
+    const { product_list, url, url2, product_campaign, updateProduct } = useContext(StoreContext);
     const [searchParams] = useSearchParams(); // Lấy các tham số từ URL
     const [selectedCategory, setSelectedCategory] = useState(null); // Category được chọn
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 9; // Số sản phẩm mỗi trang
     const navigate = useNavigate();
-
-    console.log(product_campaign)
 
     // Lấy category từ URL
     useEffect(() => {
@@ -28,8 +26,8 @@ const Products = () => {
 
     // Lọc sản phẩm theo category
     const filteredProducts = selectedCategory
-        ? product_campaign?.updatedProducts.filter((product) => product.category === selectedCategory)
-        : product_campaign?.updatedProducts;
+        ? updateProduct.filter((product) => product.category === selectedCategory)
+        : updateProduct;
 
     const totalPages = Math.ceil(filteredProducts?.length / productsPerPage);
     const currentProducts = filteredProducts?.slice(

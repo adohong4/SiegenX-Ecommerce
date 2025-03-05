@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post('/product/campaign/create', checkTokenCookie, asyncHandler(campaignController.createCampaign))
 
-router.get('/product/campaign/get', checkTokenCookie, asyncHandler(campaignController.getAllCampaign))
+router.get('/product/campaign/get', asyncHandler(campaignController.getAllCampaign))
 router.get('/product/campaign/get/:id', checkTokenCookie, asyncHandler(campaignController.getCampaignById))
 
 router.put('/product/campaign/update/:id', checkTokenCookie, asyncHandler(campaignController.updateCampaignById))
@@ -27,5 +27,5 @@ router.get('/product/campaign/search/:code', checkTokenCookie, asyncHandler(camp
 router.post('/product/campaign/addToCampaign', checkTokenCookie, asyncHandler(campaignController.addToCampaign))
 router.post('/product/campaign/removeFromCampaign', checkTokenCookie, asyncHandler(campaignController.removeFromCampaign))
 
-router.get('/product/campaign/updateProductPrice', checkTokenCookie, asyncHandler(campaignController.updateProductPricesForCampaign))
+router.get('/product/campaign/updateProductPrice', asyncHandler(campaignController.updateProductPricesForCampaign))
 module.exports = router;

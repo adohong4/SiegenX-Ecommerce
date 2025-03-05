@@ -402,6 +402,45 @@ section {
 
 }
 
+.discount-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.product-price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.product-new-price {
+  font-size: 16px;
+  color: #d90429;
+  font-weight: bold;
+}
+
+.product-old-price {
+  font-size: 13px;
+  text-decoration: line-through;
+  color: #666;
+}
+
+.product-price {
+  font-size: 16px;
+  color: #d90429;
+  font-weight: bold;
+}
+
+
 .product-btn {
   background-color: #00B98E;
   color: #fff;

@@ -18,6 +18,7 @@ import Sidebar from './components/Profile/SideBarUserProfile';
 import UserAddress from './components/Profile/UserAddress';
 import UserProfile from './components/Profile/UserProfile';
 import ChangePassword from './components/Profile/UserPassword';
+import OrderList from './components/Profile/UserPurchase';
 import { ToastContainer } from 'react-toastify';
 const App = () => {
   return (
@@ -44,7 +45,7 @@ const App = () => {
             <Route path="profile" element={<UserProfile />} />
             <Route path="address" element={<UserAddress />} />
             <Route path="change-password" element={<ChangePassword />} />
-            {/* <Route path="orders" element={<OrderList />} />           */}
+            <Route path="orders" element={<OrderList />} />
           </Route>
 
         </Routes>

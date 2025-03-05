@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import '../styles/styles.css';
 // import ScrollToTop from '../../components/ScrollToTop/ScrollToTop';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,10 @@ export const Fee = 50000;
 
 const Cart = () => {
 
-    const { cartItems, product_list, removeFromCart, getTotalCartAmount, url, url2 } = useContext(StoreContext)
+    const { cartItems, product_list, removeFromCart, getTotalCartAmount, url, url2, product_campaign } = useContext(StoreContext)
     const navigate = useNavigate();
+
+    console.log(product_campaign);
 
     return (
         <div className="cart">
@@ -27,17 +29,18 @@ const Cart = () => {
                             <p></p>
                         </div>
                         <hr />
-                        {product_list.map((item) => {
+                        {product_campaign?.updatedProducts?.map((item) => {
                             if (cartItems[item._id] > 0) {
+                                const priceToUse = item.newPrice !== null && item.newPrice !== undefined ? item.newPrice : item.price;
+                                const totalPrice = priceToUse * cartItems[item._id];
                                 return (
                                     <div key={item._id} className="cart-item">
-                                        {/* <img src={`${url2}/images/${item.images[0]}`} className="cart-item-image" /> */}
                                         <img src={`http://localhost:9003/images/${item.images[0]}`} className="cart-item-image" alt={item.nameProduct} />
                                         <p>{item.nameProduct}</p>
-                                        <p>{(item.price).toLocaleString()} đ</p>
+                                        <p>{priceToUse.toLocaleString()} đ</p>
                                         <p>{cartItems[item._id]}</p>
-                                        <p>{(item.price * cartItems[item._id]).toLocaleString()} đ</p>
-                                        <p onClick={() => removeFromCart(item._id)} className="cart-item-remove"><i class="fa-solid fa-trash"></i></p>
+                                        <p>{totalPrice.toLocaleString()} đ</p>
+                                        <p onClick={() => removeFromCart(item._id)} className="cart-item-remove"><i className="fa-solid fa-trash"></i></p>
                                     </div>
                                 )
                             }

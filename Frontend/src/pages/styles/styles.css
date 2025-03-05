@@ -402,6 +402,7 @@ section {
 
 }
 
+/* Giảm giá */
 .discount-badge {
   position: absolute;
   top: 0;
@@ -438,6 +439,36 @@ section {
   font-size: 16px;
   color: #d90429;
   font-weight: bold;
+}
+
+/* Product Detail */
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.productDetail-new-price {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.productDetail-old-price {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.productDetail-price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #028062;
+}
+
+.discount-product-detail {
+  background-color: red;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
 }
 
 

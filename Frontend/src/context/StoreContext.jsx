@@ -15,6 +15,8 @@ const StoreContextProvider = (props) => {
     const [product_list, setProductList] = useState([])
     const [product_campaign, setProductCampaign] = useState([])
     const [product_slug, setProductSlug] = useState(null);
+    const [product_slug_campaign, setProductSlugCampaign] = useState([]);
+    const [product_info, setProductInfo] = useState([]);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
@@ -58,12 +60,16 @@ const StoreContextProvider = (props) => {
         let totalAmount = 0;
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
-                let itemInfo = product_list.find((product) => (product._id) === (item));
-                totalAmount += itemInfo.price * cartItems[item];
+                let itemInfo = product_campaign?.updatedProducts.find((product) => product._id === item);
+                if (itemInfo) {
+                    const priceToUse = itemInfo.newPrice !== null && itemInfo.newPrice !== undefined ? itemInfo.newPrice : itemInfo.price;
+                    totalAmount += priceToUse * cartItems[item];
+                }
             }
         }
         return totalAmount;
-    }
+    };
+
 
     const fetchProductList = async () => {
         const response = await axios.get(`${url}/v1/api/product/getAll`);
@@ -85,6 +91,12 @@ const StoreContextProvider = (props) => {
         setProductCampaign(response.data.metadata);
     };
 
+    const fetchProductUpdateCampaignSlug = async (slug) => {
+        const response = await axios.get(`${url}/v1/api/product/campaign/updateProductPrice/${slug}`);
+        setProductSlugCampaign(response.data.metadata);
+        setProductInfo(response.data.metadata.updatedProduct);
+    };
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
@@ -101,14 +113,14 @@ const StoreContextProvider = (props) => {
 
     const contextValue = {
         product_list, product_campaign,
-        product_slug,
+        product_slug, product_slug_campaign, product_info,
         cartItems,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount,
-        fetchProductSlug,
+        fetchProductSlug, fetchProductUpdateCampaignSlug,
         url, url2,
         setToken,
         token

@@ -3,10 +3,11 @@ import { StoreContext } from '../../context/StoreContext'
 import { useParams, useNavigate } from "react-router-dom";
 import { FaSearch, FaShoppingCart, FaCartPlus, FaEnvelope } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import { formatCurrency } from '../../lib/utils'
 import '../styles/styles.css';
 
 const ProductDetail = () => {
-  const { product_slug, fetchProductSlug, url, cartItems, addQuantityToCart, addToCart, removeFromCart } = useContext(StoreContext);
+  const { product_slug, fetchProductSlug, url, cartItems, addQuantityToCart, fetchProductUpdateCampaignSlug, product_slug_campaign, product_info } = useContext(StoreContext);
   const { id } = useParams(); // Lấy ID từ URL
   const [product, setProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
@@ -18,17 +19,18 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (id) {
-      fetchProductSlug(id);
+      // fetchProductSlug(id);
+      fetchProductUpdateCampaignSlug(id);
     }
   }, [id]);
 
   useEffect(() => {
-    setProduct(product_slug);
-    if (product_slug && product_slug.images && product_slug.images.length > 0) {
-      setMainImage(product_slug.images[0]);
-      setSelectedThumbnail(product_slug.images[0]);
+    setProduct(product_info);
+    if (product_info && product_info.images && product_info.images.length > 0) {
+      setMainImage(product_info.images[0]);
+      setSelectedThumbnail(product_info.images[0]);
     }
-  }, [product_slug]);
+  }, [product_info]);
 
   // Kiểm tra nếu không có sản phẩm thì render thông báo sản phẩm không tồn tại
   if (!product) return <div>Sản phẩm không tồn tại</div>;
@@ -86,7 +88,22 @@ const ProductDetail = () => {
         <div className="productinfo-details">
           <h1 className="productinfo-name">{product.nameProduct}</h1>
           <p>{product.recap}</p>
-          <p className="productinfo-price">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ VỚI SHOP"}</p>
+          {/* <p className="productinfo-price">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ VỚI SHOP"}</p> */}
+          <div className="priceContainer">
+            {product.newPrice !== null ? (
+              <>
+                <span className="productDetail-new-price">{formatCurrency(product.newPrice)}đ</span>
+                <span className="productDetail-old-price">{formatCurrency(product.price)}đ</span>
+              </>
+            ) : (
+              <span className="productDetail-price">{formatCurrency(product.price)}đ</span>
+            )}
+            {product_slug_campaign?.campaignType === 'percentage' && product.newPrice !== null && (
+              <div className="discount-product-detail">
+                -{product_slug_campaign?.campaignValue}%
+              </div>
+            )}
+          </div>
 
           <div className="productinfo-quantity">
             <label htmlFor="quantity">Số lượng:</label>
@@ -105,7 +122,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <button className="productinfo-buy-now" onClick={() => { handleAddQuantityToCart(product_slug._id, quantity), navigate("/cart") }}>
+          <button className="productinfo-buy-now" onClick={() => { handleAddQuantityToCart(product_info._id, quantity), navigate("/cart") }}>
             <FaShoppingCart className="productinfo-icon" /> MUA NGAY
           </button>
 
@@ -113,7 +130,7 @@ const ProductDetail = () => {
             <button className="productinfo-contact col-6" onClick={() => navigate("/lien-he")}>
               <FaEnvelope className="productinfo-icon-contact" /> LIÊN HỆ
             </button>
-            <button className="productinfo-addCart col-6" onClick={() => handleAddQuantityToCart(product_slug._id, quantity)}>
+            <button className="productinfo-addCart col-6" onClick={() => handleAddQuantityToCart(product_info._id, quantity)}>
               <FaCartPlus className="productinfo-icon-addCart" /> Thêm vào giỏ hàng
             </button>
           </div>

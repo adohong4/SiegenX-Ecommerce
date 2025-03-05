@@ -19,6 +19,7 @@ const StoreContextProvider = (props) => {
     const [product_slug_campaign, setProductSlugCampaign] = useState([]);
     const [product_info, setProductInfo] = useState([]);
     const [address, setAddress] = useState([]);
+    const [profile, setProfile] = useState([]);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
@@ -105,11 +106,17 @@ const StoreContextProvider = (props) => {
         setAddress(response.data.metadata.addresses);
     }
 
+    const fetchUserProfile = async () => {
+        const response = await axios.get(`${url}/v1/api/profile/getProfile`);
+        setProfile(response.data.metadata);
+    }
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
             await fetchProductUpdateCampaign();
             await fetchUserAddress();
+            await fetchUserProfile();
             const cookieToken = Cookies.get("jwt");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -123,13 +130,13 @@ const StoreContextProvider = (props) => {
     const contextValue = {
         product_list, product_campaign, updateProduct,
         product_slug, product_slug_campaign, product_info,
-        cartItems, address,
+        cartItems, address, profile,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount,
-        fetchProductSlug, fetchProductUpdateCampaignSlug,
+        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile,
         fetchUserAddress,
         url, url2,
         setToken,

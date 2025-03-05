@@ -7,10 +7,6 @@ import { StoreContext } from '../../context/StoreContext';
 const UserAddress = () => {
     const { url, fetchUserAddress, address } = useContext(StoreContext)
     axios.defaults.withCredentials = true;
-    const [list, setList] = useState([]);
-    const [username, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [showAddressPopup, setShowAddressPopup] = useState(false);
 
     const handleDeleteAddress = async (addressId) => {

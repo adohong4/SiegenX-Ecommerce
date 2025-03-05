@@ -16,6 +16,8 @@ import Order from './pages/Home/Order';
 import Login from './pages/Home/Login';
 import Sidebar from './components/Profile/SideBarUserProfile';
 import UserAddress from './components/Profile/UserAddress';
+import UserProfile from './components/Profile/UserProfile';
+import ChangePassword from './components/Profile/UserPassword';
 import { ToastContainer } from 'react-toastify';
 const App = () => {
   return (
@@ -39,10 +41,10 @@ const App = () => {
           <Route path="/user" element={<Sidebar />} />
           <Route path="/user" element={<Sidebar />}>
             <Route index element={<div>Trang chủ User</div>} />
-            {/* <Route path="profile" element={<UserProfile />} />       */}
+            <Route path="profile" element={<UserProfile />} />
             <Route path="address" element={<UserAddress />} />
-            {/* <Route path="change-password" element={<ChangePassword />} /> 
-            <Route path="orders" element={<OrderList />} />           */}
+            <Route path="change-password" element={<ChangePassword />} />
+            {/* <Route path="orders" element={<OrderList />} />           */}
           </Route>
 
         </Routes>

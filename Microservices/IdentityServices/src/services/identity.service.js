@@ -35,8 +35,17 @@ class IdentityService {
                 username: username,
                 email: email,
                 password: hashedPassword,
+                role: 'USER'
             })
-            const token = createToken(newUser._id, req.res);
+
+            //create payload
+            const tokenPayload = {
+                userId: newUser._id,
+                email: newUser.email,
+                role: newUser.role,
+            };
+
+            const token = createToken(tokenPayload, req.res);
 
             if (newUser) {
                 return {

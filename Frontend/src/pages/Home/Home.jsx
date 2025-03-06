@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import {
     options,
     fadeUpVariants, fadeInScaleUp, staggerContainer, containerVariants, imageVariants, textVariants, partners
-} from "../../data/Enviroment";
+} from "../../data/data";
 
 const handleOptionClick = (index) => setSelectedOption(index);
 

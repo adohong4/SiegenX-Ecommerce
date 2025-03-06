@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { toast } from 'react-toastify';
 // import { StoreContext } from '../../context/StoreContext';
-import { Order } from '../../data/Enviroment'
+import { Order } from '../../data/data'
 
 const PlaceOrder = () => {
     // const { getTotalCartAmount, token, user_address, product_list, cartItems, url } = useContext(StoreContext);
@@ -58,7 +58,7 @@ const PlaceOrder = () => {
             phone: selectedAddress.phone
         });
     };
-// Code cũ
+    // Code cũ
 
 
     // const handleSubmit = async (event) => {
@@ -238,7 +238,7 @@ const PlaceOrder = () => {
                             <b>{Order[0].finalAmount.toLocaleString()} đ</b>
                         </div>
                     </div>
-{/* Kết thúc hàm giả lập */}
+                    {/* Kết thúc hàm giả lập */}
                     <div className="hinhthuc-thanhtoan">
                         <p>Hình thức thanh toán:</p>
                         <label>

@@ -1,4 +1,4 @@
-
+import { faTrash,faBox, faShoppingCart,faUser,faDollarSign ,  faBook, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 // Fake data của Product
 export const fakeProducts = [
     {
@@ -369,11 +369,12 @@ export const fakeOrderData = {
 
 
 export const stats = [
-    { label: "Tổng số sản phẩm", value: 20 },
-    { label: "Sản phẩm hết hàng", value: 3 },
-    { label: "Sản phẩm còn hàng", value: 17 },
-    { label: "Sản phẩm bị ẩn", value: 0 },
+    { label: "Tổng sản phẩm", value: 25, animatedValue: 25, icon: faBox },
+    { label: "Đơn hàng mới", value: 10, animatedValue: 10, icon: faShoppingCart },
+    { label: "Khách hàng", value: 15, animatedValue: 15, icon: faUser },
+    { label: "Doanh thu", value: 500, animatedValue: 500, icon: faDollarSign }
 ];
+
 
 
 export const fakeCustomerData = [

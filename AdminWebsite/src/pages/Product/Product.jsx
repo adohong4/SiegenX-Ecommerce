@@ -154,6 +154,7 @@ const ListProduct = () => {
         {
             title: "Hành động",
             key: "action",
+            align: "center",
             render: (text, record) => (
                 <div className='button-product'>
                     <button onClick={() => handleProductClick(record._id)} className="btn-info">
@@ -174,12 +175,17 @@ const ListProduct = () => {
                 <div className="das-body">
                     {stats.map((stat, index) => (
                         <div key={index} className="box">
-                            <p className="label">{stat.label}</p>
-                            <p className="value">{stat.value.toString().padStart(2, "0")} + </p>
+                            <FontAwesomeIcon icon={stat.icon} className="stat-icon" />
+                            <div>
+                                <p className="label">{stat.label}</p>
+                                <p className="value">{stat.animatedValue} </p>
+                            </div>
+                            
                         </div>
                     ))}
                 </div>
             </div>
+
             <div className='top-list-tiltle'>
                 <div className='col-lg-4 tittle-right'>
                     <Input
@@ -193,7 +199,7 @@ const ListProduct = () => {
                     <div className='search-right'>
                         <Select
                             placeholder="Danh mục sản phẩm"
-                            style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                            style={{ width: 200, marginRight: 8, borderRadius: '7px', border: '1px solid rgb(134, 134, 134, 0.6)', }}
                             value={selectedType}
                             onChange={(value) => setSelectedType(value)}
                             allowClear

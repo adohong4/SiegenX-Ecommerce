@@ -998,7 +998,6 @@ textarea {
 }
 
 .profile-auth {
-    border: 1px solid #b5b5b5;
     padding: 5px;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -1609,24 +1608,32 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
-
+.nhap-hang-page{
+    padding: 20px;
+}
 .nhap-hang-page .header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
 
 }
-
+.nhap-hang-page .search-invoice input{
+    height: 100%;
+    border-radius: 5px;
+}
 .nhap-hang-page .btn {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-
+.nhap-hang-page .order-table td>.btn-info>svg{
+    margin: 0;
+}
 .nhap-hang-page .btn-primary {
     background-color: #007bff;
     color: white;
+    margin-left: 20px;
 }
 
 .nhap-hang-page .btn-info {
@@ -1823,7 +1830,11 @@ h2 {
     border-radius: 10px;
     text-align: center;
 }
-
+.profile-admin-container .profile-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 h2 {
     color: #333;
 }
@@ -1851,7 +1862,7 @@ h2 {
     font-size: 16px;
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
 }
 
 .profile-admin-field input {
@@ -2030,11 +2041,14 @@ h2 {
 
 .profile-admin-table {
     width: 100%;
+    text-align: left;
     border-collapse: collapse;
 }
-
+.profile-admin-table tr td{
+    padding:10px 0px;
+}
 .profile-admin-table tr {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px dashed #aaa;
 }
 
 .profile-label {
@@ -2067,7 +2081,7 @@ h2 {
     font-size: 16px;
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+
     outline: none;
 }
 
@@ -2098,7 +2112,7 @@ h2 {
 
 /* Button */
 .profile-admin-actions {
-    text-align: center;
+    text-align: left;
     margin-top: 20px;
 }
 

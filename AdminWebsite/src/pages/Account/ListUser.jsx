@@ -44,7 +44,7 @@ const ListUser = () => {
         try {
             const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
             if (response.data.status) {
-                toast.success(response.data.message);
+                toast.success('Xóa tài khoản thành công');
                 fetchList(currentPage, limit);
             }
         } catch (error) {
@@ -88,7 +88,7 @@ const ListUser = () => {
         { title: "Tài khoản", dataIndex: "username", key: "username", sorter: (a, b) => a.username.localeCompare(b.username) },
         { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => a.email.localeCompare(b.email) },
         { title: "Giới tính", dataIndex: "gender", key: "gender", sorter: (a, b) => a.gender.localeCompare(b.gender) },
-        { title: "Số lượng đơn hàng",align: "center", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
+        { title: "Số lượng đơn hàng", align: "center", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
         { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt", render: (createdAt) => formatDayTime(createdAt) },
         {
             title: "Tùy chỉnh",

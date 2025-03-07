@@ -2,12 +2,9 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Select } from "antd";
 import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { formatHourDayTime, formatCurrency } from '../../lib/utils';
 const Cart = () => {
     const { url, order_list, fetchOrder } = useContext(StoreContext);
@@ -54,7 +51,7 @@ const Cart = () => {
     const removeOrder = async (id) => {
         const response = await axios.delete(`${url}/v1/api/profile/order/status/${id}`);
         if (response.data.status) {
-            toast.success(response.data.message);
+            toast.success('Xóa thành công');
             fetchListpage(currentPage);
         }
     };
@@ -129,7 +126,7 @@ const Cart = () => {
                                 record.status === "Đang giao hàng" ? "#f39c12" :
                                     record.status === "Giao hàng thành công" ? "#27ae60" : "#ecf0f1",
                         color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black",
-                        width:"fit-content"
+                        width: "fit-content"
                     }}
                 >
                     <option value="Đợi xác nhận">Đợi xác nhận</option>

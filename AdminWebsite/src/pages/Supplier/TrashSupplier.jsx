@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Table, Button, Popconfirm, Modal, Form, Input, List } from "antd";
-import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import "../styles/styles.css";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
@@ -45,7 +45,7 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
             const response = await axios.delete(`${url}/v1/api/supplier/delete/${key}`);
             fetchListSupplier(currentPage)
         } catch (error) {
-            alert(error.response.data.message)
+            toast.error(error.response.data.message)
         }
 
     };
@@ -53,12 +53,6 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
     const handleStore = async (key) => {
         await axios.delete(`${url}/v1/api/supplier/active/${key}`);
         fetchListSupplier(currentPage)
-    };
-
-    // Mở Modal cập nhật
-    const showEditModal = (record) => {
-        setEditingSupplier(record);
-        setIsModalOpen(true);
     };
 
     // Hủy cập nhật
@@ -109,7 +103,7 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
             title: "Trạng thái",
             dataIndex: "status",
             key: "status",
-            align:'center',
+            align: 'center',
             render: (status) => (
                 <span>{!status ? "Hoạt động" : "Không hoạt động"}</span>
             ),
@@ -117,7 +111,7 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
         {
             title: "Hành động",
             key: "action",
-            align:'center',
+            align: 'center',
             render: (text, record) => (
                 <>
                     <Button onClick={() => handleStore(record._id)} style={{ marginRight: 8 }}>Hồi phục</Button>

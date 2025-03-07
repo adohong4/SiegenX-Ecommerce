@@ -72,7 +72,7 @@ const ListUser = () => {
     const restoreAccount = async (userId) => {
         const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
         if (response.data.status) {
-            toast.success(response.data.message);
+            toast.success('Hồi phục thành công');
             await fetchList(currentPage);
         }
     };

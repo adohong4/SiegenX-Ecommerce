@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
 import { formatHourDayTime } from '../../lib/utils';
 import { StoreContext } from '../../context/StoreContext';
 import '../styles/styles.css';
@@ -32,7 +33,7 @@ const ProductDetails = () => {
 
     const handleSave = async () => {
         await updateProductId(id, updatedProduct);
-        alert("Cập nhật thành công!");
+        toast.success("Cập nhật thành công!");
     };
 
     if (!product_id) return <p>Đang tải dữ liệu...</p>;

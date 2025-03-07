@@ -3,9 +3,6 @@ import '../styles/styles.css';
 import axios from 'axios';
 import { formatDayTime, formatTime, formatHourDayTime } from '../../lib/utils'
 import { toast } from 'react-toastify';
-import { debounce } from 'lodash'
-import ContactPopup from '../../components/Popup/ContactPopup';
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faTrash, faBook } from '@fortawesome/free-solid-svg-icons';
@@ -48,7 +45,7 @@ const Contact = () => {
                 }));
 
                 if (filterStatus !== "All") {
-                    const isCheckValue = filterStatus === "true"; 
+                    const isCheckValue = filterStatus === "true";
                     contacts = contacts.filter(contact => contact.isCheck === isCheckValue);
                 }
 
@@ -139,17 +136,17 @@ const Contact = () => {
                 </button>
             ),
         },
-        
+
         {
             title: "Hành động",
             key: "action",
             render: (text, record) => (
                 <>
-                    <button onClick={() => showViewModal(record)} className="btn-info-contact" style={{padding:"5px 10px"}}>
+                    <button onClick={() => showViewModal(record)} className="btn-info-contact" style={{ padding: "5px 10px" }}>
                         <FontAwesomeIcon icon={faBook} />
                     </button>
                     <Popconfirm title="Xóa tài khoản này?" onConfirm={(e) => { e.stopPropagation(); removeContact(record._id); }} okText="Xóa" cancelText="Hủy">
-                        <button className="btn-delete-contact" style={{padding:"5px 10px", color:"red"}}><FontAwesomeIcon icon={faTrash} /></button>
+                        <button className="btn-delete-contact" style={{ padding: "5px 10px", color: "red" }}><FontAwesomeIcon icon={faTrash} /></button>
                     </Popconfirm>
 
                 </>

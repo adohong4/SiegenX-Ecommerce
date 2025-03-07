@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { formatDayTime, formatCurrency } from '../../lib/utils';
 import { Form, Input, Button, Select, DatePicker, InputNumber, Tooltip, Row, Col, Space, message, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -62,11 +63,11 @@ const CampaignInfo = () => {
                 message: response.data.message,
                 duration: 3,
             });
-            alert(response.data.message)
+            toast.success(response.data.message)
             console.log("Cập nhật chiến dịch thành công!");
         } catch (error) {
             console.error("Lỗi khi cập nhật chiến dịch:", error);
-            alert(error.response.data.message)
+            toast.error(response.data.message)
             throw error;
         }
     };

@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Table, Input, Button, Popconfirm, Modal, Form, Checkbox, Select, notification } from "antd";
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 
@@ -118,7 +119,7 @@ const EmployeeList = () => {
     {
       title: "Hành động",
       key: "actions",
-      align:'center',
+      align: 'center',
       render: (_, record) => (
         <>
           <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }}>Sửa</Button>
@@ -146,7 +147,7 @@ const EmployeeList = () => {
       <Input
         placeholder="Tìm kiếm nhân viên..."
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: 20, width: "300px", marginRight:20 }}
+        style={{ marginBottom: 20, width: "300px", marginRight: 20 }}
       />
       <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>Thêm nhân viên</Button>
 

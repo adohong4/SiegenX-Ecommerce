@@ -1,15 +1,12 @@
 
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Form, Select } from "antd";
-import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { debounce } from 'lodash'
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
-import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faBook, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment";
@@ -54,10 +51,10 @@ const ListProduct = () => {
         console.log(productId)
         const response = await axios.delete(`${url}/v1/api/product/delete/${productId}`);
         if (response.data.status) {
-            alert(response.data.message);
+            toast.success(response.data.message);
             await fetchList(currentPage);
         } else {
-            alert('Error deleting product');
+            toast.error('Error deleting product');
         }
     };
 
@@ -141,7 +138,7 @@ const ListProduct = () => {
                     {record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}
                 </p>
             ),
-        },        
+        },
         {
             title: "Giá", dataIndex: "price", key: "price",
             render: (price) => formatCurrency(price),
@@ -182,7 +179,7 @@ const ListProduct = () => {
                                 <p className="label">{stat.label}</p>
                                 <p className="value">{stat.animatedValue} </p>
                             </div>
-                            
+
                         </div>
                     ))}
                 </div>

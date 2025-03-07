@@ -2,13 +2,9 @@ import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../styles/styles.css";
 import { formatDayTime, formatCurrency } from '../../lib/utils'
-import { debounce } from 'lodash'
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Table, Switch, Modal, Button, Pagination, Select, Input, Popconfirm, Descriptions } from "antd";
 import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
-import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 
 const ImportOrders = () => {

@@ -1,14 +1,13 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Table, Button, Popconfirm, Modal, Form, Input, List, Row, Col } from "antd";
-import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
+import { Table, Button, Popconfirm, Modal, Form, Input, Row, Col } from "antd";
+import { PlusOutlined, } from "@ant-design/icons";
+import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 
-const { Search } = Input;
-
-const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
+const SupplierList = () => {
     axios.defaults.withCredentials = true;
     const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
@@ -62,13 +61,13 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
         try {
             const response = await axios.put(`${url}/v1/api/supplier/update/${key}`, values);
             if (response.data.status) {
-                alert(response.data.message);
+                toast.success(response.data.message);
                 setIsModalOpen(false);
                 setEditingSupplier(null);
                 fetchListSupplier(currentPage);
             }
         } catch (error) {
-            alert(error.response.data.message);
+            toast.error(error.response.data.message);
         }
 
     };
@@ -105,7 +104,7 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
             title: "Trạng thái",
             dataIndex: "status",
             key: "status",
-            align:'center',
+            align: 'center',
             render: (status) => (
                 <span>{!status ? "Hoạt động" : "Không hoạt động"}</span>
             ),
@@ -113,7 +112,7 @@ const SupplierList = ({ trashSuppliers, setTrashSuppliers }) => {
         {
             title: "Hành động",
             key: "action",
-            align:'center',
+            align: 'center',
             render: (text, record) => (
                 <>
                     <Button onClick={() => navigate(record._id)} style={{ marginRight: 8 }}>Xem</Button>

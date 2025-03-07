@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { formatDayTime, formatCurrency } from '../../lib/utils'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -77,10 +78,10 @@ const CreateImportOrder = () => {
         try {
             const response = await axios.post(`${url}/v1/api/product/invoice/create`, requestData);
             if (response.status === 201 || response.status === 200) {
-                alert("Đơn hàng đã được thêm thành công!");
+                toast.success("Đơn hàng đã được thêm thành công!");
                 navigate(-1);
             } else {
-                alert("Có lỗi xảy ra khi tạo đơn hàng!");
+                toast.error("Có lỗi xảy ra khi tạo đơn hàng!");
             }
         } catch (error) {
             console.error("Lỗi khi tạo đơn hàng:", error);

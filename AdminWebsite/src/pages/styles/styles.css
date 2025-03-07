@@ -1586,6 +1586,11 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
+.nhap-hang-page h1{
+    padding-bottom: 10px;
+    font-size: 25px;
+    border-bottom: 2px dashed #cccccc;
+}
 .nhap-hang-page{
     padding: 20px;
 }
@@ -1593,7 +1598,12 @@ body.popup-open {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
+    margin-top: 20px;
 
+}
+.nhap-hang-page .ant-table-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
 }
 .nhap-hang-page .search-invoice input{
     height: 100%;

@@ -77,10 +77,13 @@ const ImportOrders = () => {
       dataIndex: "statusInput",
       key: "statusInput",
       render: (statusInput) => {
-        return statusInput === 'not imported' ? 'Chưa nhập' :
-          statusInput === 'imported' ? 'Đã nhập' : '';
+        let color = statusInput === 'not imported' ? 'red' : 'green';
+        let text = statusInput === 'not imported' ? 'Chưa nhập' : 'Đã nhập';
+
+        return <span style={{ color, fontWeight: "400" }}>{text}</span>;
       },
     },
+
     {
       title: "Nhà cung cấp",
       dataIndex: "supplierId",
@@ -119,6 +122,7 @@ const ImportOrders = () => {
     {
       title: "Hành động",
       key: "action",
+      align: 'center',
       render: (_, record) => (
         <>
           <Button type="primary" icon={<BookFilled />} onClick={() => navigate(`/invoice/${record._id}`)} />
@@ -136,7 +140,7 @@ const ImportOrders = () => {
 
         <Input
           placeholder="Tìm kiếm tài khoản..."
-          style={{ width: 200, marginBottom: 16 }}
+          style={{ width: 300, }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

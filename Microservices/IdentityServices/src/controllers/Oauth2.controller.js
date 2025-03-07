@@ -20,7 +20,7 @@ async function verify(token) {
 class GGController {
     async login(req, res) {
         const { token } = req.body;
-        console.log('Received token: ', token);
+        //console.log('Received token: ', token);
         try {
             const payload = await verify(token);
 

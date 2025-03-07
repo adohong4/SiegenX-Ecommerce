@@ -2013,6 +2013,68 @@ section {
   background-color: #056145;
 }
 
+.products-recommend {
+  width: 100%;
+}
+
+.products-recommend h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.recommend-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 10px;
+  justify-content: center;
+}
+
+.recommend-card {
+  flex: 0 0 auto;
+  width: 250px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.recommend-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 8px;
+}
+
+.recommend-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-weight: bold;
+  min-height: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recommend-price {
+  font-size: 14px;
+  color: #f00;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.recommend-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recommend-card {
+  position: relative;
+}
+
+
 .pagination {
   display: flex;
   justify-content: center;

@@ -311,7 +311,7 @@ class StaffService {
             }
 
             // Xóa cookie chứa token
-            res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "strict" });
+            res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "strict" });
 
             return { message: "Đăng xuất thành công" };
         } catch (error) {

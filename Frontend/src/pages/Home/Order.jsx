@@ -4,14 +4,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { toast } from 'react-toastify';
-// import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import { Order } from '../../data/data'
 
 const PlaceOrder = () => {
-    // const { getTotalCartAmount, token, user_address, product_list, cartItems, url } = useContext(StoreContext);
+    const { getTotalCartAmount, fetchUserAddress, address, product_list, cartItems, url, token } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const navigate = useNavigate();
     const [paymentMethod, setPaymentMethod] = useState("cash");
+    axios.defaults.withCredentials = true;
     // Giả lập dữ liệu 
     const orderData = Order[0];
     const [formData, setFormData] = useState({
@@ -22,19 +23,6 @@ const PlaceOrder = () => {
         city: "",
         province: "",
     });
-
-    const fetchUserAddress = async () => {
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/getAddress`, {
-                headers: { token }
-            });
-            if (response.data.status) {
-                setList(response.data.metadata.addresses);
-            }
-        } catch (error) {
-            toast.error("Lỗi hiển thị");
-        }
-    };
 
     const handlePaymentChange = (event) => {
         setPaymentMethod(event.target.value);
@@ -59,76 +47,77 @@ const PlaceOrder = () => {
         });
     };
     // Code cũ
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        let orderItems = [];
+        product_list.map((item) => {
+            if (cartItems[item._id] > 0) {
+                let itemInfo = item;
+                itemInfo["quantity"] = cartItems[item._id];
+                orderItems.push(itemInfo);
+            }
+        });
 
+        let orderData = {
+            address: formData,
+            items: orderItems,
+            amount: getTotalCartAmount() + 50000,
+        };
+        //lựa chọn online hay tại nhà
+        if (paymentMethod === 'online') {
+            let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData, { headers: { token } });
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     let orderItems = [];
-    //     product_list.map((item) => {
-    //         if (cartItems[item._id] > 0) {
-    //             let itemInfo = item;
-    //             itemInfo["quantity"] = cartItems[item._id];
-    //             orderItems.push(itemInfo);
-    //         }
-    //     });
+            if (response.data.success) {
+                const { session_url } = response.data;
+                window.location.replace(session_url);
+            } else {
+                toast.error(response.data.message);
+            }
+        } else {
+            // let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
+            // if (response.data.success) {
+            //     toast.success(response.data.message);
+            //     navigate("/myorder");
+            // } else {
+            //     toast.error(response.data.message);
+            // }
+            try {
+                console.log("orderData: ", orderData);
+                let response = await axios.post(url + "/v1/api/profile/cod/verify", orderData);
 
-    //     let orderData = {
-    //         address: formData,
-    //         items: orderItems,
-    //         amount: getTotalCartAmount() + 50000,
-    //     };
-    //     //lựa chọn online hay tại nhà
-    //     if (paymentMethod === 'online') {
-    //         let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData, { headers: { token } });
+                if (response.data.success) {
+                    console.log("Thanh toán thành công, điều hướng tới /payment-success");
+                    toast.success(response.data.message);
 
-    //         if (response.data.success) {
-    //             const { session_url } = response.data;
-    //             window.location.replace(session_url);
-    //         } else {
-    //             toast.error(response.data.message);
-    //         }
-    //     } else {
-    //         // let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
-    //         // if (response.data.success) {
-    //         //     toast.success(response.data.message);
-    //         //     navigate("/myorder");
-    //         // } else {
-    //         //     toast.error(response.data.message);
-    //         // }
+                    await sendEmailConfirmation(orderItems, formData.email)
+                    // Chuyển hướng đến trang thông báo thanh toán thành công
+                    navigate('/payment-success', {
+                        state: {
+                            message: "Đặt hàng thành công!",
+                            orderData
+                        }
+                    });
+                }
+            } catch (error) {
+                toast.error(error.response.data.message);
+            }
+        }
 
-    //         let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
-    //         if (response.data.success) {
-    //             console.log("Thanh toán thành công, điều hướng tới /payment-success");
-    //             toast.success(response.data.message);
-
-    //             await sendEmailConfirmation(orderItems, formData.email)
-    //             // Chuyển hướng đến trang thông báo thanh toán thành công
-    //             navigate('/payment-success', {
-    //                 state: {
-    //                     message: "Đặt hàng thành công!",
-    //                     orderData
-    //                 }
-    //             });
-    //         } else {
-    //             toast.error(response.data.message);
-    //         }
-    //     }
-
-    // };
+    };
 
 
     // Giả lập cho hàm handle submit
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        toast.success("Đặt hàng thành công!");
-        navigate('/payment-success', {
-            state: {
-                message: "Đặt hàng thành công!",
-                orderData
-            }
-        });
-    };
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    //     toast.success("Đặt hàng thành công!");
+    //     navigate('/payment-success', {
+    //         state: {
+    //             message: "Đặt hàng thành công!",
+    //             orderData
+    //         }
+    //     });
+    // };
 
     // Kết thúc giả lập cho handleSubmit
 
@@ -145,24 +134,22 @@ const PlaceOrder = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchUserAddress(token);
-    //     if (!token) {
-    //         navigate('/cart');
-    //     } else if (getTotalCartAmount() === 0) {
-    //         navigate('/cart');
-    //     }
-    // }, [token]);
-
     useEffect(() => {
-        if (Order.length > 0) {
-            const orderData = Order[0]; // Lấy đơn hàng đầu tiên từ danh sách
-            setList([orderData.address]); // Lưu địa chỉ vào danh sách
-            setFormData(orderData.address); // Cập nhật form với địa chỉ có sẵn
-        } else {
-            toast.error("Không có dữ liệu đơn hàng!");
+        fetchUserAddress();
+        if (getTotalCartAmount() === 0) {
+            navigate('/cart');
         }
     }, []);
+
+    // useEffect(() => {
+    //     if (Order.length > 0) {
+    //         const orderData = Order[0]; // Lấy đơn hàng đầu tiên từ danh sách
+    //         setList([orderData.address]); // Lưu địa chỉ vào danh sách
+    //         setFormData(orderData.address); // Cập nhật form với địa chỉ có sẵn
+    //     } else {
+    //         toast.error("Không có dữ liệu đơn hàng!");
+    //     }
+    // }, []);
 
     return (
         <form className="place-order" onSubmit={handleSubmit}>
@@ -174,7 +161,7 @@ const PlaceOrder = () => {
                         onChange={handleAddressChange}
                     >
                         <option value="">Chọn địa chỉ giao hàng của bạn</option>
-                        {list.map((address, index) => (
+                        {address.map((address, index) => (
                             <option key={index} value={JSON.stringify(address)}>
                                 {address.fullname}, {address.street}, {address.precinct}, {address.city}, {address.province}, {address.phone}
                             </option>
@@ -203,7 +190,7 @@ const PlaceOrder = () => {
             <div className="place-order-right">
                 <div className="cart-total">
                     <h2>Tổng Giỏ Hàng</h2>
-                    {/* <div>
+                    <div>
                         <div className="cart-total-details">
                             <p>Tạm Tính</p>
                             <p>{(getTotalCartAmount()).toLocaleString()} đ</p>
@@ -218,11 +205,11 @@ const PlaceOrder = () => {
                             <b>Tổng Cộng</b>
                             <b>{(getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 50000).toLocaleString()} đ</b>
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Giả lập dữ liệu cho hàm getTotalAmount */}
 
-                    <div>
+                    {/* <div>
                         <div className="cart-total-details">
                             <p>Tạm Tính</p>
                             <p>{Order[0].totalAmount.toLocaleString()} đ</p>
@@ -237,7 +224,7 @@ const PlaceOrder = () => {
                             <b>Tổng Cộng</b>
                             <b>{Order[0].finalAmount.toLocaleString()} đ</b>
                         </div>
-                    </div>
+                    </div> */}
                     {/* Kết thúc hàm giả lập */}
                     <div className="hinhthuc-thanhtoan">
                         <p>Hình thức thanh toán:</p>

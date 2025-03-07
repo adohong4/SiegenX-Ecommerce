@@ -18,8 +18,10 @@ const StoreContextProvider = (props) => {
     const [product_slug, setProductSlug] = useState(null);
     const [product_slug_campaign, setProductSlugCampaign] = useState([]);
     const [product_info, setProductInfo] = useState([]);
+    const [recommend, setProductRecommend] = useState([]);
     const [address, setAddress] = useState([]);
     const [profile, setProfile] = useState([]);
+    const [orders, setOrders] = useState([]);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
 
@@ -47,8 +49,6 @@ const StoreContextProvider = (props) => {
         if (quantity <= 0) {
             console.error("Số lượng phải lớn hơn 0");
         }
-        console.log("itemId: ", itemId)
-        console.log("quantity: ", quantity)
         if (!cartItems[itemId]) {
             setCartItems((prev) => ({ ...prev, [itemId]: quantity }))
         } else {
@@ -72,6 +72,35 @@ const StoreContextProvider = (props) => {
         }
         return totalAmount;
     };
+
+    const fetchProductRecommend = async () => {
+        // Lấy danh sách productIds từ cartItems
+        const productIds = Object.keys(cartItems).filter(id => cartItems[id] > 0);
+
+        if (productIds.length > 0) {
+            const data = {
+                productIds: productIds, // Danh sách ID sản phẩm từ giỏ hàng
+                numRecommendations: 4   // Số lượng sản phẩm gợi ý mong muốn
+            };
+
+            try {
+                // Gọi API bằng phương thức POST
+                const response = await axios.post(`${url}/v1/api/product/recommend`, data, {
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                // Kiểm tra phản hồi từ API
+                if (response.data && response.data.status === 200) {
+                    setProductRecommend(response.data.metadata); // Cập nhật danh sách sản phẩm gợi ý
+                } else {
+                    console.warn("API không trả về dữ liệu hợp lệ:", response.data);
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy sản phẩm gợi ý:", error);
+            }
+        }
+    };
+
 
 
     const fetchProductList = async () => {
@@ -111,12 +140,21 @@ const StoreContextProvider = (props) => {
         setProfile(response.data.metadata);
     }
 
+    const fetchOrders = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/profile/user/order/get`);
+            if (response.data.status === 200) {
+                setOrders(response.data.metadata);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    };
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
             await fetchProductUpdateCampaign();
-            await fetchUserAddress();
-            await fetchUserProfile();
             const cookieToken = Cookies.get("jwt");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -130,13 +168,14 @@ const StoreContextProvider = (props) => {
     const contextValue = {
         product_list, product_campaign, updateProduct,
         product_slug, product_slug_campaign, product_info,
-        cartItems, address, profile,
+        cartItems, address, profile, recommend,
+        fetchOrders, orders,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
-        getTotalCartAmount,
-        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile,
+        getTotalCartAmount, loadCartData,
+        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile, fetchProductRecommend,
         fetchUserAddress,
         url, url2,
         setToken,

@@ -7,6 +7,7 @@ const { CREATED } = require("../../core/success.response")
 
 class StripeController {
     placeOrder = async (req, res) => {
+        const userId = req.user;
         const frontend_url = process.env.URL_FRONTEND;
         try {
             // Tính tổng số tiền
@@ -36,7 +37,7 @@ class StripeController {
                     quantity: 1
                 });
                 const newOrder = new orderModel({
-                    userId: req.body.userId,
+                    userId: userId,
                     items: req.body.items,
                     amount: totalAmount,
                     address: req.body.address,

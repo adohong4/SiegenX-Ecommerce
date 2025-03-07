@@ -37,6 +37,8 @@ router.get("/product/getCountProduct", asyncHandler(ProductController.getCountPr
 router.get("/product/paginate", asyncHandler(ProductController.getProductsByPage));
 router.get("/product/trash/paginate", asyncHandler(ProductController.paginateProductTrash)); //trash
 
+router.post("/product/recommend", asyncHandler(ProductController.ContentBasedFiltering))
+
 
 
 module.exports = router;

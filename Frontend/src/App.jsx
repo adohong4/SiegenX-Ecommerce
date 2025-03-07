@@ -20,6 +20,7 @@ import UserProfile from './components/Profile/UserProfile';
 import ChangePassword from './components/Profile/UserPassword';
 import OrderList from './components/Profile/UserPurchase';
 import { ToastContainer } from 'react-toastify';
+import ProductRecommend from './pages/Home/ProductRecommend'
 const App = () => {
   return (
     <>
@@ -47,8 +48,8 @@ const App = () => {
             <Route path="change-password" element={<ChangePassword />} />
             <Route path="orders" element={<OrderList />} />
           </Route>
-
         </Routes>
+        <ProductRecommend />
         <Footer />
       </div>
     </>

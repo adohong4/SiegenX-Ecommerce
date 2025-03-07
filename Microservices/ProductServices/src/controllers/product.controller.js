@@ -1,5 +1,6 @@
 'use strict'
 const ProductService = require("../services/product.service");
+const ProductCustom = require("../services/Product.custom");
 const { CREATED, OK, SuccessResponse, NOCONTENT } = require('../core/success.response');
 
 class ProductController {
@@ -141,6 +142,18 @@ class ProductController {
 
             new OK({
                 message: 'get Product Trash',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    ContentBasedFiltering = async (req, res, next) => {
+        try {
+            const result = await ProductCustom.ContentBasedFiltering(req, res);
+            new OK({
+                message: 'filter Product',
                 metadata: result.metadata
             }).send(res);
         } catch (error) {

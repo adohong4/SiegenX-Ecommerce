@@ -7,9 +7,11 @@ const { CREATED } = require("../../core/success.response")
 
 class CODController {
     CODplaceOrder = async (req, res) => {
+        const userId = req.user;
+
         try {
             const newOrder = new orderModel({
-                userId: req.body.userId,
+                userId: userId,
                 items: req.body.items,
                 amount: req.body.amount,
                 address: req.body.address,

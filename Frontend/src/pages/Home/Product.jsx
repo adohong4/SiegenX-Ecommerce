@@ -7,7 +7,7 @@ import { columns, columns_Rep } from '../../data/data'
 import '../styles/styles.css';
 
 const Products = () => {
-    const { product_list, url, url2, product_campaign, updateProduct } = useContext(StoreContext);
+    const { product_list, url, url2, product_campaign, updateProduct, recommend, fetchProductRecommend } = useContext(StoreContext);
     const [searchParams] = useSearchParams(); // Lấy các tham số từ URL
     const [selectedCategory, setSelectedCategory] = useState(null); // Category được chọn
     const [currentPage, setCurrentPage] = useState(1);

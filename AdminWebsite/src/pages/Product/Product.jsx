@@ -137,9 +137,11 @@ const ListProduct = () => {
             title: "Trạng thái",
             key: "quantity",
             render: (text, record) => (
-                <p>{record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}</p>
+                <p style={{ color: record.quantity <= 0 ? 'red' : 'green' }}>
+                    {record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}
+                </p>
             ),
-        },
+        },        
         {
             title: "Giá", dataIndex: "price", key: "price",
             render: (price) => formatCurrency(price),

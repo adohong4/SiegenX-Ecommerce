@@ -623,13 +623,29 @@ textarea {
 }
 
 /* CSS cho trang Hóa đơn */
+
+
 .order-list-table {
     width: 100%;
 }
-
+.order-list-container{
+    padding: 20px;
+}
+.order-list-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
+}
 .order-list-container .search {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+.order-list-container .top-order-list{
+    padding:  20px 0;
+    display: flex;
+    gap: 10px;
+}
+.order-list-container .col-12{
+    display: flex;
 }
 
 .order-list-table .btn-delete {
@@ -1004,7 +1020,11 @@ textarea {
 
 /* CSS cho ListUser */
 
-
+.user-list-container .ant-table-tbody td.ant-table-cell:last-child{
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+}
 
 .user-list-container {
     padding: 20px;

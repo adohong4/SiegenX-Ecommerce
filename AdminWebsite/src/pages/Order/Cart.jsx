@@ -128,7 +128,8 @@ const Cart = () => {
                             record.status === "Đang chuẩn bị hàng" ? "#d35400" :
                                 record.status === "Đang giao hàng" ? "#f39c12" :
                                     record.status === "Giao hàng thành công" ? "#27ae60" : "#ecf0f1",
-                        color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black"
+                        color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black",
+                        width:"fit-content"
                     }}
                 >
                     <option value="Đợi xác nhận">Đợi xác nhận</option>
@@ -178,35 +179,38 @@ const Cart = () => {
 
     return (
         <div className='order-list-container'>
-
-            <Input
-                placeholder="Tìm kiếm hóa đơn..."
-                style={{ width: 200, marginBottom: 16 }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-                placeholder="Hình thức thanh toán"
-                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
-                value={selectedType}
-                onChange={(value) => setSelectedType(value)}
-                allowClear
-            >
-                <Option value="Thanh toán trực tuyến">Thanh toán trực tuyến</Option>
-                <Option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</Option>
-            </Select>
-            <Select
-                placeholder="Trạng thái"
-                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
-                value={selectedStatus}
-                onChange={(value) => setSelectedStatus(value)}
-                allowClear
-            >
-                <Option value="Đợi xác nhận">Đợi xác nhận</Option>
-                <Option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</Option>
-                <Option value="Đang giao hàng">Đang giao hàng</Option>
-                <Option value="Giao hàng thành công">Giao hàng thành công</Option>
-            </Select>
+            <div className='col-12'>
+                <div className='top-order-list col-6'>
+                    <Input
+                        placeholder="Tìm kiếm hóa đơn..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className='col-4'
+                    />
+                    <Select
+                        placeholder="Hình thức thanh toán"
+                        value={selectedType}
+                        className='col-4'
+                        onChange={(value) => setSelectedType(value)}
+                        allowClear
+                    >
+                        <Option value="Thanh toán trực tuyến">Thanh toán trực tuyến</Option>
+                        <Option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</Option>
+                    </Select>
+                    <Select
+                        placeholder="Trạng thái"
+                        value={selectedStatus}
+                        className='col-4'
+                        onChange={(value) => setSelectedStatus(value)}
+                        allowClear
+                    >
+                        <Option value="Đợi xác nhận">Đợi xác nhận</Option>
+                        <Option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</Option>
+                        <Option value="Đang giao hàng">Đang giao hàng</Option>
+                        <Option value="Giao hàng thành công">Giao hàng thành công</Option>
+                    </Select>
+                </div>
+            </div>
             <Table
                 columns={columns}
                 dataSource={filteredOrders.map((order, index) => ({ ...order, key: order._id || index }))}

@@ -120,6 +120,7 @@ const CampaignPage = () => {
     {
       title: "Hành động",
       key: "action",
+      align: 'center',
       render: (_, record) => (
         <>
           <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />

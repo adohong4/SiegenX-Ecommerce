@@ -2537,3 +2537,12 @@ h2 {
 .history-table th {
     background-color: #f4f4f4;
 }
+
+
+/* CSS cho trang Nhân Viên */
+
+
+.staff-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
+}

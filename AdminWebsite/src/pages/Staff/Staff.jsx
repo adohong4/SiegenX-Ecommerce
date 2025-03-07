@@ -118,6 +118,7 @@ const EmployeeList = () => {
     {
       title: "Hành động",
       key: "actions",
+      align:'center',
       render: (_, record) => (
         <>
           <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }}>Sửa</Button>
@@ -140,12 +141,12 @@ const EmployeeList = () => {
   ];
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className='staff-container' style={{ padding: 20 }}>
       <h2>DANH SÁCH NHÂN VIÊN</h2>
       <Input
         placeholder="Tìm kiếm nhân viên..."
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: 20, width: "300px" }}
+        style={{ marginBottom: 20, width: "300px", marginRight:20 }}
       />
       <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>Thêm nhân viên</Button>
 

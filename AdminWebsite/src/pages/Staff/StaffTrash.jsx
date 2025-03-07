@@ -69,9 +69,10 @@ const EmployeeTrashList = () => {
         {
             title: "Hành động",
             key: "actions",
+            align:'center',
             render: (_, record) => (
                 <>
-                    <Button onClick={() => showViewModal(record)} style={{ marginRight: 8 }}>Xem</Button>
+                    <Button onClick={() => showViewModal(record)} >Xem</Button>
                     <Popconfirm title="Bạn muốn phục hồi?" onConfirm={() => handleResore(record._id)}>
                         <Button type="primary" danger>Phục hồi</Button>
                     </Popconfirm>
@@ -90,7 +91,7 @@ const EmployeeTrashList = () => {
     ];
 
     return (
-        <div style={{ padding: 20 }}>
+        <div className='staff-container' style={{ padding: 20 }}>
             <h2>DANH SÁCH NHÂN VIÊN</h2>
             <Input
                 placeholder="Tìm kiếm nhân viên..."

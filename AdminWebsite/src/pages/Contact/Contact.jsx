@@ -48,7 +48,7 @@ const Contact = () => {
                 }));
 
                 if (filterStatus !== "All") {
-                    const isCheckValue = filterStatus === "true"; // Convert "true"/"false" thành boolean
+                    const isCheckValue = filterStatus === "true"; 
                     contacts = contacts.filter(contact => contact.isCheck === isCheckValue);
                 }
 
@@ -126,23 +126,30 @@ const Contact = () => {
             render: (text, record) => (
                 <button onClick={() => handleViewToggle(record._id)} className="btn-eye">
                     {record.viewed ? (
-                        <EyeOutlined style={{ color: "green" }} />
+                        <>
+                            <EyeOutlined style={{ color: "red", marginRight: 5 }} />
+                            <span style={{ color: "red" }}>Đã liên hệ</span>
+                        </>
                     ) : (
-                        <EyeFilled style={{ color: "red" }} />
+                        <>
+                            <EyeFilled style={{ color: "green", marginRight: 5 }} />
+                            <span style={{ color: "green" }}>Chưa liên hệ</span>
+                        </>
                     )}
                 </button>
             ),
         },
+        
         {
             title: "Hành động",
             key: "action",
             render: (text, record) => (
                 <>
-                    <button onClick={() => showViewModal(record)} className="btn-info">
+                    <button onClick={() => showViewModal(record)} className="btn-info-contact" style={{padding:"5px 10px"}}>
                         <FontAwesomeIcon icon={faBook} />
                     </button>
                     <Popconfirm title="Xóa tài khoản này?" onConfirm={(e) => { e.stopPropagation(); removeContact(record._id); }} okText="Xóa" cancelText="Hủy">
-                        <button className="btn-delete"><FontAwesomeIcon icon={faTrash} /></button>
+                        <button className="btn-delete-contact" style={{padding:"5px 10px", color:"red"}}><FontAwesomeIcon icon={faTrash} /></button>
                     </Popconfirm>
 
                 </>
@@ -170,25 +177,24 @@ const Contact = () => {
                     </div>
                 ))}
             </section>
-            <div className='top-list-tiltle'>
+            <div className='top-list-tiltle col-6'>
 
-                <div className='col-lg-4 tittle-right'>
+                <div className='col-lg-3 tittle-right'>
                     <Input
                         placeholder="Tìm kiếm liên hệ...."
                         style={{
                             width: 200,
                             marginRight: 8,
                             backgroundColor: '#ffff',
-                            border: '1px solid rgb(134, 134, 134)',
                         }}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <div className='col-lg-8 list-left'>
+                <div className='col-lg-3 list-left'>
                     <Select
                         placeholder="Danh mục liên hệ"
-                        style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                        style={{ width: 200, marginRight: 8 }}
                         value={selectedView}
                         onChange={(value) => setSelectedView(value)}
                         allowClear
@@ -204,6 +210,7 @@ const Contact = () => {
                 dataSource={filtered.map((contact, index) => ({ ...contact, key: contact._id || index }))}
                 rowKey="key"
                 pagination={false} // Ẩn phân trang mặc định của Table
+                rowClassName={(record) => (record.viewed ? "checked-row" : "")} // Thêm class nếu đã kiểm tra
             />
 
             <Pagination

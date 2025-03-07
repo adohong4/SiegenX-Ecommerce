@@ -349,14 +349,14 @@ textarea {
 
 .top-list-tiltle {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 20px 0px;
     margin-bottom: 20px;
 }
 
-.top-list-tiltle .tittle-right {
+/* .top-list-tiltle .tittle-right {
     margin-top: 1%;
-}
+} */
 
 .top-list-tiltle .search-container input {
     width: 100%;
@@ -663,19 +663,31 @@ textarea {
 }
 
 /* CSS cho Contact */
+.contact-list-container{
+    padding: 20px;
+}
 .section-dashboard-contact {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
 }
-
+.checked-row {
+    opacity: 0.5;  
+}
+.contact-list-container .ant-table-tbody tr>td.ant-table-cell::after{
+    display: flex;
+    justify-content: space-around;
+    padding: 0px;
+}
 .section-dashboard-contact .dashboard-body {
-    background-color: #cccccc;
+    background-color: #fff;
     width: 20%;
     padding: 20px;
     border-radius: 10px;
     font-weight: bold;
     transition: all 0.6s ease-in-out;
+    border: 2px dashed #ccc;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .section-dashboard-contact .dashboard-body:hover {

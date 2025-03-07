@@ -231,14 +231,22 @@ textarea {
     margin-bottom: 20px;
 }
 
-.das-body .box {
+.dashboard-product .das-body .box {
     width: 20%;
-    background-color: #e2e2e2;
+    background-color: transparent;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
     padding: 10px;
     border-radius: 10px;
     text-align: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     transition: all 0.3s ease-in-out;
     font-weight: bold;
+    border: 2px dashed #cccccc;
+}
+.dashboard-product .das-body .box svg{
+    font-size: 2em;
 }
 
 .das-body .box:hover {
@@ -252,6 +260,13 @@ textarea {
     padding: 20px;
     margin-right: 0;
 
+}
+
+.listproduct .button-product .btn-info{
+    color: #000;
+}
+.listproduct .button-product .cursor1{
+    color: #000;
 }
 
 .list-table-format>* {
@@ -325,6 +340,7 @@ textarea {
 .list-left {
     display: flex;
     align-items: center;
+    justify-content: right;
 }
 
 .search {
@@ -333,14 +349,14 @@ textarea {
 
 .top-list-tiltle {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 20px 0px;
     margin-bottom: 20px;
 }
 
-.top-list-tiltle .tittle-right {
+/* .top-list-tiltle .tittle-right {
     margin-top: 1%;
-}
+} */
 
 .top-list-tiltle .search-container input {
     width: 100%;
@@ -359,17 +375,6 @@ textarea {
 }
 
 
-.cursor1 {
-    background-color: #dc3545;
-    border: none;
-    color: #fff;
-    border-radius: 5px;
-    height: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.6s ease-in-out;
-}
-
 .btn-update1 {
     background-color: #00B98E;
     border: none;
@@ -382,12 +387,6 @@ textarea {
 
 }
 
-.cursor1:hover {
-    border-radius: 50px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    background-color: #c0392b;
-    color: white;
-}
 
 .btn-update1:hover {
     transform: scale(1.05);
@@ -624,13 +623,29 @@ textarea {
 }
 
 /* CSS cho trang Hóa đơn */
+
+
 .order-list-table {
     width: 100%;
 }
-
+.order-list-container{
+    padding: 20px;
+}
+.order-list-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
+}
 .order-list-container .search {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+.order-list-container .top-order-list{
+    padding:  20px 0;
+    display: flex;
+    gap: 10px;
+}
+.order-list-container .col-12{
+    display: flex;
 }
 
 .order-list-table .btn-delete {
@@ -648,19 +663,31 @@ textarea {
 }
 
 /* CSS cho Contact */
+.contact-list-container{
+    padding: 20px;
+}
 .section-dashboard-contact {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
 }
-
+.checked-row {
+    opacity: 0.5;  
+}
+.contact-list-container .ant-table-tbody tr>td.ant-table-cell::after{
+    display: flex;
+    justify-content: space-around;
+    padding: 0px;
+}
 .section-dashboard-contact .dashboard-body {
-    background-color: #cccccc;
+    background-color: #fff;
     width: 20%;
     padding: 20px;
     border-radius: 10px;
     font-weight: bold;
     transition: all 0.6s ease-in-out;
+    border: 2px dashed #ccc;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .section-dashboard-contact .dashboard-body:hover {
@@ -998,7 +1025,6 @@ textarea {
 }
 
 .profile-auth {
-    border: 1px solid #b5b5b5;
     padding: 5px;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -1006,7 +1032,11 @@ textarea {
 
 /* CSS cho ListUser */
 
-
+.user-list-container .ant-table-tbody td.ant-table-cell:last-child{
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+}
 
 .user-list-container {
     padding: 20px;
@@ -1160,60 +1190,7 @@ textarea {
     cursor: pointer;
 }
 
-.btn-info {
-    background-color: #2196f3;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
-
-/* .user-list-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    
-}
-
-.user-list-table th,
-.user-list-table td {
-    padding: 12px 15px;
-    text-align: left;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.user-list-table th:nth-child(1),
-.user-list-table td:nth-child(1) {
-    max-width: 50px;
-}
-
-.user-list-table th:nth-child(2),
-.user-list-table td:nth-child(2) {
-    max-width: 100px;
-}
-
-.user-list-table th:nth-child(3),
-.user-list-table td:nth-child(3) {
-    text-align: center;
-    max-width: 50px;
-}
-
-.user-list-table td:nth-child(4),
-.user-list-table th:nth-child(4),
-.user-list-table td:nth-child(5),
-.user-list-table th:nth-child(5) {
-    text-align: center;
-    max-width: 100px;
-}
-.user-list-table td:nth-child(6),
-.user-list-table th:nth-child(6) {
-    text-align: center;
-    max-width: 100px;
-} */
 
 .page-link:hover,
 .page-link {
@@ -1430,7 +1407,7 @@ body.popup-open {
 /* Thẻ thông tin */
 .info-cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
     gap: 50px;
     margin-top: 80px;
 }
@@ -1609,24 +1586,42 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
-
+.nhap-hang-page h1{
+    padding-bottom: 10px;
+    font-size: 25px;
+    border-bottom: 2px dashed #cccccc;
+}
+.nhap-hang-page{
+    padding: 20px;
+}
 .nhap-hang-page .header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
+    margin-top: 20px;
 
 }
-
+.nhap-hang-page .ant-table-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
+}
+.nhap-hang-page .search-invoice input{
+    height: 100%;
+    border-radius: 5px;
+}
 .nhap-hang-page .btn {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-
+.nhap-hang-page .order-table td>.btn-info>svg{
+    margin: 0;
+}
 .nhap-hang-page .btn-primary {
     background-color: #007bff;
     color: white;
+    margin-left: 20px;
 }
 
 .nhap-hang-page .btn-info {
@@ -1823,7 +1818,11 @@ h2 {
     border-radius: 10px;
     text-align: center;
 }
-
+.profile-admin-container .profile-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 h2 {
     color: #333;
 }
@@ -1851,7 +1850,7 @@ h2 {
     font-size: 16px;
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
 }
 
 .profile-admin-field input {
@@ -2030,11 +2029,14 @@ h2 {
 
 .profile-admin-table {
     width: 100%;
+    text-align: left;
     border-collapse: collapse;
 }
-
+.profile-admin-table tr td{
+    padding:10px 0px;
+}
 .profile-admin-table tr {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px dashed #aaa;
 }
 
 .profile-label {
@@ -2067,7 +2069,7 @@ h2 {
     font-size: 16px;
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+
     outline: none;
 }
 
@@ -2098,7 +2100,7 @@ h2 {
 
 /* Button */
 .profile-admin-actions {
-    text-align: center;
+    text-align: left;
     margin-top: 20px;
 }
 
@@ -2384,4 +2386,163 @@ h2 {
 
 .supplier-list-container .ant-input {
     border-radius: 5px;
+}
+
+/* CSS cho trang ProductDetail */
+.product-details-container .upload-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor:default;
+}
+.product-details-container .product-images-section .image-wrapper{
+    cursor:pointer;
+    transition: all 0.3s ease-in-out;
+}
+.product-details-container .product-images-section .image-wrapper:hover {
+    scale: 1.05;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-details-container {
+    max-width: 100%;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.product-details-container .top-info .form-row{
+    display: flex;
+    flex-wrap: nowrap;
+    column-gap: 0;
+    margin-top: 10px;
+}
+.product-details-container .top-info .form-field {
+    padding: 0 10px;
+}
+.product-details-grid{
+    display: flex;
+    gap: 20px;
+}
+.product-details-grid .product-info-section h2{
+    text-align: left;
+    padding-left: 10px;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+    border-bottom: 2px dashed #cccccc;
+}
+.product-details-grid .product-info-section .specs-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; 
+}
+.product-details-grid .product-info-section .product-specs>h2{
+    text-transform: uppercase;
+}
+.product-header {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.product-content {
+    display: flex;
+    gap: 20px;
+}
+
+.product-image-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 250px;
+    cursor: pointer;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.file-input {
+    display: none;
+}
+
+.product-info-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.product-details-form .form-field {
+    margin-bottom: 10px;
+}
+
+.form-field label {
+    font-weight: bold;
+    display: block;
+}
+
+.product-description {
+    margin-top: 15px;
+}
+
+.save-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.history-header {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #555;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.history-table th, .history-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.history-table th {
+    background-color: #f4f4f4;
+}
+
+
+/* CSS cho trang Nhân Viên */
+
+
+.staff-container .ant-table-tbody .ant-table-cell:last-child{
+    display: flex;
+    justify-content: space-around;
 }

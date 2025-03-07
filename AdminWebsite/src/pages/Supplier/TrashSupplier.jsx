@@ -109,6 +109,7 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
             title: "Trạng thái",
             dataIndex: "status",
             key: "status",
+            align:'center',
             render: (status) => (
                 <span>{!status ? "Hoạt động" : "Không hoạt động"}</span>
             ),
@@ -116,6 +117,7 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
         {
             title: "Hành động",
             key: "action",
+            align:'center',
             render: (text, record) => (
                 <>
                     <Button onClick={() => handleStore(record._id)} style={{ marginRight: 8 }}>Hồi phục</Button>

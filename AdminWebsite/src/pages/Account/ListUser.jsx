@@ -88,19 +88,46 @@ const ListUser = () => {
         { title: "Tài khoản", dataIndex: "username", key: "username", sorter: (a, b) => a.username.localeCompare(b.username) },
         { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => a.email.localeCompare(b.email) },
         { title: "Giới tính", dataIndex: "gender", key: "gender", sorter: (a, b) => a.gender.localeCompare(b.gender) },
-        { title: "Số lượng đơn hàng", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
+        { title: "Số lượng đơn hàng",align: "center", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
         { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt", render: (createdAt) => formatDayTime(createdAt) },
         {
             title: "Tùy chỉnh",
+            align: "center",
             key: "action",
             render: (_, record) => (
                 <>
-                    <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />
-                    <Button onClick={() => showEditModal(record)} type="primary" icon={<EditFilled />} />
-                    <Popconfirm title="Xóa tài khoản này?" onConfirm={() => removeUser(record._id)} okText="Xóa" cancelText="Hủy">
-                        <Button type="primary" icon={<DeleteOutlined />} danger />
+                    <Button
+                        type="primary"
+                        icon={<BookFilled />}
+                        onClick={() => showViewModal(record)}
+                        style={{ backgroundColor: "#1890ff", borderColor: "#1890ff", color: "white" }}
+                        title="Xem chi tiết"
+                    />
+
+                    <Button
+                        type="primary"
+                        icon={<EditFilled />}
+                        onClick={() => showEditModal(record)}
+                        style={{ backgroundColor: "#fa8c16", borderColor: "#fa8c16", color: "white" }}
+                        title="Chỉnh sửa"
+                    />
+
+                    <Popconfirm
+                        title="Xóa tài khoản này?"
+                        onConfirm={() => removeUser(record._id)}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                    >
+                        <Button
+                            type="primary"
+                            icon={<DeleteOutlined />}
+                            style={{ backgroundColor: "#ff4d4f", borderColor: "#ff4d4f", color: "white" }}
+                            title="Xóa tài khoản"
+                        />
                     </Popconfirm>
                 </>
+
+
             ),
         },
     ];
@@ -123,7 +150,7 @@ const ListUser = () => {
                 columns={columns}
                 dataSource={filteredUsers.map((user, index) => ({ ...user, key: user._id || index }))}
                 rowKey="key"
-                pagination={false} // Ẩn phân trang mặc định của Table
+                pagination={false}
             />
             <Pagination
                 current={currentPage}
@@ -169,7 +196,6 @@ const ListUser = () => {
                 )}
             </Modal>
 
-            {/* Modal cập nhật tài khoản người dùng */}
             <Modal
                 title="Chỉnh sửa tài khoản"
                 open={isModalOpen}

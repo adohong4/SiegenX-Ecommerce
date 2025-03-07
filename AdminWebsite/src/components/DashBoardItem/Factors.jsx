@@ -47,9 +47,7 @@ const Factors = () => {
 
     return (
         <div className="user-factors-container">
-            <div className='user-factors-title'>
-            </div>
-            <div className="info-cards">
+            <div className="info-cards col-12">
                 <div className="info-card" style={{ background: "#6F42C1", color: "white" }}>
                     <FontAwesomeIcon icon={faUsers} className="info-icon" />
                     <StatsCard maxCount={user} label="Người dùng" />

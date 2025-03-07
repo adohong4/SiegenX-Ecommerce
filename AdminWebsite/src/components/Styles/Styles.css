@@ -69,7 +69,7 @@
 .sidebar-left {
   background-color: #1d2327;
 }
-
+  
 .sidebar-right {
   margin-left: 180px;
   width: calc(100% - 180px);
@@ -938,7 +938,7 @@ button[type='submit'] span {
 }
 
 .admin-container {
-  width: 100vw;
+  width: 99vw;
 }
 
 .login-popup .col-12 {

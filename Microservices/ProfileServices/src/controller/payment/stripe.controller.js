@@ -5,6 +5,8 @@ const orderModel = require('../../models/order.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 const { CREATED } = require("../../core/success.response")
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 class StripeController {
     placeOrder = async (req, res) => {
         const userId = req.user;

@@ -3,7 +3,7 @@ import { assets } from '../../assets/assets';
 import '../styles/styles.css'
 import { StoreContext } from '../../context/StoreContext'
 import React, { useState, useEffect, useContext } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
     options,
@@ -16,6 +16,7 @@ const Home = () => {
     const { product_list } = useContext(StoreContext);
     const [activeTab, setActiveTab] = useState("Giải pháp phòng học thông minh");
     const [selectedOption, setSelectedOption] = useState(0);
+    const navigate = useNavigate();
     const handleTabClick = (tabName) => {
         setActiveTab(tabName);
     };
@@ -110,14 +111,14 @@ const Home = () => {
                                 >
                                     <div className="product-img-container">
                                         <img src={`http://localhost:9003/images/${product.images[0]}`} alt={product.title} className="product-img" />
-                                        <div className="cart-icon" onClick={(e) => { e.stopPropagation(); navigate("/cart"); }}>
+                                        <div className="cart-icon" onClick={(e) => { e.stopPropagation(); navigate("/san-pham") }}>
                                             <i className="fas fa-shopping-cart"></i>
                                         </div>
                                     </div>
                                     <h3 className="product-name">{product.nameProduct}</h3>
                                     <div className="product-actions">
-                                        <button className="product-price-btn">{product.price ? `${product.price.toLocaleString()}đ` : "LIÊN HỆ"}</button>
-                                        <button className="product-btn">XEM NGAY</button>
+                                        <button className="product-price-btn">LIÊN HỆ</button>
+                                        <button className="product-btn" onClick={() => navigate(`/san-pham`)}>XEM NGAY</button>
                                     </div>
                                 </motion.div>
                             ))}

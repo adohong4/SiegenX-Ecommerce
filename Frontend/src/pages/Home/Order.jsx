@@ -65,8 +65,9 @@ const PlaceOrder = () => {
         };
         //lựa chọn online hay tại nhà
         if (paymentMethod === 'online') {
-            let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData, { headers: { token } });
 
+            let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData);
+            console.log("data: ", response.data.success)
             if (response.data.success) {
                 const { session_url } = response.data;
                 window.location.replace(session_url);
@@ -105,22 +106,6 @@ const PlaceOrder = () => {
 
     };
 
-
-    // Giả lập cho hàm handle submit
-
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     toast.success("Đặt hàng thành công!");
-    //     navigate('/payment-success', {
-    //         state: {
-    //             message: "Đặt hàng thành công!",
-    //             orderData
-    //         }
-    //     });
-    // };
-
-    // Kết thúc giả lập cho handleSubmit
-
     const sendEmailConfirmation = async (orderDetails, email) => {
         try {
             const response = await axios.post(url + '/v1/api/profile/send-email', {
@@ -140,16 +125,6 @@ const PlaceOrder = () => {
             navigate('/cart');
         }
     }, []);
-
-    // useEffect(() => {
-    //     if (Order.length > 0) {
-    //         const orderData = Order[0]; // Lấy đơn hàng đầu tiên từ danh sách
-    //         setList([orderData.address]); // Lưu địa chỉ vào danh sách
-    //         setFormData(orderData.address); // Cập nhật form với địa chỉ có sẵn
-    //     } else {
-    //         toast.error("Không có dữ liệu đơn hàng!");
-    //     }
-    // }, []);
 
     return (
         <form className="place-order" onSubmit={handleSubmit}>
@@ -207,25 +182,6 @@ const PlaceOrder = () => {
                         </div>
                     </div>
 
-                    {/* Giả lập dữ liệu cho hàm getTotalAmount */}
-
-                    {/* <div>
-                        <div className="cart-total-details">
-                            <p>Tạm Tính</p>
-                            <p>{Order[0].totalAmount.toLocaleString()} đ</p>
-                        </div>
-                        <hr />
-                        <div className="cart-total-details">
-                            <p>Phí Giao Hàng</p>
-                            <p>{Order[0].shippingFee.toLocaleString()} đ</p>
-                        </div>
-                        <hr />
-                        <div className="cart-total-details">
-                            <b>Tổng Cộng</b>
-                            <b>{Order[0].finalAmount.toLocaleString()} đ</b>
-                        </div>
-                    </div> */}
-                    {/* Kết thúc hàm giả lập */}
                     <div className="hinhthuc-thanhtoan">
                         <p>Hình thức thanh toán:</p>
                         <label>

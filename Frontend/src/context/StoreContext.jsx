@@ -5,12 +5,9 @@ import Cookies from 'js-cookie';
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-
-    const [cartItems, setCartItems] = useState({})
-
+    axios.defaults.withCredentials = true;
     const url = "http://localhost:4001";
-    const url2 = "http://localhost:9003";
-
+    const [cartItems, setCartItems] = useState({})
     const [token, setToken] = useState("")
     const [product_list, setProductList] = useState([]);
     const [product_campaign, setProductCampaign] = useState([]);
@@ -18,13 +15,9 @@ const StoreContextProvider = (props) => {
     const [product_slug, setProductSlug] = useState(null);
     const [product_slug_campaign, setProductSlugCampaign] = useState([]);
     const [product_info, setProductInfo] = useState([]);
-    const [recommend, setProductRecommend] = useState([]);
     const [address, setAddress] = useState([]);
     const [profile, setProfile] = useState([]);
     const [orders, setOrders] = useState([]);
-    // Cấu hình axios mặc định
-    axios.defaults.withCredentials = true;
-
 
     const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {
@@ -72,36 +65,6 @@ const StoreContextProvider = (props) => {
         }
         return totalAmount;
     };
-
-    const fetchProductRecommend = async () => {
-        // Lấy danh sách productIds từ cartItems
-        const productIds = Object.keys(cartItems).filter(id => cartItems[id] > 0);
-
-        if (productIds.length > 0) {
-            const data = {
-                productIds: productIds, // Danh sách ID sản phẩm từ giỏ hàng
-                numRecommendations: 4   // Số lượng sản phẩm gợi ý mong muốn
-            };
-
-            try {
-                // Gọi API bằng phương thức POST
-                const response = await axios.post(`${url}/v1/api/product/recommend`, data, {
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                // Kiểm tra phản hồi từ API
-                if (response.data && response.data.status === 200) {
-                    setProductRecommend(response.data.metadata); // Cập nhật danh sách sản phẩm gợi ý
-                } else {
-                    console.warn("API không trả về dữ liệu hợp lệ:", response.data);
-                }
-            } catch (error) {
-                console.error("Lỗi khi lấy sản phẩm gợi ý:", error);
-            }
-        }
-    };
-
-
 
     const fetchProductList = async () => {
         const response = await axios.get(`${url}/v1/api/product/getAll`);
@@ -168,16 +131,16 @@ const StoreContextProvider = (props) => {
     const contextValue = {
         product_list, product_campaign, updateProduct,
         product_slug, product_slug_campaign, product_info,
-        cartItems, address, profile, recommend,
+        cartItems, address, profile,
         fetchOrders, orders,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
         getTotalCartAmount, loadCartData,
-        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile, fetchProductRecommend,
+        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile,
         fetchUserAddress,
-        url, url2,
+        url,
         setToken,
         token
     }

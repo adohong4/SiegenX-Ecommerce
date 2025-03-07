@@ -13,6 +13,7 @@ import Products from './pages/Home/Product';
 import ProductDetail from './pages/Home/ProductDetails';
 import Cart from './pages/Home/Cart';
 import Order from './pages/Home/Order';
+import Verify from './pages/Home/Verify';
 import Login from './pages/Home/Login';
 import Sidebar from './components/Profile/SideBarUserProfile';
 import UserAddress from './components/Profile/UserAddress';
@@ -39,8 +40,8 @@ const App = () => {
           <Route path="/san-pham/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/hoa-don" element={<Order />} />
+          <Route path="/verify" element={<Verify />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/user" element={<Sidebar />} />
           <Route path="/user" element={<Sidebar />}>
             <Route index element={<div>Trang chủ User</div>} />
             <Route path="profile" element={<UserProfile />} />

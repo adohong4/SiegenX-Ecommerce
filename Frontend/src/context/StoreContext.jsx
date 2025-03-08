@@ -13,6 +13,7 @@ const StoreContextProvider = (props) => {
 
     const [token, setToken] = useState("")
     const [product_list, setProductList] = useState([])
+    const [product_campaign, setProductCampaign] = useState([])
     const [product_slug, setProductSlug] = useState(null);
     // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
@@ -79,9 +80,15 @@ const StoreContextProvider = (props) => {
         setCartItems(response.data.metadata);
     };
 
+    const fetchProductUpdateCampaign = async () => {
+        const response = await axios.get(`${url}/v1/api/product/campaign/updateProductPrice`);
+        setProductCampaign(response.data.metadata);
+    };
+
     useEffect(() => {
         async function loadData() {
             await fetchProductList();
+            await fetchProductUpdateCampaign();
             const cookieToken = Cookies.get("jwt");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -93,7 +100,7 @@ const StoreContextProvider = (props) => {
 
 
     const contextValue = {
-        product_list,
+        product_list, product_campaign,
         product_slug,
         cartItems,
         setCartItems,

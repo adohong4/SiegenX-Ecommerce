@@ -37,5 +37,10 @@ export function formatDayTime(date) {
 
 }
 
+export function formatCurrency(price) {
+  const integerPart = Math.floor(price);
+  return integerPart.toLocaleString()
+}
+
 
 

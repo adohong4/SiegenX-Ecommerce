@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/register_controller.dart';
 import 'package:siegenx_mobile_app/screens/enter_information_screen.dart';
 import 'package:siegenx_mobile_app/screens/login_screen.dart';
-import 'package:siegenx_mobile_app/screens/manager_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -37,7 +37,6 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-// Sửa _Header để căn sát hẳn bên trái
 class _Header extends StatelessWidget {
   const _Header({Key? key}) : super(key: key);
 
@@ -47,14 +46,13 @@ class _Header extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start, // Căn sát bên trái
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:
-              const EdgeInsets.only(left: 0.0, top: 16.0), // Bỏ padding trái
+          padding: const EdgeInsets.only(left: 0.0, top: 16.0),
           child: Text(
             "Tạo tài khoản",
-            textAlign: TextAlign.left, // Căn sát bên trái
+            textAlign: TextAlign.left,
             style: isSmallScreen
                 ? Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -69,11 +67,10 @@ class _Header extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(
-              left: 0.0, top: 8.0, bottom: 16.0), // Bỏ padding trái
+          padding: const EdgeInsets.only(left: 0.0, top: 8.0, bottom: 16.0),
           child: Text(
             "Vui lòng nhập đầy đủ thông tin và tạo tài khoản.",
-            textAlign: TextAlign.left, // Căn sát bên trái
+            textAlign: TextAlign.left,
             style: isSmallScreen
                 ? Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Color(0xff929292),
@@ -104,6 +101,47 @@ class __FormContentState extends State<_FormContent> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final RegisterController _registerController = RegisterController();
+  bool _isLoading = false;
+
+  // Trong __FormContentState của RegisterScreen
+  Future<void> _handleRegister() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final result = await _registerController.registerUser(
+      username: _usernameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (result['success']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+      // Truyền token và userId sang màn hình tiếp theo
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EnterInformationScreen(
+            token: result['data']['metadata']['token'],
+            userId: result['data']['metadata']['user']['_id'],
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,8 +219,9 @@ class __FormContentState extends State<_FormContent> {
                 if (value == null || value.isEmpty) {
                   return 'Vui lòng nhập mật khẩu';
                 }
-                if (value.length < 6) {
-                  return 'Mật khẩu ít nhất 6 ký tự';
+                if (value.length < 8) {
+                  // Thay đổi thành 8 để khớp với backend
+                  return 'Mật khẩu ít nhất 8 ký tự';
                 }
                 return null;
               },
@@ -263,30 +302,20 @@ class __FormContentState extends State<_FormContent> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: const Padding(
+                onPressed: _isLoading ? null : _handleRegister,
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    'TIẾP TỤC',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'TIẾP TỤC',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
-                onPressed: () {
-                  // if (_formKey.currentState!.validate()) {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => ManagerScreen()),
-                  //   );
-                  // }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EnterInformationScreen()),
-                  );
-                },
               ),
             ),
             const SizedBox(height: 30),

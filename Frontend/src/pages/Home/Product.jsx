@@ -2,15 +2,19 @@ import React, { useState, useContext, useEffect } from "react";
 import { StoreContext } from '../../context/StoreContext'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { assets } from '../../assets/assets';
+import { formatCurrency } from '../../lib/utils'
+import { columns, columns_Rep } from '../../data/data'
 import '../styles/styles.css';
 
 const Products = () => {
-    const { product_list, url, url2 } = useContext(StoreContext);
+    const { product_list, url, url2, product_campaign } = useContext(StoreContext);
     const [searchParams] = useSearchParams(); // Lấy các tham số từ URL
     const [selectedCategory, setSelectedCategory] = useState(null); // Category được chọn
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 9; // Số sản phẩm mỗi trang
     const navigate = useNavigate();
+
+    console.log(product_campaign)
 
     // Lấy category từ URL
     useEffect(() => {
@@ -24,17 +28,17 @@ const Products = () => {
 
     // Lọc sản phẩm theo category
     const filteredProducts = selectedCategory
-        ? product_list.filter((product) => product.category === selectedCategory)
-        : product_list;
+        ? product_campaign?.updatedProducts.filter((product) => product.category === selectedCategory)
+        : product_campaign?.updatedProducts;
 
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-    const currentProducts = filteredProducts.slice(
+    const totalPages = Math.ceil(filteredProducts?.length / productsPerPage);
+    const currentProducts = filteredProducts?.slice(
         (currentPage - 1) * productsPerPage, // (thứ tự trang hiện tại - 1) * số lượng sp có thể hiển thị trên 1 trang( 9sp )
         currentPage * productsPerPage // trang hiện tại * 9 
         // kết quả vidu: (0,9), (9,18), (18, 27)
     );
 
-    const emptyProducts = new Array(productsPerPage - currentProducts.length).fill(null); // Placeholder nếu ít sản phẩm hơn
+    const emptyProducts = new Array(productsPerPage - currentProducts?.length).fill(null); // Placeholder nếu ít sản phẩm hơn
 
     // Xử lý khi click vào sản phẩm
     const handleProductClick = (productSlug) => {
@@ -70,20 +74,6 @@ const Products = () => {
         return pages;
     };
 
-    const columns = [
-        { title: "Màn hình LED", category: "Màn hình LED" },
-        { title: "MH tương tác", category: "MH tương tác" },
-        { title: "Màn hình quảng cáo LCD", category: "MH quảng cáo LCD" },
-        { title: "Quảng cáo 3D (OOH)", category: "Quảng cáo 3D (OOH)" },
-        { title: "KTV 5D", category: "KTV 5D" },
-    ];
-    const columns_Rep = [
-        { title: "LED", category: "Màn hình LED" },
-        { title: "Tương tác", category: "MH tương tác" },
-        { title: "LCD", category: "Màn hình quảng cáo LCD" },
-        { title: "3D (OOH)", category: "Quảng cáo 3D (OOH)" },
-        { title: "5D", category: "KTV 5D" },
-    ];
     // Xử lý khi click vào category từ BannerHome
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
@@ -145,17 +135,29 @@ const Products = () => {
                                             onClick={() => handleProductClick(product.product_slug)}
                                         >
                                             <div className="productlist-img-container">
+                                                {product_campaign?.campaignType === 'percentage' && product.newPrice !== null && (
+                                                    <div className="discount-badge">
+                                                        -{product_campaign.campaignValue}%
+                                                    </div>
+                                                )}
                                                 <img src={`http://localhost:9003/images/${product.images[0]}`} alt=""
                                                     className="productlist-image"
                                                 />
-                                                {/* Fake data cho hình ảnh */}
-                                                <img src={`/images/${product.images[0]}`} alt="" className="productlist-image" />
-
                                                 <div className="cart-icon">
                                                     <i className="fas fa-shopping-cart"></i>
                                                 </div>
                                             </div>
                                             <h3 className="productlist-title">{product.nameProduct}</h3>
+                                            <div className="product-price-container">
+                                                {product.newPrice !== null ? (
+                                                    <>
+                                                        <span className="product-new-price">{formatCurrency(product.newPrice)}đ</span>
+                                                        <span className="product-old-price">{formatCurrency(product.price)}đ</span>
+                                                    </>
+                                                ) : (
+                                                    <span className="product-price">{formatCurrency(product.price)}đ</span>
+                                                )}
+                                            </div>
                                             <div className="productlist-actions">
                                                 <button
                                                     className="productlist-price-btn"

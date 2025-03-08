@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:siegenx_mobile_app/screens/manager_screen.dart';
+import 'package:siegenx_mobile_app/controllers/profile_controller.dart';
 
 class EnterInformationScreen extends StatelessWidget {
-  const EnterInformationScreen({Key? key}) : super(key: key);
+  final String token;
+  final String userId;
+
+  const EnterInformationScreen({
+    Key? key,
+    required this.token,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,6 @@ class EnterInformationScreen extends StatelessWidget {
   }
 }
 
-// Sửa _Header để thêm icon back
 class _Header extends StatelessWidget {
   const _Header({Key? key}) : super(key: key);
 
@@ -46,7 +53,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start, // Căn sát bên trái
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsetsDirectional.only(
@@ -58,7 +65,7 @@ class _Header extends StatelessWidget {
               size: 28,
             ),
             onPressed: () {
-              Navigator.pop(context); // Quay lại màn hình trước
+              Navigator.pop(context);
             },
           ),
         ),
@@ -73,7 +80,6 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        // Bỏ dòng "Vui lòng nhập đầy đủ thông tin..."
       ],
     );
   }
@@ -92,8 +98,9 @@ class __FormContentState extends State<_FormContent> {
   DateTime? _dateOfBirth;
   String? _gender;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ProfileController _profileController = ProfileController();
+  bool _isLoading = false;
 
-  // Định dạng số điện thoại với dấu chấm ngăn cách
   String _formatPhoneNumber(String value) {
     String digits = value.replaceAll(RegExp(r'[^0-9]'), '');
     if (digits.length > 4 && digits.length <= 7) {
@@ -104,7 +111,6 @@ class __FormContentState extends State<_FormContent> {
     return digits;
   }
 
-  // Mở DatePicker để chọn ngày sinh
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -119,6 +125,44 @@ class __FormContentState extends State<_FormContent> {
     }
   }
 
+  Future<void> _handleUpdateProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final EnterInformationScreen widgetScreen =
+        context.findAncestorWidgetOfExactType<EnterInformationScreen>()!;
+
+    final result = await _profileController.updateProfile(
+      token: widgetScreen.token,
+      userId: widgetScreen.userId,
+      fullName: _fullNameController.text,
+      dateOfBirth: _dateOfBirth!.toIso8601String().split('T')[0],
+      numberPhone: _phoneController.text.replaceAll('.', ''),
+      gender: _gender!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (result['success']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ManagerScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -130,7 +174,6 @@ class __FormContentState extends State<_FormContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 10),
-            // Họ và tên
             TextFormField(
               controller: _fullNameController,
               validator: (value) {
@@ -156,8 +199,6 @@ class __FormContentState extends State<_FormContent> {
               ),
             ),
             _gap(),
-
-            // Ngày sinh
             GestureDetector(
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
@@ -169,7 +210,6 @@ class __FormContentState extends State<_FormContent> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    // labelText: 'Ngày sinh',
                     labelStyle: TextStyle(color: Color(0xff00B98E)),
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(12.0),
@@ -191,7 +231,6 @@ class __FormContentState extends State<_FormContent> {
               ),
             ),
             _gap(),
-            // Số điện thoại
             TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.number,
@@ -234,7 +273,6 @@ class __FormContentState extends State<_FormContent> {
               ),
             ),
             _gap(),
-            // Giới tính
             DropdownButtonFormField<String>(
               value: _gender,
               validator: (value) {
@@ -256,7 +294,6 @@ class __FormContentState extends State<_FormContent> {
               },
               decoration: const InputDecoration(
                 labelText: 'Giới tính',
-                // labelStyle: TextStyle(color: Color(0xff00B98E)),
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(12.0),
                   child: Image(
@@ -281,29 +318,23 @@ class __FormContentState extends State<_FormContent> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: const Padding(
+                onPressed: _isLoading ? null : _handleUpdateProfile,
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    'ĐĂNG KÝ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'ĐĂNG KÝ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ManagerScreen()),
-                    );
-                  }
-                },
               ),
             ),
             const SizedBox(height: 30),
-            // Bỏ phần "Đã có tài khoản? ĐĂNG NHẬP NGAY"
           ],
         ),
       ),

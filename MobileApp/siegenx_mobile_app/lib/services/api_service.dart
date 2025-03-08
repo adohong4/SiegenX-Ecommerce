@@ -1,6 +1,5 @@
 class ApiService {
-  static const String baseUrl =
-      "https://6dd9-2401-d800-2c91-8ffb-bdd2-cbc9-2928-81a9.ngrok-free.app/v1/api";
+  static const String baseUrl = "http://localhost:4001/v1/api";
   static const String imageBaseUrl = "http://localhost:9003/images/";
 
   static const String identity = "$baseUrl/identity";
@@ -19,4 +18,5 @@ class ApiService {
   static const String deleteAddress = "$profile/address/delete";
 
   static const String getAllProducts = "$product/getAll";
+  static const String updateProfile = "$profile/update";
 }

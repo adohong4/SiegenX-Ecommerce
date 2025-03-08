@@ -103,117 +103,103 @@ class CampaignService {
     }
 
 
-    static updateProductPricesForCampaign = async (page = 1, pageSize = 7) => {
+    static updateProductPricesForCampaign = async () => {
         try {
-            const skip = (page - 1) * pageSize;
-            const limit = pageSize;
+            const campaigns = await campaignModel.find({ status: 'active' });
+            let activeCampaign = null;
 
-            const campaign = await campaignModel.find({ status: 'active' });
-            if (!campaign || campaign.length == 0) {
-                throw new BadRequestError('Chiến dịch không tồn tại');
+            if (campaigns && campaigns.length > 0) {
+                // Sắp xếp và chọn chiến dịch (như trước)
+                const sortedCampaigns = campaigns.sort((a, b) => {
+                    if (a.appliesTo === b.appliesTo) {
+                        return new Date(a.startDate) - new Date(b.startDate);
+                    }
+                    return a.appliesTo === 'all' ? -1 : 1;
+                });
+                activeCampaign = sortedCampaigns[0];
             }
 
-            //Sắp xếp mức độ ưu tiên của chiến dịch theo appliesTo && startDate
-            const sortedCampaigns = campaign.sort((a, b) => {
-                if (a.appliesTo === b.appliesTo) {
-                    return new Date(a.startDate) - new Date(b.startDate)
+            const updatedProducts = [];
+            let allProducts;
+
+            // Luôn lấy tất cả sản phẩm, bất kể chiến dịch
+            allProducts = await productModel.find()
+                .select('title nameProduct product_slug price images category quantity')
+                .sort({ createdAt: -1 })
+                .exec();
+
+
+            if (!activeCampaign) {
+                // Không có chiến dịch, trả về sản phẩm với giá gốc (newPrice = null)
+                for (let product of allProducts) {
+                    updatedProducts.push({ ...product.toObject(), newPrice: null });
                 }
 
-                return a.appliesTo === 'all' ? -1 : 1;
-            })
+                return {
+                    metadata: {
+                        updatedProducts,
+                        campaignType: null, // Không có chiến dịch
+                        campaignValue: null, // Không có chiến dịch
+                        totalProduct: allProducts.length
+                    }
+                };
+            }
 
-            const activeCampaign = sortedCampaigns[0];
 
+            // Có chiến dịch, xử lý theo appliesTo
             if (activeCampaign.appliesTo === 'all') {
-                const products = await productModel.find()
-                    .select('title nameProduct product_slug price images category quantity')
-                    .sort({ createdAt: -1 })
-                    .skip(skip)
-                    .limit(limit)
-                    .exec();
-                const updatedProducts = [];
-
-                for (let product of products) {
+                for (let product of allProducts) {
                     let newPrice = 0;
-                    console.log("activeCampaign.type: ", activeCampaign.type)
                     if (activeCampaign.type === 'percentage') {
                         if ((product.price * activeCampaign.value / 100) > activeCampaign.maxValue) {
                             newPrice = product.price - activeCampaign.maxValue;
                         } else {
                             newPrice = product.price * (100 - activeCampaign.value) / 100;
                         }
-                    }
-
-                    if (activeCampaign.type === 'fixed_amount') {
+                    } else if (activeCampaign.type === 'fixed_amount') {
                         newPrice = product.price - activeCampaign.value;
                     }
-
-                    await product.save();
                     updatedProducts.push({ ...product.toObject(), newPrice });
                 }
-                const totalProduct = await productModel.countDocuments();
-                const totalPages = Math.ceil(totalProduct / pageSize);
-
-                return {
-                    metadata: {
-                        updatedProducts,
-                        currentPage: page,
-                        totalPages,
-                        totalProduct
-                    }
-                };
-            }
-
-            if (activeCampaign.appliesTo === 'items') {
-                const updatedProducts = [];
-
-                const allProducts = await productModel.find()
-                    .select('title nameProduct product_slug price images category quantity')
-                    .sort({ createdAt: -1 })
-                    .skip(skip)
-                    .limit(limit)
-                    .exec();
-
-                const productIdsSet = new Set(activeCampaign.productIds);
+            } else if (activeCampaign.appliesTo === 'items') {
+                const productIdsSet = new Set(activeCampaign.productIds.map(id => id.toString())); // Chuyển đổi sang Set để tìm kiếm nhanh
 
                 for (let product of allProducts) {
+                    let newPrice = null; // Mặc định là null (không cập nhật)
                     if (productIdsSet.has(product._id.toString())) {
-                        let newPrice = 0;
+                        // Sản phẩm nằm trong danh sách áp dụng
                         if (activeCampaign.type === 'percentage') {
                             if ((product.price * activeCampaign.value / 100) > activeCampaign.maxValue) {
                                 newPrice = product.price - activeCampaign.maxValue;
                             } else {
                                 newPrice = product.price * (100 - activeCampaign.value) / 100;
                             }
-                        }
-
-                        if (activeCampaign.type === 'fixed_amount') {
+                        } else if (activeCampaign.type === 'fixed_amount') {
                             newPrice = product.price - activeCampaign.value;
                         }
-
-                        await product.save();
-                        updatedProducts.push({ ...product.toObject(), newPrice });
-                    } else {
-                        updatedProducts.push({ ...product.toObject(), newPrice: null });
                     }
+                    updatedProducts.push({ ...product.toObject(), newPrice });
                 }
-
-                const totalProduct = await productModel.countDocuments();
-                const totalPages = Math.ceil(totalProduct / pageSize);
-
-                return {
-                    metadata: {
-                        updatedProducts,
-                        currentPage: page,
-                        totalPages,
-                        totalProduct
-                    }
-                };
+            } else {
+                //  Có thể xử lý thêm logic nếu `appliesTo` có giá trị khác.
+                throw new BadRequestError("Giá trị 'appliesTo' không hợp lệ.");
             }
+
+
+            return {
+                metadata: {
+                    updatedProducts,
+                    campaignType: activeCampaign.type,
+                    campaignValue: activeCampaign.value,
+                    totalProduct: allProducts.length
+                }
+            };
+
         } catch (error) {
             throw error;
         }
-    }
+    };
+
 }
 
 module.exports = CampaignService;

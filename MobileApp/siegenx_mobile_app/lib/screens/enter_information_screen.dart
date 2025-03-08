@@ -137,7 +137,7 @@ class __FormContentState extends State<_FormContent> {
 
     final result = await _profileController.updateProfile(
       token: widgetScreen.token,
-      userId: widgetScreen.userId,
+      // userId: widgetScreen.userId,
       fullName: _fullNameController.text,
       dateOfBirth: _dateOfBirth!.toIso8601String().split('T')[0],
       numberPhone: _phoneController.text.replaceAll('.', ''),

@@ -11,6 +11,7 @@ const routes = {
     '/v1/api/contact': 'http://localhost:9004',
     '/v1/api/supplier': 'http://localhost:9005',
     '/v1/api/staff': 'http://localhost:9006',
+    '/v1/api/online': 'http://localhost:9007',
 };
 
 const corsMiddleware = (req, res, next) => {
@@ -41,6 +42,7 @@ const proxy = createProxyMiddleware({
         '^/v1/api/contact': '/v1/api/contact',
         '^/v1/api/supplier': '/v1/api/supplier',
         '^/v1/api/staff': '/v1/api/staff',
+        '^/v1/api/online': '/v1/api/online'
     },
     router: (req) => {
         // Select backend server based on the requested route

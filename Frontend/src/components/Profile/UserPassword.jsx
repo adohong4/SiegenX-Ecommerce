@@ -32,7 +32,7 @@ const UserPassword = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <form onSubmit={onSubmitHandler}>
                 <div className="profile-info">
                     <h2 className="change-password">Thay đổi mật khẩu</h2>

@@ -25,42 +25,47 @@ const UserAddress = () => {
 
     return (
         <div className="my-address">
-            <h2 className="border-bt">Địa chỉ của tôi</h2>
-            <button type="button" className="btn-add-address" onClick={() => setShowAddressPopup(true)}>
-                + THÊM ĐỊA CHỈ
-            </button>
-            <div className="address-list">
-                {address.map((address, index) => {
-                    return (
-                        <div key={index} className="my-address-addresses">
-                            {/* <img src={assets.parcel_icon} alt="" className="address-icon" /> */}
-                            <div className="address-details">
-                                <div className='Address'>
-                                    <div className="address-details-body">
-                                        <div className="address-details-left">
-                                            <div>
-                                                <p>{address.fullname}</p>
-                                                <p>{address.phone}</p>
+            <div className='container'>
+                <div className='title-address'>
+                    <h2 className="border-bt col-6">Địa chỉ của tôi</h2>
+                    <button type="button" className="btn-add-address col-3" onClick={() => setShowAddressPopup(true)}>
+                        + Thêm đia chỉ
+                    </button>
+                </div>
+
+                <div className="address-list">
+                    {address.map((address, index) => {
+                        return (
+                            <div key={index} className="my-address-addresses">
+                                {/* <img src={assets.parcel_icon} alt="" className="address-icon" /> */}
+                                <div className="address-details">
+                                    <div className='Address'>
+                                        <div className="address-details-body">
+                                            <div className="address-details-left">
+                                                <div>
+                                                    <p>{address.fullname}</p>
+                                                    <p>{address.phone}</p>
+                                                </div>
+                                                <p>{address.street}, {address.precinct}, {address.city}, {address.province}</p>
                                             </div>
-                                            <p>{address.street}, {address.precinct}, {address.city}, {address.province}</p>
-                                        </div>
-                                        <div className="address-details-right">
-                                            <button onClick={() => handleDeleteAddress(address._id)}>Xóa</button>
+                                            <div className="address-details-right">
+                                                <button onClick={() => handleDeleteAddress(address._id)}>Xóa</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
+                {/* AddressPopup */}
+                {showAddressPopup && (
+                    <AddressPopup
+                        setShowAddress={setShowAddressPopup}
+                        onSuccess={fetchUserAddress}
+                    />
+                )}
             </div>
-            {/* AddressPopup */}
-            {showAddressPopup && (
-                <AddressPopup
-                    setShowAddress={setShowAddressPopup}
-                    onSuccess={fetchUserAddress}
-                />
-            )}
         </div>
     )
 }

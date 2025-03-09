@@ -21,9 +21,9 @@ const SidebarUserProfile = () => {
 
     return (
         <div className="section-sidebar">
-            <div className="sidebar">
-                <div className="sidebar-dropdown">
-                    {/* Tài khoản của tôi */}
+            <div className="container page-User">
+            <div className="sidebar col-3">
+                <div className="sidebar-dropdown-dad">
                     <div className="sidebar-dropdown">
                         <div
                             className="sidebar-option sidebar-main"
@@ -33,8 +33,6 @@ const SidebarUserProfile = () => {
                                 <FontAwesomeIcon icon={faUserTie} />
                                 <p>Tài khoản của tôi</p>
                             </div>
-                            {/* Thêm icon dropdown, có thể style để xoay khi mở/đóng */}
-                            <FontAwesomeIcon icon={faChevronDown} className={openMenus.profile ? "rotate-down" : ""} />
                         </div>
                         {openMenus.profile && (
                             <ul className="sidebar-submenu">
@@ -44,21 +42,21 @@ const SidebarUserProfile = () => {
                             </ul>
                         )}
                     </div>
-
-                    {/* Đơn mua */}
-                    <NavLink to="/user/orders" className="sidebar-dropdown"> {/* Chuyển thành NavLink */}
-                        <div className="dad-menu sidebar-title">
-                            <FontAwesomeIcon icon={faInbox} />
-                            <p>Đơn mua</p>
-                        </div>
-                    </NavLink>
+                    <div className="sidebar-dropdown">
+                        <NavLink to="/user/orders" className="sidebar-dropdown"> 
+                            <div className="dad-menu sidebar-title">
+                                <FontAwesomeIcon icon={faInbox} />
+                                <p>Đơn mua</p>
+                            </div>
+                        </NavLink>
+                    </div>
                 </div>
             </div>
 
-            {/* Thêm Outlet để hiển thị các component con */}
-            <div className="content">
+            <div className="content col-9">
                 <Outlet />
             </div>
+        </div>
         </div>
     );
 };

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { StoreContext } from '../../context/StoreContext';
+import { assets } from '../../assets/assets';
 
 const UserProfile = () => {
     const { url, profile, fetchUserProfile } = useContext(StoreContext);
@@ -44,120 +45,136 @@ const UserProfile = () => {
     return (
         <div>
             <form onSubmit={onSubmitHandler}>
-                <div className="profile-info">
-                    <h2 className="border-bt">Thông tin cá nhân</h2>
-                    <div className="form-group top-image-profile">
-                        <p>Ảnh đại diện</p>
-                        <img
-                            src={profile.profilePic}
-                            alt="Profile"
-                            className="profile-image"
-                            style={{
-                                borderRadius: '50%',
-                                width: '100px',
-                                height: '100px',
-                                objectFit: 'cover'
-                            }}
-                        />
-                        <input
-                            type="file"
-                            id="image"
-                            className="form-control-file"
-                            style={{ display: 'none' }}
-                        />
-                    </div>
+                <div className='container'>
+                    <div className="profile-info">
+                        <h2 className="border-bt">Thông tin cá nhân</h2>
+                        <div className='Profile-user'>
+                            <div className='col-6 info-profile'>
+                                <div className="form-group top-mid-profile">
+                                    <p>Tên tài khoản</p>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        className="form-control"
+                                        value={data.username}
+                                        onChange={onChangeHandler}
+                                    />
+                                </div>
 
-                    <div className="form-group top-mid-profile">
-                        <p>Tên tài khoản</p>
-                        <input
-                            type="text"
-                            name="username"
-                            className="form-control"
-                            value={data.username}
-                            onChange={onChangeHandler}
-                        />
-                    </div>
+                                <div className="form-group top-mid-profile">
+                                    <p>Họ và tên</p>
+                                    <input
+                                        type="text"
+                                        name="fullName"
+                                        className="form-control"
+                                        value={data.fullName}
+                                        onChange={onChangeHandler}
+                                    />
+                                </div>
 
-                    <div className="form-group top-mid-profile">
-                        <p>Họ và tên</p>
-                        <input
-                            type="text"
-                            name="fullName"
-                            className="form-control"
-                            value={data.fullName}
-                            onChange={onChangeHandler}
-                        />
-                    </div>
+                                <div className="form-group">
+                                    <p>Email</p>
+                                    <input
+                                        type="text"
+                                        name="email"
+                                        className="form-control"
+                                        value={data.email}
+                                        onChange={onChangeHandler}
+                                        readOnly
+                                    />
+                                </div>
 
-                    <div className="form-group">
-                        <p>Email</p>
-                        <input
-                            type="text"
-                            name="email"
-                            className="form-control"
-                            value={data.email}
-                            onChange={onChangeHandler}
-                            readOnly
-                        />
-                    </div>
+                                <div className="form-group">
+                                    <p>Số điện thoại</p>
+                                    <input
+                                        type="text"
+                                        name="numberPhone"
+                                        className="form-control"
+                                        value={data.numberPhone}
+                                        onChange={onChangeHandler}
+                                    />
+                                </div>
+                                <div className='form-group'>
+                                    <p> Ngày sinh</p>
+                                    <input
+                                        type="date"
+                                        name="dateOfBirth"
+                                        className="form-control"
+                                        value={data.dateOfBirth ? data.dateOfBirth.slice(0, 10) : ''} // Chuyển đổi định dạng
+                                        onChange={onChangeHandler}
+                                    />
+                                </div>
+                                <div className="form-group gender-group">
+                                    <p className='col-4'>Giới tính</p>
+                                    <div className='gen col-2'>
+                                        <input
+                                            type="radio"
+                                            id="gender1"
+                                            name="gender col-6"
+                                            value="Nam"
+                                            checked={data.gender === "Nam"}
+                                            onChange={onChangeHandler}
+                                        />
+                                        <label htmlFor="gender1" >Nam</label><br />
+                                    </div>
+                                    <div className='gen col-2'>
+                                        <input
+                                            type="radio"
+                                            id="gender2"
+                                            name="gender"
+                                            value="Nữ"
+                                            checked={data.gender === "Nữ"}
+                                            onChange={onChangeHandler}
+                                        />
+                                        <label htmlFor="gender2">Nữ</label><br />
+                                    </div>
+                                    <div className='gen col-2'>
+                                        <input
+                                            type="radio"
+                                            id="gender3"
+                                            name="gender"
+                                            value="Khác"
+                                            checked={data.gender === "Khác"}
+                                            onChange={onChangeHandler}
+                                        />
+                                        <label htmlFor="gender3">Khác</label><br /><br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='col-6 img-profile'>
+                                <div className="form-group top-image-profile">
+                                    <p>Ảnh đại diện</p>
+                                    <img
+                                        src={assets.zalopay}
+                                        alt="Profile"
+                                        className="profile-image"
+                                        style={{
+                                            width: '200px',
+                                            height: '200px',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
+                                    <input
+                                        type="file"
+                                        id="image"
+                                        className="form-control-file"
+                                        style={{ display: 'none' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-                    <div className="form-group">
-                        <p>Số điện thoại</p>
-                        <input
-                            type="text"
-                            name="numberPhone"
-                            className="form-control"
-                            value={data.numberPhone}
-                            onChange={onChangeHandler}
-                        />
-                    </div>
 
-                    <div className="form-group">
-                        <p>Giới tính</p>
-                        <input
-                            type="radio"
-                            id="gender1"
-                            name="gender"
-                            value="Nam"
-                            checked={data.gender === "Nam"}
-                            onChange={onChangeHandler}
-                        />
-                        <label htmlFor="gender1">Nam</label><br />
-                        <input
-                            type="radio"
-                            id="gender2"
-                            name="gender"
-                            value="Nữ"
-                            checked={data.gender === "Nữ"}
-                            onChange={onChangeHandler}
-                        />
-                        <label htmlFor="gender2">Nữ</label><br />
-                        <input
-                            type="radio"
-                            id="gender3"
-                            name="gender"
-                            value="Khác"
-                            checked={data.gender === "Khác"}
-                            onChange={onChangeHandler}
-                        />
-                        <label htmlFor="gender3">Khác</label><br /><br />
-                    </div>
 
-                    <input
-                        type="date"
-                        name="dateOfBirth"
-                        className="form-control"
-                        value={data.dateOfBirth ? data.dateOfBirth.slice(0, 10) : ''} // Chuyển đổi định dạng
-                        onChange={onChangeHandler}
-                    />
-
-                    <div className="bottom-profile">
-                        <button type="submit" className="btn btn-primary add-btn">
-                            LƯU
-                        </button>
+                        <div className="bottom-profile">
+                            <button type="submit" className="btn btn-primary add-btn">
+                                LƯU
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
+
         </div>
     );
 };

@@ -108,6 +108,8 @@ const Contact = () => {
             title: "Nội dung",
             dataIndex: "content",
             key: "content",
+
+            with: '200px',
             render: (content) => content,
         },
         {
@@ -125,12 +127,12 @@ const Contact = () => {
                     {record.viewed ? (
                         <>
                             <EyeOutlined style={{ color: "red", marginRight: 5 }} />
-                            <span style={{ color: "red" }}>Đã liên hệ</span>
+                            <span style={{ color: "red", fontSize:"13px"}}>Đã liên hệ</span>
                         </>
                     ) : (
                         <>
                             <EyeFilled style={{ color: "green", marginRight: 5 }} />
-                            <span style={{ color: "green" }}>Chưa liên hệ</span>
+                            <span style={{ color: "green", fontSize:"13px" }}>Liên hệ</span>
                         </>
                     )}
                 </button>
@@ -191,7 +193,7 @@ const Contact = () => {
                 <div className='col-lg-3 list-left'>
                     <Select
                         placeholder="Danh mục liên hệ"
-                        style={{ width: 200, marginRight: 8 }}
+                        style={{ width: 300, marginRight: 8 }}
                         value={selectedView}
                         onChange={(value) => setSelectedView(value)}
                         allowClear

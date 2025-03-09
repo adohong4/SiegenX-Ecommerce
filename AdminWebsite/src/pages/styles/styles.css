@@ -352,6 +352,7 @@ textarea {
     align-items: center;
     padding: 20px 0px;
     margin-bottom: 20px;
+    gap: 50px;
 }
 
 /* .top-list-tiltle .tittle-right {
@@ -632,8 +633,11 @@ textarea {
     padding: 20px;
 }
 .order-list-container .ant-table-tbody .ant-table-cell:last-child{
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: 80px;
+    align-content: center;
 }
 .order-list-container .search {
     margin-bottom: 20px;
@@ -674,10 +678,15 @@ textarea {
 .checked-row {
     opacity: 0.5;  
 }
-.contact-list-container .ant-table-tbody tr>td.ant-table-cell::after{
-    display: flex;
-    justify-content: space-around;
-    padding: 0px;
+.contact-list-container>.ant-table-tbody tr>td.ant-table-cell{
+    padding: 10px;
+}
+.contact-list-container .ant-table-tbody tr>td.ant-table-cell:last-child{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: 80px;
+    align-content: center;
 }
 .section-dashboard-contact .dashboard-body {
     background-color: #fff;

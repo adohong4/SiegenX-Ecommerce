@@ -47,7 +47,7 @@ const PlaceOrder = () => {
             phone: selectedAddress.phone
         });
     };
-    // Code cũ
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         let orderItems = [];
@@ -64,7 +64,7 @@ const PlaceOrder = () => {
             items: orderItems,
             amount: getTotalCartAmount() + 50000,
         };
-        //lựa chọn online hay tại nhà
+
         if (paymentMethod === 'online') {
             try {
                 let response;
@@ -100,7 +100,6 @@ const PlaceOrder = () => {
                 toast.error(error.response.data.message);
             }
         }
-
     };
 
     useEffect(() => {

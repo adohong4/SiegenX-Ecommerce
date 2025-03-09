@@ -157,15 +157,30 @@ class StaffService {
             const page = req.query.page || 1;
             const limit = req.query.limit || 10;
             const skip = (page - 1) * limit;
+            const searchQuery = req.query.search || '';
             if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
-            const staffs = await staffModel.find({ StatusActive: true })
+
+            const searchFilter = searchQuery
+                ? {
+                    $or: [
+                        { Username: { $regex: searchQuery, $options: 'i' } },
+                        { Email: { $regex: searchQuery, $options: 'i' } },
+                    ],
+                } : {};
+
+            // Xử lý sắp xếp
+            const sortField = req.query.sort || 'createdAt';
+            const sortOrder = req.query.order === 'asc' ? 1 : -1;
+            const sortOptions = { [sortField]: sortOrder };
+
+            const staffs = await staffModel.find({ StatusActive: true, ...searchFilter })
                 .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
-                .sort({ createdAt: -1 })
+                .sort(sortOptions)
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
-            const totalStaff = await staffModel.countDocuments({ StatusActive: true });
+            const totalStaff = await staffModel.countDocuments({ StatusActive: true, ...searchFilter });
             const totalPages = Math.ceil(totalStaff / limit);
             return {
                 metadata: {
@@ -173,7 +188,10 @@ class StaffService {
                     currentPage: page,
                     totalPages,
                     totalStaff,
-                    limit
+                    limit,
+                    search: searchQuery,
+                    sort: sortField,
+                    order: req.query.order || 'desc',
                 }
             };
         } catch (error) {
@@ -187,15 +205,31 @@ class StaffService {
             const page = req.query.page || 1;
             const limit = req.query.limit || 10;
             const skip = (page - 1) * limit;
+            const searchQuery = req.query.search || '';
             if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn')
-            const staffs = await staffModel.find({ StatusActive: false })
+
+            const searchFilter = searchQuery
+                ? {
+                    $or: [
+                        { Username: { $regex: searchQuery, $options: 'i' } },
+                        { Email: { $regex: searchQuery, $options: 'i' } },
+                    ],
+                }
+                : {};
+
+            // Xử lý sắp xếp
+            const sortField = req.query.sort || 'createdAt';
+            const sortOrder = req.query.order === 'asc' ? 1 : -1;
+            const sortOptions = { [sortField]: sortOrder };
+
+            const staffs = await staffModel.find({ StatusActive: false, ...searchFilter })
                 .select('StaffName Username Email Numberphone Tax Role StatusActive createdAt StatusActive creator')
-                .sort({ createdAt: -1 })
+                .sort(sortOptions)
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
-            const totalStaff = await staffModel.countDocuments({ StatusActive: false });
+            const totalStaff = await staffModel.countDocuments({ StatusActive: false, ...searchFilter });
             const totalPages = Math.ceil(totalStaff / limit);
             return {
                 metadata: {
@@ -203,7 +237,10 @@ class StaffService {
                     currentPage: page,
                     totalPages,
                     totalStaff,
-                    limit
+                    limit,
+                    search: searchQuery,
+                    sort: sortField,
+                    order: req.query.order || 'desc',
                 }
             };
         } catch (error) {

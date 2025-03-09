@@ -4,6 +4,8 @@ const staffModel = require('../models/staff.model');
 const { BadRequestError, AuthFailureError } = require('../core/error.response');
 const bcrypt = require('bcrypt')
 const validator = require('validator')
+const cloudinary = require('../config/cloudinary.config');
+const fs = require('fs');
 const { createToken } = require("../middleware/authUtils")
 
 
@@ -353,6 +355,45 @@ class StaffService {
             return { message: "Đăng xuất thành công" };
         } catch (error) {
             throw new Error("Lỗi khi đăng xuất: " + error.message);
+        }
+    }
+
+    static uploadImageProfile = async (req, res, next) => {
+        try {
+            let image_filename = "";
+            if (req.file) {
+                image_filename = req.file.path;
+            } else {
+                throw new Error("No file uploaded");
+            }
+
+            const userId = req.user;
+
+            // Upload lên Cloudinary
+            const uploadResponse = await cloudinary.uploader.upload(image_filename, {
+                resource_type: 'auto'
+            });
+
+            // Cập nhật profile với URL từ Cloudinary
+            const updatedProfile = await staffModel.findByIdAndUpdate(
+                userId,
+                { StaffPic: uploadResponse.secure_url },
+                { new: true }
+            );
+
+            // Xóa file local sau khi upload thành công
+            fs.unlink(image_filename, (err) => {
+                if (err) {
+                    console.error('Failed to delete local file:', err);
+                } else {
+                    console.log('Local file deleted successfully');
+                }
+            });
+
+            return updatedProfile;
+
+        } catch (error) {
+            throw error;
         }
     }
 

@@ -245,7 +245,8 @@ textarea {
     font-weight: bold;
     border: 2px dashed #cccccc;
 }
-.dashboard-product .das-body .box svg{
+
+.dashboard-product .das-body .box svg {
     font-size: 2em;
 }
 
@@ -262,10 +263,11 @@ textarea {
 
 }
 
-.listproduct .button-product .btn-info{
+.listproduct .button-product .btn-info {
     color: #000;
 }
-.listproduct .button-product .cursor1{
+
+.listproduct .button-product .cursor1 {
     color: #000;
 }
 
@@ -629,26 +631,31 @@ textarea {
 .order-list-table {
     width: 100%;
 }
-.order-list-container{
+
+.order-list-container {
     padding: 20px;
 }
-.order-list-container .ant-table-tbody .ant-table-cell:last-child{
+
+.order-list-container .ant-table-tbody .ant-table-cell:last-child {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     height: 80px;
     align-content: center;
 }
+
 .order-list-container .search {
     margin-bottom: 20px;
     margin-top: 20px;
 }
-.order-list-container .top-order-list{
-    padding:  20px 0;
+
+.order-list-container .top-order-list {
+    padding: 20px 0;
     display: flex;
     gap: 10px;
 }
-.order-list-container .col-12{
+
+.order-list-container .col-12 {
     display: flex;
 }
 
@@ -667,27 +674,32 @@ textarea {
 }
 
 /* CSS cho Contact */
-.contact-list-container{
+.contact-list-container {
     padding: 20px;
 }
+
 .section-dashboard-contact {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
 }
+
 .checked-row {
-    opacity: 0.5;  
+    opacity: 0.5;
 }
-.contact-list-container>.ant-table-tbody tr>td.ant-table-cell{
+
+.contact-list-container>.ant-table-tbody tr>td.ant-table-cell {
     padding: 10px;
 }
-.contact-list-container .ant-table-tbody tr>td.ant-table-cell:last-child{
+
+.contact-list-container .ant-table-tbody tr>td.ant-table-cell:last-child {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     height: 80px;
     align-content: center;
 }
+
 .section-dashboard-contact .dashboard-body {
     background-color: #fff;
     width: 20%;
@@ -1041,7 +1053,7 @@ textarea {
 
 /* CSS cho ListUser */
 
-.user-list-container .ant-table-tbody td.ant-table-cell:last-child{
+.user-list-container .ant-table-tbody td.ant-table-cell:last-child {
     gap: 10px;
     display: flex;
     justify-content: center;
@@ -1595,14 +1607,17 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
-.nhap-hang-page h1{
+
+.nhap-hang-page h1 {
     padding-bottom: 10px;
     font-size: 25px;
     border-bottom: 2px dashed #cccccc;
 }
-.nhap-hang-page{
+
+.nhap-hang-page {
     padding: 20px;
 }
+
 .nhap-hang-page .header {
     display: flex;
     justify-content: flex-end;
@@ -1610,23 +1625,28 @@ body.popup-open {
     margin-top: 20px;
 
 }
-.nhap-hang-page .ant-table-container .ant-table-tbody .ant-table-cell:last-child{
+
+.nhap-hang-page .ant-table-container .ant-table-tbody .ant-table-cell:last-child {
     display: flex;
     justify-content: space-around;
 }
-.nhap-hang-page .search-invoice input{
+
+.nhap-hang-page .search-invoice input {
     height: 100%;
     border-radius: 5px;
 }
+
 .nhap-hang-page .btn {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-.nhap-hang-page .order-table td>.btn-info>svg{
+
+.nhap-hang-page .order-table td>.btn-info>svg {
     margin: 0;
 }
+
 .nhap-hang-page .btn-primary {
     background-color: #007bff;
     color: white;
@@ -1827,11 +1847,14 @@ h2 {
     border-radius: 10px;
     text-align: center;
 }
+
 .profile-admin-container .profile-auth {
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: center;
 }
+
 h2 {
     color: #333;
 }
@@ -2041,9 +2064,11 @@ h2 {
     text-align: left;
     border-collapse: collapse;
 }
-.profile-admin-table tr td{
-    padding:10px 0px;
+
+.profile-admin-table tr td {
+    padding: 10px 0px;
 }
+
 .profile-admin-table tr {
     border-bottom: 1px dashed #aaa;
 }
@@ -2403,12 +2428,14 @@ h2 {
     width: 100%;
     height: 100%;
     opacity: 0;
-    cursor:default;
+    cursor: default;
 }
-.product-details-container .product-images-section .image-wrapper{
-    cursor:pointer;
+
+.product-details-container .product-images-section .image-wrapper {
+    cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
+
 .product-details-container .product-images-section .image-wrapper:hover {
     scale: 1.05;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
@@ -2421,34 +2448,41 @@ h2 {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.product-details-container .top-info .form-row{
+
+.product-details-container .top-info .form-row {
     display: flex;
     flex-wrap: nowrap;
     column-gap: 0;
     margin-top: 10px;
 }
+
 .product-details-container .top-info .form-field {
     padding: 0 10px;
 }
-.product-details-grid{
+
+.product-details-grid {
     display: flex;
     gap: 20px;
 }
-.product-details-grid .product-info-section h2{
+
+.product-details-grid .product-info-section h2 {
     text-align: left;
     padding-left: 10px;
     padding-bottom: 20px;
     text-transform: uppercase;
     border-bottom: 2px dashed #cccccc;
 }
-.product-details-grid .product-info-section .specs-list{
+
+.product-details-grid .product-info-section .specs-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px; 
+    gap: 20px;
 }
-.product-details-grid .product-info-section .product-specs>h2{
+
+.product-details-grid .product-info-section .product-specs>h2 {
     text-transform: uppercase;
 }
+
 .product-header {
     text-align: center;
     font-size: 24px;
@@ -2537,7 +2571,8 @@ h2 {
     margin-top: 10px;
 }
 
-.history-table th, .history-table td {
+.history-table th,
+.history-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
@@ -2551,7 +2586,7 @@ h2 {
 /* CSS cho trang Nhân Viên */
 
 
-.staff-container .ant-table-tbody .ant-table-cell:last-child{
+.staff-container .ant-table-tbody .ant-table-cell:last-child {
     display: flex;
     justify-content: space-around;
 }

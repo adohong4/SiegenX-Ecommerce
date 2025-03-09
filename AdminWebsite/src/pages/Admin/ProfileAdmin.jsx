@@ -4,18 +4,34 @@ import { assets } from '../../assets/assets';
 import { motion } from "framer-motion";
 import { StoreContext } from '../../context/StoreContext';
 import { formatHourDayTime } from '../../lib/utils';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ProfileAdmin = () => {
-    const { account_list, updateStaff } = useContext(StoreContext);
+    axios.defaults.withCredentials = true;
+    const { url, account_list, updateStaff } = useContext(StoreContext);
     const [isEditing, setIsEditing] = useState(false);
     const [editProfile, setEditProfile] = useState({ ...account_list });
     const fileInputRef = useRef(null);
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setEditProfile({ ...editProfile, StaffPic: imageUrl });
+            const formData = new FormData();
+            formData.append('profile', file);
+            try {
+                const response = await axios.post(`${url}/v1/api/staff/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                toast.success(response.data.message);
+                setEditProfile({ ...editProfile, StaffPic: response.data.imageUrl });
+
+
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Upload ảnh thất bại'); // Xử lý lỗi tốt hơn
+            }
         }
     };
 
@@ -49,12 +65,12 @@ const ProfileAdmin = () => {
                 />
                 <img
                     className="logo profile-pic col-3"
-                    src={editProfile.StaffPic || assets.staffImage}
+                    src={account_list.StaffPic || assets.staffImage}
                     alt="avt"
                     onClick={() => fileInputRef.current.click()}
                     style={{ cursor: "pointer" }}
                 />
-                <p style={{ fontSize: "14px", color: "#555", marginBottom:"0px"}}>
+                <p style={{ fontSize: "14px", color: "#555", marginBottom: "0px" }}>
                     Hãy click để thay đổi hình ảnh
                 </p>
             </div>
@@ -110,7 +126,7 @@ const ProfileAdmin = () => {
                                     name={field.key}
                                     value={editProfile[field.key]}
                                     onChange={(e) => setEditProfile({ ...editProfile, [e.target.name]: e.target.value })}
-                                    style={{ flex: 1}}
+                                    style={{ flex: 1 }}
                                 />
                             </div>
                         ))}

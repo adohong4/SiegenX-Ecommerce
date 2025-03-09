@@ -162,6 +162,19 @@ class StaffController {
             next(error);
         }
     }
+
+    uploadImageProfile = async (req, res, next) => {
+        try {
+            const result = await StaffService.uploadImageProfile(req, res);
+            new OK({
+                message: "Cập nhật ảnh đại diện thành công",
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }
 
 module.exports = new StaffController();

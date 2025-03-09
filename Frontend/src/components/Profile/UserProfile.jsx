@@ -7,19 +7,25 @@ import { assets } from '../../assets/assets';
 const UserProfile = () => {
     const { url, profile, fetchUserProfile } = useContext(StoreContext);
     axios.defaults.withCredentials = true;
-    const [data, setData] = useState({
-        username: profile.username || "",
-        email: profile.email || "",
-        password: "",
-        fullName: profile.fullName || "",
-        dateOfBirth: profile.dateOfBirth || "",
-        numberPhone: profile.numberPhone || "",
-        gender: profile.gender || "",
-    });
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         fetchUserProfile();
     }, [])
+
+    useEffect(() => {
+        if (profile) {
+            setData({
+                username: profile.username || "",
+                email: profile.email || "",
+                password: "",
+                fullName: profile.fullName || "",
+                dateOfBirth: profile.dateOfBirth || "",
+                numberPhone: profile.numberPhone || "",
+                gender: profile.gender || "",
+            });
+        }
+    }, [profile]);
 
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
@@ -145,7 +151,7 @@ const UserProfile = () => {
                                 <div className="form-group top-image-profile">
                                     <p>Ảnh đại diện</p>
                                     <img
-                                        src={assets.zalopay}
+                                        src={profile.profilePic || assets.zalopay}
                                         alt="Profile"
                                         className="profile-image"
                                         style={{
@@ -163,7 +169,6 @@ const UserProfile = () => {
                                 </div>
                             </div>
                         </div>
-
 
 
                         <div className="bottom-profile">

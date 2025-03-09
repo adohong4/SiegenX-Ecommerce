@@ -63,11 +63,21 @@ const ImportOrders = () => {
       dataIndex: "statusPayment",
       key: "statusPayment",
       render: (statusPayment) => {
-        return statusPayment === 'pending' ? 'Chờ xử lý' :
-          statusPayment === 'partial payment' ? 'Thanh toán một phần' :
-            statusPayment === 'completed' ? 'Đã thanh toán' : '';
+        const statusMap = {
+          pending: { text: 'Chờ xử lý', color: 'black' },
+          'partial payment': { text: 'Thanh toán một phần', color: 'blue' },
+          completed: { text: 'Đã thanh toán', color: 'green' },
+          default: { text: '' },
+        };
+        const currentStatus = statusMap[statusPayment] || statusMap.default;
+        return (
+          <span style={{ color: currentStatus.color, fontWeight: "400" }}>
+            {currentStatus.text}
+          </span>
+        );
       },
     },
+
     {
       title: "Trạng thái nhập",
       dataIndex: "statusInput",
@@ -106,15 +116,24 @@ const ImportOrders = () => {
       dataIndex: "status",
       key: "status",
       render: (status) => {
-        return status === 'active' ? "Đang vận chuyển" :
-          status === 'paused' ? "Tạm dừng" :
-            status === 'completed' ? "Đã nhận hàng" :
-              status === 'pending' ? "Đang chờ xử lý" :
-                status === 'cancelled' ? "Đã bị hủy" :
-                  status === 'failed' ? "Không thành công" :
-                    status === 'draft' ? "Đang ở dạng nháp" : "";
+        const statusMap = {
+          active: { text: "Đang vận chuyển", color: "blue" },
+          paused: { text: "Tạm dừng", color: "#000044" },
+          completed: { text: "Đã nhận hàng", color: "green" },
+          pending: { text: "Đang chờ xử lý", color: "#8c8c8c" },
+          cancelled: { text: "Đã bị hủy", color: "red" },
+          failed: { text: "Không thành công", color: "darkred" },
+          draft: { text: "Đang ở dạng nháp", color: "#555" },
+          default: { text: "" },
+        };
+        const currentStatus = statusMap[status] || statusMap.default;
+        const style = { ...currentStatus, fontWeight: '400', padding: '2px 5px', borderRadius: '4px', display: 'inline-block' };
+        return (
+          <span style={style}>{currentStatus.text}</span>
+        );
       },
     },
+
     {
       title: "Hành động",
       key: "action",

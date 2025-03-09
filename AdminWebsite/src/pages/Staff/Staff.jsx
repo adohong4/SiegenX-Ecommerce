@@ -31,12 +31,7 @@ const EmployeeList = () => {
         setTotalPages(response.data.metadata.totalPages);
       }
     } catch (error) {
-      // console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
-      notification.error({
-        message: 'Lỗi',
-        description: 'Tài khoản bị giới hạn',
-        placement: 'topRight',
-      });
+      toast.error(error.response.data.message)
     }
   };
 

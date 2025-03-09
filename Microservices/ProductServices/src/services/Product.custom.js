@@ -46,7 +46,7 @@ class ProductCustomeService {
             // Loại bỏ trùng lặp (sử dụng JSON.stringify vì không có _id)
             const uniqueRecommendations = Array.from(new Set(allRecommendations.map(p => JSON.stringify(p)))).map(p => JSON.parse(p));
 
-            return { // Thêm res.status(200)
+            return {
                 metadata: uniqueRecommendations.slice(0, numRecommendations),
             };
 
@@ -55,8 +55,6 @@ class ProductCustomeService {
         };
     }
 
-
-    // Hàm vectorizeProduct (Helper function - nên là private)
     static async vectorizeProduct(product) {
         const tfidf = new TfIdf();
         const document = ProductCustomeService.preprocessText(`${product.title} ${product.nameProduct} ${product.recap} ${product.description} ${product.category} ${product.chip} ${product.cpu} ${product.gpu} ${product.ram} ${product.memory} ${product.version} ${product.display}`);
@@ -70,7 +68,6 @@ class ProductCustomeService {
         return vector;
     }
 
-    // Hàm cosineSimilarity (Helper function - nên là private)
     static cosineSimilarity(vecA, vecB) {
         let dotProduct = 0;
         let normA = 0;
@@ -89,13 +86,11 @@ class ProductCustomeService {
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 
-    // Hàm preprocessText (Helper function - nên là private)
     static preprocessText(text) {
         text = text.toLowerCase();
         text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
 
-        // Loại bỏ stop words tiếng Việt (ví dụ đơn giản)
-        const stopWords = ["và", "hoặc", "là", "của", "các", "có", "trong", "được", "bị", "một", "những"]; // Thêm stop words
+        const stopWords = ["và", "hoặc", "là", "của", "các", "có", "trong", "được", "bị", "một", "những"];
         const words = text.split(" ");
         const filteredWords = words.filter(word => !stopWords.includes(word));
         text = filteredWords.join(" ");

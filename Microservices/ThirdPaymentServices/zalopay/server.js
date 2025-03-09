@@ -34,11 +34,13 @@ app.post('/payment', async (req, res) => {
 
     const totalAmount = req.body.amount;
 
-    const items = req.body.items.map(item => ({
-        name: item.nameProduct,
-        price: item.price,
-        quantity: item.quantity
-    }));
+    // const items = req.body.items.map(item => ({
+    //     name: item.nameProduct,
+    //     price: item.price,
+    //     quantity: item.quantity
+    // }));
+
+    const items = []
 
     // Thêm phí giao hàng (nếu có)
     items.push({

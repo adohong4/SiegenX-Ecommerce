@@ -408,17 +408,22 @@ section {
   top: 0;
   left: 0;
   background-color: red;
-  color: white;
+  color: #fff;
   padding: 5px 10px;
-  margin-left: 5px;
+  margin-left: 10px;
   font-size: 14px;
   font-weight: bold;
+  border-top-left-radius:  5px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
   z-index: 1;
 }
 
 .product-price-container {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 8px;
   margin-left: 10px;
 }
@@ -1161,9 +1166,6 @@ section {
   width: 100vw;
 }
 
-.banner-contact {
-  margin-top: 100px;
-}
 
 .contact-container {
   display: flex;
@@ -1197,6 +1199,7 @@ section {
   color: #fff;
   margin-bottom: 20px;
   line-height: 25px;
+  
 }
 
 .contact-detail {
@@ -2014,6 +2017,7 @@ section {
 }
 
 .products-recommend {
+  margin-top: 20px ;
   width: 100%;
 }
 
@@ -2026,19 +2030,23 @@ section {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  gap: 16px;
-  padding: 10px;
+  gap: 20px;
+  padding: 30px 0PX;
   justify-content: center;
 }
 
 .recommend-card {
   flex: 0 0 auto;
   width: 250px;
-  border: 1px solid #ddd;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+.recommend-card:hover {
+  scale: 1.05;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .recommend-image {
@@ -2055,14 +2063,18 @@ section {
   font-weight: bold;
   min-height: 48px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
 }
+
 
 .recommend-price {
   font-size: 14px;
   color: #f00;
   margin-bottom: 8px;
   font-weight: bold;
+  text-align: center;
 }
 
 .recommend-actions {
@@ -2309,9 +2321,6 @@ section {
 /* CSS cho trang Chi tiết sản phẩm */
 
 
-.container-home {
-  margin-top: 125px;
-}
 
 .productinfo-container {
   display: flex;

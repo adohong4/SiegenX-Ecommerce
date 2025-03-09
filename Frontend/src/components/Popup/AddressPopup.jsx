@@ -88,7 +88,7 @@ const AddressPopup = ({ setShowAddress, onSuccess }) => {
                         />
                     </div>
 
-                    <div className="form-group multi-fields">
+                    <div className="form-group multi-fields col-12">
                         <div className='form-mul'>
                             <label htmlFor="precinct">Xã/Phường</label>
                             <input
@@ -115,7 +115,7 @@ const AddressPopup = ({ setShowAddress, onSuccess }) => {
                         </div>
                     </div>
 
-                    <div className="form-group multi-fields">
+                    <div className="form-group multi-fields col-12" >
                         <div className='form-mul-1'>
                             <label htmlFor="province">Tỉnh</label>
                             <input

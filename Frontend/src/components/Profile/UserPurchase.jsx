@@ -126,9 +126,7 @@ const MyOrders = () => {
                                                 </div>
                                                 <div style={{ textAlign: 'right' }}>
                                                     <p style={{ marginBottom: '5px', color: 'red' }}>₫{formatCurrency(item.price)}</p>
-                                                    {/* <p style={{ textDecoration: 'line-through', color: 'gray', marginBottom: '5px' }}>{formatCurrency(item.price * 1.2)} VNĐ</p> */}
                                                 </div>
-
                                             </div>
 
                                             <div style={{ borderTop: '1px solid #ddd', paddingTop: '20px', marginTop: '10px' }}>

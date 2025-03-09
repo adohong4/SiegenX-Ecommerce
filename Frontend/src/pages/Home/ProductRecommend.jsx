@@ -1,21 +1,20 @@
 import React, { useState, useContext, useEffect } from "react";
-import { StoreContext } from '../../context/StoreContext'
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { assets } from '../../assets/assets';
-import { formatCurrency } from '../../lib/utils'
-import { toast } from 'react-toastify';
+import { StoreContext } from '../../context/StoreContext';
+import { useNavigate } from "react-router-dom";
+import { formatCurrency } from '../../lib/utils';
 import axios from "axios";
+import { motion } from "framer-motion";
 import '../styles/styles.css';
 
 const ProductRecommend = () => {
-    const { url, fetchOrders, orders, } = useContext(StoreContext);
+    const { url, fetchOrders, orders } = useContext(StoreContext);
     const [recommend, setProductRecommend] = useState([]);
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
+
     useEffect(() => {
         fetchOrders();
     }, []);
-
 
     const fetchProductRecommend = async () => {
         if (!orders.length) return;
@@ -51,12 +50,33 @@ const ProductRecommend = () => {
         return null;
     }
 
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    };
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.3 } }
+    };
+
     return (
-        <div className="products-recommend">
-            <h3>Gợi ý sản phẩm</h3>
-            <div className="recommend-grid">
+        <motion.div 
+            className="products-recommend"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.2 }}
+            variants={containerVariants}
+        >
+            <motion.h3 variants={fadeInUp}>SẢN PHẨM LIÊN QUAN</motion.h3>
+            <motion.div className="recommend-grid" variants={containerVariants}>
                 {recommend.map((item, index) => (
-                    <div key={index} className="recommend-card">
+                    <motion.div 
+                        key={index} 
+                        className="recommend-card"
+                        variants={fadeInUp}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
                         <img
                             src={item.images && item.images.length > 0 ? `http://localhost:9003/images/${item.images[0]}` : 'path/to/default-image.jpg'}
                             alt={item.nameProduct || 'Product Image'}
@@ -65,19 +85,26 @@ const ProductRecommend = () => {
                         <h3 className="recommend-title">{item.title || 'Product Title'}</h3>
                         <p className="recommend-price">{item.price ? formatCurrency(item.price) : 'Liên hệ'}</p>
                         <div className="recommend-actions">
-                            <button className="productlist-price-btn">
+                            <motion.button 
+                                className="productlist-price-btn"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                            >
                                 LIÊN HỆ
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
                                 onClick={() => navigate(`san-pham/${item.product_slug}`)}
-                                className="productlist-btn">
+                                className="productlist-btn"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                            >
                                 XEM NGAY
-                            </button>
+                            </motion.button>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }
 

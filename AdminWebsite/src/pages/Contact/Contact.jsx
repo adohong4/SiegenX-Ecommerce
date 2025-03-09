@@ -108,6 +108,9 @@ const Contact = () => {
             title: "Nội dung",
             dataIndex: "content",
             key: "content",
+
+            with: '200px'
+            ,
             render: (content) => content,
         },
         {

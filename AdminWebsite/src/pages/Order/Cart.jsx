@@ -24,17 +24,76 @@ const Cart = () => {
     const handlePrint = () => {
         if (popupRef.current) {
             const printContent = popupRef.current.innerHTML;
-            const originalContent = document.body.innerHTML;
-            // Chuyển nội dung popup vào body để in
-            document.body.innerHTML = printContent;
-            // Thực hiện in
-            window.print();
-            // Khôi phục nội dung ban đầu
-            document.body.innerHTML = originalContent;
-            window.location.reload(); // Reload lại trang sau khi in xong
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Hóa đơn</title>
+                        <link rel="stylesheet" href="/path/to/your/print.css">
+                        <style>
+                            @media print {
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    padding: 20px;
+                                }
+                                
+                                #invoice-print-area {
+                                    max-width: 600px;
+                                    margin: auto;
+                                    border: 2px solid black;
+                                    padding: 20px;
+                                    background: white;
+                                    box-shadow: 0px 0px 10px gray;
+                                }
+
+                                h1 {
+                                    text-align: center;
+                                    font-size: 20px;
+                                    margin-bottom: 10px;
+                                }
+
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 10px;
+                                }
+
+                                th, td {
+                                    border: 1px solid black;
+                                    padding: 10px;
+                                    text-align: left;
+                                }
+
+                                th {
+                                    background-color: #f2f2f2;
+                                    font-weight: bold;
+                                }
+
+                                /* Ẩn nút in khi in */
+                                #invoice-print-area>.ant-btn{
+                                    display: none ;
+                                }
+                            }
+
+                        </style>
+                    </head>
+                    <body>
+                        <div id="invoice-print-area">
+                            ${printContent}
+                        </div>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        </script>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     };
-
+    
     const statusHandler = async (event, orderId) => {
         const selectedValue = event.target.value;
 

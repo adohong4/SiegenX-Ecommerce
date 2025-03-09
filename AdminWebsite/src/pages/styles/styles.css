@@ -632,8 +632,11 @@ textarea {
     padding: 20px;
 }
 .order-list-container .ant-table-tbody .ant-table-cell:last-child{
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: 80px;
+    align-content: center;
 }
 .order-list-container .search {
     margin-bottom: 20px;

@@ -47,7 +47,7 @@ class StripeController {
                 });
                 // Nếu tổng số tiền hợp lệ
                 await newOrder.save();
-                await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+                await userModel.findByIdAndUpdate(userId, { cartData: {} });
                 // Tạo phiên giao dịch Stripe
                 const session = await stripe.checkout.sessions.create({
                     line_items: line_items,

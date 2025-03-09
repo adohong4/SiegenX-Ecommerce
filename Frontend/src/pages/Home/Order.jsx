@@ -5,16 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { toast } from 'react-toastify';
 import { StoreContext } from '../../context/StoreContext';
-import { Order } from '../../data/data'
 
 const PlaceOrder = () => {
     const { getTotalCartAmount, fetchUserAddress, address, product_list, cartItems, url, token } = useContext(StoreContext);
-    const [list, setList] = useState([]);
     const navigate = useNavigate();
     const [paymentMethod, setPaymentMethod] = useState("cash");
+    const [onlinePaymentMethod, setOnlinePaymentMethod] = useState("stripe");
     axios.defaults.withCredentials = true;
-    // Giả lập dữ liệu 
-    const orderData = Order[0];
     const [formData, setFormData] = useState({
         fullname: "",
         phone: "",
@@ -26,6 +23,10 @@ const PlaceOrder = () => {
 
     const handlePaymentChange = (event) => {
         setPaymentMethod(event.target.value);
+    };
+
+    const handleOnlinePaymentChange = (event) => {
+        setOnlinePaymentMethod(event.target.value);
     };
 
     const onChangeHandler = (event) => {
@@ -46,7 +47,7 @@ const PlaceOrder = () => {
             phone: selectedAddress.phone
         });
     };
-    // Code cũ
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         let orderItems = [];
@@ -63,59 +64,41 @@ const PlaceOrder = () => {
             items: orderItems,
             amount: getTotalCartAmount() + 50000,
         };
-        //lựa chọn online hay tại nhà
-        if (paymentMethod === 'online') {
 
-            let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData);
-            console.log("data: ", response.data.success)
-            if (response.data.success) {
-                const { session_url } = response.data;
-                window.location.replace(session_url);
-            } else {
-                toast.error(response.data.message);
+        if (paymentMethod === 'online') {
+            try {
+                let response;
+                if (onlinePaymentMethod === 'stripe') {
+                    response = await axios.post(`${url}/v1/api/profile/stripe/place`, orderData);
+                } else if (onlinePaymentMethod === 'zalopay') {
+                    response = await axios.post(`${url}/v1/api/online/zalopay/payment`, orderData);
+                }
+
+                if (response && response.data.success) {
+                    if (onlinePaymentMethod === 'stripe') {
+                        const { session_url } = response.data;
+                        window.location.replace(session_url);
+                    } else if (onlinePaymentMethod === 'zalopay') {
+                        window.location.replace(response.data.order_url); // URL từ ZaloPay
+                    }
+                } else {
+                    toast.error(response ? response.data.message : "Có lỗi xảy ra khi xử lý thanh toán.");
+                }
+            } catch (error) {
+                toast.error(error.response?.data.message || "Có lỗi xảy ra khi kết nối đến cổng thanh toán.");
             }
         } else {
-            // let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
-            // if (response.data.success) {
-            //     toast.success(response.data.message);
-            //     navigate("/myorder");
-            // } else {
-            //     toast.error(response.data.message);
-            // }
             try {
-                console.log("orderData: ", orderData);
                 let response = await axios.post(url + "/v1/api/profile/cod/verify", orderData);
 
-                if (response.data.success) {
+                if (response.data.status) {
                     console.log("Thanh toán thành công, điều hướng tới /payment-success");
                     toast.success(response.data.message);
-
-                    await sendEmailConfirmation(orderItems, formData.email)
-                    // Chuyển hướng đến trang thông báo thanh toán thành công
-                    navigate('/payment-success', {
-                        state: {
-                            message: "Đặt hàng thành công!",
-                            orderData
-                        }
-                    });
+                    navigate(`/user/orders`)
                 }
             } catch (error) {
                 toast.error(error.response.data.message);
             }
-        }
-
-    };
-
-    const sendEmailConfirmation = async (orderDetails, email) => {
-        try {
-            const response = await axios.post(url + '/v1/api/profile/send-email', {
-                email: email,
-                orderDetails: orderDetails, // Array chứa chi tiết đơn hàng
-            });
-
-            console.log(response.data.message); // Thông báo thành công
-        } catch (error) {
-            console.error('Lỗi khi gửi email:', error.response?.data || error.message);
         }
     };
 
@@ -124,7 +107,7 @@ const PlaceOrder = () => {
         if (getTotalCartAmount() === 0) {
             navigate('/cart');
         }
-    }, []);
+    }, [fetchUserAddress, getTotalCartAmount, navigate]);
 
     return (
         <form className="place-order" onSubmit={handleSubmit}>
@@ -210,9 +193,26 @@ const PlaceOrder = () => {
                             <div className="payment-options">
                                 <p>Chọn phương thức thanh toán trực tuyến:</p>
                                 <div className='pay-options'>
-                                    {/* <img src={assets.momo} alt="MoMo" className="payment-logo" />
-                                    <img src={assets.zalopay} alt="ZaloPay" className="payment-logo" /> */}
-                                    <img src={assets.stripe} alt="Stripe" className="payment-logo" />
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="onlinePaymentMethod"
+                                            value="stripe"
+                                            checked={onlinePaymentMethod === "stripe"}
+                                            onChange={handleOnlinePaymentChange}
+                                        />
+                                        <img src={assets.stripe} alt="Stripe" className="payment-logo" />
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="onlinePaymentMethod"
+                                            value="zalopay"
+                                            checked={onlinePaymentMethod === "zalopay"}
+                                            onChange={handleOnlinePaymentChange}
+                                        />
+                                        <img src={assets.zalopay} alt="ZaloPay" className="payment-logo" />
+                                    </label>
                                 </div>
                             </div>
                         )}

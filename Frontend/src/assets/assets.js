@@ -17,7 +17,10 @@ import solution3 from './Home/solution3.png'
 import background from './Home/background.png'
 import banner from './Home/Banner.png'
 import interactiveScreen from './Home/interactiveScreen.png'
+
+//Online Payment
 import stripe from './stripe.jpeg'
+import zalopay from './zalopay.webp'
 
 
 import introduce from './Intro/introduce.png'
@@ -69,15 +72,16 @@ import gianhang6 from './Solution/gianhang6.jpg'
 import bannerproduct from './Products/bannerproduct.png'
 import Banner from './Products/Banner.png'
 export const assets = {
-    logo, logo_footer, stripe,
-    img_banner_home,banner_home,category1,category2,category3,category4,category5, homeProduct,solution1,solution2,solution3,background,banner,interactiveScreen,
-    
-    
-    introduce,forme,about1,bulb,currency,eco,mission,rocket, vision,economic,
+    logo, logo_footer,
+    stripe, zalopay,
+    img_banner_home, banner_home, category1, category2, category3, category4, category5, homeProduct, solution1, solution2, solution3, background, banner, interactiveScreen,
+
+
+    introduce, forme, about1, bulb, currency, eco, mission, rocket, vision, economic,
 
     banner_contact, bgrcontact,
 
-    sol1, sol2, sol3,sol,class1, class2, class4, class5, class6, class7,meeting10, productClass1, productClass2, productClass3, productClass4, phonghop1, phonghop2, phonghop3, phonghop4, phonghop5,phonghop0, gianhang1, gianhang2, gianhang3, gianhang4, gianhang5, gianhang6,
+    sol1, sol2, sol3, sol, class1, class2, class4, class5, class6, class7, meeting10, productClass1, productClass2, productClass3, productClass4, phonghop1, phonghop2, phonghop3, phonghop4, phonghop5, phonghop0, gianhang1, gianhang2, gianhang3, gianhang4, gianhang5, gianhang6,
 
     bannerproduct, Banner,
 }

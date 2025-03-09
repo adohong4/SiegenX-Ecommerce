@@ -112,13 +112,16 @@ class ProductGrid extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 5),
+                          // Phần hiển thị giá
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  formatCurrency(product.price),
+                                  product.newPrice != null
+                                      ? formatCurrency(product.newPrice!)
+                                      : formatCurrency(product.price),
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Color(0xFF00B98E),
@@ -128,18 +131,30 @@ class ProductGrid extends StatelessWidget {
                               ],
                             ),
                           ),
+
+// Phần thay thế số lượng bằng giá cũ
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Số lượng: ${product.quantity}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black54,
+                                if (product.newPrice != null)
+                                  Text(
+                                    formatCurrency(product.price),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    'Số lượng: ${product.quantity}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black54,
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),

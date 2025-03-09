@@ -19,4 +19,6 @@ class ApiService {
 
   static const String getAllProducts = "$product/getAll";
   static const String updateProfile = "$profile/update";
+  static const String getCampaignProducts =
+      "$product/campaign/updateProductPrice";
 }

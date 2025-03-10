@@ -3,16 +3,19 @@ import 'package:siegenx_mobile_app/controllers/add_cart.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/widgets/product_detail.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class ProductGrid extends StatelessWidget {
-  final CartController _cartController =
-      CartController(); // Khởi tạo controller
-
   ProductGrid({Key? key}) : super(key: key);
+
+  // Hàm tính phần trăm giảm giá
+  int calculateDiscountPercentage(int price, int newPrice) {
+    return (((price - newPrice) / price) * 100).round();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,21 +111,19 @@ class ProductGrid extends StatelessWidget {
                                       size: 18,
                                     ),
                                     onPressed: () async {
-                                      bool success = await _cartController
-                                          .addToCart(product.id.toString());
-                                      if (success) {
+                                      try {
+                                        await AddCartController.addToCart(
+                                            context, product.id.toString());
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                               content:
                                                   Text('Đã thêm vào giỏ hàng')),
                                         );
-                                      } else {
+                                      } catch (e) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  'Thêm vào giỏ hàng thất bại')),
+                                          SnackBar(content: Text(e.toString())),
                                         );
                                       }
                                     },
@@ -151,28 +152,46 @@ class ProductGrid extends StatelessWidget {
                               ],
                             ),
                           ),
-
-// Phần thay thế số lượng bằng giá cũ
+                          // Phần hiển thị giá cũ và giảm giá
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                if (product.newPrice != null)
-                                  Text(
-                                    formatCurrency(product.price),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
-                                  )
-                                else
-                                  Text(
-                                    'Số lượng: ${product.quantity}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black54,
+                                Row(
+                                  children: [
+                                    if (product.newPrice != null)
+                                      Text(
+                                        formatCurrency(product.price),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        ),
+                                      )
+                                    else
+                                      Text(
+                                        'Số lượng: ${product.quantity}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  width: 12,
+                                ),
+                                if (product.newPrice !=
+                                    null) // Hiển thị giảm giá nếu có newPrice
+                                  Container(
+                                    child: Text(
+                                      '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.textColorRed, // Chữ đỏ
+                                      ),
                                     ),
                                   ),
                               ],

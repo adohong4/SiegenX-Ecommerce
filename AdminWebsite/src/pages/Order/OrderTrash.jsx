@@ -65,7 +65,7 @@ const OrderTrash = () => {
     const restoreOrder = async (id) => {
         const response = await axios.delete(`${url}/v1/api/profile/order/status/${id}`);
         if (response.data.status) {
-            toast.success(response.data.message);
+            toast.success('Hồi phục thành công');
             fetchListpage(currentPage);
         }
     };

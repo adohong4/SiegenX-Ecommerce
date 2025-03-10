@@ -3,7 +3,7 @@ const express = require('express');
 
 const StaffController = require('../../controllers/staff.controller');
 const { asyncHandler } = require('../../helpers/asyncHandler');
-
+const upload = require('../../config/upload.config')
 const { checkTokenCookie } = require('../../middleware/checkAuth');
 
 const router = express.Router();
@@ -23,5 +23,7 @@ router.post("/staff/login", asyncHandler(StaffController.Login));
 router.get("/staff/getProfile", checkTokenCookie, asyncHandler(StaffController.getProfile));
 router.post("/staff/logOut", checkTokenCookie, asyncHandler(StaffController.LogOutStaff));
 router.put("/staff/updateProfile", checkTokenCookie, asyncHandler(StaffController.updateStaffProfile));
+
+router.post('/staff/upload', checkTokenCookie, upload.single("profile"), asyncHandler(StaffController.uploadImageProfile)) //Upload image profile
 
 module.exports = router;

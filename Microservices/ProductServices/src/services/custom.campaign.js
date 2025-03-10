@@ -109,7 +109,6 @@ class CampaignService {
             let activeCampaign = null;
 
             if (campaigns && campaigns.length > 0) {
-                // Sắp xếp và chọn chiến dịch (như trước)
                 const sortedCampaigns = campaigns.sort((a, b) => {
                     if (a.appliesTo === b.appliesTo) {
                         return new Date(a.startDate) - new Date(b.startDate);
@@ -122,7 +121,6 @@ class CampaignService {
             const updatedProducts = [];
             let allProducts;
 
-            // Luôn lấy tất cả sản phẩm, bất kể chiến dịch
             allProducts = await productModel.find()
                 .select('title nameProduct product_slug price images category quantity')
                 .sort({ createdAt: -1 })
@@ -130,7 +128,6 @@ class CampaignService {
 
 
             if (!activeCampaign) {
-                // Không có chiến dịch, trả về sản phẩm với giá gốc (newPrice = null)
                 for (let product of allProducts) {
                     updatedProducts.push({ ...product.toObject(), newPrice: null });
                 }
@@ -138,13 +135,12 @@ class CampaignService {
                 return {
                     metadata: {
                         updatedProducts,
-                        campaignType: null, // Không có chiến dịch
-                        campaignValue: null, // Không có chiến dịch
+                        campaignType: null,
+                        campaignValue: null,
                         totalProduct: allProducts.length
                     }
                 };
             }
-
 
             // Có chiến dịch, xử lý theo appliesTo
             if (activeCampaign.appliesTo === 'all') {
@@ -162,12 +158,11 @@ class CampaignService {
                     updatedProducts.push({ ...product.toObject(), newPrice });
                 }
             } else if (activeCampaign.appliesTo === 'items') {
-                const productIdsSet = new Set(activeCampaign.productIds.map(id => id.toString())); // Chuyển đổi sang Set để tìm kiếm nhanh
+                const productIdsSet = new Set(activeCampaign.productIds.map(id => id.toString()));
 
                 for (let product of allProducts) {
-                    let newPrice = null; // Mặc định là null (không cập nhật)
+                    let newPrice = null;
                     if (productIdsSet.has(product._id.toString())) {
-                        // Sản phẩm nằm trong danh sách áp dụng
                         if (activeCampaign.type === 'percentage') {
                             if ((product.price * activeCampaign.value / 100) > activeCampaign.maxValue) {
                                 newPrice = product.price - activeCampaign.maxValue;
@@ -181,7 +176,6 @@ class CampaignService {
                     updatedProducts.push({ ...product.toObject(), newPrice });
                 }
             } else {
-                //  Có thể xử lý thêm logic nếu `appliesTo` có giá trị khác.
                 throw new BadRequestError("Giá trị 'appliesTo' không hợp lệ.");
             }
 
@@ -192,6 +186,70 @@ class CampaignService {
                     campaignType: activeCampaign.type,
                     campaignValue: activeCampaign.value,
                     totalProduct: allProducts.length
+                }
+            };
+
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    static updateProductPricesForCampaignBySlug = async (req, res) => {
+        try {
+            const { productSlug } = req.params;
+            const product = await productModel.findOne({ product_slug: productSlug })
+                .select('-creator')
+                .exec();
+
+            if (!product) {
+                throw new NotFoundError("Không tìm thấy sản phẩm với slug này.");
+            }
+
+            const campaigns = await campaignModel.find({ status: 'active' });
+            let activeCampaign = null;
+
+            if (campaigns && campaigns.length > 0) {
+                const sortedCampaigns = campaigns.sort((a, b) => {
+                    if (a.appliesTo === b.appliesTo) {
+                        return new Date(a.startDate) - new Date(b.startDate);
+                    }
+                    return a.appliesTo === 'all' ? -1 : 1;
+                });
+                activeCampaign = sortedCampaigns[0];
+            }
+
+            let newPrice = null;
+            let campaignType = null;
+            let campaignValue = null;
+
+            if (activeCampaign) {
+                campaignType = activeCampaign.type;
+                campaignValue = activeCampaign.value;
+
+                if (activeCampaign.appliesTo === 'all' ||
+                    (activeCampaign.appliesTo === 'items' && activeCampaign.productIds.map(id => id.toString()).includes(product._id.toString()))) {
+
+                    if (activeCampaign.type === 'percentage') {
+                        const discountAmount = product.price * activeCampaign.value / 100;
+                        if (discountAmount > activeCampaign.maxValue) {
+                            newPrice = product.price - activeCampaign.maxValue;
+                        } else {
+                            newPrice = product.price - discountAmount;
+                        }
+                    } else if (activeCampaign.type === 'fixed_amount') {
+                        newPrice = product.price - activeCampaign.value;
+                    }
+
+                    if (newPrice !== null && newPrice < 0) {
+                        newPrice = 0;
+                    }
+                }
+            }
+            return {
+                metadata: {
+                    updatedProduct: { ...product.toObject(), newPrice },
+                    campaignType,
+                    campaignValue,
                 }
             };
 

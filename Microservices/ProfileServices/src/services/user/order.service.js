@@ -10,7 +10,9 @@ class OrderService {
         try {
             if (!userId) throw new BadRequestError("userId is required");
 
-            const orders = await orderModel.find({ userId }).sort({ createdAt: -1 });
+            const orders = await orderModel.find({ userId })
+                .select('userId amount status paymentMethod payment statusActive date items._id items.images items.title items.price items.quantity items.category items.product_slug')
+                .sort({ createdAt: -1 });
             return { metadata: orders }
         } catch (error) {
             throw error;

@@ -30,6 +30,7 @@ import ListCampain from '../../pages/Campaign/ListCampaign';
 import AddCampaign from '../../pages/Campaign/AddCampaign';
 import CampaignInfo from '../../pages/Campaign/CampaignInfo';
 import TrashCampain from '../../pages/Campaign/TrashCampaign';
+import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
@@ -41,71 +42,74 @@ const Admin = () => {
     //     }
     // }, [token, navigate]);
     return (
-        <div className="admin-container">
-            <Routes>
-                {/* Login page chỉ hiển thị khi vào "/admin-login" */}
-                <Route path="/admin-login" element={<LoginAdmin />} />
+        <>
+            <ToastContainer />
+            <div className="admin-container">
+                <Routes>
+                    {/* Login page chỉ hiển thị khi vào "/admin-login" */}
+                    <Route path="/admin-login" element={<LoginAdmin />} />
 
-                {/* Admin Layout */}
-                <Route path="/*" element={
-                    <div className="admin-layout">
-                        <div className='sidebar-left'>
-                            <Sidebar />
+                    {/* Admin Layout */}
+                    <Route path="/*" element={
+                        <div className="admin-layout">
+                            <div className='sidebar-left'>
+                                <Sidebar />
+                            </div>
+                            <div className='header-topadmin'>
+                                <Headeradmin />
+                            </div>
+                            <div className="admin-content sidebar-right">
+                                <Routes>
+                                    <Route path="dashboard" element={<DashBoard />} />
+
+                                    {/* Route Product */}
+                                    <Route path="add" element={<AddProduct />} />
+                                    <Route path="product" element={<ListProduct />} />
+                                    <Route path="product/trash" element={<ProductTrash />} />
+                                    <Route path="product/:id" element={<ProductDetail />} />
+
+                                    {/* Route Contact */}
+                                    <Route path="contact" element={<Contact />} />
+                                    <Route path="contact/trash" element={<ContactTrash />} />
+
+                                    {/* Route User */}
+                                    <Route path="user" element={<ListUser />} />
+                                    <Route path="user/trash" element={<UserTrash />} />
+
+                                    {/* Route Order */}
+                                    <Route path="orders" element={<Orders />} />
+                                    <Route path="orders/trash" element={<OrderTrash />} />
+
+                                    {/* Route Invoice */}
+                                    <Route path="invoice" element={<ImportProducts />} />
+                                    <Route path="invoice/create" element={<CreateImportOrder />} />
+                                    <Route path="invoice/trash" element={<InvoiceTrash />} />
+                                    <Route path="invoice/:id" element={<InvoiceDetail />} />
+
+                                    {/* Route Staff */}
+                                    <Route path="staff" element={<Staff />} />
+                                    <Route path="staff/trash" element={<StaffTrash />} />
+
+                                    <Route path="profile-admin" element={<ProfileAdmin />} />
+
+                                    {/* Campaign */}
+                                    <Route path="list-campaign" element={<ListCampain />} />
+                                    <Route path="add-campaign" element={<AddCampaign />} />
+                                    <Route path="list-campaign/:id" element={<CampaignInfo />} />
+                                    <Route path="trash-campaign" element={<TrashCampain />} />
+
+                                    {/* Supplier */}
+                                    <Route path="add-supplier" element={<AddSupplier />} />
+                                    <Route path="supplier" element={<Supplier />} />
+                                    <Route path="trash-supplier" element={<TrashSupplier />} />
+                                    <Route path="supplier/:id" element={<SupplierInfo />} />
+                                </Routes>
+                            </div>
                         </div>
-                        <div className='header-topadmin'>
-                            <Headeradmin />
-                        </div>
-                        <div className="admin-content sidebar-right">
-                            <Routes>
-                                <Route path="dashboard" element={<DashBoard />} />
-
-                                {/* Route Product */}
-                                <Route path="add" element={<AddProduct />} />
-                                <Route path="product" element={<ListProduct />} />
-                                <Route path="product/trash" element={<ProductTrash />} />
-                                <Route path="product/:id" element={<ProductDetail />} />
-
-                                {/* Route Contact */}
-                                <Route path="contact" element={<Contact />} />
-                                <Route path="contact/trash" element={<ContactTrash />} />
-
-                                {/* Route User */}
-                                <Route path="user" element={<ListUser />} />
-                                <Route path="user/trash" element={<UserTrash />} />
-
-                                {/* Route Order */}
-                                <Route path="orders" element={<Orders />} />
-                                <Route path="orders/trash" element={<OrderTrash />} />
-
-                                {/* Route Invoice */}
-                                <Route path="invoice" element={<ImportProducts />} />
-                                <Route path="invoice/create" element={<CreateImportOrder />} />
-                                <Route path="invoice/trash" element={<InvoiceTrash />} />
-                                <Route path="invoice/:id" element={<InvoiceDetail />} />
-
-                                {/* Route Staff */}
-                                <Route path="staff" element={<Staff />} />
-                                <Route path="staff/trash" element={<StaffTrash />} />
-
-                                <Route path="profile-admin" element={<ProfileAdmin />} />
-
-                                {/* Campaign */}
-                                <Route path="list-campaign" element={<ListCampain />} />
-                                <Route path="add-campaign" element={<AddCampaign />} />
-                                <Route path="list-campaign/:id" element={<CampaignInfo />} />
-                                <Route path="trash-campaign" element={<TrashCampain />} />
-
-                                {/* Supplier */}
-                                <Route path="add-supplier" element={<AddSupplier />} />
-                                <Route path="supplier" element={<Supplier />} />
-                                <Route path="trash-supplier" element={<TrashSupplier />} />
-                                <Route path="supplier/:id" element={<SupplierInfo />} />
-                            </Routes>
-                        </div>
-                    </div>
-                } />
-            </Routes>
-        </div>
+                    } />
+                </Routes>
+            </div>
+        </>
     );
 };
 

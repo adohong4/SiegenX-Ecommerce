@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/add_cart.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/services/product_service.dart';
@@ -8,7 +9,10 @@ import 'package:siegenx_mobile_app/widgets/product_detail.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({Key? key}) : super(key: key);
+  final CartController _cartController =
+      CartController(); // Khởi tạo controller
+
+  ProductGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +82,8 @@ class ProductGrid extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) => Icon(
-                                        Icons.error,
-                                        color: Colors.red,
+                                        Icons.image,
+                                        color: Colors.grey,
                                         size: 120,
                                       ),
                                     ),
@@ -103,8 +107,24 @@ class ProductGrid extends StatelessWidget {
                                       color: Colors.black,
                                       size: 18,
                                     ),
-                                    onPressed: () {
-                                      // TODO: Thêm chức năng thêm vào giỏ hàng
+                                    onPressed: () async {
+                                      bool success = await _cartController
+                                          .addToCart(product.id.toString());
+                                      if (success) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content:
+                                                  Text('Đã thêm vào giỏ hàng')),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                                  'Thêm vào giỏ hàng thất bại')),
+                                        );
+                                      }
                                     },
                                   ),
                                 ),

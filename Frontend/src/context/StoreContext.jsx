@@ -5,19 +5,19 @@ import Cookies from 'js-cookie';
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-
-    const [cartItems, setCartItems] = useState({})
-
-    const url = "http://localhost:4001";
-    const url2 = "http://localhost:9003";
-
-    const [token, setToken] = useState("")
-    const [product_list, setProductList] = useState([])
-    const [product_campaign, setProductCampaign] = useState([])
-    const [product_slug, setProductSlug] = useState(null);
-    // Cấu hình axios mặc định
     axios.defaults.withCredentials = true;
-
+    const url = "http://localhost:4001";
+    const [cartItems, setCartItems] = useState({})
+    const [token, setToken] = useState("")
+    const [product_list, setProductList] = useState([]);
+    const [product_campaign, setProductCampaign] = useState([]);
+    const [updateProduct, setUpdateProduct] = useState([]);
+    const [product_slug, setProductSlug] = useState(null);
+    const [product_slug_campaign, setProductSlugCampaign] = useState([]);
+    const [product_info, setProductInfo] = useState([]);
+    const [address, setAddress] = useState([]);
+    const [profile, setProfile] = useState([]);
+    const [orders, setOrders] = useState([]);
 
     const addToCart = async (itemId) => {
         if (!cartItems[itemId]) {
@@ -42,8 +42,6 @@ const StoreContextProvider = (props) => {
         if (quantity <= 0) {
             console.error("Số lượng phải lớn hơn 0");
         }
-        console.log("itemId: ", itemId)
-        console.log("quantity: ", quantity)
         if (!cartItems[itemId]) {
             setCartItems((prev) => ({ ...prev, [itemId]: quantity }))
         } else {
@@ -58,12 +56,15 @@ const StoreContextProvider = (props) => {
         let totalAmount = 0;
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
-                let itemInfo = product_list.find((product) => (product._id) === (item));
-                totalAmount += itemInfo.price * cartItems[item];
+                let itemInfo = product_campaign?.updatedProducts.find((product) => product._id === item);
+                if (itemInfo) {
+                    const priceToUse = itemInfo.newPrice !== null && itemInfo.newPrice !== undefined ? itemInfo.newPrice : itemInfo.price;
+                    totalAmount += priceToUse * cartItems[item];
+                }
             }
         }
         return totalAmount;
-    }
+    };
 
     const fetchProductList = async () => {
         const response = await axios.get(`${url}/v1/api/product/getAll`);
@@ -83,6 +84,34 @@ const StoreContextProvider = (props) => {
     const fetchProductUpdateCampaign = async () => {
         const response = await axios.get(`${url}/v1/api/product/campaign/updateProductPrice`);
         setProductCampaign(response.data.metadata);
+        setUpdateProduct(response.data.metadata.updatedProducts);
+    };
+
+    const fetchProductUpdateCampaignSlug = async (slug) => {
+        const response = await axios.get(`${url}/v1/api/product/campaign/updateProductPrice/${slug}`);
+        setProductSlugCampaign(response.data.metadata);
+        setProductInfo(response.data.metadata.updatedProduct);
+    };
+
+    const fetchUserAddress = async () => {
+        const response = await axios.get(`${url}/v1/api/profile/address/getList`);
+        setAddress(response.data.metadata.addresses);
+    }
+
+    const fetchUserProfile = async () => {
+        const response = await axios.get(`${url}/v1/api/profile/getProfile`);
+        setProfile(response.data.metadata);
+    }
+
+    const fetchOrders = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/profile/user/order/get`);
+            if (response.data.status === 200) {
+                setOrders(response.data.metadata);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
     };
 
     useEffect(() => {
@@ -100,16 +129,18 @@ const StoreContextProvider = (props) => {
 
 
     const contextValue = {
-        product_list, product_campaign,
-        product_slug,
-        cartItems,
+        product_list, product_campaign, updateProduct,
+        product_slug, product_slug_campaign, product_info,
+        cartItems, address, profile,
+        fetchOrders, orders,
         setCartItems,
         addToCart,
         addQuantityToCart,
         removeFromCart,
-        getTotalCartAmount,
-        fetchProductSlug,
-        url, url2,
+        getTotalCartAmount, loadCartData,
+        fetchProductSlug, fetchProductUpdateCampaignSlug, fetchUserProfile,
+        fetchUserAddress,
+        url,
         setToken,
         token
     }

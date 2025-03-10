@@ -51,13 +51,12 @@ const Contact = () => {
         visible: { opacity: 1, transition: { staggerChildren: 0.3 } }
     };
     return (
-        <motion.div 
-        className="page-contact"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }}
-        variants={containerVariants}
-        >
+            <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={containerVariants}
+            >
             <motion.div className='banner-contact' variants={fadeInUp}>
                 <img src={assets.banner_contact} alt="Banner_Contact" />
             </motion.div>

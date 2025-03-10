@@ -68,6 +68,7 @@ const TrashCampaigns = () => {
         {
             title: "Hành động",
             key: "actions",
+            align: 'center',
             render: (_, record) => (
                 <Space>
                     <Button icon={<UndoOutlined />} onClick={() => handleRestore(record._id)}>

@@ -4,11 +4,11 @@ import '../styles/styles.css';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-// import { StoreContext } from '../../../context/StoreContext';
+import { StoreContext } from '../../context/StoreContext';
 import { Tab, Tabs } from 'react-bootstrap';
 
 const AddProduct = () => {
-    // const { url } = useContext(StoreContext);
+    const { url } = useContext(StoreContext);
     const [images, setImage] = useState([]);
     const [data, setData] = useState({
         title: "",
@@ -65,6 +65,7 @@ const AddProduct = () => {
         formData.append("refreshRate", data.refreshRate);
 
         try {
+            console.log("data: ", formData)
             const response = await axios.post(`${url}/v1/api/product/add`, formData);
             if (response.data.status) {
                 setData({
@@ -103,10 +104,10 @@ const AddProduct = () => {
     return (
         <div className="add d-flex align-items-center justify-content-center add-tab" style={{ minHeight: '100vh' }}>
             <div className=" addprd card p-5 shadow-lg border-0" style={{ width: '90vw', borderRadius: '15px', height: '100%' }}>
-                
-                <div className='add-body-product'>
-                    <div className='tab-left col-8'>
-                        <form onSubmit={onSubmitHandler}>
+                <form onSubmit={onSubmitHandler}>
+                    <div className='add-body-product'>
+                        <div className='tab-left col-8'>
+
                             <Tabs defaultActiveKey="general" id="product-tabs" >
                                 <Tab eventKey="general" title="Thông Tin Sản Phẩm">
                                     <div className="form-group text-center" style={{ display: "flex", gap: "10px", alignItems: "center" }}                                    >
@@ -120,7 +121,7 @@ const AddProduct = () => {
                                                             src={URL.createObjectURL(img)}
                                                             alt={`Upload Preview ${index + 1}`}
                                                             className=" shadow-sm"
-                                                        
+
                                                         />
                                                     ))
                                                 ) : (
@@ -128,7 +129,7 @@ const AddProduct = () => {
                                                         src={assets.download_img}
                                                         alt="Upload Preview"
                                                         className=" shadow-sm"
-                                    
+
                                                     />
                                                 )}
                                             </div>
@@ -413,31 +414,30 @@ const AddProduct = () => {
                                 </Tab>
                             </Tabs>
 
-
-                        </form>
-                    </div>
-                    <div className='tab-right col-2'>
-                        <div className='tab-right-content'>
-                            <img src={assets.add_product} alt="add products" />
-                            <div className="text-center mt-4">
-                                <button type="submit" className="btn btn-primary rounded-pill px-4 py-2" disabled={loading}>
-                                    {loading ? "Đang tải..." : "Thêm Sản Phẩm"}
-                                </button>
-                            </div>
-                            <div className="text-center mt-4">
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary rounded-pill px-4 py-2"
-                                    disabled={loading}
-                                    style={{ background: "red" }}  // Đúng: Dùng object
-                                >
-                                    {loading ? "Đang tải..." : "Clear all"}
-                                </button>
-
+                        </div>
+                        <div className='tab-right col-2'>
+                            <div className='tab-right-content'>
+                                <img src={assets.add_product} alt="add products" />
+                                <div className="text-center mt-4">
+                                    <button type="submit" className="btn btn-primary rounded-pill px-4 py-2" disabled={loading}>
+                                        {loading ? "Đang tải..." : "Thêm Sản Phẩm"}
+                                    </button>
+                                </div>
+                                <div className="text-center mt-4">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary rounded-pill px-4 py-2"
+                                        disabled={loading}
+                                        style={{ background: "red" }}  // Đúng: Dùng object
+                                    >
+                                        {loading ? "Đang tải..." : "Làm mới"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );

@@ -145,6 +145,14 @@ class CampaignController {
             metadata: result.metadata
         }).send(res)
     }
+
+    updateProductPricesForCampaignBySlug = async (req, res, next) => {
+        const result = await CustomCampaignService.updateProductPricesForCampaignBySlug(req, res)
+        new OK({
+            message: 'Thông tin sản phẩm theo id sau update',
+            metadata: result.metadata
+        }).send(res)
+    }
 }
 
 module.exports = new CampaignController();

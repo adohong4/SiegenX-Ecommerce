@@ -4,16 +4,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { toast } from 'react-toastify';
-// import { StoreContext } from '../../context/StoreContext';
-import { Order } from '../../data/Enviroment'
+import { StoreContext } from '../../context/StoreContext';
 
 const PlaceOrder = () => {
-    // const { getTotalCartAmount, token, user_address, product_list, cartItems, url } = useContext(StoreContext);
-    const [list, setList] = useState([]);
+    const { getTotalCartAmount, fetchUserAddress, address, product_list, cartItems, url, token } = useContext(StoreContext);
     const navigate = useNavigate();
     const [paymentMethod, setPaymentMethod] = useState("cash");
-    // Giả lập dữ liệu 
-    const orderData = Order[0];
+    const [onlinePaymentMethod, setOnlinePaymentMethod] = useState("stripe");
+    axios.defaults.withCredentials = true;
     const [formData, setFormData] = useState({
         fullname: "",
         phone: "",
@@ -23,21 +21,12 @@ const PlaceOrder = () => {
         province: "",
     });
 
-    const fetchUserAddress = async () => {
-        try {
-            const response = await axios.get(`${url}/v1/api/profile/getAddress`, {
-                headers: { token }
-            });
-            if (response.data.status) {
-                setList(response.data.metadata.addresses);
-            }
-        } catch (error) {
-            toast.error("Lỗi hiển thị");
-        }
-    };
-
     const handlePaymentChange = (event) => {
         setPaymentMethod(event.target.value);
+    };
+
+    const handleOnlinePaymentChange = (event) => {
+        setOnlinePaymentMethod(event.target.value);
     };
 
     const onChangeHandler = (event) => {
@@ -58,111 +47,67 @@ const PlaceOrder = () => {
             phone: selectedAddress.phone
         });
     };
-// Code cũ
 
-
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     let orderItems = [];
-    //     product_list.map((item) => {
-    //         if (cartItems[item._id] > 0) {
-    //             let itemInfo = item;
-    //             itemInfo["quantity"] = cartItems[item._id];
-    //             orderItems.push(itemInfo);
-    //         }
-    //     });
-
-    //     let orderData = {
-    //         address: formData,
-    //         items: orderItems,
-    //         amount: getTotalCartAmount() + 50000,
-    //     };
-    //     //lựa chọn online hay tại nhà
-    //     if (paymentMethod === 'online') {
-    //         let response = await axios.post(url + "/v1/api/profile/stripe/place", orderData, { headers: { token } });
-
-    //         if (response.data.success) {
-    //             const { session_url } = response.data;
-    //             window.location.replace(session_url);
-    //         } else {
-    //             toast.error(response.data.message);
-    //         }
-    //     } else {
-    //         // let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
-    //         // if (response.data.success) {
-    //         //     toast.success(response.data.message);
-    //         //     navigate("/myorder");
-    //         // } else {
-    //         //     toast.error(response.data.message);
-    //         // }
-
-    //         let response = await axios.post(url + "/v1/api/profile/payment/verify", orderData, { headers: { token } });
-    //         if (response.data.success) {
-    //             console.log("Thanh toán thành công, điều hướng tới /payment-success");
-    //             toast.success(response.data.message);
-
-    //             await sendEmailConfirmation(orderItems, formData.email)
-    //             // Chuyển hướng đến trang thông báo thanh toán thành công
-    //             navigate('/payment-success', {
-    //                 state: {
-    //                     message: "Đặt hàng thành công!",
-    //                     orderData
-    //                 }
-    //             });
-    //         } else {
-    //             toast.error(response.data.message);
-    //         }
-    //     }
-
-    // };
-
-
-    // Giả lập cho hàm handle submit
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        toast.success("Đặt hàng thành công!");
-        navigate('/payment-success', {
-            state: {
-                message: "Đặt hàng thành công!",
-                orderData
+        let orderItems = [];
+        product_list.map((item) => {
+            if (cartItems[item._id] > 0) {
+                let itemInfo = item;
+                itemInfo["quantity"] = cartItems[item._id];
+                orderItems.push(itemInfo);
             }
         });
-    };
 
-    // Kết thúc giả lập cho handleSubmit
+        let orderData = {
+            address: formData,
+            items: orderItems,
+            amount: getTotalCartAmount() + 50000,
+        };
 
-    const sendEmailConfirmation = async (orderDetails, email) => {
-        try {
-            const response = await axios.post(url + '/v1/api/profile/send-email', {
-                email: email,
-                orderDetails: orderDetails, // Array chứa chi tiết đơn hàng
-            });
+        if (paymentMethod === 'online') {
+            try {
+                let response;
+                if (onlinePaymentMethod === 'stripe') {
+                    response = await axios.post(`${url}/v1/api/profile/stripe/place`, orderData);
+                } else if (onlinePaymentMethod === 'zalopay') {
+                    response = await axios.post(`${url}/v1/api/online/zalopay/payment`, orderData);
+                }
 
-            console.log(response.data.message); // Thông báo thành công
-        } catch (error) {
-            console.error('Lỗi khi gửi email:', error.response?.data || error.message);
+                if (response && response.data.success) {
+                    if (onlinePaymentMethod === 'stripe') {
+                        const { session_url } = response.data;
+                        window.location.replace(session_url);
+                    } else if (onlinePaymentMethod === 'zalopay') {
+                        window.location.replace(response.data.order_url); // URL từ ZaloPay
+                    }
+                } else {
+                    toast.error(response ? response.data.message : "Có lỗi xảy ra khi xử lý thanh toán.");
+                }
+            } catch (error) {
+                toast.error(error.response?.data.message || "Có lỗi xảy ra khi kết nối đến cổng thanh toán.");
+            }
+        } else {
+            try {
+                let response = await axios.post(url + "/v1/api/profile/cod/verify", orderData);
+
+                if (response.data.status) {
+                    console.log("Thanh toán thành công, điều hướng tới /payment-success");
+                    toast.success(response.data.message);
+                    navigate(`/user/orders`)
+                }
+            } catch (error) {
+                toast.error(error.response.data.message);
+            }
         }
     };
-
-    // useEffect(() => {
-    //     fetchUserAddress(token);
-    //     if (!token) {
-    //         navigate('/cart');
-    //     } else if (getTotalCartAmount() === 0) {
-    //         navigate('/cart');
-    //     }
-    // }, [token]);
 
     useEffect(() => {
-        if (Order.length > 0) {
-            const orderData = Order[0]; // Lấy đơn hàng đầu tiên từ danh sách
-            setList([orderData.address]); // Lưu địa chỉ vào danh sách
-            setFormData(orderData.address); // Cập nhật form với địa chỉ có sẵn
-        } else {
-            toast.error("Không có dữ liệu đơn hàng!");
+        fetchUserAddress();
+        if (getTotalCartAmount() === 0) {
+            navigate('/cart');
         }
-    }, []);
+    }, [fetchUserAddress, getTotalCartAmount, navigate]);
 
     return (
         <form className="place-order" onSubmit={handleSubmit}>
@@ -174,7 +119,7 @@ const PlaceOrder = () => {
                         onChange={handleAddressChange}
                     >
                         <option value="">Chọn địa chỉ giao hàng của bạn</option>
-                        {list.map((address, index) => (
+                        {address.map((address, index) => (
                             <option key={index} value={JSON.stringify(address)}>
                                 {address.fullname}, {address.street}, {address.precinct}, {address.city}, {address.province}, {address.phone}
                             </option>
@@ -203,7 +148,7 @@ const PlaceOrder = () => {
             <div className="place-order-right">
                 <div className="cart-total">
                     <h2>Tổng Giỏ Hàng</h2>
-                    {/* <div>
+                    <div>
                         <div className="cart-total-details">
                             <p>Tạm Tính</p>
                             <p>{(getTotalCartAmount()).toLocaleString()} đ</p>
@@ -218,27 +163,8 @@ const PlaceOrder = () => {
                             <b>Tổng Cộng</b>
                             <b>{(getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 50000).toLocaleString()} đ</b>
                         </div>
-                    </div> */}
-
-                    {/* Giả lập dữ liệu cho hàm getTotalAmount */}
-
-                    <div>
-                        <div className="cart-total-details">
-                            <p>Tạm Tính</p>
-                            <p>{Order[0].totalAmount.toLocaleString()} đ</p>
-                        </div>
-                        <hr />
-                        <div className="cart-total-details">
-                            <p>Phí Giao Hàng</p>
-                            <p>{Order[0].shippingFee.toLocaleString()} đ</p>
-                        </div>
-                        <hr />
-                        <div className="cart-total-details">
-                            <b>Tổng Cộng</b>
-                            <b>{Order[0].finalAmount.toLocaleString()} đ</b>
-                        </div>
                     </div>
-{/* Kết thúc hàm giả lập */}
+
                     <div className="hinhthuc-thanhtoan">
                         <p>Hình thức thanh toán:</p>
                         <label>
@@ -267,9 +193,26 @@ const PlaceOrder = () => {
                             <div className="payment-options">
                                 <p>Chọn phương thức thanh toán trực tuyến:</p>
                                 <div className='pay-options'>
-                                    {/* <img src={assets.momo} alt="MoMo" className="payment-logo" />
-                                    <img src={assets.zalopay} alt="ZaloPay" className="payment-logo" /> */}
-                                    <img src={assets.stripe} alt="Stripe" className="payment-logo" />
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="onlinePaymentMethod"
+                                            value="stripe"
+                                            checked={onlinePaymentMethod === "stripe"}
+                                            onChange={handleOnlinePaymentChange}
+                                        />
+                                        <img src={assets.stripe} alt="Stripe" className="payment-logo" />
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="onlinePaymentMethod"
+                                            value="zalopay"
+                                            checked={onlinePaymentMethod === "zalopay"}
+                                            onChange={handleOnlinePaymentChange}
+                                        />
+                                        <img src={assets.zalopay} alt="ZaloPay" className="payment-logo" />
+                                    </label>
                                 </div>
                             </div>
                         )}

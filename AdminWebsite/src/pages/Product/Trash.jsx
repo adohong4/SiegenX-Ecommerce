@@ -44,20 +44,20 @@ const ProductTrash = () => {
     const removeProduct = async (productId) => {
         const response = await axios.delete(`${url}/v1/api/product/deleteProduct/${productId}`);  // delete
         if (response.data.status) {
-            alert(response.data.message);
+            toast.success(response.data.message);
             await fetchList(currentPage);
         } else {
-            alert('Error deleting product');
+            toast.error('Error deleting product');
         }
     };
 
     const restoreProduct = async (productId) => {
         const response = await axios.delete(`${url}/v1/api/product/delete/${productId}`);  // soft delete
         if (response.data.status) {
-            alert(response.data.message);
+            toast.success(response.data.message);
             await fetchList(currentPage);
         } else {
-            alert('Error deleting product');
+            toast.error('Error deleting product');
         }
     };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Table, Input, Button, Popconfirm, Modal, Form, Checkbox, Select, notification } from "antd";
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
 
@@ -30,12 +31,7 @@ const EmployeeList = () => {
         setTotalPages(response.data.metadata.totalPages);
       }
     } catch (error) {
-      // console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ');
-      notification.error({
-        message: 'Lỗi',
-        description: 'Tài khoản bị giới hạn',
-        placement: 'topRight',
-      });
+      toast.error(error.response.data.message)
     }
   };
 
@@ -118,6 +114,7 @@ const EmployeeList = () => {
     {
       title: "Hành động",
       key: "actions",
+      align: 'center',
       render: (_, record) => (
         <>
           <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }}>Sửa</Button>
@@ -140,12 +137,12 @@ const EmployeeList = () => {
   ];
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className='staff-container' style={{ padding: 20 }}>
       <h2>DANH SÁCH NHÂN VIÊN</h2>
       <Input
         placeholder="Tìm kiếm nhân viên..."
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: 20, width: "300px" }}
+        style={{ marginBottom: 20, width: "300px", marginRight: 20 }}
       />
       <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>Thêm nhân viên</Button>
 

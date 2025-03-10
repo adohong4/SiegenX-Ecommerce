@@ -1,24 +1,42 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import "../styles/styles.css";
-import axios from 'axios';
 import { assets } from '../../assets/assets';
 import { motion } from "framer-motion";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { StoreContext } from '../../context/StoreContext';
-import { formatHourDayTime } from '../../lib/utils'
+import { formatHourDayTime } from '../../lib/utils';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ProfileAdmin = () => {
-    const { account_list, updateStaff } = useContext(StoreContext);
+    axios.defaults.withCredentials = true;
+    const { url, account_list, updateStaff } = useContext(StoreContext);
     const [isEditing, setIsEditing] = useState(false);
-    const [images, setImage] = useState([]);
     const [editProfile, setEditProfile] = useState({ ...account_list });
+    const fileInputRef = useRef(null);
 
-    const handleChange = (e) => {
-        setEditProfile({ ...editProfile, [e.target.name]: e.target.value });
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('profile', file);
+            try {
+                const response = await axios.post(`${url}/v1/api/staff/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                toast.success(response.data.message);
+                setEditProfile({ ...editProfile, StaffPic: response.data.imageUrl });
+
+
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Upload ảnh thất bại'); // Xử lý lỗi tốt hơn
+            }
+        }
     };
 
     const handleSave = () => {
-        updateStaff(editProfile)
+        updateStaff(editProfile);
         setIsEditing(false);
         alert("Thông tin đã được cập nhật!");
     };
@@ -35,20 +53,29 @@ const ProfileAdmin = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
-
-            <div className="profile-auth col-6">
-
-                <input type="file" accept="image/*" onChange={(e) => (e)} className="imageStaff-upload-input col-9" />
+            {/* Upload Ảnh */}
+            <div className="profile-auth col-6" style={{ textAlign: "center" }}>
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    className="imageStaff-upload-input col-9"
+                    style={{ display: "none" }}
+                    onChange={handleImageChange}
+                />
                 <img
                     className="logo profile-pic col-3"
                     src={account_list.StaffPic || assets.staffImage}
                     alt="avt"
-                    onClick={(e) => (e)}
+                    onClick={() => fileInputRef.current.click()}
+                    style={{ cursor: "pointer" }}
                 />
+                <p style={{ fontSize: "14px", color: "#555", marginBottom: "0px" }}>
+                    Hãy click để thay đổi hình ảnh
+                </p>
             </div>
 
             <div className="profile-admin-grid">
-                {/* Cột 1 - Bảng hiển thị thông tin */}
                 <div className="profile-admin-column">
                     <table className="profile-admin-table">
                         <tbody>
@@ -63,7 +90,7 @@ const ProfileAdmin = () => {
                                 ['Ngày tạo', formatHourDayTime(account_list.createdAt)],
                             ].map(([field, value]) => (
                                 <tr key={field}>
-                                    <td style={{ fontWeight: 'bold' }} className="field" >{field}</td>
+                                    <td style={{ fontWeight: 'bold' }} className="field">{field}</td>
                                     <td className="value">{value || 'N/A'}</td>
                                 </tr>
                             ))}
@@ -82,8 +109,6 @@ const ProfileAdmin = () => {
                         )}
                     </div>
                 </div>
-
-                {/* Cột 2 - Form chỉnh sửa */}
                 {isEditing && (
                     <div className="profile-admin-column">
                         {[
@@ -98,10 +123,10 @@ const ProfileAdmin = () => {
                                 <span style={{ fontWeight: 'bold' }}>{field.label}:</span>
                                 <input
                                     type="text"
-                                    name={field.key} // Đặt name cho input để sử dụng trong handleChange
-                                    value={editProfile[field.key]} // Sử dụng editProfile để hiển thị giá trị
-                                    onChange={handleChange} // Sử dụng handleChange để cập nhật giá trị
-                                    style={{ flex: 1, marginLeft: '10px' }}
+                                    name={field.key}
+                                    value={editProfile[field.key]}
+                                    onChange={(e) => setEditProfile({ ...editProfile, [e.target.name]: e.target.value })}
+                                    style={{ flex: 1 }}
                                 />
                             </div>
                         ))}
@@ -117,7 +142,6 @@ const ProfileAdmin = () => {
                         </div>
                     </div>
                 )}
-
             </div>
         </motion.div>
     );

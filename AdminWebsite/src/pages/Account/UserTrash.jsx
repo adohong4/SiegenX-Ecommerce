@@ -72,7 +72,7 @@ const ListUser = () => {
     const restoreAccount = async (userId) => {
         const response = await axios.delete(`${url}/v1/api/profile/account/active/${userId}`);
         if (response.data.status) {
-            toast.success(response.data.message);
+            toast.success('Hồi phục thành công');
             await fetchList(currentPage);
         }
     };
@@ -124,10 +124,10 @@ const ListUser = () => {
                         <div>{item.address.length}</div>
                         <div>{Object.keys(item.cartData).length}</div>
                         <div className="actions">
-                            <button onClick={() => removeUser(item._id)} className="btn-delete">
+                            <button onClick={() => removeUser(item._id)} className="btn-delete-user">
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
-                            <button onClick={() => restoreAccount(item._id)} className="btn-update">
+                            <button onClick={() => restoreAccount(item._id)} className="btn-update-user">
                                 <FontAwesomeIcon icon={faRotateRight} />
                             </button>
 

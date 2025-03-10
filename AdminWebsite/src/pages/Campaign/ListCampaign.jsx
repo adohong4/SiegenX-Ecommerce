@@ -94,15 +94,44 @@ const CampaignPage = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status, record) => (
-        record.status === 'active' ? 'Hoạt động'
-          : record.status === 'paused' ? 'Tạm dừng'
-            : record.status === 'completed' ? 'Thành công'
-              : record.status === 'pending' ? 'Chờ xử lý'
-                : record.status === 'cancelled' ? 'Bị hủy'
-                  : record.status === 'failed' ? 'Thất bại' : 'Nháp'
-      ),
+      render: (status, record) => {
+        let statusText;
+        let style = {}; // Object chứa style
+
+        switch (record.status) {
+          case 'active':
+            statusText = 'Hoạt động';
+            style = { color: '#003366', padding: '2px 8px', backgroundColor: '#CCFFFF', border: '1px solid #003366', borderRadius: '20px', display: 'inline-block' };
+            break;
+          case 'paused':
+            statusText = 'Tạm dừng';
+            style = { color: '#FF6600', padding: '2px 8px', backgroundColor: '#FFFFCC', border: '1px solid #FF6600', borderRadius: '20px', display: 'inline-block' };
+            break;
+          case 'completed':
+            statusText = 'Thành công';
+            style = { color: '#006600', padding: '2px 8px', backgroundColor: '#CCFF99', border: '1px solid #006600', borderRadius: '20px', display: 'inline-block' };
+            break;
+          case 'pending':
+            statusText = 'Chờ xử lý';
+            style = { color: 'black', padding: '2px 8px', border: '1px solid', borderRadius: '20px', display: 'inline-block' };
+            break;
+          case 'cancelled':
+            statusText = 'Bị hủy';
+            style = { color: 'red', padding: '2px 8px', backgroundColor: '#FFFFFF', border: '1px solid red', borderRadius: '20px', display: 'inline-block' };
+            break;
+          case 'failed':
+            statusText = 'Thất bại';
+            style = { color: 'darkred', padding: '2px 5px', borderRadius: '4px', display: 'inline-block' };
+            break;
+          default:
+            statusText = 'Nháp';
+            style = { color: '#555', padding: '2px 5px', borderRadius: '4px', display: 'inline-block' };
+        }
+
+        return <span style={style}>{statusText}</span>;
+      },
     },
+
     {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
@@ -120,6 +149,7 @@ const CampaignPage = () => {
     {
       title: "Hành động",
       key: "action",
+      align: 'center',
       render: (_, record) => (
         <>
           <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />

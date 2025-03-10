@@ -11,6 +11,8 @@ const router = express.Router()
 
 //Payment
 router.post('/profile/cod/verify', checkTokenCookie, asyncHandler(paymentController.CODplaceOrder))
+
+//Stripe
 router.post('/profile/stripe/place', checkTokenCookie, asyncHandler(stripeController.placeOrder))
 router.post('/profile/stripe/verify', checkTokenCookie, asyncHandler(stripeController.verifyOrder))
 

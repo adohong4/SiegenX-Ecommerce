@@ -5,8 +5,11 @@ const orderModel = require('../../models/order.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 const { CREATED } = require("../../core/success.response")
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 class StripeController {
     placeOrder = async (req, res) => {
+        const userId = req.user;
         const frontend_url = process.env.URL_FRONTEND;
         try {
             // Tính tổng số tiền
@@ -36,7 +39,7 @@ class StripeController {
                     quantity: 1
                 });
                 const newOrder = new orderModel({
-                    userId: req.body.userId,
+                    userId: userId,
                     items: req.body.items,
                     amount: totalAmount,
                     address: req.body.address,
@@ -44,7 +47,7 @@ class StripeController {
                 });
                 // Nếu tổng số tiền hợp lệ
                 await newOrder.save();
-                await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+                await userModel.findByIdAndUpdate(userId, { cartData: {} });
                 // Tạo phiên giao dịch Stripe
                 const session = await stripe.checkout.sessions.create({
                     line_items: line_items,

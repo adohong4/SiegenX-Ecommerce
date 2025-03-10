@@ -1,15 +1,12 @@
 
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Form, Select } from "antd";
-import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
 import { debounce } from 'lodash'
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
-import ProductPopup from '../../components/Popup/ProductsPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faBook, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { fakeProducts, stats } from "../../data/Enviroment";
@@ -54,10 +51,10 @@ const ListProduct = () => {
         console.log(productId)
         const response = await axios.delete(`${url}/v1/api/product/delete/${productId}`);
         if (response.data.status) {
-            alert(response.data.message);
+            toast.success(response.data.message);
             await fetchList(currentPage);
         } else {
-            alert('Error deleting product');
+            toast.error('Error deleting product');
         }
     };
 
@@ -137,7 +134,9 @@ const ListProduct = () => {
             title: "Trạng thái",
             key: "quantity",
             render: (text, record) => (
-                <p>{record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}</p>
+                <p style={{ color: record.quantity <= 0 ? 'red' : 'green' }}>
+                    {record.quantity <= 0 ? 'Hết hàng' : 'Còn hàng'}
+                </p>
             ),
         },
         {
@@ -154,6 +153,7 @@ const ListProduct = () => {
         {
             title: "Hành động",
             key: "action",
+            align: "center",
             render: (text, record) => (
                 <div className='button-product'>
                     <button onClick={() => handleProductClick(record._id)} className="btn-info">
@@ -174,12 +174,17 @@ const ListProduct = () => {
                 <div className="das-body">
                     {stats.map((stat, index) => (
                         <div key={index} className="box">
-                            <p className="label">{stat.label}</p>
-                            <p className="value">{stat.value.toString().padStart(2, "0")} + </p>
+                            <FontAwesomeIcon icon={stat.icon} className="stat-icon" />
+                            <div>
+                                <p className="label">{stat.label}</p>
+                                <p className="value">{stat.animatedValue} </p>
+                            </div>
+
                         </div>
                     ))}
                 </div>
             </div>
+
             <div className='top-list-tiltle'>
                 <div className='col-lg-4 tittle-right'>
                     <Input
@@ -193,7 +198,7 @@ const ListProduct = () => {
                     <div className='search-right'>
                         <Select
                             placeholder="Danh mục sản phẩm"
-                            style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+                            style={{ width: 200, marginRight: 8, borderRadius: '7px', border: '1px solid rgb(134, 134, 134, 0.6)', }}
                             value={selectedType}
                             onChange={(value) => setSelectedType(value)}
                             allowClear

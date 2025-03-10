@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Table, Input, Button, Popconfirm, Modal, Form, Checkbox, Select } from "antd";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { StoreContext } from '../../context/StoreContext';
 
 const EmployeeTrashList = () => {
@@ -25,8 +26,7 @@ const EmployeeTrashList = () => {
                 setTotalPages(response.data.metadata.totalPages);
             }
         } catch (error) {
-            // console.error('Xảy ra ngoại lệ khi lấy dữ liệu liên hệ', error);
-            alert("Tài khoản bị giới hạn")
+            toast.error(error.response.data.message)
         }
     };
 
@@ -69,9 +69,10 @@ const EmployeeTrashList = () => {
         {
             title: "Hành động",
             key: "actions",
+            align: 'center',
             render: (_, record) => (
                 <>
-                    <Button onClick={() => showViewModal(record)} style={{ marginRight: 8 }}>Xem</Button>
+                    <Button onClick={() => showViewModal(record)} >Xem</Button>
                     <Popconfirm title="Bạn muốn phục hồi?" onConfirm={() => handleResore(record._id)}>
                         <Button type="primary" danger>Phục hồi</Button>
                     </Popconfirm>
@@ -90,7 +91,7 @@ const EmployeeTrashList = () => {
     ];
 
     return (
-        <div style={{ padding: 20 }}>
+        <div className='staff-container' style={{ padding: 20 }}>
             <h2>DANH SÁCH NHÂN VIÊN</h2>
             <Input
                 placeholder="Tìm kiếm nhân viên..."

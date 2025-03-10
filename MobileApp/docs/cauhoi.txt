@@ -496,3 +496,289 @@ class ApiService {
 
 tôi đang bị lỗi ở trang chủ của tôi không hiển thị sản phẩm mà nó báo lỗi
 Error: Exception: failed to load products
+------------------------------------------------------------
+----------------------------------------------------------
+--------------------------------------------------------
+http://localhost:4001/v1/api/profile/cart/add
+phương thức post
+body-raw nhập vào:
+{
+    "itemId": "6769509216ebd4be548c5302"
+}
+-------------------------------------------------
+kết quả trả về:
+{
+    "status": 201,
+    "message": "Thêm vào giỏ hàng thành công",
+    "metadata": {}
+}
+------------------------------
+thêm api này vào cho sự kiện icon 
+IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.add_shopping_cart_rounded,
+                                      color: Colors.black,
+                                      size: 18,
+                                    ),
+                                    onPressed: () {
+                                      // TODO: Thêm chức năng thêm vào giỏ hàng
+                                    },
+                                  ),
+trong đoạn code này
+import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
+import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/utils/format_untils.dart';
+import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
+import 'package:siegenx_mobile_app/widgets/product_detail.dart';
+import 'package:siegenx_mobile_app/services/api_service.dart';
+
+class ProductGrid extends StatelessWidget {
+  const ProductGrid({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: FutureBuilder<List<Product>>(
+        future: ProductService.fetchAllProducts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No products found'));
+          }
+
+          final products = snapshot.data!;
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              int crossAxisCount = (constraints.maxWidth ~/ 150).clamp(2, 4);
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 0.65,
+                ),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+
+                  return GestureDetector(
+                    onLongPress: () {
+                      showProductDialog(context, product);
+                    },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProductDetailScreen(product: product),
+                        ),
+                      );
+                    },
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF2F3F4),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                                      width: double.infinity,
+                                      height: 160,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                        size: 120,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF2F3F4),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.add_shopping_cart_rounded,
+                                      color: Colors.black,
+                                      size: 18,
+                                    ),
+                                    onPressed: () {
+                                      // TODO: Thêm chức năng thêm vào giỏ hàng
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          // Phần hiển thị giá
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  product.newPrice != null
+                                      ? formatCurrency(product.newPrice!)
+                                      : formatCurrency(product.price),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFF00B98E),
+                                  ),
+                                ),
+                                FavoriteIcon(productId: product.id),
+                              ],
+                            ),
+                          ),
+
+// Phần thay thế số lượng bằng giá cũ
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                if (product.newPrice != null)
+                                  Text(
+                                    formatCurrency(product.price),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    'Số lượng: ${product.quantity}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                product.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+-----------------------------------
+đây là api_service.dart
+class ApiService {
+  static const String baseUrl = "http://localhost:4001/v1/api";
+  static const String imageBaseUrl = "http://localhost:9003/images/";
+
+  static const String identity = "$baseUrl/identity";
+  static const String profile = "$baseUrl/profile";
+  static const String product = "$baseUrl/product";
+  static const String contact = "$baseUrl/contact";
+
+  static const String login = "$identity/login";
+  static const String register = "$identity/register";
+  static const String userProfile = "$profile/getProfile";
+  static const String productList = "$product/list";
+  static const String contactSupport = "$contact/support";
+  static const String addAddress = "$profile/address/create";
+  static const String listAddresses = "$profile/address/getList";
+  static const String logout = "$identity/logout";
+  static const String deleteAddress = "$profile/address/delete";
+
+  static const String getAllProducts = "$product/getAll";
+  static const String updateProfile = "$profile/update";
+  static const String getCampaignProducts =
+      "$product/campaign/updateProductPrice";
+}
+--------------------------------
+class Product {
+  final int id;
+  final String name;
+  final int price;
+  final int? newPrice; // Thêm trường mới này
+  final String description;
+  final bool isFavorite;
+  final List<String> imageUrl;
+  final int quantity;
+
+  Product({
+    required this.id,
+    required this.name,
+    required this.price,
+    this.newPrice, // Thêm vào constructor
+    required this.description,
+    required this.isFavorite,
+    required this.imageUrl,
+    required this.quantity,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: int.parse(json['_id'].substring(0, 8), radix: 16),
+      name: json['title'] as String,
+      price: (json['price'] as num).round(),
+      newPrice: json['newPrice'] != null
+          ? (json['newPrice'] as num).round()
+          : null, // Xử lý giá mới
+      description: json['title'] as String,
+      isFavorite: false,
+      imageUrl: List<String>.from(json['images'] as List),
+      quantity: json['quantity'] as int,
+    );
+  }
+}
+
+-----------------------------------------
+nếu cần thì tách riêng backend call api, thì tách ra 1 file code riêng là add_cart trong folder controllers

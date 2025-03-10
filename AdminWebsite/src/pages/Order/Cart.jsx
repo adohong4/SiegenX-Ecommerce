@@ -2,12 +2,9 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import '../styles/styles.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import ReactPaginate from 'react-paginate';
 import { StoreContext } from '../../context/StoreContext';
 import { Table, Input, Popconfirm, Button, Pagination, Modal, Descriptions, Select } from "antd";
 import { DeleteOutlined, BookFilled, EditFilled } from "@ant-design/icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { formatHourDayTime, formatCurrency } from '../../lib/utils';
 const Cart = () => {
     const { url, order_list, fetchOrder } = useContext(StoreContext);
@@ -27,17 +24,76 @@ const Cart = () => {
     const handlePrint = () => {
         if (popupRef.current) {
             const printContent = popupRef.current.innerHTML;
-            const originalContent = document.body.innerHTML;
-            // Chuyển nội dung popup vào body để in
-            document.body.innerHTML = printContent;
-            // Thực hiện in
-            window.print();
-            // Khôi phục nội dung ban đầu
-            document.body.innerHTML = originalContent;
-            window.location.reload(); // Reload lại trang sau khi in xong
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Hóa đơn</title>
+                        <link rel="stylesheet" href="/path/to/your/print.css">
+                        <style>
+                            @media print {
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    padding: 20px;
+                                }
+                                
+                                #invoice-print-area {
+                                    max-width: 600px;
+                                    margin: auto;
+                                    border: 2px solid black;
+                                    padding: 20px;
+                                    background: white;
+                                    box-shadow: 0px 0px 10px gray;
+                                }
+
+                                h1 {
+                                    text-align: center;
+                                    font-size: 20px;
+                                    margin-bottom: 10px;
+                                }
+
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 10px;
+                                }
+
+                                th, td {
+                                    border: 1px solid black;
+                                    padding: 10px;
+                                    text-align: left;
+                                }
+
+                                th {
+                                    background-color: #f2f2f2;
+                                    font-weight: bold;
+                                }
+
+                                /* Ẩn nút in khi in */
+                                #invoice-print-area>.ant-btn{
+                                    display: none ;
+                                }
+                            }
+
+                        </style>
+                    </head>
+                    <body>
+                        <div id="invoice-print-area">
+                            ${printContent}
+                        </div>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        </script>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     };
-
+    
     const statusHandler = async (event, orderId) => {
         const selectedValue = event.target.value;
 
@@ -54,7 +110,7 @@ const Cart = () => {
     const removeOrder = async (id) => {
         const response = await axios.delete(`${url}/v1/api/profile/order/status/${id}`);
         if (response.data.status) {
-            toast.success(response.data.message);
+            toast.success('Xóa thành công');
             fetchListpage(currentPage);
         }
     };
@@ -128,7 +184,8 @@ const Cart = () => {
                             record.status === "Đang chuẩn bị hàng" ? "#d35400" :
                                 record.status === "Đang giao hàng" ? "#f39c12" :
                                     record.status === "Giao hàng thành công" ? "#27ae60" : "#ecf0f1",
-                        color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black"
+                        color: ["Đợi xác nhận", "Đang chuẩn bị hàng", "Đang giao hàng", "Giao hàng thành công"].includes(record.status) ? "white" : "black",
+                        width: "fit-content"
                     }}
                 >
                     <option value="Đợi xác nhận">Đợi xác nhận</option>
@@ -178,35 +235,38 @@ const Cart = () => {
 
     return (
         <div className='order-list-container'>
-
-            <Input
-                placeholder="Tìm kiếm hóa đơn..."
-                style={{ width: 200, marginBottom: 16 }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-                placeholder="Hình thức thanh toán"
-                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
-                value={selectedType}
-                onChange={(value) => setSelectedType(value)}
-                allowClear
-            >
-                <Option value="Thanh toán trực tuyến">Thanh toán trực tuyến</Option>
-                <Option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</Option>
-            </Select>
-            <Select
-                placeholder="Trạng thái"
-                style={{ width: 200, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
-                value={selectedStatus}
-                onChange={(value) => setSelectedStatus(value)}
-                allowClear
-            >
-                <Option value="Đợi xác nhận">Đợi xác nhận</Option>
-                <Option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</Option>
-                <Option value="Đang giao hàng">Đang giao hàng</Option>
-                <Option value="Giao hàng thành công">Giao hàng thành công</Option>
-            </Select>
+            <div className='col-12'>
+                <div className='top-order-list col-6'>
+                    <Input
+                        placeholder="Tìm kiếm hóa đơn..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className='col-4'
+                    />
+                    <Select
+                        placeholder="Hình thức thanh toán"
+                        value={selectedType}
+                        className='col-4'
+                        onChange={(value) => setSelectedType(value)}
+                        allowClear
+                    >
+                        <Option value="Thanh toán trực tuyến">Thanh toán trực tuyến</Option>
+                        <Option value="Thanh toán khi nhận hàng">Thanh toán khi nhận hàng</Option>
+                    </Select>
+                    <Select
+                        placeholder="Trạng thái"
+                        value={selectedStatus}
+                        className='col-4'
+                        onChange={(value) => setSelectedStatus(value)}
+                        allowClear
+                    >
+                        <Option value="Đợi xác nhận">Đợi xác nhận</Option>
+                        <Option value="Đang chuẩn bị hàng">Đang chuẩn bị hàng</Option>
+                        <Option value="Đang giao hàng">Đang giao hàng</Option>
+                        <Option value="Giao hàng thành công">Giao hàng thành công</Option>
+                    </Select>
+                </div>
+            </div>
             <Table
                 columns={columns}
                 dataSource={filteredOrders.map((order, index) => ({ ...order, key: order._id || index }))}

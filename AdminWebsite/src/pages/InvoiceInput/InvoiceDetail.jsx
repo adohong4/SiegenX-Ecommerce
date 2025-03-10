@@ -2,9 +2,9 @@ import React, { useEffect, useContext, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import { StoreContext } from '../../context/StoreContext';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { formatDayTime, formatCurrency } from '../../lib/utils';
-import { campainlist } from "../../data/Enviroment";
 
 const InvoiceDetail = () => {
     const { id } = useParams();
@@ -60,23 +60,23 @@ const InvoiceDetail = () => {
             const response = await axios.put(`${url}/v1/api/product/invoice/push/${id}`);
             console.log("giữa");
             if (response.status === 200 || response.status === 201) {
-                alert("Số lượng nhập kho thành công thành công!");
+                toast.success("Số lượng nhập kho thành công thành công!");
                 navigate(-1);
             } else {
-                alert("Có lỗi xảy ra khi cập nhật đơn hàng!");
+                toast.error("Có lỗi xảy ra khi cập nhật đơn hàng!");
             }
         } catch (error) {
-            alert(error.response.data.message);
+            toast.error(error.response.data.message);
         }
     }
 
     const handleSaveOrder = async () => {
         if (!selectedSupplier) {
-            alert("Vui lòng chọn nhà cung cấp!");
+            toast.error("Vui lòng chọn nhà cung cấp!");
             return;
         }
         if (selectedProducts.length === 0) {
-            alert("Vui lòng thêm ít nhất một sản phẩm!");
+            toast.error("Vui lòng thêm ít nhất một sản phẩm!");
             return;
         }
 
@@ -89,14 +89,14 @@ const InvoiceDetail = () => {
         try {
             const response = await axios.put(`${url}/v1/api/product/invoice/update/${id}`, requestData);
             if (response.status === 200 || response.status === 201) {
-                alert("Đơn hàng đã được cập nhật thành công!");
+                toast.success("Đơn hàng đã được cập nhật thành công!");
                 navigate(-1);
             } else {
-                alert("Có lỗi xảy ra khi cập nhật đơn hàng!");
+                toast.error("Có lỗi xảy ra khi cập nhật đơn hàng!");
             }
         } catch (error) {
             console.error("Lỗi khi cập nhật đơn hàng:", error);
-            alert(error.response.data.message);
+            toast.error(error.response.data.message);
         }
     };
 

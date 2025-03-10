@@ -89,10 +89,10 @@ const Navbar = () => {
 
                                             {isDropdownOpen && (
                                                 <ul className="dropdown-menu">
-                                                    <li onClick={() => { navigate('/myorder'); setIsDropdownOpen(false); }}>
+                                                    <li onClick={() => { navigate('/user/orders'); setIsDropdownOpen(false); }}>
                                                         Hóa đơn
                                                     </li>
-                                                    <li onClick={() => { navigate('/ca-nhan'); setIsDropdownOpen(false); }}>
+                                                    <li onClick={() => { navigate('/user/profile'); setIsDropdownOpen(false); }}>
                                                         Cá Nhân
                                                     </li>
                                                     <li onClick={() => { handleLogout(); setIsDropdownOpen(false); }}>
@@ -194,10 +194,8 @@ const Navbar = () => {
                             </button>
                         ) : (
                             <ul>
-                                <li onClick={() => handleNavigate('/myorder')}>Đơn Hàng</li>
-                                <li onClick={() => handleNavigate('/ca-nhan')}>
-                                    Tài Khoản
-                                </li>
+                                <li onClick={() => handleNavigate('/user/orders')}>Đơn Hàng</li>
+                                <li onClick={() => handleNavigate('/user/profile')}>Tài Khoản</li>
                                 <li onClick={handleLogout}>Đăng Xuất</li>
                             </ul>
                         )}

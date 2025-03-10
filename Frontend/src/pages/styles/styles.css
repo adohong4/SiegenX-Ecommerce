@@ -402,22 +402,28 @@ section {
 
 }
 
+/* Giảm giá */
 .discount-badge {
   position: absolute;
   top: 0;
   left: 0;
   background-color: red;
-  color: white;
+  color: #fff;
   padding: 5px 10px;
-  margin-left: 5px;
+  margin-left: 10px;
   font-size: 14px;
   font-weight: bold;
+  border-top-left-radius:  5px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
   z-index: 1;
 }
 
 .product-price-container {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 8px;
   margin-left: 10px;
 }
@@ -438,6 +444,36 @@ section {
   font-size: 16px;
   color: #d90429;
   font-weight: bold;
+}
+
+/* Product Detail */
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.productDetail-new-price {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.productDetail-old-price {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.productDetail-price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #028062;
+}
+
+.discount-product-detail {
+  background-color: red;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
 }
 
 
@@ -1130,9 +1166,6 @@ section {
   width: 100vw;
 }
 
-.banner-contact {
-  margin-top: 100px;
-}
 
 .contact-container {
   display: flex;
@@ -1166,6 +1199,7 @@ section {
   color: #fff;
   margin-bottom: 20px;
   line-height: 25px;
+  
 }
 
 .contact-detail {
@@ -1982,6 +2016,77 @@ section {
   background-color: #056145;
 }
 
+.products-recommend {
+  margin-top: 20px ;
+  width: 100%;
+}
+
+.products-recommend h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.recommend-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 30px 0PX;
+  justify-content: center;
+}
+
+.recommend-card {
+  flex: 0 0 auto;
+  width: 250px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+.recommend-card:hover {
+  scale: 1.05;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.recommend-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 8px;
+}
+
+.recommend-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-weight: bold;
+  min-height: 48px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+}
+
+
+.recommend-price {
+  font-size: 14px;
+  color: #f00;
+  margin-bottom: 8px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.recommend-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recommend-card {
+  position: relative;
+}
+
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -2216,9 +2321,6 @@ section {
 /* CSS cho trang Chi tiết sản phẩm */
 
 
-.container-home {
-  margin-top: 125px;
-}
 
 .productinfo-container {
   display: flex;

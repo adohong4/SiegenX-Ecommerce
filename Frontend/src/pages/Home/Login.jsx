@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie';
-// import { GoogleLogin } from '@react-oauth/google'
+import { GoogleLogin } from '@react-oauth/google'
 import { StoreContext } from '../../context/StoreContext'
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
@@ -11,7 +11,7 @@ const Login = () => {
     const { url, setToken } = useContext(StoreContext)
     const navigate = useNavigate();
     const [currState, setCurrState] = useState('Đăng nhập');
-
+    axios.defaults.withCredentials = true;
     const [data, setData] = useState({
         username: "",
         email: "",
@@ -24,27 +24,27 @@ const Login = () => {
         setData(data => ({ ...data, [name]: value }))
     }
 
-    // const handleGoogleLogin = async (credentialResponse) => {
-    //     try {
-    //         const response = await axios.post(`${url}/v1/api/identity/google-login`, {
-    //             token: credentialResponse.credential,
-    //         });
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            const response = await axios.post(`${url}/v1/api/identity/google-login`, {
+                token: credentialResponse.credential,
+            });
 
-    //         if (response.data.status) {
-    //             const { user } = response.data.metadata;
-    //             toast.success(`Chào mừng ${user.username || user.email}!`);
-    //             localStorage.setItem("token", response.data.metadata.token); // Nếu cần thêm token sau này
-    //             navigate('/');
-    //         } else {
-    //             toast.error(response.data.message || 'Đăng nhập thất bại');
-    //         }
-    //     } catch (error) {
-    //         console.error('Login error:', error);
-    //         toast.error(
-    //             error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'
-    //         );
-    //     }
-    // };
+            if (response.data.status) {
+                const { user } = response.data.metadata;
+                toast.success(`Chào mừng ${user.username || user.email}!`);
+                localStorage.setItem("token", response.data.metadata.token); // Nếu cần thêm token sau này
+                navigate('/');
+            } else {
+                toast.error(response.data.message || 'Đăng nhập thất bại');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            toast.error(
+                error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+            );
+        }
+    };
 
 
     const onLogin = async (event) => {
@@ -92,11 +92,11 @@ const Login = () => {
                             <input name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Email' required />
                             <input name='password' onChange={onChangeHandler} value={data.password} type="password" placeholder='Mật khẩu' required />
                         </div>
-                        {/* <div className="Oauth2">
+                        <div className="Oauth2">
                             <GoogleLogin
                                 onSuccess={handleGoogleLogin}
                             />
-                        </div> */}
+                        </div>
 
                         <button type='submit' className='btn-sub'>{currState === "Đăng ký" ? "Tạo tài khoản mới" : "Đăng nhập"}</button>
                         <div className="login-popup-condition">

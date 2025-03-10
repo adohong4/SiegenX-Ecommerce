@@ -11,8 +11,8 @@
 
 .profile-pic {
   cursor: pointer;
-  height: 50px;
-  width: 50px;
+  height: 200px;
+  width: 200px;
   border-radius: 50%;
   border: 2px solid #00A07B;
 }
@@ -938,7 +938,7 @@ button[type='submit'] span {
 }
 
 .admin-container {
-  width: 100vw;
+  width: 99vw;
 }
 
 .login-popup .col-12 {

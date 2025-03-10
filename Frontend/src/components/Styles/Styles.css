@@ -470,7 +470,7 @@
     align-items: center;
     justify-content: center;
     /* margin-top: 123px; */
-    background-color: #EFEFEF;
+    background-color: #ddd;
   }
   
   .notification-text {
@@ -702,4 +702,342 @@
         width: 100vw;
         justify-content: space-between;
     }
+}
+
+
+
+/* CSS Trang User */
+.section-sidebar{
+  padding: 50px 0px;
+  background-color: #f0f0f0;
+  
+}
+.section-sidebar .page-User .content{
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-title{
+  display: flex;
+  align-items: center;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-title svg{
+  margin-right: 5px;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-title p{
+  margin-bottom: 0;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-submenu{
+  padding: 0;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-submenu li{
+  list-style-type: none;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-submenu li a{
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.section-sidebar .sidebar-dropdown-dad .sidebar-dropdown a{
+  text-decoration: none;
+  color: #000;
+}
+.page-User {
+  display: flex;
+}
+.page-User .sidebar{
+  padding: 20px;
+  font-size: 18px;
+}
+.page-User .sidebar .sidebar-submenu li a{
+  font-size: 18px;
+}
+
+
+
+.profile-info .gender-group{
+  display: flex;
+  align-items: center;
+}
+.profile-info .gender-group p{
+  margin-bottom: 0;
+}
+.profile-info .gender-group .gen{
+  display: flex;
+  align-items: center;
+}
+.profile-info .gender-group .gen label{
+  margin-left: 10px;
+}
+
+.Profile-user{
+  display: flex;
+}
+.Profile-user .form-group{
+  margin-bottom: 10px;
+}
+.Profile-user>.img-profile{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border-left: 2px dashed #ccc;
+}
+.Profile-user>.info-profile{
+  padding: 20px;
+}
+
+
+.my-address {
+  padding: 20px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.my-address .title-address {
+  display: flex;
+  justify-content: space-between;
+}
+
+.border-bt {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.btn-add-address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00A07B;
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  float: right;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-add-address:hover {
+  background-color: #00A07B;
+}
+
+.address-list {
+  margin-top: 20px;
+}
+
+.my-address-addresses {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  background-color: #fff;
+}
+
+.address-details-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.address-details-left {
+  flex: 1;
+}
+.address-details-left div {
+  display: flex;
+}
+.address-details-left div p:first-child {
+  padding-right: 10px;
+  border-right: 1px solid #bbb;
+  font-weight: bold;
+}
+.address-details-left div p:last-child {
+  padding-left: 10px;
+}
+.address-details-left p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.address-details-right {
+  text-align: right;
+}
+
+.address-details-right button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.address-details-right button:hover {
+  text-decoration: underline;
+}
+
+/* Badge Mặc định */
+.default-badge {
+  display: inline-block;
+  background-color: #ffebe9;
+  color: #d73727;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: 1px solid #d73727;
+  margin-top: 5px;
+}
+
+/* Badge Địa chỉ lấy hàng / trả hàng */
+.address-type {
+  display: inline-block;
+  background-color: #f5f5f5;
+  color: #555;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  margin-right: 5px;
+}
+
+/* Nút "Thiết lập mặc định" */
+.set-default-btn {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.set-default-btn:hover {
+  background-color: #e0e0e0;
+}
+
+
+
+.address-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.address-popup-container {
+  background: #fff;
+  width: 400px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: scale(0.9);
+  }
+  to {
+      opacity: 1;
+      transform: scale(1);
+  }
+}
+
+.address-popup .popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.address-popup .popup-header h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.address-popup .close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+.address-popup .close-btn:hover {
+  color: #e9412f;
+}
+
+.address-popup .popup-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.address-popup .form-group {
+  margin-bottom: 15px;
+}
+
+.address-popup .form-group label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.address-popup .form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.address-popup .form-group input:focus {
+  outline: none;
+}
+
+.address-popup .multi-fields {
+  display: block;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.address-popup .form-mul,
+.address-popup .form-mul-1 {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.address-popup .popup-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.address-popup .btn {
+  background: #00A07B;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.address-popup .btn:hover {
+  background: #00A07B;
 }

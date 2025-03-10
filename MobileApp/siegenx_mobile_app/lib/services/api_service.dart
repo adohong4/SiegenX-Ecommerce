@@ -16,9 +16,9 @@ class ApiService {
   static const String listAddresses = "$profile/address/getList";
   static const String logout = "$identity/logout";
   static const String deleteAddress = "$profile/address/delete";
-
   static const String getAllProducts = "$product/getAll";
   static const String updateProfile = "$profile/update";
   static const String getCampaignProducts =
       "$product/campaign/updateProductPrice";
+  static const String addToCart = "$profile/cart/add";
 }

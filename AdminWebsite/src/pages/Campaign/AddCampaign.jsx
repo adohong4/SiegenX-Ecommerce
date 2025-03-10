@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
+import { toast } from 'react-toastify';
 import { formatDayTime, formatCurrency } from '../../lib/utils';
 import { Form, Input, Button, Select, DatePicker, InputNumber, Tooltip, Row, Col, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -28,12 +29,12 @@ const AddCampaign = () => {
         try {
             console.log(values);
             const response = await axios.post(`${url}/v1/api/product/campaign/create`, values);
-            alert(response.data.message)
+            toast.success(response.data.message)
             console.log("Tạo mới chiến dịch thành công!");
             navigate('/list-campaign')
         } catch (error) {
             console.error("Lỗi khi cập nhật chiến dịch:", error);
-            alert(error.response.data.message)
+            toast.error(response.data.message)
             throw error;
         }
     };

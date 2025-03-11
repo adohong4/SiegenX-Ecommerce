@@ -11,7 +11,11 @@ import 'package:siegenx_mobile_app/widgets/success_animation.dart';
 
 class AuthController {
   static Future<void> login(
-      BuildContext context, String email, String password) async {
+    BuildContext context,
+    String email,
+    String password, {
+    VoidCallback? onError, // Callback để xử lý lỗi từ bên ngoài
+  }) async {
     final url = Uri.parse(ApiService.login);
 
     try {
@@ -58,9 +62,15 @@ class AuthController {
         CustomSnackBar.show(context, message, Icons.error, Colors.red);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi kết nối: ${e.toString()}')),
-      );
+      // Truyền lỗi ra ngoài qua callback thay vì dùng context trực tiếp
+      if (onError != null) {
+        onError();
+      } else if (context.mounted) {
+        // Kiểm tra context còn hợp lệ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi kết nối: ${e.toString()}')),
+        );
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
-import 'package:siegenx_mobile_app/services/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 
@@ -26,9 +26,9 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   // Hàm tính tổng tiền sản phẩm
-  int calculateTotalPrice(List<Product> products) {
+  double calculateTotalPrice(List<Product> products) {
     // Đổi thành int vì price là int
-    int total = 0;
+    double total = 0;
     for (var product in products) {
       if (product.quantity > 0) {
         total += product.price * product.quantity; // Dùng price trực tiếp
@@ -80,7 +80,8 @@ class _CartScreenState extends State<CartScreen> {
           final cartProducts =
               snapshot.data!.where((product) => product.quantity > 0).toList();
           int quantityCount = cartProducts.length;
-          int totalPrice = calculateTotalPrice(cartProducts); // Đổi thành int
+          double totalPrice =
+              calculateTotalPrice(cartProducts); // Đổi thành int
 
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

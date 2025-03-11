@@ -21,4 +21,5 @@ class ApiService {
   static const String getCampaignProducts =
       "$product/campaign/updateProductPrice";
   static const String addToCart = "$profile/cart/add";
+  static const String getCart = "$profile/cart/get";
 }

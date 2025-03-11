@@ -4,7 +4,7 @@ import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/providers/favorites_provider.dart';
 
 class FavoriteIcon extends StatelessWidget {
-  final int productId;
+  final String productId;
 
   const FavoriteIcon({Key? key, required this.productId}) : super(key: key);
 
@@ -19,9 +19,11 @@ class FavoriteIcon extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (isFavorite) {
-          await favoritesProvider.removeFavorite(userId, productId);
+          await favoritesProvider.removeFavorite(
+              userId, productId); // Sử dụng String
         } else {
-          await favoritesProvider.addFavorite(userId, productId);
+          await favoritesProvider.addFavorite(
+              userId, productId); // Sử dụng String
         }
       },
       child: Icon(

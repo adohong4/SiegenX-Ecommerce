@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/controllers/cart_controller.dart'; // Thay vì product_service
 import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
@@ -22,6 +23,10 @@ class CartProductGrid extends StatefulWidget {
 class _CartProductGridState extends State<CartProductGrid> {
   final Map<int, bool> _selectedProducts = {};
 
+  int calculateDiscountPercentage(double price, double newPrice) {
+    return (((price - newPrice) / price) * 100).round();
+  }
+
   @override
   void didUpdateWidget(covariant CartProductGrid oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -37,7 +42,7 @@ class _CartProductGridState extends State<CartProductGrid> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.0),
       child: FutureBuilder<List<Product>>(
-        future: ProductService.fetchAllProducts(),
+        future: CartController.fetchCartProducts(context), // Thay đổi ở đây
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -47,8 +52,7 @@ class _CartProductGridState extends State<CartProductGrid> {
             return Center(child: Text('No products in cart'));
           }
 
-          final cartProducts =
-              snapshot.data!.where((product) => product.quantity > 0).toList();
+          final cartProducts = snapshot.data!; // Không cần lọc quantity > 0 nữa
 
           if (cartProducts.isEmpty) {
             return Center(child: Text('No products in cart'));
@@ -72,7 +76,7 @@ class _CartProductGridState extends State<CartProductGrid> {
                       showProductDialog(context, product);
                     },
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 12),
+                      margin: EdgeInsets.only(top: 12),
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -102,7 +106,7 @@ class _CartProductGridState extends State<CartProductGrid> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                              '${ApiService.imageBaseUrl}${product.images[0]}',
                               width: 90,
                               height: 90,
                               fit: BoxFit.cover,
@@ -116,7 +120,7 @@ class _CartProductGridState extends State<CartProductGrid> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  product.name,
+                                  product.nameProduct,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -138,11 +142,39 @@ class _CartProductGridState extends State<CartProductGrid> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Số lượng: ${product.quantity}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black54,
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              if (product.newPrice != null)
+                                                Text(
+                                                  formatCurrency(product.price),
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          const SizedBox(width: 12),
+                                          if (product.newPrice != null)
+                                            Container(
+                                              child: Text(
+                                                '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: AppColors.textColorRed,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
                                     ),
                                     Container(
@@ -159,11 +191,12 @@ class _CartProductGridState extends State<CartProductGrid> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              // setState(() {
-                                              //   if (product.quantity > 1) {
-                                              //     product.quantity--;
-                                              //   }
-                                              // });
+                                              setState(() {
+                                                if (product.quantity > 1) {
+                                                  // product.quantity--;
+                                                  // TODO: Cập nhật giỏ hàng qua API
+                                                }
+                                              });
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -187,9 +220,10 @@ class _CartProductGridState extends State<CartProductGrid> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              // setState(() {
-                                              //   product.quantity++;
-                                              // });
+                                              setState(() {
+                                                // product.quantity++;
+                                                // TODO: Cập nhật giỏ hàng qua API
+                                              });
                                             },
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(

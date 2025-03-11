@@ -13,7 +13,8 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(product.nameProduct,
+            maxLines: 1, overflow: TextOverflow.ellipsis),
         backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
@@ -23,7 +24,7 @@ class ProductDetailScreen extends StatelessWidget {
           children: [
             Center(
               child: Image.network(
-                '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                '${ApiService.imageBaseUrl}${product.images[0]}',
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Icon(
@@ -35,7 +36,7 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              product.name,
+              product.nameProduct,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),

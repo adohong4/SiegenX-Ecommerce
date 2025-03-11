@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/add_cart.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
+import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
-import 'package:siegenx_mobile_app/services/product_service.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
@@ -12,8 +12,7 @@ import 'package:siegenx_mobile_app/services/api_service.dart';
 class ProductGrid extends StatelessWidget {
   ProductGrid({Key? key}) : super(key: key);
 
-  // Hàm tính phần trăm giảm giá
-  int calculateDiscountPercentage(int price, int newPrice) {
+  int calculateDiscountPercentage(double price, double newPrice) {
     return (((price - newPrice) / price) * 100).round();
   }
 
@@ -27,9 +26,9 @@ class ProductGrid extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Lỗi: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No products found'));
+            return Center(child: Text('Không tìm thấy sản phẩm'));
           }
 
           final products = snapshot.data!;
@@ -79,7 +78,7 @@ class ProductGrid extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
-                                      '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                                      '${ApiService.imageBaseUrl}${product.images.isNotEmpty ? product.images[0] : ''}',
                                       width: double.infinity,
                                       height: 160,
                                       fit: BoxFit.cover,
@@ -113,7 +112,7 @@ class ProductGrid extends StatelessWidget {
                                     onPressed: () async {
                                       try {
                                         await AddCartController.addToCart(
-                                            context, product.id.toString());
+                                            context, product.id);
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
@@ -133,7 +132,6 @@ class ProductGrid extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 5),
-                          // Phần hiển thị giá
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
@@ -152,7 +150,6 @@ class ProductGrid extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // Phần hiển thị giá cũ và giảm giá
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
@@ -180,17 +177,14 @@ class ProductGrid extends StatelessWidget {
                                       ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                if (product.newPrice !=
-                                    null) // Hiển thị giảm giá nếu có newPrice
+                                const SizedBox(width: 12),
+                                if (product.newPrice != null)
                                   Container(
                                     child: Text(
                                       '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: AppColors.textColorRed, // Chữ đỏ
+                                        color: AppColors.textColorRed,
                                       ),
                                     ),
                                   ),
@@ -202,7 +196,7 @@ class ProductGrid extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Text(
-                                product.name,
+                                product.nameProduct,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,

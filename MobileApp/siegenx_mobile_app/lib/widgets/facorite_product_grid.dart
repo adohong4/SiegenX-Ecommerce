@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
-import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
@@ -86,7 +86,7 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          '${ApiService.imageBaseUrl}${product.imageUrl[0]}',
+                          '${ApiService.imageBaseUrl}${product.images[0]}',
                           width: 90,
                           height: 90,
                           fit: BoxFit.cover,
@@ -104,7 +104,7 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    product.name,
+                                    product.nameProduct,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siegenx_mobile_app/widgets/facorite_product_grid.dart';
-import 'package:siegenx_mobile_app/services/product_service.dart';
+import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/providers/favorites_provider.dart';

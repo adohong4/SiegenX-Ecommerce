@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/controllers/cart_controller.dart'; // Thay vì product_service
+import 'package:siegenx_mobile_app/controllers/cart_controller.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
@@ -42,7 +42,7 @@ class _CartProductGridState extends State<CartProductGrid> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.0),
       child: FutureBuilder<List<Product>>(
-        future: CartController.fetchCartProducts(context), // Thay đổi ở đây
+        future: CartController.fetchCartProducts(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -52,7 +52,7 @@ class _CartProductGridState extends State<CartProductGrid> {
             return Center(child: Text('No products in cart'));
           }
 
-          final cartProducts = snapshot.data!; // Không cần lọc quantity > 0 nữa
+          final cartProducts = snapshot.data!;
 
           if (cartProducts.isEmpty) {
             return Center(child: Text('No products in cart'));
@@ -130,8 +130,11 @@ class _CartProductGridState extends State<CartProductGrid> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 2),
+                                // Hiển thị newPrice bằng màu xanh nếu có, nếu không thì hiển thị price
                                 Text(
-                                  formatCurrency(product.price),
+                                  product.newPrice != null
+                                      ? formatCurrency(product.newPrice!)
+                                      : formatCurrency(product.price),
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Color(0xFF00B98E),
@@ -144,34 +147,29 @@ class _CartProductGridState extends State<CartProductGrid> {
                                   children: [
                                     Padding(
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                          EdgeInsets.symmetric(horizontal: 0.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            children: [
-                                              if (product.newPrice != null)
-                                                Text(
-                                                  formatCurrency(product.price),
-                                                  style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.grey,
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
+                                          // Hiển thị price bằng text xám gạch ngang nếu có newPrice
+                                          if (product.newPrice != null)
+                                            Text(
+                                              formatCurrency(product.price),
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                            ),
                                           const SizedBox(width: 12),
                                           if (product.newPrice != null)
-                                            Container(
-                                              child: Text(
-                                                '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: AppColors.textColorRed,
-                                                ),
+                                            Text(
+                                              '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: AppColors.textColorRed,
                                               ),
                                             ),
                                         ],

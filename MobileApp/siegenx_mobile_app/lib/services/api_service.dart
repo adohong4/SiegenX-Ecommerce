@@ -22,4 +22,6 @@ class ApiService {
       "$product/campaign/updateProductPrice";
   static const String addToCart = "$profile/cart/add";
   static const String getCart = "$profile/cart/get";
+  static const String removeFromCart =
+      "$profile/cart/remove"; // Thêm endpoint này
 }

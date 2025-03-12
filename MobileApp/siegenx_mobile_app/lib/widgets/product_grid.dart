@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siegenx_mobile_app/controllers/add_cart.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
 import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
@@ -7,6 +6,7 @@ import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/widgets/product_detail.dart';
+import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart'; // Import widget mới
 import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class ProductGrid extends StatelessWidget {
@@ -109,22 +109,18 @@ class ProductGrid extends StatelessWidget {
                                       color: Colors.black,
                                       size: 18,
                                     ),
-                                    onPressed: () async {
-                                      try {
-                                        await AddCartController.addToCart(
-                                            context, product.id);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text('Đã thêm vào giỏ hàng')),
-                                        );
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(content: Text(e.toString())),
-                                        );
-                                      }
+                                    onPressed: () {
+                                      // Gọi Bottom Sheet widget mới
+                                      showModalBottomSheet(
+                                        context: context,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(15)),
+                                        ),
+                                        builder: (context) =>
+                                            AddToCartBottomSheet(
+                                                product: product),
+                                      );
                                     },
                                   ),
                                 ),

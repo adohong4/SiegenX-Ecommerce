@@ -9,7 +9,7 @@ class Product {
   final String recap; // recap
   final String description; // description
   final String category; // category
-  final int quantity; // quantity
+  int quantity; // quantity
   final String? mainBoard; // mainBoard
   final String? chip; // chip
   final String? cpu; // cpu

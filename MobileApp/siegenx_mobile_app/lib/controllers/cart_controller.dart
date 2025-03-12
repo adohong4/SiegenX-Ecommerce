@@ -74,22 +74,22 @@ class CartController {
       final cartData = await fetchCartData(context);
       final campaignProducts = await fetchCampaignProducts(context);
 
-      // Kiểm tra sự khớp nối
       final cartIds = cartData.keys.toSet();
       final campaignIds = campaignProducts.map((p) => p.id).toSet();
       print('Cart IDs: $cartIds');
       print('Campaign IDs: $campaignIds');
       print('Matched IDs: ${cartIds.intersection(campaignIds)}');
 
-      // Lọc sản phẩm khớp với cartData
       final List<Product> cartProducts = campaignProducts
           .where((product) {
             final isMatch = cartData.containsKey(product.id);
-            if (isMatch) {
+            final quantity = cartData[product.id] ?? 0;
+            if (isMatch && quantity >= 1) {
               print(
-                  'Matched product: ${product.id} - ${product.nameProduct} with quantity ${cartData[product.id]}');
+                  'Matched product: ${product.id} - ${product.nameProduct} with quantity $quantity');
+              return true;
             }
-            return isMatch;
+            return false;
           })
           .map((product) => product.copyWith(
                 quantity: cartData[product.id] ?? 0,
@@ -105,6 +105,98 @@ class CartController {
     } catch (e) {
       print('Error in fetchCartProducts: $e');
       throw Exception('Error fetching cart products: $e');
+    }
+  }
+
+  // Xóa toàn bộ số lượng sản phẩm
+  static Future<void> removeProductFromCart(
+      BuildContext context, String productId, int currentQuantity) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final String? token = authProvider.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No token available');
+    }
+
+    try {
+      for (int i = 0; i < currentQuantity; i++) {
+        final response = await http.post(
+          Uri.parse(ApiService.removeFromCart),
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': 'jwt=$token',
+          },
+          body: jsonEncode({'itemId': productId}),
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception(
+              'Failed to remove product from cart on iteration $i: ${response.statusCode}');
+        }
+      }
+      print('Product $productId removed completely (quantity set to 0)');
+    } catch (e) {
+      throw Exception('Error removing product from cart: $e');
+    }
+  }
+
+  // Thêm một sản phẩm vào giỏ hàng
+  static Future<void> addProductToCart(
+      BuildContext context, String productId) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final String? token = authProvider.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No token available');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(ApiService.addToCart),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'jwt=$token',
+        },
+        body: jsonEncode({'itemId': productId}),
+      );
+
+      // Chấp nhận cả 200 và 201 là thành công
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Product $productId added to cart successfully');
+      } else {
+        throw Exception(
+            'Failed to add product to cart: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error adding product to cart: $e');
+    }
+  }
+
+  // Giảm một sản phẩm khỏi giỏ hàng
+  static Future<void> removeOneProductFromCart(
+      BuildContext context, String productId) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final String? token = authProvider.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No token available');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(ApiService.removeFromCart),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'jwt=$token',
+        },
+        body: jsonEncode({'itemId': productId}),
+      );
+
+      if (response.statusCode == 200) {
+        print('One unit of product $productId removed from cart successfully');
+      } else {
+        throw Exception(
+            'Failed to remove one product from cart: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error removing one product from cart: $e');
     }
   }
 }

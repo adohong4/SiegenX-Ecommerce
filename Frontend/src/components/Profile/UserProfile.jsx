@@ -6,6 +6,7 @@ import { assets } from '../../assets/assets';
 
 const UserProfile = () => {
     const { url, profile, fetchUserProfile } = useContext(StoreContext);
+    const [image, setImage] = useState(null);
     axios.defaults.withCredentials = true;
     const [data, setData] = useState({
         username: profile.username || "",
@@ -16,7 +17,18 @@ const UserProfile = () => {
         numberPhone: profile.numberPhone || "",
         gender: profile.gender || "",
     });
+    
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setImage(imageUrl);
+        }
+    };
 
+    const handleClick = () => {
+        document.getElementById('imageInput').click();
+    };
     useEffect(() => {
         fetchUserProfile();
     }, [])
@@ -145,20 +157,25 @@ const UserProfile = () => {
                                 <div className="form-group top-image-profile">
                                     <p>Ảnh đại diện</p>
                                     <img
-                                        src={assets.zalopay}
+                                        src={image || 'URL_HINH_MAC_DINH'}
                                         alt="Profile"
                                         className="profile-image"
                                         style={{
                                             width: '200px',
                                             height: '200px',
-                                            objectFit: 'cover'
+                                            objectFit: 'cover',
+                                            cursor: 'pointer', 
+                                            borderRadius:'15px'
                                         }}
+                                        onClick={handleClick}
                                     />
                                     <input
                                         type="file"
-                                        id="image"
+                                        id="imageInput"
                                         className="form-control-file"
                                         style={{ display: 'none' }}
+                                        accept="image/*"
+                                        onChange={handleImageChange}
                                     />
                                 </div>
                             </div>

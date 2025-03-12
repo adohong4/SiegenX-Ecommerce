@@ -1,4 +1,3 @@
-// cart_screen.dart
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/cart_controller.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
@@ -8,8 +7,7 @@ import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
 
 class CartScreen extends StatefulWidget {
-  final Function(int)?
-      onCartCountUpdated; // Callback để truyền tổng số sản phẩm
+  final Function(int)? onCartCountUpdated;
 
   const CartScreen({super.key, this.onCartCountUpdated});
 
@@ -20,8 +18,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   List<Product> _cartProducts = [];
   bool _isLoading = true;
-  Map<int, bool> _selectedProducts = {};
-  bool _selectAll = false;
 
   @override
   void initState() {
@@ -31,7 +27,6 @@ class _CartScreenState extends State<CartScreen> {
 
   void _onCartUpdated() {
     setState(() {
-      // Cập nhật tổng số sản phẩm và gọi callback
       widget.onCartCountUpdated?.call(_cartProducts.length);
     });
   }
@@ -42,12 +37,7 @@ class _CartScreenState extends State<CartScreen> {
       setState(() {
         _cartProducts = products;
         _isLoading = false;
-        _selectedProducts = Map.fromIterables(
-          List.generate(products.length, (index) => index),
-          List.filled(products.length, _selectAll),
-        );
-        widget.onCartCountUpdated
-            ?.call(_cartProducts.length); // Gọi callback khi fetch xong
+        widget.onCartCountUpdated?.call(_cartProducts.length);
       });
     } catch (e) {
       setState(() {
@@ -59,53 +49,24 @@ class _CartScreenState extends State<CartScreen> {
     }
   }
 
-  void _toggleSelectAll(bool? value) {
-    final newValue = value ?? false;
-    // Sử dụng postFrameCallback để tránh setState trong build phase
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _selectAll = newValue;
-        _selectedProducts = Map.fromIterables(
-          List.generate(_cartProducts.length, (index) => index),
-          List.filled(_cartProducts.length, newValue),
-        );
-      });
-    });
-  }
-
-  void _onProductSelected(int index, bool isSelected) {
-    setState(() {
-      _selectedProducts[index] = isSelected;
-      _selectAll = _selectedProducts.values.every((val) => val);
-    });
-  }
-
-  double _calculateTotalSelectedPrice() {
+  double _calculateTotalPrice() {
     double total = 0;
-    _selectedProducts.forEach((index, isSelected) {
-      if (isSelected && index < _cartProducts.length) {
-        final product = _cartProducts[index];
-        final price = product.newPrice ?? product.price;
-        total += price * product.quantity;
-      }
-    });
+    for (var product in _cartProducts) {
+      final price = product.newPrice ?? product.price;
+      total += price * product.quantity;
+    }
     return total;
   }
 
   double _calculateTotalDiscount() {
     double discount = 0;
-    _selectedProducts.forEach((index, isSelected) {
-      if (isSelected && index < _cartProducts.length) {
-        final product = _cartProducts[index];
-        if (product.newPrice != null) {
-          discount += (product.price - product.newPrice!) * product.quantity;
-        }
+    for (var product in _cartProducts) {
+      if (product.newPrice != null) {
+        discount += (product.price - product.newPrice!) * product.quantity;
       }
-    });
+    }
     return discount;
   }
-
-  int get _selectedCount => _selectedProducts.values.where((v) => v).length;
 
   @override
   Widget build(BuildContext context) {
@@ -119,11 +80,7 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       CartProductGrid(
                         cartProducts: _cartProducts,
-                        selectedProducts: _selectedProducts,
-                        onProductSelected: _onProductSelected,
-                        selectAll: _selectAll,
-                        onSelectAll: _toggleSelectAll,
-                        onCartUpdated: _onCartUpdated, // Truyền callback
+                        onCartUpdated: _onCartUpdated,
                       ),
                     ],
                   ),
@@ -140,91 +97,67 @@ class _CartScreenState extends State<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Checkbox(
-                          shape: const CircleBorder(),
-                          value: _selectAll,
-                          activeColor: Colors.green,
-                          onChanged: _toggleSelectAll,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text("Tất cả"),
-                    ],
-                  ),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            formatCurrency(_calculateTotalSelectedPrice()),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textColorRed,
+                      Text(
+                        formatCurrency(_calculateTotalPrice()),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textColorRed,
+                        ),
+                      ),
+                      const Text("Phí vận chuyển: 50.000 đ"),
+                      Text(
+                        "Giảm: ${formatCurrency(_calculateTotalDiscount())}",
+                        style: TextStyle(color: AppColors.textColorRed),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentScreen(
+                              totalPrice: _calculateTotalPrice(),
+                              selectedCount: _cartProducts.length,
+                              selectedProducts: _cartProducts,
                             ),
                           ),
-                          const Text("Phí vận chuyển: 50.000 đ"),
+                        );
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Thanh toán",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                          ),
                           Text(
-                            "Giảm: ${formatCurrency(_calculateTotalDiscount())}",
-                            style: TextStyle(color: AppColors.textColorRed),
+                            "(${_cartProducts.length})",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 10),
-                      SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: _selectedCount > 0
-                              ? () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PaymentScreen(
-                                        totalPrice:
-                                            _calculateTotalSelectedPrice(),
-                                        selectedCount: _selectedCount,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              : null,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                "Thanh toán",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                "($_selectedCount)",
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),

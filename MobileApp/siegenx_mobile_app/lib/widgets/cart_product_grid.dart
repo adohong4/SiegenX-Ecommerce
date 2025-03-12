@@ -1,3 +1,4 @@
+// cart_product_grid.dart
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/cart_controller.dart';
@@ -10,20 +11,12 @@ import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class CartProductGrid extends StatefulWidget {
   final List<Product> cartProducts;
-  final Map<int, bool> selectedProducts;
-  final Function(int index, bool isSelected) onProductSelected;
-  final bool selectAll;
-  final Function(bool) onSelectAll;
-  final VoidCallback onCartUpdated; // Thêm callback mới
+  final VoidCallback onCartUpdated;
 
   const CartProductGrid({
     Key? key,
     required this.cartProducts,
-    required this.selectedProducts,
-    required this.onProductSelected,
-    required this.selectAll,
-    required this.onSelectAll,
-    required this.onCartUpdated, // Thêm vào constructor
+    required this.onCartUpdated,
   }) : super(key: key);
 
   @override
@@ -35,51 +28,15 @@ class _CartProductGridState extends State<CartProductGrid> {
     return (((price - newPrice) / price) * 100).round();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.selectAll != _previousSelectAll) {
-        _updateAllSelections();
-      }
-    });
-  }
-
-  bool _previousSelectAll = false;
-
-  @override
-  void didUpdateWidget(CartProductGrid oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _previousSelectAll = oldWidget.selectAll;
-  }
-
-  void _updateAllSelections() {
-    widget.cartProducts.asMap().forEach((index, _) {
-      widget.onProductSelected(index, widget.selectAll);
-    });
-  }
-
   Future<void> _removeProduct(
       BuildContext context, Product product, int index) async {
     try {
       await CartController.removeProductFromCart(
           context, product.id, product.quantity);
-
-      final Map<int, bool> updatedSelections = {};
-      widget.selectedProducts.forEach((key, value) {
-        if (key < index) {
-          updatedSelections[key] = value;
-        } else if (key > index) {
-          updatedSelections[key - 1] = value;
-        }
-      });
-
       setState(() {
         widget.cartProducts.removeAt(index);
-        widget.selectedProducts.clear();
-        widget.selectedProducts.addAll(updatedSelections);
       });
-      widget.onCartUpdated(); // Gọi callback sau khi xóa
+      widget.onCartUpdated();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi khi xóa sản phẩm: $e')),
@@ -129,21 +86,6 @@ class _CartProductGridState extends State<CartProductGrid> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Checkbox(
-                            shape: const CircleBorder(),
-                            value: widget.selectedProducts[index] ?? false,
-                            activeColor: Colors.green,
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                widget.onProductSelected(index, value);
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.network(
@@ -289,7 +231,7 @@ class _CartProductGridState extends State<CartProductGrid> {
       try {
         await CartController.removeOneProductFromCart(context, product.id);
         setState(() => product.quantity--);
-        widget.onCartUpdated(); // Gọi callback sau khi giảm số lượng
+        widget.onCartUpdated();
       } catch (e) {
         _showErrorFlushbar('Lỗi khi giảm số lượng: $e');
       }
@@ -302,7 +244,7 @@ class _CartProductGridState extends State<CartProductGrid> {
     try {
       await CartController.addProductToCart(context, product.id);
       setState(() => product.quantity++);
-      widget.onCartUpdated(); // Gọi callback sau khi tăng số lượng
+      widget.onCartUpdated();
     } catch (e) {
       _showErrorFlushbar('Lỗi khi tăng số lượng: $e');
     }

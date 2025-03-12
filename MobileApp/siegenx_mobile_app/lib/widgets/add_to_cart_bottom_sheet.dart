@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:siegenx_mobile_app/controllers/add_cart.dart';
@@ -116,6 +117,38 @@ class _AddToCartBottomSheetState extends State<AddToCartBottomSheet> {
         );
       },
     );
+  }
+
+  void _showSuccessFlushbar(String message) {
+    Flushbar(
+      message: message,
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.green, // Màu xanh giống button
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      messageColor: Colors.white,
+      icon: Icon(
+        Icons.check_circle,
+        color: Colors.white,
+      ),
+    )..show(context);
+  }
+
+  void _showErrorFlushbar(String message) {
+    Flushbar(
+      message: message,
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.red,
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      icon: Icon(
+        Icons.error,
+        color: Colors.white,
+      ),
+      leftBarIndicatorColor: Colors.white,
+    )..show(context);
   }
 
   @override
@@ -359,13 +392,11 @@ class _AddToCartBottomSheetState extends State<AddToCartBottomSheet> {
                         context, widget.product.id);
                   }
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Đã thêm vào giỏ hàng')),
-                  );
+                  _showSuccessFlushbar(
+                      'Đã thêm vào giỏ hàng'); // Thay thế SnackBar
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(e.toString())),
-                  );
+                  _showErrorFlushbar(
+                      'Lỗi khi thêm vào giỏ hàng: $e'); // Thay thế SnackBar lỗi
                 }
               },
               style: ElevatedButton.styleFrom(

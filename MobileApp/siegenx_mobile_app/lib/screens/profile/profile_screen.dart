@@ -237,7 +237,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Column(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -247,7 +247,9 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   Text(
                                     _formatPhoneNumber(defaultAddress.phone),
                                     style: TextStyle(fontSize: 14),

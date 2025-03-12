@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/screens/all_products.dart';
-import 'package:siegenx_mobile_app/widgets/product_grid.dart';
+import 'package:siegenx_mobile_app/widgets/feature_products_grid.dart';
 
 class FeaturedProducts extends StatelessWidget {
   const FeaturedProducts({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class FeaturedProducts extends StatelessWidget {
         SingleChildScrollView(
           child: Column(
             children: [
-              ProductGrid(),
+              FeatureProductsGrid(),
             ],
           ),
         )

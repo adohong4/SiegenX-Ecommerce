@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'cart_screen.dart';
-import 'pending_screen.dart';
-import 'preparing_screen.dart';
-import 'shipping_screen.dart';
-import 'delivered_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/cart_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/pending_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/preparing_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/shipping_screen.dart';
+import 'package:siegenx_mobile_app/screens/cart/delivered_screen.dart';
 
 class CartMainScreen extends StatefulWidget {
   @override
@@ -12,21 +12,33 @@ class CartMainScreen extends StatefulWidget {
 
 class _CartMainScreenState extends State<CartMainScreen> {
   int _selectedIndex = 0;
+  int _cartItemCount = 0;
+  late List<Widget> _screens;
 
-  final List<Widget> _screens = [
-    CartScreen(), // Giỏ hàng
-    PendingScreen(), // Chờ xác nhận
-    PreparingScreen(), // Chuẩn bị đơn hàng
-    ShippingScreen(), // Đang giao hàng
-    DeliveredScreen(), // Giao hàng thành công
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      CartScreen(
+        onCartCountUpdated: (count) {
+          setState(() {
+            _cartItemCount = count;
+          });
+        },
+      ),
+      PendingScreen(),
+      PreparingScreen(),
+      ShippingScreen(),
+      DeliveredScreen(),
+    ];
+  }
 
   final List<String> _iconNames = [
-    "cart", // Giỏ hàng
-    "pending", // Chờ xác nhận
-    "preparing", // Chuẩn bị đơn hàng
-    "shipping", // Đang giao hàng
-    "delivered", // Giao hàng thành công
+    "cart",
+    "pending",
+    "preparing",
+    "shipping",
+    "delivered",
   ];
 
   void _onItemTapped(int index) {
@@ -39,13 +51,15 @@ class _CartMainScreenState extends State<CartMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Đơn hàng của bạn",
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          "Đơn hàng của bạn",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          SizedBox(height: 10), // Khoảng cách giữa tiêu đề và icon
+          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
@@ -55,7 +69,7 @@ class _CartMainScreenState extends State<CartMainScreen> {
               }),
             ),
           ),
-          Divider(thickness: 1, color: Colors.grey[300]), // Đường kẻ phân cách
+          Divider(thickness: 1, color: Colors.grey[300]),
           Expanded(child: _screens[_selectedIndex]),
         ],
       ),
@@ -70,7 +84,37 @@ class _CartMainScreenState extends State<CartMainScreen> {
       onTap: () => _onItemTapped(index),
       child: Column(
         children: [
-          Image.asset(imagePath, width: 26, height: 26),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Image.asset(imagePath, width: 26, height: 26),
+              if (iconName == "cart" && _cartItemCount > 0)
+                Positioned(
+                  right: -8,
+                  top: -8,
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '$_cartItemCount',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           SizedBox(height: 10),
           Text(
             _getLabel(iconName),

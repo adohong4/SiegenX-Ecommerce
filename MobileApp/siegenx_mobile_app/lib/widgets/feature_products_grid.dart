@@ -1,3 +1,4 @@
+import 'dart:math'; // Thêm import này để dùng Random
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/favorite_icon.dart';
 import 'package:siegenx_mobile_app/controllers/product_service.dart';
@@ -6,11 +7,11 @@ import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/widgets/product_detail.dart';
-import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart'; // Import widget mới
+import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 
-class ProductGrid extends StatelessWidget {
-  ProductGrid({Key? key}) : super(key: key);
+class FeatureProductsGrid extends StatelessWidget {
+  FeatureProductsGrid({Key? key}) : super(key: key);
 
   int calculateDiscountPercentage(double price, double newPrice) {
     return (((price - newPrice) / price) * 100).round();
@@ -31,7 +32,15 @@ class ProductGrid extends StatelessWidget {
             return Center(child: Text('Không tìm thấy sản phẩm'));
           }
 
+          // Lấy danh sách sản phẩm từ snapshot
           final products = snapshot.data!;
+
+          // Trộn danh sách và lấy 4 sản phẩm ngẫu nhiên
+          final random = Random();
+          final randomProducts = products..shuffle(random); // Trộn danh sách
+          final displayedProducts =
+              randomProducts.take(4).toList(); // Lấy 4 sản phẩm đầu tiên
+
           return LayoutBuilder(
             builder: (context, constraints) {
               int crossAxisCount = (constraints.maxWidth ~/ 150).clamp(2, 4);
@@ -45,9 +54,9 @@ class ProductGrid extends StatelessWidget {
                   mainAxisSpacing: 16,
                   childAspectRatio: 0.65,
                 ),
-                itemCount: products.length,
+                itemCount: displayedProducts.length, // Chỉ hiển thị 4 sản phẩm
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = displayedProducts[index];
 
                   return GestureDetector(
                     onLongPress: () {
@@ -107,10 +116,9 @@ class ProductGrid extends StatelessWidget {
                                     icon: Icon(
                                       Icons.add_shopping_cart_rounded,
                                       color: Colors.black,
-                                      size: 22,
+                                      size: 18,
                                     ),
                                     onPressed: () {
-                                      // Gọi Bottom Sheet widget mới
                                       showModalBottomSheet(
                                         context: context,
                                         shape: RoundedRectangleBorder(
@@ -133,7 +141,6 @@ class ProductGrid extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // giá mới
                                 Text(
                                   product.newPrice != null
                                       ? formatCurrency(product.newPrice!)
@@ -154,7 +161,6 @@ class ProductGrid extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    // giá cũ
                                     if (product.newPrice != null)
                                       Text(
                                         formatCurrency(product.price),
@@ -168,7 +174,6 @@ class ProductGrid extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(width: 12),
-                                // % phần trăm giảm giá
                                 if (product.newPrice != null)
                                   Container(
                                     child: Text(

@@ -2,12 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/cart_controller.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/screens/payment_screen.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  final Function(int)?
+      onCartCountUpdated; // Callback để truyền tổng số sản phẩm
+
+  const CartScreen({super.key, this.onCartCountUpdated});
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -27,7 +31,8 @@ class _CartScreenState extends State<CartScreen> {
 
   void _onCartUpdated() {
     setState(() {
-      // Không cần làm gì trong này, chỉ cần gọi setState để rebuild
+      // Cập nhật tổng số sản phẩm và gọi callback
+      widget.onCartCountUpdated?.call(_cartProducts.length);
     });
   }
 
@@ -41,6 +46,8 @@ class _CartScreenState extends State<CartScreen> {
           List.generate(products.length, (index) => index),
           List.filled(products.length, _selectAll),
         );
+        widget.onCartCountUpdated
+            ?.call(_cartProducts.length); // Gọi callback khi fetch xong
       });
     } catch (e) {
       setState(() {
@@ -159,13 +166,12 @@ class _CartScreenState extends State<CartScreen> {
                           Text(
                             formatCurrency(_calculateTotalSelectedPrice()),
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textColorRed,
                             ),
                           ),
-                          const SizedBox(height: 5),
-                          const Text("Phí vận chuyển: 0đ"),
+                          const Text("Phí vận chuyển: 50.000 đ"),
                           Text(
                             "Giảm: ${formatCurrency(_calculateTotalDiscount())}",
                             style: TextStyle(color: AppColors.textColorRed),
@@ -183,7 +189,20 @@ class _CartScreenState extends State<CartScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: _selectedCount > 0
+                              ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PaymentScreen(
+                                        totalPrice:
+                                            _calculateTotalSelectedPrice(),
+                                        selectedCount: _selectedCount,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              : null,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [

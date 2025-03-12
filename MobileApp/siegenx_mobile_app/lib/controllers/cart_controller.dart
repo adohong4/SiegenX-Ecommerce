@@ -93,7 +93,7 @@ class CartController {
           })
           .map((product) => product.copyWith(
                 quantity: cartData[product.id] ?? 0,
-                price: product.newPrice ?? product.price,
+                // Không ghi đè price, giữ nguyên price và newPrice từ campaignProducts
               ))
           .toList();
 

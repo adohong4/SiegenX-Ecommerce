@@ -133,6 +133,7 @@ class ProductGrid extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // giá mới
                                 Text(
                                   product.newPrice != null
                                       ? formatCurrency(product.newPrice!)
@@ -153,6 +154,7 @@ class ProductGrid extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
+                                    // giá cũ
                                     if (product.newPrice != null)
                                       Text(
                                         formatCurrency(product.price),
@@ -163,17 +165,10 @@ class ProductGrid extends StatelessWidget {
                                               TextDecoration.lineThrough,
                                         ),
                                       )
-                                    else
-                                      Text(
-                                        'Số lượng: ${product.quantity}',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
                                   ],
                                 ),
                                 const SizedBox(width: 12),
+                                // % phần trăm giảm giá
                                 if (product.newPrice != null)
                                   Container(
                                     child: Text(

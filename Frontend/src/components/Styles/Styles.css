@@ -1041,3 +1041,24 @@
 .address-popup .btn:hover {
   background: #00A07B;
 }
+
+
+.back-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  background-color: #00B98E;
+  color: white;
+  border: none;
+  padding: 10px 17px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.back-to-top:hover {
+  background-color: #009c8b;
+  transform: scale(1.1);
+}

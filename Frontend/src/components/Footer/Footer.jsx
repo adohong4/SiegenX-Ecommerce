@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Styles/Styles.css';
 import { assets } from '../../assets/assets';
 
-const handleSubmit = (event) => {
-    event.preventDefault();
-    const phone = event.target.phone.value;
-    console.log("Số điện thoại đã nhập:", phone);
-    // Xử lý thêm logic gửi dữ liệu tại đây
-};
-
-
 const Footer = () => {
+    const [showButton, setShowButton] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                setShowButton(true);
+            } else {
+                setShowButton(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
         <footer className="footer">
             <div className='container'>
                 <div className='container footer-container'>
-                    <div className=" row footer-content">
+                    <div className="row footer-content">
                         <div className='top-tittle-footer'>
                             <div className='top-title-left'>
                                 <h1>Luôn kết nối với SiegenX</h1>
@@ -30,6 +41,7 @@ const Footer = () => {
                                 </div>
                             </div>
                         </div>
+
                         <div className='body-footer'>
                             <div className="footer-info col-4">
                                 <img src={assets.logo_footer} alt="" />
@@ -37,7 +49,7 @@ const Footer = () => {
                                 <p>Địa chỉ: D11-39 Khu đô thị Glaximeco, đường Lê Trọng Tấn, Q. Hà Đông, Tp. Hà Nội</p>
                             </div>
 
-                            <div className='footer-chinhsach col-7 '>
+                            <div className='footer-chinhsach col-7'>
                                 <div className="footer-services">
                                     <h4>DỊCH VỤ</h4>
                                     <ul>
@@ -80,18 +92,22 @@ const Footer = () => {
                                             </a>
                                         </li>
                                     </ul>
-
                                 </div>
                             </div>
+
                             <div className='footer-copy'>
-                                <p>Copyright 2024 © <strong>Cung cấp bởi SigenX</strong></p>
+                                <p>Copyright 2024 © <strong>Cung cấp bởi SiegenX</strong></p>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </div>
+
+            {showButton && (
+                <button className="back-to-top" onClick={scrollToTop}>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            )}
         </footer>
     );
 };

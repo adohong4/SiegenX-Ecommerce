@@ -7,16 +7,13 @@ const qs = require('qs');
 const orderModel = require('../models/order.model');
 const userModel = require('../models/profile.model');
 
-console.log(process.env.ENDPOINT)
 const config = {
-    app_id: process.env.APP_ID,
-    key1: process.env.KEY1,
-    key2: process.env.KEY2,
-    endpoint: "https://sb-openapi.zalopay.vn/v2/create",
+    app_id: '2553',
+    key1: 'PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL',
+    key2: 'kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz',
+    endpoint: 'https://sb-openapi.zalopay.vn/v2/create',
     query_endpoint: "https://sb-openapi.zalopay.vn/v2/query",
 };
-
-
 
 
 class ZaloPayController {

@@ -6,12 +6,39 @@ import { assets } from '../../assets/assets';
 
 const UserProfile = () => {
     const { url, profile, fetchUserProfile } = useContext(StoreContext);
+    const [uploading, setUploading] = useState(false);
     axios.defaults.withCredentials = true;
     const [data, setData] = useState([]);
 
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('profile', file);
+            setUploading(true);
+            try {
+                const response = await axios.post(`${url}/v1/api/profile/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                toast.success(response.data.message);
+                fetchUserProfile();
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Upload ảnh thất bại');
+            } finally {
+                setUploading(false);
+            }
+        }
+    };
+
+    const handleClick = () => {
+        document.getElementById('imageInput').click();
+    };
+
     useEffect(() => {
         fetchUserProfile();
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (profile) {
@@ -116,12 +143,12 @@ const UserProfile = () => {
                                         <input
                                             type="radio"
                                             id="gender1"
-                                            name="gender col-6"
+                                            name="gender"
                                             value="Nam"
                                             checked={data.gender === "Nam"}
                                             onChange={onChangeHandler}
                                         />
-                                        <label htmlFor="gender1" >Nam</label><br />
+                                        <label htmlFor="gender1">Nam</label><br />
                                     </div>
                                     <div className='gen col-2'>
                                         <input
@@ -151,25 +178,30 @@ const UserProfile = () => {
                                 <div className="form-group top-image-profile">
                                     <p>Ảnh đại diện</p>
                                     <img
-                                        src={profile.profilePic || assets.zalopay}
+                                        src={profile.profilePic || assets.userIcon}
                                         alt="Profile"
                                         className="profile-image"
                                         style={{
                                             width: '200px',
                                             height: '200px',
-                                            objectFit: 'cover'
+                                            objectFit: 'cover',
+                                            cursor: 'pointer',
+                                            borderRadius: '15px'
                                         }}
+                                        onClick={handleClick}
                                     />
                                     <input
                                         type="file"
-                                        id="image"
+                                        id="imageInput"
                                         className="form-control-file"
                                         style={{ display: 'none' }}
+                                        accept="image/*"
+                                        onChange={handleImageChange}
                                     />
+                                    {uploading && <p>Ảnh đại diện đang được cập nhật...</p>}
                                 </div>
                             </div>
                         </div>
-
 
                         <div className="bottom-profile">
                             <button type="submit" className="btn btn-primary add-btn">
@@ -179,7 +211,6 @@ const UserProfile = () => {
                     </div>
                 </div>
             </form>
-
         </div>
     );
 };

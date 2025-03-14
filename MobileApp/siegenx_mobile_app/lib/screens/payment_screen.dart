@@ -1,13 +1,13 @@
-// payment_screen.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import Provider
 import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
 import 'package:siegenx_mobile_app/controllers/payment_controller.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -28,7 +28,6 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   List<AddressModel> addresses = [];
-  String? defaultAddressId;
   bool isLoadingAddresses = true;
   final AddAddressController _addAddressController = AddAddressController();
   bool isCodSelected = true;
@@ -37,15 +36,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDefaultAddress();
     _fetchAddresses();
-  }
-
-  Future<void> _loadDefaultAddress() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      defaultAddressId = prefs.getString('defaultAddressId');
-    });
   }
 
   Future<void> _fetchAddresses() async {
@@ -65,10 +56,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   AddressModel? _getDefaultAddress() {
     if (addresses.isEmpty) return null;
-    return addresses.firstWhere(
-      (address) => address.id == defaultAddressId,
-      orElse: () => addresses.first,
-    );
+    // Nếu AuthProvider không có defaultAddressId, lấy địa chỉ đầu tiên làm mặc định
+    return addresses.first;
+    // Nếu bạn thêm defaultAddressId vào AuthProvider, thay bằng logic sau:
+    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // return addresses.firstWhere(
+    //   (address) => address.id == authProvider.defaultAddressId,
+    //   orElse: () => addresses.first,
+    // );
   }
 
   String _formatPhoneNumber(String phone) {
@@ -80,7 +75,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return '(+84) $firstTwo$hiddenPart$lastTwo';
   }
 
-  // Hàm gọi API đặt hàng
   Future<void> _placeOrder() async {
     final defaultAddress = _getDefaultAddress();
     if (defaultAddress == null) {
@@ -90,37 +84,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
       return;
     }
 
-    // Chuẩn bị dữ liệu gửi lên API
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final token = authProvider.token;
+
     final Map<String, dynamic> orderData = {
       "address": {
         "fullname": defaultAddress.fullname,
-        "email": "test01@gmail.com", // Thay bằng email thực nếu có
+        "email": authProvider.email ??
+            "test01@gmail.com", // Sử dụng email từ AuthProvider nếu có
         "street": defaultAddress.street,
         "precinct": defaultAddress.precinct,
         "city": defaultAddress.city,
         "province": defaultAddress.province,
         "_id": defaultAddress.id,
       },
-      "amount": widget.totalPrice + 50000, // Tổng tiền bao gồm phí vận chuyển
+      "amount": widget.totalPrice + 50000,
       "items": widget.selectedProducts
           .map((product) => {
                 "itemId": product.id,
-                "title": product
-                    .title, // Sửa từ "nam" thành "title" để đồng bộ với Product
-                "nameProduct":
-                    product.nameProduct, // Sử dụng nameProduct thay vì name
+                "title": product.title,
+                "nameProduct": product.nameProduct,
                 "product_slug": product.productSlug ??
                     product.nameProduct.toLowerCase().replaceAll(' ', '-'),
                 "price": product.price,
-                "quantity": product.quantity, // Thêm quantity từ Product
+                "quantity": product.quantity,
               })
           .toList(),
     };
 
     try {
-      // Lấy token từ SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('jwt');
+      print('Token before placing order: $token'); // Debug token
 
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -129,7 +122,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         return;
       }
 
-      // Gọi API thông qua PaymentController
       final response = await PaymentController.placeCodOrder(
         token: token,
         orderData: orderData,
@@ -138,11 +130,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(response['message'])),
       );
-      Navigator.pop(
-          context); // Quay lại màn hình trước sau khi đặt hàng thành công
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi đặt hàng: $e')),
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
       );
     }
   }

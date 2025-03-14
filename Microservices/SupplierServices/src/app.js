@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db.mongo');
+const compression = require('compression')
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const app = express();
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
+app.use(compression())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -18,16 +20,15 @@ app.use(
                 callback(new Error("Not allowed by CORS"));
             }
         },
-        credentials: true, // Cho phép gửi cookie/token
+        credentials: true,
     })
 );
 app.use(cookieParser());
 
 // Init db
 connectDB();
-
-// Serve static files
-
+const initRedis = require('./config/init.redis')
+initRedis.initRedis()
 // Init router
 app.use('', require('./routes'));
 // app.use('/images', express.static('upload'));

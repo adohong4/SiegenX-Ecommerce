@@ -93,12 +93,13 @@ class _CartScreenState extends State<CartScreen> {
                 color: Colors.white,
                 border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
               ),
+              // tổng tiền thanh toán
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
@@ -116,6 +117,12 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ],
                   ),
+
+                  SizedBox(
+                    width: 20,
+                  ),
+
+                  // button thanh toán
                   SizedBox(
                     height: 50,
                     child: ElevatedButton(

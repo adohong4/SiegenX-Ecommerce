@@ -1,24 +1,25 @@
 // payment_screen.dart
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
+import 'package:siegenx_mobile_app/controllers/payment_controller.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
-import 'package:siegenx_mobile_app/models/product.dart'; // Thêm import Product
+import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/screens/address/address_list_screen.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart'; // Thêm import CartProductGrid
+import 'package:siegenx_mobile_app/widgets/cart_product_grid.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double totalPrice;
   final int selectedCount;
-  final List<Product> selectedProducts; // Thêm danh sách sản phẩm đã chọn
+  final List<Product> selectedProducts;
 
   const PaymentScreen({
     super.key,
     required this.totalPrice,
     required this.selectedCount,
-    required this.selectedProducts, // Thêm vào constructor
+    required this.selectedProducts,
   });
 
   @override
@@ -30,6 +31,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? defaultAddressId;
   bool isLoadingAddresses = true;
   final AddAddressController _addAddressController = AddAddressController();
+  bool isCodSelected = true;
+  bool isZaloPaySelected = false;
 
   @override
   void initState() {
@@ -77,93 +80,130 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return '(+84) $firstTwo$hiddenPart$lastTwo';
   }
 
+  // Hàm gọi API đặt hàng
+  Future<void> _placeOrder() async {
+    final defaultAddress = _getDefaultAddress();
+    if (defaultAddress == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng chọn địa chỉ giao hàng!')),
+      );
+      return;
+    }
+
+    // Chuẩn bị dữ liệu gửi lên API
+    final Map<String, dynamic> orderData = {
+      "address": {
+        "fullname": defaultAddress.fullname,
+        "email": "test01@gmail.com", // Thay bằng email thực nếu có
+        "street": defaultAddress.street,
+        "precinct": defaultAddress.precinct,
+        "city": defaultAddress.city,
+        "province": defaultAddress.province,
+        "_id": defaultAddress.id,
+      },
+      "amount": widget.totalPrice + 50000, // Tổng tiền bao gồm phí vận chuyển
+      "items": widget.selectedProducts
+          .map((product) => {
+                "itemId": product.id,
+                "title": product
+                    .title, // Sửa từ "nam" thành "title" để đồng bộ với Product
+                "nameProduct":
+                    product.nameProduct, // Sử dụng nameProduct thay vì name
+                "product_slug": product.productSlug ??
+                    product.nameProduct.toLowerCase().replaceAll(' ', '-'),
+                "price": product.price,
+                "quantity": product.quantity, // Thêm quantity từ Product
+              })
+          .toList(),
+    };
+
+    try {
+      // Lấy token từ SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt');
+
+      if (token == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Vui lòng đăng nhập để đặt hàng!')),
+        );
+        return;
+      }
+
+      // Gọi API thông qua PaymentController
+      final response = await PaymentController.placeCodOrder(
+        token: token,
+        orderData: orderData,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response['message'])),
+      );
+      Navigator.pop(
+          context); // Quay lại màn hình trước sau khi đặt hàng thành công
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi đặt hàng: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final defaultAddress = _getDefaultAddress();
 
-    // Tính toán ngày giao hàng
     DateTime now = DateTime.now();
-    DateTime deliveryStart = now.add(Duration(days: 3)); // Cộng 3 ngày
-    DateTime deliveryEnd = now.add(Duration(days: 4)); // Cộng 4 ngày
+    DateTime deliveryStart = now.add(Duration(days: 3));
+    DateTime deliveryEnd = now.add(Duration(days: 4));
 
-    // Hàm định dạng ngày tháng
     String formatDate(DateTime date) {
       return '${date.day}/${date.month}';
     }
 
-    // Chuỗi ngày giao hàng
     String deliveryText =
         'Đảm bảo giao hàng: ${formatDate(deliveryStart)} - ${formatDate(deliveryEnd)}';
-
-    // State để quản lý checkbox
-    bool isCodSelected = true; // Mặc định chọn "Thanh toán khi nhận hàng"
-    bool isZaloPaySelected = false;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.black,
-            size: 18,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Colors.black, size: 18),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Tổng quan đơn hàng',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            const Text('Tổng quan đơn hàng',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
             const SizedBox(height: 3),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/icons/verified.png',
-                  width: 13,
-                  height: 13,
-                ),
+                Image.asset('assets/icons/verified.png', width: 13, height: 13),
                 const SizedBox(width: 4),
-                Text(
-                  'Thông tin của bạn sẽ được bảo mật và mã hóa',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.primaryColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                Text('Thông tin của bạn sẽ được bảo mật và mã hóa',
+                    style:
+                        TextStyle(fontSize: 10, color: AppColors.primaryColor),
+                    overflow: TextOverflow.ellipsis),
               ],
             ),
           ],
         ),
-        actions: [
-          SizedBox(width: 48),
-        ],
+        actions: [SizedBox(width: 48)],
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: Column(
         children: [
-          Container(
-            height: 1,
-            color: Colors.grey[300],
-          ),
+          Container(height: 1, color: Colors.grey[300]),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Phần địa chỉ nhận hàng với padding
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -172,13 +212,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddressListScreen()),
-                            ).then((_) => _fetchAddresses());
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddressListScreen()))
+                                .then((_) => _fetchAddresses());
                           },
                           child: Row(
-                            // ... (giữ nguyên nội dung GestureDetector)
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(Icons.location_on,
@@ -186,19 +226,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: isLoadingAddresses
-                                    ? Text(
-                                        'Đang tải địa chỉ...',
+                                    ? Text('Đang tải địa chỉ...',
                                         style: TextStyle(
                                             fontSize: 14,
-                                            color: Color(0xff808B96)),
-                                      )
+                                            color: Color(0xff808B96)))
                                     : defaultAddress == null
-                                        ? Text(
-                                            'Chưa có địa chỉ mặc định',
+                                        ? Text('Chưa có địa chỉ mặc định',
                                             style: TextStyle(
                                                 fontSize: 14,
-                                                color: Color(0xff808B96)),
-                                          )
+                                                color: Color(0xff808B96)))
                                         : Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -207,41 +243,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    defaultAddress.fullname,
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
+                                                  Text(defaultAddress.fullname,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
                                                   const SizedBox(width: 10),
                                                   Text(
-                                                    _formatPhoneNumber(
-                                                        defaultAddress.phone),
-                                                    style:
-                                                        TextStyle(fontSize: 14),
-                                                  ),
+                                                      _formatPhoneNumber(
+                                                          defaultAddress.phone),
+                                                      style: TextStyle(
+                                                          fontSize: 14)),
                                                 ],
                                               ),
                                               SizedBox(height: 3),
                                               Text(
-                                                '${defaultAddress.street}, ${defaultAddress.precinct}, ${defaultAddress.city}, ${defaultAddress.province}',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Color(0xff808B96)),
-                                              ),
+                                                  '${defaultAddress.street}, ${defaultAddress.precinct}, ${defaultAddress.city}, ${defaultAddress.province}',
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          Color(0xff808B96))),
                                             ],
                                           ),
                               ),
                               Column(
                                 children: [
                                   const SizedBox(height: 5),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.grey,
-                                    size: 18,
-                                  ),
+                                  Icon(Icons.arrow_forward_ios,
+                                      color: Colors.grey, size: 18),
                                 ],
                               ),
                             ],
@@ -251,14 +280,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Divider(height: 1, color: Colors.grey[300]),
                         const SizedBox(height: 10),
                         CartProductGrid(
-                          // ... (giữ nguyên CartProductGrid)
-                          cartProducts: widget.selectedProducts,
-                          onCartUpdated: () {},
-                        ),
+                            cartProducts: widget.selectedProducts,
+                            onCartUpdated: () {}),
                       ],
                     ),
                   ),
-                  // Container thông tin giao hàng full chiều ngang
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -266,189 +292,122 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          deliveryText,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text(deliveryText,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
                         const SizedBox(height: 10),
-                        Text(
-                          'Vận chuyển tiêu chuẩn',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text('Vận chuyển tiêu chuẩn',
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black)),
                         const SizedBox(height: 10),
-                        Text(
-                          'Nhận voucher giảm giá nếu đơn hàng bị giao muộn',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Text('Nhận voucher giảm giá nếu đơn hàng bị giao muộn',
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black)),
                       ],
                     ),
                   ),
-                  // Phần thông tin thanh toán với padding
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Tóm tắt đơn hàng',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
+                        Text('Tóm tắt đơn hàng',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Tổng phụ',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            Text(
-                              formatCurrency(widget.totalPrice),
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Tổng phụ', style: TextStyle(fontSize: 14)),
+                              Text(formatCurrency(widget.totalPrice),
+                                  style: TextStyle(fontSize: 14)),
+                            ]),
                         const SizedBox(height: 8),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Vận chuyển',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            Text(
-                              '50.000 đ',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Vận chuyển',
+                                  style: TextStyle(fontSize: 14)),
+                              Text('50.000 đ', style: TextStyle(fontSize: 14)),
+                            ]),
                         const SizedBox(height: 10),
                         Divider(height: 1, color: Colors.grey[300]),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Tổng',
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                            Text(
-                              formatCurrency(widget.totalPrice + 50000),
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Tổng', style: TextStyle(fontSize: 14)),
+                              Text(formatCurrency(widget.totalPrice + 50000),
+                                  style: TextStyle(fontSize: 14)),
+                            ]),
                       ],
                     ),
                   ),
-
-                  // Đường kẻ full ngang với chiều cao 5px
-                  Container(
-                    height: 20,
-                    color: Colors.grey[300],
-                  ),
-
-                  // Phần phương thức thanh toán
+                  Container(height: 20, color: Colors.grey[300]),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Phương thức thanh toán',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Text('Phương thức thanh toán',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons/bank.png',
-                                  width: 30,
-                                  height: 30,
-                                ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(children: [
+                                Image.asset('assets/icons/bank.png',
+                                    width: 30, height: 30),
                                 const SizedBox(width: 10),
-                                Text(
-                                  'Thanh toán khi nhận hàng',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            Checkbox(
-                              value: isCodSelected,
-                              onChanged: (bool? value) {
-                                if (!isCodSelected && !isZaloPaySelected) {
-                                  // Chỉ cho chọn khi chưa chọn gì
+                                Text('Thanh toán khi nhận hàng',
+                                    style: TextStyle(fontSize: 14)),
+                              ]),
+                              Checkbox(
+                                value: isCodSelected,
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    isCodSelected = true;
+                                    isCodSelected = value ?? false;
+                                    if (isCodSelected)
+                                      isZaloPaySelected = false;
                                   });
-                                }
-                              },
-                              shape: CircleBorder(), // Checkbox hình tròn
-                              activeColor: Colors.green, // Màu xanh khi chọn
-                              checkColor: Colors.white, // Màu dấu check
-                            ),
-                          ],
-                        ),
+                                },
+                                shape: CircleBorder(),
+                                activeColor: Colors.green,
+                                checkColor: Colors.white,
+                              ),
+                            ]),
                         const SizedBox(height: 8),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons/zalo.png',
-                                  width: 30,
-                                  height: 30,
-                                ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(children: [
+                                Image.asset('assets/icons/zalo.png',
+                                    width: 30, height: 30),
                                 const SizedBox(width: 8),
-                                Text(
-                                  'Zalopay (******1103)',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            Checkbox(
-                              value: isZaloPaySelected,
-                              onChanged: (bool? value) {
-                                if (!isCodSelected && !isZaloPaySelected) {
-                                  // Chỉ cho chọn khi chưa chọn gì
+                                Text('Zalopay (******1103)',
+                                    style: TextStyle(fontSize: 14)),
+                              ]),
+                              Checkbox(
+                                value: isZaloPaySelected,
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    isZaloPaySelected = true;
+                                    isZaloPaySelected = value ?? false;
+                                    if (isZaloPaySelected)
+                                      isCodSelected = false;
                                   });
-                                }
-                              },
-                              shape: CircleBorder(), // Checkbox hình tròn
-                              activeColor: Colors.green, // Màu xanh khi chọn
-                              checkColor: Colors.white, // Màu dấu check
-                            ),
-                          ],
-                        ),
+                                },
+                                shape: CircleBorder(),
+                                activeColor: Colors.green,
+                                checkColor: Colors.white,
+                              ),
+                            ]),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
@@ -458,63 +417,48 @@ class _PaymentScreenState extends State<PaymentScreen> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!, width: 1),
-          ),
-        ),
+            color: Colors.white,
+            border:
+                Border(top: BorderSide(color: Colors.grey[300]!, width: 1))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Cột bên trái
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  'Tổng (${widget.selectedCount} mặt hàng)',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  formatCurrency(widget.totalPrice + 50000),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Tổng (${widget.selectedCount} mặt hàng)',
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
+                Text(formatCurrency(widget.totalPrice + 50000),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
               ],
             ),
+            SizedBox(width: 20),
             SizedBox(
-              width: 20,
-            ),
-            // Cột bên phải
-            SizedBox(
-              width: 150, // Điều chỉnh độ rộng của button
+              width: 150,
               height: 45,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Thanh toán thành công!')),
-                  );
+                onPressed: () async {
+                  if (isCodSelected) {
+                    await _placeOrder();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Vui lòng chọn phương thức thanh toán khi nhận hàng!')),
+                    );
+                  }
                 },
-                child: const Text(
-                  'Đặt hàng',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
+                child: const Text('Đặt hàng',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
-            // SizedBox(
-            //   width: 16,
-            // ),
           ],
         ),
       ),

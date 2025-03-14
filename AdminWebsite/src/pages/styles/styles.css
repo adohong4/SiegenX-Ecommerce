@@ -265,10 +265,12 @@ textarea {
 
 .listproduct .button-product .btn-info {
     color: #000;
+    background-color: #fff;
 }
 
 .listproduct .button-product .cursor1 {
     color: #000;
+    background-color: #fff;
 }
 
 .list-table-format>* {

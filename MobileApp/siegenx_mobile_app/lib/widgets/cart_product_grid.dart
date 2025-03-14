@@ -153,9 +153,10 @@ class _CartProductGridState extends State<CartProductGrid> {
                                         ),
                                     ],
                                   ),
+                                  // phần tuỳ chỉnh số lượng
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                        horizontal: 0, vertical: 0),
                                     decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(5),
@@ -179,7 +180,7 @@ class _CartProductGridState extends State<CartProductGrid> {
                                           ),
                                         ),
                                         Container(
-                                          width: 40,
+                                          width: 20,
                                           alignment: Alignment.center,
                                           child: Text(
                                             product.quantity.toString(),

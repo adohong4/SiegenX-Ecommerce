@@ -34,13 +34,11 @@ const SidebarUserProfile = () => {
                                 <p>Tài khoản của tôi</p>
                             </div>
                         </div>
-                        {openMenus.profile && (
                             <ul className="sidebar-submenu">
                                 <li><NavLink to="/user/profile" className="submenu-item" >Hồ sơ</NavLink></li>
                                 <li><NavLink to="/user/address" className="submenu-item" >Địa chỉ</NavLink></li>
                                 <li><NavLink to="/user/change-password" className="submenu-item" >Đổi mật khẩu</NavLink></li>
                             </ul>
-                        )}
                     </div>
                     <div className="sidebar-dropdown">
                         <NavLink to="/user/orders" className="sidebar-dropdown"> 

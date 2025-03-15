@@ -739,7 +739,7 @@
   margin-bottom: 0;
 }
 .section-sidebar .sidebar-dropdown-dad .sidebar-submenu{
-  padding: 0;
+  padding-left: 12px;
 }
 .section-sidebar .sidebar-dropdown-dad .sidebar-submenu li{
   list-style-type: none;
@@ -1195,13 +1195,14 @@
 
 .my-orders__brand {
   padding: 3px 5px;
-  background: #26AA99;
-  color: white;
+  color: #26AA99;
+  font-style: italic;
 }
 
 .my-orders__status {
   color: #26AA99;
   display: flex;
+  gap: 10px;
   align-items: center;
   white-space: nowrap;
 }
@@ -1222,7 +1223,7 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #ddd;
+
 }
 
 .my-orders__image {
@@ -1248,16 +1249,31 @@
 }
 
 .my-orders__footer {
-  border-top: 1px solid #ddd;
   padding-top: 20px;
   margin-top: 10px;
   text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.my-orders__footer p{
+  margin-bottom: 0px;
 }
 
 .my-orders__total {
   color: red;
+  font-weight: bold;
 }
-
+.TWLNg9 {
+  padding: 3px 0;
+}
+.MOYo7t {
+  background-image: repeating-linear-gradient(45deg, #6fa6d6, #6fa6d6 33px, transparent 0, transparent 41px, #f18d9b 0, #f18d9b 74px, transparent 0, transparent 82px);
+  background-position-x: -1.875rem;
+  background-size: 7.25rem .1875rem;
+  height: .1875rem;
+  width: 100%;
+}
 .my-orders__actions {
   display: flex;
   justify-content: flex-end;

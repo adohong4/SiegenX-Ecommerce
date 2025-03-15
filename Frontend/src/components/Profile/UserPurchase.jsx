@@ -111,7 +111,7 @@ const MyOrders = () => {
                                 </div>
                             ))}
                         </div>
-
+                        <div class="TWLNg9"><div class="MOYo7t"></div></div>
                         <div className="my-orders__footer">
                             <p>Thành tiền: <span className="my-orders__total">₫{formatCurrency(order.items.reduce((sum, item) => sum + item.quantity * item.price, 0))}</span></p>
                             <div className="my-orders__actions">

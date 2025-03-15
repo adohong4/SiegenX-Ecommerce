@@ -2,6 +2,7 @@
 
 const campaignModel = require('../models/campaign.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError } = require('../core/error.response');
+const RedisService = require('./ProductRedis.service')
 
 class CampaignService {
     static createCampaign = async (
@@ -47,6 +48,9 @@ class CampaignService {
                     description: "Tạo mới chiến dịch"
                 }
             })
+
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
 
             return {
                 metadata: newCampaign
@@ -127,6 +131,9 @@ class CampaignService {
             });
             await updatedCampaign.save();
 
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
+
             return { metadata: updatedCampaign };
         } catch (error) {
             throw error;
@@ -146,6 +153,10 @@ class CampaignService {
                 description: actionDescription
             })
             await campaign.save();
+
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
+
             return { metadata: campaign }
         } catch (error) {
             throw error;

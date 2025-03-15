@@ -4,7 +4,7 @@ const productModel = require('../models/product.model');
 const invoiceInputModel = require('../models/invoiceInput.model');
 const supplierModel = require('../models/supplier.model')
 const { BadRequestError, AuthFailureError } = require('../core/error.response');
-
+const RedisService = require('./ProductRedis.service')
 
 class InvoiceInputService {
     static createInvoiceInput = async (req, res) => {
@@ -195,6 +195,11 @@ class InvoiceInputService {
                 description: "Đẩy số lượng thành công"
             })
             await invoice.save();
+
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.deleteCache('products:all');
+            await RedisService.clearCacheByPrefix('product');
+
             return {
                 metadata: {
                     result: results,

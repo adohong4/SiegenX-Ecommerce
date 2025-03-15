@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path');
 const mongoose = require('mongoose');
 const { BadRequestError, AuthFailureError } = require('../core/error.response');
+const RedisService = require('./ProductRedis.service')
 
 class ProductService {
     static createProduct = async (req, res, next) => {
@@ -35,6 +36,11 @@ class ProductService {
                 }
             });
             const product = await newProduct.save();
+
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.deleteCache('products:all');
+            await RedisService.clearCacheByPrefix('product');
+
             return {
                 product
             }
@@ -44,13 +50,24 @@ class ProductService {
     }
 
     static getProduct = async () => {
+        const CACHE_KEY = 'products:all';
         try {
+            const cachedProducts = await RedisService.getCache(CACHE_KEY);
+            if (cachedProducts) {
+                console.log('Cache hit: Returning all products from Redis');
+                return { product: cachedProducts };
+            }
+
+            console.log('Cache miss: Fetching all products from MongoDB');
+
             const product = await productModel.find()
                 .select('title nameProduct product_slug price images category quantity active')
+                .sort({ createdAt: -1 })
                 .exec();
-            return {
-                product
-            }
+
+            await RedisService.setCache(CACHE_KEY, product);
+
+            return { product };
         } catch (error) {
             throw error;
         }
@@ -107,6 +124,10 @@ class ProductService {
             });
             await updatedProduct.save();
 
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.deleteCache('products:all');
+            await RedisService.clearCacheByPrefix('product');
+
             return { product: updatedProduct }
         } catch (error) {
             throw error;
@@ -156,6 +177,10 @@ class ProductService {
 
             await productModel.findByIdAndDelete(id)
 
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.deleteCache('products:all');
+            await RedisService.clearCacheByPrefix('product');
+
             return {
                 product
             }
@@ -176,6 +201,11 @@ class ProductService {
             description: actionDescription
         })
         await product.save();
+
+        await RedisService.deleteCache('campaign:products:global');
+        await RedisService.deleteCache('products:all');
+        await RedisService.clearCacheByPrefix('product');
+
         return { metadata: product }
     }
 
@@ -259,7 +289,7 @@ class ProductService {
     static updateQuantityProduct = async (req, res) => {
         try {
             const { items } = req.body;
-            console.log("items: ", items)
+            // console.log("items: ", items)
             if (!items || !Array.isArray(items) || items.length === 0) {
                 return res.status(400).json({ message: "Items must be a non-empty array" });
             }
@@ -272,7 +302,7 @@ class ProductService {
                 for (const item of items) {
                     const itemId = item._id;
                     const { quantity } = item;
-                    console.log("itemId: ", itemId)
+                    // console.log("itemId: ", itemId)
                     if (!itemId || !quantity || quantity <= 0) {
                         throw new Error(`Invalid itemId or quantity for item: ${JSON.stringify(item)}`);
                     }

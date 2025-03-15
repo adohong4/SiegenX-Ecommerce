@@ -131,7 +131,7 @@ const StoreContextProvider = (props) => {
 
     const updateProductId = async (productId, data) => {
         try {
-            const response = await axios.put(`${url}/v1/api/product/updateProduct/${productId}`, data);
+            const response = await axios.post(`${url}/v1/api/product/updateProduct/${productId}`, data);
             setProductId(response.data.metadata);
         } catch (error) {
             console.error("Lỗi khi cập nhật sản phẩm:", error);

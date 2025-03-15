@@ -2,6 +2,7 @@
 
 const supplierModel = require('../models/supplier.model');
 const { BadRequestError, AuthFailureError, ConflictRequestError, NotFoundError, ForbiddenError } = require('../core/error.response');
+const SupplierRedisService = require('./redis.service')
 const validator = require('validator')
 
 class SupplierService {
@@ -56,7 +57,11 @@ class SupplierService {
 
     static getSupplierById = async (id) => {
         try {
-            const supplier = await supplierModel.findById(id);
+            //use RedisService to get the Supplier list from cache
+            const supplier = await SupplierRedisService.getSupplierById(id)
+            if (!supplier) {
+                throw new NotFoundError('Supplier not found');
+            }
             return { metadata: supplier }
         } catch (error) {
             throw error;

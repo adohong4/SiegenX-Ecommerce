@@ -4,6 +4,7 @@ const connectDB = require('./config/db.mongo');
 const compression = require('compression')
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const { initRedis, closeRedis } = require('./config/init.redis');
 
 const app = express();
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
@@ -27,11 +28,12 @@ app.use(cookieParser());
 
 // Init db
 connectDB();
-const initRedis = require('./config/init.redis')
-initRedis.initRedis()
+
+//init redis
+initRedis();
+
 // Init router
 app.use('', require('./routes'));
-// app.use('/images', express.static('upload'));
 
 // Handling errors
 app.use((req, res, next) => {
@@ -48,6 +50,19 @@ app.use((error, req, res, next) => {
         stack: error.stack,
         message: error.message || 'Internal Server Error'
     });
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down server...');
+    try {
+        await closeRedis();
+        console.log('Redis connection closed');
+        process.exit(0);
+    } catch (error) {
+        console.error('Error during shutdown:', error);
+        process.exit(1);
+    }
 });
 
 module.exports = app;

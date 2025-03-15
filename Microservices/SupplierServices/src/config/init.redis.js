@@ -27,9 +27,7 @@ const handleTimeoutError = () => {
     }, REDIS_CONNECT_TIMEOUT)
 }
 
-const handleEventConnect = ({
-    connectionRedis
-}) => {
+const handleEventConnect = ({ connectionRedis }) => {
     connectionRedis.on(statusConnectRedis.CONNECT, () => {
         console.log(`connectionRedis - Connection status: connected`);
         clearTimeout(connectTimeout)
@@ -53,13 +51,28 @@ const handleEventConnect = ({
     })
 }
 
-const initRedis = () => {
-    const instanceRedis = redis.createClient();
-    client.instanceRedis = instanceRedis;
-    handleEventConnect({
-        connectionRedis: instanceRedis
-    })
-}
+const initRedis = async () => {
+    return new Promise((resolve, reject) => {
+        const instanceRedis = redis.createClient();
+
+        client.instanceRedis = instanceRedis;
+        handleEventConnect({ connectionRedis: instanceRedis });
+
+        // Chờ kết nối thành công
+        instanceRedis.connect().then(() => {
+            resolve(instanceRedis);
+        }).catch((error) => {
+            reject(new RedisErrorResponse({
+                message: 'Không thể kết nối tới Redis server',
+                code: -98,
+                details: error.message,
+            }));
+        });
+
+        // Timeout nếu không kết nối được
+        handleTimeoutError();
+    });
+};
 
 const getRedis = () => client
 

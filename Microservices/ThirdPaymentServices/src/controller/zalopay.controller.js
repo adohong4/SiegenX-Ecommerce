@@ -6,6 +6,7 @@ const moment = require('moment');
 const qs = require('qs');
 const orderModel = require('../models/order.model');
 const userModel = require('../models/profile.model');
+const RedisService = require('../services/Redis.service')
 
 const config = {
     app_id: '2553',
@@ -84,6 +85,7 @@ class ZaloPayController {
     }
 
     verifyOrder = async (req, res) => {
+        const userId = req.user;
         const { orderId, app_trans_id } = req.body;
         // console.log("orderId: ", orderId);
 
@@ -120,6 +122,7 @@ class ZaloPayController {
             if (zalopayResult.return_code === 1 && !zalopayResult.is_processing) {
                 // console.log("order._id: ", order._id);
                 await orderModel.findByIdAndUpdate(order._id, { payment: true });
+                await RedisService.deleteCache(`order:user:${userId}`)
                 return res.status(200).json({ success: true, message: 'Thanh toán thành công!' });
                 // } else if (zalopayResult.return_code === 3 || zalopayResult.is_processing) {
                 //     return res.status(200).json({ success: false, message: 'Đơn hàng đang được xử lý.' }); 

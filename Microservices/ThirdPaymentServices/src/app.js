@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db.mongodb");
 const cookieParser = require("cookie-parser");
-
+const { initRedis, closeRedis } = require('./config/init.redis');
 const app = express();
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
@@ -32,6 +32,8 @@ app.options("*", (req, res) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.sendStatus(200);
 });
+//init redis
+initRedis();
 
 // Kết nối database
 connectDB();
@@ -53,6 +55,18 @@ app.use((error, req, res, next) => {
         message: error.message || "Internal Server Error",
         stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
+});
+
+process.on('SIGINT', async () => {
+    console.log('Shutting down server...');
+    try {
+        await closeRedis();
+        console.log('Redis connection closed');
+        process.exit(0);
+    } catch (error) {
+        console.error('Error during shutdown:', error);
+        process.exit(1);
+    }
 });
 
 module.exports = app;

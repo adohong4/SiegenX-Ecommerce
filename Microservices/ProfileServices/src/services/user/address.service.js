@@ -1,6 +1,7 @@
 'use strict'
 
 const profileModel = require("../../models/profile.model");
+const RedisService = require('./UserRedis.service')
 
 class AddressService {
     static createAddress = async ({ userId, fullname, phone, street, precinct, city, province }) => {
@@ -13,6 +14,8 @@ class AddressService {
                 { new: true, runValidators: true }
             );
 
+            await RedisService.deleteCache(`address:user:${userId}`)
+
             return {
                 metadata: updatedProfile.address,
             }
@@ -22,12 +25,22 @@ class AddressService {
     }
 
     static getListAddress = async (userId) => {
+        const CACHE_KEY = `address:user:${userId}`;
         try {
-            const profile = await profileModel.findById(userId);
+            const cachedAddress = await RedisService.getCache(CACHE_KEY);
+            if (cachedAddress) {
+                console.log('Cache hit: User Address from Redis');
+                return { metadata: { addresses: cachedAddress } };
+            }
 
+            console.log('Cache miss: User Address from MongoDB');
+
+            const profile = await profileModel.findById(userId);
             if (!profile) {
                 throw new BadRequestError("Tài khoản không tồn tại");
             }
+
+            await RedisService.setCache(CACHE_KEY, profile.address);
 
             return { metadata: { addresses: profile.address } };
         } catch (error) {
@@ -52,6 +65,8 @@ class AddressService {
             if (!updatedProfile) {
                 throw new BadRequestError("Không tìm thấy địa chỉ để xóa");
             }
+
+            await RedisService.deleteCache(`address:user:${userId}`)
 
             return;
         } catch (error) {

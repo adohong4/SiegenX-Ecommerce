@@ -4,18 +4,29 @@ const profileModel = require("../../models/profile.model");
 const cloudinary = require('../../config/cloudinary.config');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const RedisService = require('./UserRedis.service')
 
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 
 class ProfileService {
 
     static getProfile = async (userId) => {
+        const CACHE_KEY = `profile:user:${userId}`;
         try {
+            const cachedUserProfile = await RedisService.getCache(CACHE_KEY);
+            if (cachedUserProfile) {
+                console.log('Cache hit: Returning User Profile from Redis');
+                return cachedUserProfile
+            }
+            console.log('Cache miss: Fetching all products from MongoDB');
+
             const profile = await profileModel.findById(userId);
 
             if (!profile) {
                 throw new BadRequestError("Tài khoản không tồn tại");
             }
+            //redis
+            await RedisService.setCache(CACHE_KEY, profile);
 
             return profile;
         } catch (error) {
@@ -55,6 +66,8 @@ class ProfileService {
                 }
             });
 
+            await RedisService.deleteCache(`order:user:${userId}`)
+
             return updatedProfile;
 
         } catch (error) {
@@ -63,6 +76,7 @@ class ProfileService {
     }
 
     static updateProfile = async ({ userId, password, fullName, dateOfBirth, numberPhone, gender }) => {
+        const CACHE_KEY = `order:user:${userId}`;
         try {
             const user = await profileModel.findById(userId);
 
@@ -88,6 +102,8 @@ class ProfileService {
             const updatedUser = await profileModel.findByIdAndUpdate(userId, updates, { new: true });
 
             if (!updatedUser) throw new BadRequestError("Cập nhật không thành công");
+
+            await RedisService.deleteCache(CACHE_KEY)
 
             return { metadata: updatedUser };
         } catch (error) {

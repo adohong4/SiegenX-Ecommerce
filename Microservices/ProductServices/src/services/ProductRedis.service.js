@@ -1,8 +1,6 @@
 'use strict';
 
-const mongoose = require('mongoose');
 const { getRedis } = require('../config/init.redis');
-const productModel = require('../models/product.model');
 const { RedisErrorResponse } = require('../core/error.response');
 
 const CACHE_TTL = 3600; // TTL default

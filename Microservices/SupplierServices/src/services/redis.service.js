@@ -3,7 +3,7 @@
 const { getRedis } = require('../config/init.redis')
 const supplierModel = require('../models/supplier.model')
 const { RedisErrorResponse, BadRequestError } = require('../core/error.response')
-const CACHE_TTL = 3600;
+const CACHE_TTL = 3600; //TTL default
 
 class RedisService {
     constructor() {
@@ -47,6 +47,36 @@ class RedisService {
             });
         }
     }
+
+    //add method to cache Supplier list
+    async getSuppliers() {
+        await this.ensureClient();
+
+        const cacheKey = 'suppliers:active'
+        try {
+            const cachedSuppliers = await this.redisClient.get(cacheKey);
+            if (cachedSuppliers) {
+                console.log(`Cache hit for suppliers:active`);
+                return JSON.parse(cachedSuppliers);
+            }
+
+            const suppliers = await supplierModel
+                .find({ active: true })
+                .select('supplierName email numberPhone status taxCode description lane area city addressOthers active')
+                .lean();
+
+            await this.redisClient.setEx(cacheKey, CACHE_TTL, JSON.stringify(suppliers));
+            console.log(`Cache miss - Stored suppliers:active in Redis`);
+
+        } catch (error) {
+            console.error(`Error in getSuppliers: ${error}`);
+            throw new RedisErrorResponse({
+                message: 'Lỗi khi lấy thông tin nhà cung cấp',
+                code: -102,
+            });
+        }
+    }
+
 
 }
 

@@ -47,8 +47,8 @@ class SupplierService {
 
     static getSupplier = async () => {
         try {
-            const supplier = await supplierModel.find({ active: true })
-                .select('supplierName email numberPhone taxCode active');
+            //use Redis
+            const supplier = await SupplierRedisService.getSuppliers();
             return { metadata: supplier }
         } catch (error) {
             throw error;

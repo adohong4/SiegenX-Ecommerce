@@ -9,9 +9,9 @@ import { StoreContext } from '../../context/StoreContext';
 
 const SupplierList = () => {
     axios.defaults.withCredentials = true;
-    const { url } = useContext(StoreContext);
+    const { url, supplier_list } = useContext(StoreContext);
     const [list, setList] = useState([]);
-    const [limit, setLimit] = useState(7);
+    const [limit, setLimit] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [totalPages, setTotalPages] = useState(0);
@@ -73,7 +73,7 @@ const SupplierList = () => {
     };
 
     // Tìm kiếm nhà cung cấp
-    const filteredData = list.filter(supplier =>
+    const filteredData = supplier_list.filter(supplier =>
         supplier.supplierName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

@@ -9,7 +9,7 @@ import { StoreContext } from '../../context/StoreContext';
 
 const SupplierList = () => {
     axios.defaults.withCredentials = true;
-    const { url, supplier_list } = useContext(StoreContext);
+    const { url, supplier_list, fetchSupplierList } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [limit, setLimit] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +18,7 @@ const SupplierList = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSupplier, setEditingSupplier] = useState(null);
+    const [form] = Form.useForm();
     const navigate = useNavigate();
 
     const fetchListSupplier = async (page = 1, limit = 7) => {
@@ -35,18 +36,19 @@ const SupplierList = () => {
     };
 
     useEffect(() => {
-        fetchListSupplier(currentPage);
-    }, [currentPage]);
+        fetchSupplierList();
+    }, []);
 
     // Xóa nhà cung cấp (chuyển vào Trash)
     const handleDelete = async (key) => {
         await axios.delete(`${url}/v1/api/supplier/active/${key}`);
-        fetchListSupplier(currentPage)
+        fetchSupplierList();
     };
 
     // Mở Modal cập nhật
     const showEditModal = (record) => {
         setEditingSupplier(record);
+        form.setFieldsValue(record);
         setIsModalOpen(true);
     };
 
@@ -64,7 +66,7 @@ const SupplierList = () => {
                 toast.success(response.data.message);
                 setIsModalOpen(false);
                 setEditingSupplier(null);
-                fetchListSupplier(currentPage);
+                fetchSupplierList();
             }
         } catch (error) {
             toast.error(error.response.data.message);
@@ -73,7 +75,7 @@ const SupplierList = () => {
     };
 
     // Tìm kiếm nhà cung cấp
-    const filteredData = supplier_list.filter(supplier =>
+    const filteredData = supplier_list?.filter(supplier =>
         supplier.supplierName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -144,7 +146,7 @@ const SupplierList = () => {
 
             {/* Popup Cập nhật */}
             <Modal title="Cập Nhật Nhà Cung Cấp" open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Form layout="vertical" onFinish={(values) => handleUpdate(editingSupplier._id, values)} initialValues={editingSupplier}>
+                <Form form={form} layout="vertical" onFinish={(values) => handleUpdate(editingSupplier._id, values)}>
                     <Form.Item name="_id" hidden>
                         <Input />
                     </Form.Item>

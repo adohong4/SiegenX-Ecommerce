@@ -217,7 +217,7 @@ const StoreContextProvider = (props) => {
     const contextValue = {
         product_list, product_id, cartItems, account_list, supplier_list, invoice, token,
         updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
-        fetchInvoiceId, deleteSoftInvoice, deleteInvoice,
+        fetchInvoiceId, deleteSoftInvoice, deleteInvoice, fetchSupplierList,
         setCartItems, addToCart, addQuantityToCart, removeFromCart, getTotalCartAmount,
         activeCampaign, deleteCampaign,
         fetchProductId, updateProductId, setToken, url

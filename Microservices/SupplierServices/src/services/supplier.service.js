@@ -37,6 +37,9 @@ class SupplierService {
             })
             const supplierCreated = await supplier.save();
 
+            // Xóa cache sau khi tạo
+            await SupplierRedisService.invalidateSupplierCache(supplierCreated._id.toString());
+
             return {
                 metadata: supplierCreated
             }
@@ -100,6 +103,9 @@ class SupplierService {
             });
             await updatedSupplier.save();
 
+            // Cập nhật cache ngay sau khi cập nhật
+            await SupplierRedisService.updateSupplierCache(updatedSupplier);
+
             return {
                 metadata: updatedSupplier
             }
@@ -127,6 +133,9 @@ class SupplierService {
 
             await supplier.save();
 
+            // Xóa cache sau khi thay đổi trạng thái
+            await SupplierRedisService.invalidateSupplierCache(id);
+
             return {
                 metadata: supplier
             }
@@ -142,6 +151,8 @@ class SupplierService {
             if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn');
 
             await supplierModel.findByIdAndDelete(id)
+            // Xóa cache sau khi xóa
+            await SupplierRedisService.invalidateSupplierCache(id);
             return;
         } catch (error) {
             throw error;

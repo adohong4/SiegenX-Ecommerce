@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db.mongodb');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const app = express();
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

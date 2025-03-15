@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db.mongodb');
-
+const compression = require('compression');
 const app = express();
 
 // Init middlewares
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

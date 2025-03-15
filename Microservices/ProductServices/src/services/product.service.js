@@ -3,6 +3,7 @@
 const productModel = require('../models/product.model');
 const fs = require('fs')
 const path = require('path');
+const mongoose = require('mongoose');
 const { BadRequestError, AuthFailureError } = require('../core/error.response');
 
 class ProductService {
@@ -255,6 +256,62 @@ class ProductService {
         }
     }
 
+    static updateQuantityProduct = async (req, res) => {
+        try {
+            const { items } = req.body;
+            console.log("items: ", items)
+            if (!items || !Array.isArray(items) || items.length === 0) {
+                return res.status(400).json({ message: "Items must be a non-empty array" });
+            }
+
+            // use transaction
+            const session = await mongoose.startSession();
+            session.startTransaction();
+
+            try {
+                for (const item of items) {
+                    const itemId = item._id;
+                    const { quantity } = item;
+                    console.log("itemId: ", itemId)
+                    if (!itemId || !quantity || quantity <= 0) {
+                        throw new Error(`Invalid itemId or quantity for item: ${JSON.stringify(item)}`);
+                    }
+
+                    const product = await productModel.findOne({
+                        _id: itemId,
+                        active: true
+                    }).session(session);
+
+                    if (!product) {
+                        throw new Error(`Product with itemId ${itemId} not found or not active`);
+                    }
+
+                    if (product.quantity < quantity) {
+                        throw new Error(`Không thể thanh toán ${product.nameProduct}. Có sẵn: ${product.quantity}, Mua: ${quantity}`);
+                    }
+
+                    product.quantity -= quantity;
+
+                    await product.save({ session });
+                }
+
+                await session.commitTransaction();
+
+                return;
+
+            } catch (error) {
+                if (session.inTransaction()) {
+                    await session.abortTransaction();
+                }
+                throw error;
+            } finally {
+                session.endSession();
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 module.exports = ProductService;

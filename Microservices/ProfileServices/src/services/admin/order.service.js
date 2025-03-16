@@ -42,21 +42,7 @@ class OrderService {
             await order.save();
 
             const CACHE_KEY = `order:user:${order.userId}`;
-            const cachedOrders = await RedisService.getCache(CACHE_KEY);
-
-            if (cachedOrders) {
-                const updatedOrders = cachedOrders.map(order => {
-                    if (order._id.toString() === orderId) {
-                        return {
-                            ...order,
-                            status: newStatus,
-                            creator: order.creator
-                        }
-                    }
-                    return order;
-                });
-                await RedisService.setCache(CACHE_KEY, updatedOrders);
-            }
+            await RedisService.deleteCache(CACHE_KEY)
 
             return {
                 metadata: order

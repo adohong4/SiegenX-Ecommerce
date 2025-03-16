@@ -117,7 +117,9 @@ const MyOrders = () => {
                             <div className="my-orders__actions">
                                 <button onClick={() => navigate(`/san-pham/${order.items[0].product_slug}`)} className="my-orders__buy-again">Mua Lại</button>
                                 <button onClick={() => navigate(`/lien-he`)} className="my-orders__contact">Liên Hệ</button>
+                                <button onClick={() => navigate(`${order._id}`, { state: { order } })} className="my-orders__buy-again">Xem chi tiết</button>
                             </div>
+
                         </div>
                     </div>
                 ))}

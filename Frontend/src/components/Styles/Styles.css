@@ -1296,3 +1296,22 @@
   padding: 8px 16px;
   cursor: pointer;
 }
+
+
+
+/* CSS cho trang chi tiết hóa đơn người dùng  */
+
+
+
+.user-order-detail__btn {
+  margin-top: 24px;
+  width: 10%;
+  background: #009d68;
+  font-weight: 600;
+  padding: 12px 0;
+  border-radius: 8px;
+}
+
+.user-order-detail__btn:hover {
+  background: #0A9A79 !important;
+}

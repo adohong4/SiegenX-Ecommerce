@@ -1,11 +1,13 @@
 const http = require('http');
+const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-
+const client = require('prom-client');
 require('dotenv').config();
 
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+
 // Define API routes and corresponding backend services
 const routes = {
     '/v1/api/identity': 'http://localhost:9001',
@@ -17,6 +19,27 @@ const routes = {
     '/v1/api/online': 'http://localhost:9007',
 };
 
+const app = express();
+
+// Thu thập các metrics mặc định (CPU, memory, v.v.)
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
+
+// Tạo metric tùy chỉnh (ví dụ số lượng request)
+const counter = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'status']
+});
+
+// Middleware để đếm request
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        counter.inc({ method: req.method, route: req.path, status: res.statusCode });
+    });
+    next();
+});
+
 const corsMiddleware = (req, res, next) => {
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
@@ -26,13 +49,17 @@ const corsMiddleware = (req, res, next) => {
         res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
     if (req.method === 'OPTIONS') {
-        res.writeHead(204);
-        res.end();
+        res.writeHead(204).end();
         return;
     }
     next();
 };
 
+// Endpoint để Prometheus scrape
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', client.register.contentType);
+    res.end(await client.register.metrics());
+});
 
 // Create proxy middleware
 const proxy = createProxyMiddleware({
@@ -48,7 +75,6 @@ const proxy = createProxyMiddleware({
         '^/v1/api/online': '/v1/api/online'
     },
     router: (req) => {
-        // Select backend server based on the requested route
         const route = Object.keys(routes).find(r => req.url.startsWith(r));
         if (route) {
             return routes[route];
@@ -64,6 +90,10 @@ const proxy = createProxyMiddleware({
         }));
     },
 });
+
+// Áp dụng middleware CORS và proxy
+app.use(corsMiddleware);
+app.use(proxy);
 
 // Cluster logic
 const PORT = process.env.PORT || 4001;
@@ -92,11 +122,7 @@ if (cluster.isMaster) {
     });
 } else {
     // Worker process: Tạo server cho mỗi worker
-    const server = http.createServer((req, res) => {
-        corsMiddleware(req, res, () => {
-            proxy(req, res);
-        });
-    });
+    const server = http.createServer(app);
 
     server.listen(PORT, () => {
         console.log(`Worker ${process.pid} chạy trên port http://localhost:${PORT}`);

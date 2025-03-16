@@ -47,7 +47,7 @@ if (mongoose.connection.readyState !== 1) {
 }
 
 // Serve static files
-app.use('/images', express.static(path.join(__dirname, 'upload')));
+app.use("/images", express.static("upload"));
 // Init router
 app.use('', require('./routes'));
 

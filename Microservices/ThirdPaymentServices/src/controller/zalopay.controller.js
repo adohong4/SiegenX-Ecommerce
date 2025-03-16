@@ -8,6 +8,8 @@ const orderModel = require('../models/order.model');
 const userModel = require('../models/profile.model');
 const RedisService = require('../services/Redis.service')
 
+require('dotenv').config();
+
 const config = {
     app_id: '2553',
     key1: 'PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL',

@@ -138,6 +138,7 @@ class CampaignService {
             allProducts = await productModel.find()
                 .select('title nameProduct product_slug price images category quantity')
                 .sort({ createdAt: -1 })
+                .limit(1000)
                 .exec();
 
 

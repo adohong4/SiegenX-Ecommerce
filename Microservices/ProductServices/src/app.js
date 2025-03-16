@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db.mongodb');
+const mongoose = require('mongoose');
+const { connectDB, closeDB } = require('./config/db.mongodb');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const { initRedis, closeRedis } = require('./config/init.redis');
+const path = require('path');
 const app = express();
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 // Init middlewares
@@ -34,17 +36,20 @@ app.options("*", (req, res) => {
     res.sendStatus(200);
 });
 
-//init redis
-initRedis();
+// Init redis
+initRedis().catch((err) => {
+    console.error(`Worker ${process.pid}: Failed to init Redis:`, err);
+});
 
 // Init db
-connectDB();
+if (mongoose.connection.readyState !== 1) {
+    connectDB();
+}
 
 // Serve static files
-
+app.use('/images', express.static(path.join(__dirname, 'upload')));
 // Init router
 app.use('', require('./routes'));
-app.use('/images', express.static('upload'));
 
 // Handling errors
 app.use((req, res, next) => {
@@ -65,13 +70,15 @@ app.use((error, req, res, next) => {
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-    console.log('Shutting down server...');
+    console.log(`Worker ${process.pid} shutting down...`);
     try {
         await closeRedis();
-        console.log('Redis connection closed');
+        console.log(`Worker ${process.pid}: Redis connection closed`);
+        await closeDB();
+        console.log(`Worker ${process.pid}: MongoDB connection closed`);
         process.exit(0);
     } catch (error) {
-        console.error('Error during shutdown:', error);
+        console.error(`Worker ${process.pid}: Error during shutdown:`, error);
         process.exit(1);
     }
 });

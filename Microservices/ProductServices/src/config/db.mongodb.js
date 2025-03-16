@@ -8,7 +8,9 @@ const connectDB = async () => {
         await mongoose.connect(process.env.MONGODB_URI, {
             // useNewUrlParser: true,
             // useUnifiedTopology: true,
-            dbName: 'Product'
+            dbName: 'Product',
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 10000,
         });
         console.log('MongoDB connected');
     } catch (error) {
@@ -17,4 +19,15 @@ const connectDB = async () => {
     }
 };
 
-module.exports = connectDB;
+const closeDB = async () => {
+    try {
+        if (mongoose.connection.readyState !== 0) {
+            await mongoose.connection.close();
+            console.log('MongoDB connection closed');
+        }
+    } catch (error) {
+        console.error('Error closing MongoDB connection:', error);
+    }
+};
+
+module.exports = { connectDB, closeDB };

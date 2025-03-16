@@ -18,6 +18,8 @@ const REDIS_CONNECT_TIMEOUT = 10000, REDIS_CONNECT_MESSAGE = {
     }
 }
 
+let connectTimeout;
+
 const handleTimeoutError = () => {
     connectTimeout = setTimeout(() => {
         throw new RedisErrorResponse({

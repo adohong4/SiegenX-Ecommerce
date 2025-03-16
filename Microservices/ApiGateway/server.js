@@ -1,6 +1,9 @@
 const http = require('http');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const cors = require('cors');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+require('dotenv').config();
 
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
 // Define API routes and corresponding backend services
@@ -52,16 +55,65 @@ const proxy = createProxyMiddleware({
         }
         return null;
     },
+    onError: (err, req, res) => {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            status: 'error',
+            message: 'Proxy error',
+            details: err.message,
+        }));
+    },
 });
 
-// Create API gateway server
-const server = http.createServer((req, res) => {
-    corsMiddleware(req, res, () => {
-        proxy(req, res);
+// Cluster logic
+const PORT = process.env.PORT || 4001;
+
+if (cluster.isMaster) {
+    console.log(`Master ${process.pid} đang chạy`);
+
+    // Tạo worker cho mỗi CPU
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    // Xử lý khi worker dừng
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} đã dừng với code ${code}`);
+        cluster.fork(); // Khởi động lại worker nếu cần
     });
-});
 
-const port = process.env.PORT || 4001;
-server.listen(port, () => {
-    console.log(`API gateway running on port http://localhost:${port}`);
-});
+    // Graceful shutdown cho master
+    process.on('SIGINT', () => {
+        console.log('Master received SIGINT. Shutting down all workers...');
+        for (const id in cluster.workers) {
+            cluster.workers[id].kill();
+        }
+        process.exit(0);
+    });
+} else {
+    // Worker process: Tạo server cho mỗi worker
+    const server = http.createServer((req, res) => {
+        corsMiddleware(req, res, () => {
+            proxy(req, res);
+        });
+    });
+
+    server.listen(PORT, () => {
+        console.log(`Worker ${process.pid} chạy trên port http://localhost:${PORT}`);
+    });
+
+    // Xử lý lỗi khi server không khởi động được
+    server.on('error', (error) => {
+        console.error(`Worker ${process.pid} gặp lỗi khi khởi động server:`, error);
+        process.exit(1);
+    });
+
+    // Graceful shutdown cho worker
+    process.on('SIGINT', () => {
+        console.log(`Worker ${process.pid} shutting down...`);
+        server.close(() => {
+            console.log(`Worker ${process.pid}: Server closed`);
+            process.exit(0);
+        });
+    });
+}

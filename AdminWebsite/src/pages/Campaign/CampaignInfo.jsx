@@ -57,17 +57,14 @@ const CampaignInfo = () => {
     };
 
     const onFinish = async (values) => {
+        console.log("values: ", values);
+
         try {
             const response = await axios.put(`${url}/v1/api/product/campaign/update/${id}`, values);
-            notification.success({
-                message: response.data.message,
-                duration: 3,
-            });
             toast.success(response.data.message)
-            console.log("Cập nhật chiến dịch thành công!");
         } catch (error) {
             console.error("Lỗi khi cập nhật chiến dịch:", error);
-            toast.error(response.data.message)
+            toast.error(error.response.data.message)
             throw error;
         }
     };

@@ -87,15 +87,18 @@ class CampaignService {
             if (type === 'fixed_amount' && value <= 0) {
                 throw new BadRequestError('Value must be greater than 0 for fixed amount type');
             }
-
             // Kiểm tra thời gian
             const now = new Date();
-            if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
-            if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
 
             //Kiểm tra trạng thái
-            if (status === 'active' && now < new Date(startDate) || status === 'active' && now > new Date(endDate))
-                throw new BadRequestError('Lỗi trạng thái Hoạt động không phù hợp với thời gian chiến dịch');
+            if (status === 'active') {
+                if (now < new Date(startDate) || now > new Date(endDate)) {
+                    throw new BadRequestError('Trạng thái "Hoạt động" không phù hợp với thời gian chiến dịch.');
+                }
+            }
+
+            // if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
+            if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
 
             // Kiểm tra CODE
             const foundCampaign = await campaignModel.findOne({ code, _id: { $ne: id } });

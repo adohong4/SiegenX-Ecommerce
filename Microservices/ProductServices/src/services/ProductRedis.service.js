@@ -86,16 +86,11 @@ class RedisService {
     async clearCacheByPrefix(prefix) {
         try {
             await this.ensureClient();
-            let deletedCount = 0;
-            const stream = this.redisClient.scanStream({ match: `${prefix}:*`, count: 100 });
-            for await (const keys of stream) {
-                if (keys.length > 0) {
-                    await this.redisClient.del(keys);
-                    deletedCount += keys.length;
-                }
+            const keys = await this.redisClient.keys(`${prefix}:*`);
+            if (keys.length > 0) {
+                await this.redisClient.del(keys);
+                console.log(`Cleared ${keys.length} keys with prefix: ${prefix}`);
             }
-            console.log(`Cleared ${deletedCount} keys with prefix: ${prefix}`);
-            return deletedCount;
         } catch (error) {
             console.error(`Error clearing cache with prefix ${prefix}:`, error);
             throw new RedisErrorResponse({

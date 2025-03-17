@@ -44,3 +44,13 @@ export function formatCurrency(price) {
 
 
 
+export function formatHourDayTime(date) {
+  return new Date(date).toLocaleString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour12: false,
+  });
+}

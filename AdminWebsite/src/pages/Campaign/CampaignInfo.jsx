@@ -57,8 +57,6 @@ const CampaignInfo = () => {
     };
 
     const onFinish = async (values) => {
-        console.log("values: ", values);
-
         try {
             const response = await axios.put(`${url}/v1/api/product/campaign/update/${id}`, values);
             toast.success(response.data.message)

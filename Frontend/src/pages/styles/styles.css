@@ -2674,6 +2674,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .product-info-tab .container {
   display: flex;
+  justify-content: center;
 }
 
 .tab-header {
@@ -3384,3 +3385,6 @@ button[type='submit'] span {
       margin-top: 0;
   } */
 }
+
+
+

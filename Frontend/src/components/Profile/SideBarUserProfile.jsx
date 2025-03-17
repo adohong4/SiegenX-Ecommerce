@@ -22,7 +22,7 @@ const SidebarUserProfile = () => {
     return (
         <div className="section-sidebar">
             <div className="container page-User">
-            <div className="sidebar col-3">
+            <div className="sidebar col-2">
                 <div className="sidebar-dropdown-dad">
                     <div className="sidebar-dropdown">
                         <div
@@ -34,13 +34,11 @@ const SidebarUserProfile = () => {
                                 <p>Tài khoản của tôi</p>
                             </div>
                         </div>
-                        {openMenus.profile && (
                             <ul className="sidebar-submenu">
                                 <li><NavLink to="/user/profile" className="submenu-item" >Hồ sơ</NavLink></li>
                                 <li><NavLink to="/user/address" className="submenu-item" >Địa chỉ</NavLink></li>
                                 <li><NavLink to="/user/change-password" className="submenu-item" >Đổi mật khẩu</NavLink></li>
                             </ul>
-                        )}
                     </div>
                     <div className="sidebar-dropdown">
                         <NavLink to="/user/orders" className="sidebar-dropdown"> 
@@ -53,7 +51,7 @@ const SidebarUserProfile = () => {
                 </div>
             </div>
 
-            <div className="content col-9">
+            <div className="content col-10">
                 <Outlet />
             </div>
         </div>

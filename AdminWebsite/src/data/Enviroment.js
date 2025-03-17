@@ -449,3 +449,48 @@ export const campainlist = [
         status: false,
     },
 ];
+
+export const fakeOrder = {
+    _id: "HD20250316001",
+    address: {
+        fullname: "Nguyễn Văn A",
+        street: "123 Đường Lê Lợi",
+        precinct: "Phường Bến Nghé",
+        city: "Quận 1",
+        province: "TP. Hồ Chí Minh"
+    },
+    amount: 12480000,
+    createdAt: "2025-03-16T10:30:00Z",
+    paymentMethod: "Chuyển khoản",
+    status: "Đang giao hàng",
+    items: [
+        {
+            id: "item1",
+            title: "Tai nghe Sony WH-1000XM4",
+            quantity: 1,
+            price: 7500000,
+            category: "Tai nghe",
+            image: "sony-wh1000xm4.jpg"
+        },
+        {
+            id: "item2",
+            title: "Chuột Logitech MX Master 3S",
+            quantity: 2,
+            price: 2490000,
+            category: "Chuột máy tính",
+            image: "logitech-mx-master-3s.jpg"
+        }
+    ],
+    creator: [
+        {
+            createdBy: "admin",
+            action: "Tạo đơn hàng",
+            createdAt: "2025-03-16T10:30:00Z"
+        },
+        {
+            createdBy: "admin",
+            action: "Cập nhật trạng thái: Đang giao hàng",
+            createdAt: "2025-03-17T08:00:00Z"
+        }
+    ]
+};

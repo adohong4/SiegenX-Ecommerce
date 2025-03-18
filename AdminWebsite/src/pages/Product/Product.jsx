@@ -151,6 +151,10 @@ const ListProduct = () => {
             sorter: (a, b) => a.quantity.localeCompare(b.quantity)
         },
         {
+            title: "Tồn kho", dataIndex: "quantity", key: "quantityCount",
+            sorter: (a, b) => a.quantity.localeCompare(b.quantity)
+        },
+        {
             title: "Hành động",
             key: "action",
             align: "center",
@@ -175,7 +179,7 @@ const ListProduct = () => {
                     {stats.map((stat, index) => (
                         <div key={index} className="box">
                             <FontAwesomeIcon icon={stat.icon} className="stat-icon" />
-                            <div>
+                            <div className="stat-box">
                                 <p className="label">{stat.label}</p>
                                 <p className="value">{stat.animatedValue} </p>
                             </div>

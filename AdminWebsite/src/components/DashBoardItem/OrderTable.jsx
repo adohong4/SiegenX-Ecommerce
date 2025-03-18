@@ -2,10 +2,11 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
-// import { StoreContext } from '../../../context/StoreContext';
-import { fakeOrderData } from "../../data/Enviroment";
+import { StoreContext } from '../../context/StoreContext';
+import { formatHourDayTime, formatCurrency } from '../../lib/utils';
+
 const OrderTable = () => {
-    // const { url, order_list, fetchOrder } = useContext(StoreContext);
+    const { url } = useContext(StoreContext);
     const [list, setList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalOrder, setTotalOrder] = useState(0);
@@ -15,38 +16,28 @@ const OrderTable = () => {
         setCurrentPage(+event.selected + 1);
     };
 
-    const fetchListpage = async (page = 1) => {
+    const fetchListpage = async (page = 1, limit = 6) => {
         try {
-            const response = await axios.get(`${url}/v1/api/profile/order/pagination?page=${page}&limit=6`);
+            const response = await axios.get(`${url}/v1/api/profile/order/paginate?page=${page}&limit=${limit}`);
             if (response.data.message) {
-                setList(response.data.data);
-                setTotalOrder(response.data.pagination.limit);
-                setTotalPages(response.data.pagination.totalPages);
+                setList(response.data.metadata.order);
+                setTotalOrder(response.data.metadata.totalOrder);
+                setTotalPages(response.data.metadata.totalPages);
             }
         } catch (error) {
             toast.error('Error fetching data');
         }
     };
 
-    // useEffect(() => {
-    //     fetchListpage(currentPage);
-    // }, [currentPage]);
-
-// Fake data cho ordertable
-
-
     useEffect(() => {
-        // Thay thế API call bằng dữ liệu giả
-        setList(fakeOrderData.data);
-        setTotalOrder(fakeOrderData.pagination.limit);
-        setTotalPages(fakeOrderData.pagination.totalPages);
+        fetchListpage(currentPage);
     }, [currentPage]);
 
     return (
         <div className='orderpayment-list-container'>
-            <div className='orderpayment-list-title'>
+            {/* <div className='orderpayment-list-title'>
                 <p>Giao dịch gần đây</p>
-            </div>
+            </div> */}
 
             <ul className="transaction-list">
                 {list.map((item) => (
@@ -56,7 +47,7 @@ const OrderTable = () => {
                         </div> */}
                         <div className="transaction-details">
                             <p className="transaction-id">{item._id}</p>
-                            <p className="transaction-date">{item.date}</p>
+                            <p className="transaction-date">{formatHourDayTime(item.createdAt)}</p>
                         </div>
                         <div className="transaction-amount">
                             <p>+ {item.amount.toLocaleString()} đ</p>

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faBox, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { fakeFactors } from "../../data/Enviroment";
-
+import { StoreContext } from '../../context/StoreContext';
 
 const StatsCard = ({ maxCount, label }) => {
     const [count, setCount] = useState(0);
@@ -32,17 +32,17 @@ const StatsCard = ({ maxCount, label }) => {
 };
 
 const Factors = () => {
+    const { product_list, users, order, contacts } = useContext(StoreContext);
     const [orders, setOrders] = useState(0);
     const [user, setUser] = useState(0);
     const [product, setProduct] = useState(0);
     const [contact, setContact] = useState(0);
 
     useEffect(() => {
-        // Thay thế API call bằng dữ liệu giả
-        setUser(fakeFactors.user);
-        setProduct(fakeFactors.product);
-        setOrders(fakeFactors.orders);
-        setContact(fakeFactors.contact);
+        setUser(users?.length);
+        setProduct(product_list?.length);
+        setOrders(order?.length);
+        setContact(contacts?.length);
     }, []);
 
     return (

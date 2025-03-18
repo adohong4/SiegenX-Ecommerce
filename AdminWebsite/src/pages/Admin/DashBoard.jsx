@@ -12,7 +12,7 @@ const DashBoard = () => {
             {/* Phần Thống Kê */}
             <Row gutter={[16, 16]}>
                 <Col span={24}>
-                    <Card title="Thống kê doanh thu" bordered={false} style={{ borderRadius: 10 }}>
+                    <Card bordered={false} style={{ borderRadius: 10 }}>
                         <Factors />
                     </Card>
                 </Col>
@@ -21,12 +21,12 @@ const DashBoard = () => {
             {/* Phần Biểu Đồ & Bảng Đơn Hàng */}
             <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
                 <Col span={14}>
-                    <Card 
+                    <Card
                         title={
                             <>
-                                <BarChartOutlined /> Biểu đồ doanh thu
+                                <BarChartOutlined /> Biểu đồ thống kê
                             </>
-                        } 
+                        }
                         bordered={false}
                         style={{ borderRadius: 10 }}
                     >
@@ -34,12 +34,12 @@ const DashBoard = () => {
                     </Card>
                 </Col>
                 <Col span={10}>
-                    <Card 
+                    <Card
                         title={
                             <>
-                                <TableOutlined /> Danh sách đơn hàng
+                                <TableOutlined /> Giao dịch gần đây
                             </>
-                        } 
+                        }
                         bordered={false}
                         style={{ borderRadius: 10 }}
                     >
@@ -49,21 +49,21 @@ const DashBoard = () => {
             </Row>
 
             {/* Phần Biểu Đồ Đường */}
-            <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
+            {/* <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
                 <Col span={24}>
-                    <Card 
+                    <Card
                         title={
                             <>
                                 <LineChartOutlined /> Xu hướng doanh thu
                             </>
-                        } 
+                        }
                         bordered={false}
                         style={{ borderRadius: 10 }}
                     >
                         <LineChart />
                     </Card>
                 </Col>
-            </Row>
+            </Row> */}
         </div>
     );
 };

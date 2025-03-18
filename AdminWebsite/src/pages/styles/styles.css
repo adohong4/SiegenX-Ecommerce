@@ -232,10 +232,10 @@ textarea {
 }
 
 .dashboard-product .das-body .box {
-    width: 20%;
+    width: 19%;
     background-color: transparent;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    padding: 5px;
     border-radius: 10px;
     text-align: center;
     display: flex;
@@ -243,11 +243,20 @@ textarea {
     align-items: center;
     transition: all 0.3s ease-in-out;
     font-weight: bold;
-    border: 2px dashed #cccccc;
+    border: 3px dashed #cccccc;
+}
+
+.dashboard-product .das-body .box .stat-box {
+    padding: 0px;
 }
 
 .dashboard-product .das-body .box svg {
     font-size: 2em;
+}
+
+.dashboard-product .das-body .box .value {
+    font-size: 35px;
+    padding: 0px;
 }
 
 .das-body .box:hover {
@@ -354,9 +363,9 @@ textarea {
 .top-list-tiltle {
     display: flex;
     align-items: center;
-    padding: 20px 0px;
-    margin-bottom: 20px;
-    gap: 50px;
+    padding: 10px 0px;
+    /* margin-bottom: 20px; */
+    /* gap: 40px; */
 }
 
 /* .top-list-tiltle .tittle-right {

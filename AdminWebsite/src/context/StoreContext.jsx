@@ -12,6 +12,9 @@ const StoreContextProvider = (props) => {
     const [product_id, setProductId] = useState(null);
     const [supplier_list, setSupplierList] = useState([]);
     const [invoice, setInvoice] = useState(null);
+    const [order, setOrder] = useState([]);
+    const [contacts, setContact] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const url = "http://localhost:4001";  // URL backend
 
@@ -197,7 +200,36 @@ const StoreContextProvider = (props) => {
         } catch (error) {
             alert(error.response.data.message);
         }
+    };
 
+    //----------API Order
+    const fetchOrderList = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/profile/order/get`);
+            setOrder(response.data.metadata);
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách sản phẩm:", error);
+        }
+    };
+
+    //----------API Contact
+    const fetchContactList = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/contact/list`);
+            setContact(response.data.metadata);
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách sản phẩm:", error);
+        }
+    };
+
+    //----------API Contact
+    const fetchUserList = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/profile/account/get`);
+            setUsers(response.data.metadata);
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách sản phẩm:", error);
+        }
     };
 
     useEffect(() => {
@@ -206,6 +238,9 @@ const StoreContextProvider = (props) => {
             await fetchStaff();
             await fetchSupplierList();
             await fectchInvoice();
+            await fetchOrderList();
+            await fetchContactList();
+            await fetchUserList();
             const cookieToken = Cookies.get("token");
             if (cookieToken) {
                 setToken(cookieToken);
@@ -220,7 +255,8 @@ const StoreContextProvider = (props) => {
         fetchInvoiceId, deleteSoftInvoice, deleteInvoice, fetchSupplierList,
         setCartItems, addToCart, addQuantityToCart, removeFromCart, getTotalCartAmount,
         activeCampaign, deleteCampaign,
-        fetchProductId, updateProductId, setToken, url
+        fetchProductId, updateProductId, setToken, url,
+        order, contacts, users
     };
 
     return (

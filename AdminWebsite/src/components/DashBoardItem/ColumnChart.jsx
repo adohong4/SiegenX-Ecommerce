@@ -1,65 +1,24 @@
 
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-// import { StoreContext } from '../../../context/StoreContext';
-import { fakeFactorsData } from "../../data/Enviroment"; 
+import { StoreContext } from '../../context/StoreContext';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Factors = () => {
-    // const { url } = useContext(StoreContext)
-
+    const { product_list, users, order, contacts } = useContext(StoreContext);
     const [orders, setOrders] = useState([]);
     const [user, setUser] = useState([]);
     const [product, setProduct] = useState([]);
     const [contact, setContact] = useState([]);
 
-    const fetchOrderCount = async () => {
-        const response = await axios.get(`${url}/v1/api/profile/order/count`);
-        if (response.data.status) {
-            setOrders(response.data.metadata);
-        }
-    }
-
-    const fetchProductCount = async () => {
-        const response = await axios.get(`${url}/v1/api/product/count`);
-        if (response.data.status) {
-            setProduct(response.data.metadata);
-        }
-    }
-
-    const fetchUserCount = async () => {
-        const response = await axios.get(`${url}/v1/api/profile/admin/user/count`);
-        if (response.data.status) {
-            setUser(response.data.metadata);
-        }
-    }
-
-    const fetchContactCount = async () => {
-        const response = await axios.get(`${url}/v1/api/contact/count`);
-        if (response.data.status) {
-            setContact(response.data.metadata);
-        }
-    }
-
-    // useEffect(() => {
-    //     fetchProductCount();
-    //     fetchOrderCount();
-    //     fetchUserCount();
-    //     fetchContactCount();
-    // }, [url]);
-
-
-    // Fake data cho useEffect
     useEffect(() => {
-        // Dữ liệu giả thay thế API call
-        setUser(fakeFactorsData.user);
-        setProduct(fakeFactorsData.product);
-        setOrders(fakeFactorsData.orders);
-        setContact(fakeFactorsData.contact);
+        setUser(users?.length);
+        setProduct(product_list?.length);
+        setOrders(order?.length);
+        setContact(contacts?.length);
     }, []);
 
     const chartData = {

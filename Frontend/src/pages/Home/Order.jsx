@@ -19,6 +19,7 @@ const PlaceOrder = () => {
         precinct: "",
         city: "",
         province: "",
+        email: "",
     });
 
     const handlePaymentChange = (event) => {
@@ -103,11 +104,13 @@ const PlaceOrder = () => {
     };
 
     useEffect(() => {
-        fetchUserAddress();
+        if (!address || address.length === 0) {
+            fetchUserAddress();
+        }
         if (getTotalCartAmount() === 0) {
             navigate('/cart');
         }
-    }, [fetchUserAddress, getTotalCartAmount, navigate]);
+    }, [address, getTotalCartAmount, navigate, fetchUserAddress]);
 
     return (
         <form className="place-order" onSubmit={handleSubmit}>

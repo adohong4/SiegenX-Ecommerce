@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/cart_controller.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
+import 'package:siegenx_mobile_app/screens/all_products.dart';
 import 'package:siegenx_mobile_app/screens/payment_screen.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
@@ -34,15 +35,19 @@ class _CartScreenState extends State<CartScreen> {
   Future<void> _fetchCartProducts() async {
     try {
       final products = await CartController.fetchCartProducts(context);
-      setState(() {
-        _cartProducts = products;
-        _isLoading = false;
-        widget.onCartCountUpdated?.call(_cartProducts.length);
-      });
+      if (mounted) {
+        setState(() {
+          _cartProducts = products;
+          _isLoading = false;
+          widget.onCartCountUpdated?.call(_cartProducts.length);
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error loading cart: $e')),
       );
@@ -74,7 +79,63 @@ class _CartScreenState extends State<CartScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _cartProducts.isEmpty
-              ? const Center(child: Text('No products in cart'))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/shopping_bag_1.png', // Đường dẫn tới hình ảnh PNG của bạn
+                        width: 150,
+                        height: 150,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Giỏ hàng của bạn trống',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: const Text(
+                          'Hãy làm đầy giỏ hàng với các sản phẩm bạn yêu thích và ưu đãi tuyệt vời!',
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Điều hướng đến trang AllProducts
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AllProducts()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: const Text(
+                          'Bắt đầu mua sắm',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 70,
+                      ),
+                    ],
+                  ),
+                )
               : SingleChildScrollView(
                   child: Column(
                     children: [

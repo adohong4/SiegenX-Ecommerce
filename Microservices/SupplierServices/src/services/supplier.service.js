@@ -2,6 +2,7 @@
 
 const supplierModel = require('../models/supplier.model');
 const { BadRequestError, AuthFailureError, ConflictRequestError, NotFoundError, ForbiddenError } = require('../core/error.response');
+const SupplierRedisService = require('./redis.service')
 const validator = require('validator')
 
 class SupplierService {
@@ -36,6 +37,9 @@ class SupplierService {
             })
             const supplierCreated = await supplier.save();
 
+            // Xóa cache sau khi tạo
+            await SupplierRedisService.invalidateSupplierCache(supplierCreated._id.toString());
+
             return {
                 metadata: supplierCreated
             }
@@ -46,8 +50,8 @@ class SupplierService {
 
     static getSupplier = async () => {
         try {
-            const supplier = await supplierModel.find({ active: true })
-                .select('supplierName email numberPhone taxCode active');
+            //use Redis
+            const supplier = await SupplierRedisService.getSuppliers();
             return { metadata: supplier }
         } catch (error) {
             throw error;
@@ -56,7 +60,11 @@ class SupplierService {
 
     static getSupplierById = async (id) => {
         try {
-            const supplier = await supplierModel.findById(id);
+            //use RedisService to get the Supplier list from cache
+            const supplier = await SupplierRedisService.getSupplierById(id)
+            if (!supplier) {
+                throw new NotFoundError('Supplier not found');
+            }
             return { metadata: supplier }
         } catch (error) {
             throw error;
@@ -95,6 +103,9 @@ class SupplierService {
             });
             await updatedSupplier.save();
 
+            // Cập nhật cache ngay sau khi cập nhật
+            await SupplierRedisService.updateSupplierCache(updatedSupplier);
+
             return {
                 metadata: updatedSupplier
             }
@@ -122,6 +133,9 @@ class SupplierService {
 
             await supplier.save();
 
+            // Xóa cache sau khi thay đổi trạng thái
+            await SupplierRedisService.invalidateSupplierCache(id);
+
             return {
                 metadata: supplier
             }
@@ -137,6 +151,8 @@ class SupplierService {
             if (userRole !== 'ADMIN') throw new AuthFailureError('Tài khoản bị giới hạn');
 
             await supplierModel.findByIdAndDelete(id)
+            // Xóa cache sau khi xóa
+            await SupplierRedisService.invalidateSupplierCache(id);
             return;
         } catch (error) {
             throw error;

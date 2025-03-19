@@ -4,6 +4,7 @@ const userModel = require('../../models/profile.model')
 const orderModel = require('../../models/order.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 const { CREATED } = require("../../core/success.response")
+const RedisService = require('../../services/user/UserRedis.service')
 
 class CODController {
     CODplaceOrder = async (req, res) => {
@@ -19,6 +20,8 @@ class CODController {
 
             await newOrder.save();
             await userModel.findByIdAndUpdate(userId, { cartData: {} });
+
+            RedisService.deleteCache(`order:user:${userId}`)
 
             // Trả về phản hồi xác nhận đơn hàng
             new CREATED({

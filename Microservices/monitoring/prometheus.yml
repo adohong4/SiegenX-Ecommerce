@@ -1,0 +1,35 @@
+global:
+  scrape_interval: 15s  # Thời gian giữa các lần thu thập metrics
+
+scrape_configs:
+  - job_name: 'ApiGateway'
+    static_configs:
+      - targets: ['host.docker.internal:4001']  # Port của ApiGateway
+
+  - job_name: 'IdentityServices'
+    static_configs:
+      - targets: ['host.docker.internal:9001']  # Port của IdentityService
+
+  - job_name: 'ProfileServices'
+    static_configs:
+      - targets: ['host.docker.internal:9002']  # Port của ProfileService
+
+  - job_name: 'ProductServices'
+    static_configs:
+      - targets: ['host.docker.internal:9003']  # Port của ProductService
+
+  - job_name: 'ContactServices'
+    static_configs:
+      - targets: ['host.docker.internal:9004']
+
+  - job_name: 'StaffServices'
+    static_configs:
+      - targets: ['host.docker.internal:9006']  # Port của StaffService
+
+  - job_name: 'SupplierServices'
+    static_configs:
+      - targets: ['host.docker.internal:9005']  # Port của SupplierService
+
+  - job_name: 'ThirdPaymentServices'
+    static_configs:
+      - targets: ['host.docker.internal:9007']  # Port của PaymentService

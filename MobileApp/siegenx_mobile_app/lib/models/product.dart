@@ -1,33 +1,32 @@
 class Product {
-  final String id; // _id từ MongoDB
-  final String title; // title từ backend
-  final String nameProduct; // nameProduct từ backend
-  final String? productSlug; // product_slug
-  final double price; // price
-  final double? newPrice; // Giá khuyến mãi từ API campaign
-  final List<String> images; // images
-  final String recap; // recap
-  final String description; // description
-  final String category; // category
-  int quantity; // quantity
-  final String? mainBoard; // mainBoard
-  final String? chip; // chip
-  final String? cpu; // cpu
-  final String? gpu; // gpu
-  final String? ram; // ram
-  final String? memory; // memory
-  final String? version; // version
-  final String? ports; // ports
-  final String? displaySize; // displaySize
-  final String? pixelDensity; // pixelDensity
-  final String? display; // display
-  final String? refreshRate; // refreshRate
-  final List<dynamic>?
-      creator; // creator (mảng object, tùy thuộc vào HistorySchema)
-  final bool active; // active
-  final DateTime createdAt; // Từ timestamps
-  final DateTime updatedAt; // Từ timestamps
-  final bool isFavorite; // Trạng thái phía client
+  final String id;
+  final String title;
+  final String nameProduct;
+  final String? productSlug;
+  final double price;
+  final double? newPrice;
+  final List<String> images;
+  final String recap;
+  final String description;
+  final String category;
+  int quantity;
+  final String? mainBoard;
+  final String? chip;
+  final String? cpu;
+  final String? gpu;
+  final String? ram;
+  final String? memory;
+  final String? version;
+  final String? ports;
+  final String? displaySize;
+  final String? pixelDensity;
+  final String? display;
+  final String? refreshRate;
+  final List<dynamic>? creator;
+  final bool active;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isFavorite;
 
   Product({
     required this.id,
@@ -57,13 +56,12 @@ class Product {
     required this.active,
     required this.createdAt,
     required this.updatedAt,
-    this.isFavorite = false, // Mặc định false, không ánh xạ từ backend
+    this.isFavorite = false,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['_id'] as String? ??
-          'unknown', // Giá trị mặc định nếu _id là null
+      id: json['_id'] as String? ?? 'unknown',
       title: json['title'] as String? ?? '',
       nameProduct: json['nameProduct'] as String? ?? '',
       productSlug: json['product_slug'] as String?,
@@ -74,8 +72,9 @@ class Product {
       images: json['images'] != null
           ? List<String>.from(json['images'] as List)
           : [],
-      recap: json['recap'] as String? ?? '',
-      description: json['description'] as String? ?? '',
+      recap: json['recap'] as String? ?? '', // Đảm bảo recap được ánh xạ
+      description: json['description'] as String? ??
+          '', // Đảm bảo description được ánh xạ
       category: json['category'] as String? ?? '',
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       mainBoard: json['mainBoard'] as String?,

@@ -27,6 +27,9 @@ const MyOrders = () => {
         fetchOrders();
     }, []);
 
+    console.log(orders);
+
+
     return (
         <div className="My-Order">
             <div className="container myorder-container">

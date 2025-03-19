@@ -8,6 +8,8 @@ import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/providers/favorites_provider.dart';
+import 'package:siegenx_mobile_app/themes/app_colors.dart';
+import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart'; // Thêm import này để dùng AppColors
 
 class FavoriteProductGrid extends StatefulWidget {
   const FavoriteProductGrid({Key? key}) : super(key: key);
@@ -25,6 +27,11 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
         Provider.of<AuthProvider>(context, listen: false).userId ?? "guest";
     Provider.of<FavoritesProvider>(context, listen: false)
         .loadFavorites(userId);
+  }
+
+  // Hàm tính phần trăm giảm giá (tái sử dụng từ CartProductGrid)
+  int calculateDiscountPercentage(double price, double newPrice) {
+    return (((price - newPrice) / price) * 100).round();
   }
 
   @override
@@ -63,9 +70,9 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
               final product = favoriteProducts[index];
 
               return GestureDetector(
-                onLongPress: () {
-                  showProductDialog(context, product);
-                },
+                // onLongPress: () {
+                //   showProductDialog(context, product);
+                // },
                 child: Container(
                   margin: EdgeInsets.only(bottom: 12),
                   padding: EdgeInsets.all(8),
@@ -130,31 +137,49 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Số lượng: ${product.quantity}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black54,
-                                  ),
+                                Row(
+                                  children: [
+                                    if (product.newPrice != null)
+                                      Text(
+                                        formatCurrency(product.price),
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                    const SizedBox(width: 12),
+                                    if (product.newPrice != null)
+                                      Text(
+                                        '-${calculateDiscountPercentage(
+                                          product.price,
+                                          product.newPrice!,
+                                        )}%',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: AppColors.textColorRed,
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 Row(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(
-                                          Icons.add_shopping_cart_rounded,
-                                          color: Colors.black,
-                                          size: 20),
-                                      onPressed: () {
-                                        // TODO: Thêm chức năng giỏ hàng
-                                      },
-                                    ),
-                                    SizedBox(width: 5),
                                     ElevatedButton(
                                       onPressed: () {
-                                        // TODO: Thêm chức năng mua ngay
+                                        showModalBottomSheet(
+                                          context: context,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(15)),
+                                          ),
+                                          builder: (context) =>
+                                              AddToCartBottomSheet(
+                                                  product: product),
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFFEC7063),
+                                        backgroundColor: AppColors.primaryColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -163,7 +188,7 @@ class _FavoriteProductGridState extends State<FavoriteProductGrid> {
                                             horizontal: 10, vertical: 5),
                                       ),
                                       child: Text(
-                                        'Mua ngay',
+                                        'Thêm vào giỏ hàng',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.white,

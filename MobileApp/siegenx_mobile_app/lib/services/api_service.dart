@@ -1,6 +1,6 @@
-// api_service.dart
 class ApiService {
-  static const String baseUrl = "http://localhost:4001/v1/api";
+  static const String baseUrl =
+      "http://localhost:4001/v1/api"; // Đảm bảo đúng với backend
   static const String imageBaseUrl = "http://localhost:9003/images/";
 
   static const String identity = "$baseUrl/identity";
@@ -24,5 +24,8 @@ class ApiService {
   static const String addToCart = "$profile/cart/add";
   static const String getCart = "$profile/cart/get";
   static const String removeFromCart = "$profile/cart/remove";
-  static const String codVerify = "$profile/cod/verify"; // Giữ endpoint này
+  static const String codVerify = "$profile/cod/verify";
+  static const String getOrder = "$profile/user/order/get";
+  static const String getOrderDetails = "$profile/order/get";
+  static const String getProductBySlug = "$product/getBySlug";
 }

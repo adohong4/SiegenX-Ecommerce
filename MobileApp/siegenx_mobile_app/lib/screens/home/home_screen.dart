@@ -49,58 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Trang chủ"),
-        actions: [
-          IconButton(
-            icon: Stack(
-              clipBehavior: Clip.none, // Cho phép badge vượt ra ngoài icon
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: 8.0), // Dịch icon sang trái bằng padding
-                  child: Icon(
-                    Icons.shopping_cart,
-                    size: 30, // Tăng kích thước icon
-                    color: AppColors.textColor,
-                  ),
-                ),
-                if (_cartItemCount > 0) // Chỉ hiển thị badge khi có sản phẩm
-                  Positioned(
-                    right: 0, // Điều chỉnh vị trí badge theo icon lớn hơn
-                    top: -5,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '$_cartItemCount',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartMainScreen()),
-              ).then((_) {
-                _fetchCartItemCount(); // Cập nhật lại số lượng khi quay về từ CartScreen
-              });
-            },
-          ),
-        ],
+        centerTitle: true, // Căn giữa logo
+        title: Image.asset(
+          'assets/logo.png', // Đường dẫn đến logo trong assets
+          height: 40, // Chiều cao logo (có thể điều chỉnh)
+          fit: BoxFit.contain, // Giữ tỷ lệ logo
+        ),
+        elevation: 0, // Bỏ bóng của AppBar nếu muốn phẳng
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -4,6 +4,7 @@ const userModel = require('../../models/profile.model')
 const orderModel = require('../../models/order.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError, ForbiddenError } = require("../../core/error.response")
 const { CREATED } = require("../../core/success.response")
+const RedisService = require('../../services/user/UserRedis.service')
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -69,10 +70,12 @@ class StripeController {
 
     //verify Order
     verifyOrder = async (req, res) => {
+        const userId = req.user;
         const { orderId, success } = req.body;
         try {
             if (success == "true") {
                 await orderModel.findByIdAndUpdate(orderId, { payment: true });
+                await RedisService.deleteCache(`order:user:${userId}`)
                 res.json({ success: true, message: "paid" })
             }
             else {

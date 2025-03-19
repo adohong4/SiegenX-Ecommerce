@@ -2,12 +2,14 @@
 
 const StatusCode = {
     FORBIDDEN: 403,
-    CONFLICT: 409
+    CONFLICT: 409,
+    INTERNAL_SERVER_ERROR: 500,
 }
 
 const ReasonStatusCode = {
     FORBIDDEN: 'Bad request error',
-    CONFLICT: 'Conflict error'
+    CONFLICT: 'Conflict error',
+    INTERNAL_SERVER_ERROR: 'Internal server error'
 }
 
 const {
@@ -57,10 +59,19 @@ class ForbiddenError extends ErrorResponse {
     }
 }
 
+//error Redis
+class RedisErrorResponse extends ErrorResponse {
+
+    constructor(message = ReasonPhrases.INTERNAL_SERVER_ERROR, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
+        super(message, statusCode)
+    }
+}
+
 module.exports = {
     ConflictRequestError,
     BadRequestError,
     AuthFailureError,
     NotFoundError,
-    ForbiddenError
+    ForbiddenError,
+    RedisErrorResponse
 }

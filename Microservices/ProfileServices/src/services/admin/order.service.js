@@ -3,6 +3,7 @@
 const orderModel = require('../../models/order.model');
 const userModel = require('../../models/profile.model');
 const { BadRequestError, AuthFailureError } = require("../../core/error.response");
+const RedisService = require('../user/UserRedis.service');
 
 class OrderService {
 
@@ -31,6 +32,7 @@ class OrderService {
         try {
             const staffName = req.staffName;
             const orderId = req.user
+
             const order = await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
             order.creator.push({
                 createdBy: orderId,
@@ -38,6 +40,10 @@ class OrderService {
                 description: `Cập nhật trạng thái ${req.body.status}`
             });
             await order.save();
+
+            const CACHE_KEY = `order:user:${order.userId}`;
+            await RedisService.deleteCache(CACHE_KEY)
+
             return {
                 metadata: order
             }
@@ -52,6 +58,9 @@ class OrderService {
             const orderId = req.params.id;
             if (userRole !== "ADMIN") throw new AuthFailureError("Tài khoản bị giới hạn chức năng.")
             const deleteOrder = await orderModel.findByIdAndDelete(orderId);
+
+            await RedisService.deleteCache(`order:user:${orderId.userId}`);
+
             return {
                 metadata: deleteOrder
             };

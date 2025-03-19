@@ -39,6 +39,7 @@ router.get("/product/trash/paginate", asyncHandler(ProductController.paginatePro
 
 router.post("/product/recommend", asyncHandler(ProductController.ContentBasedFiltering))
 
+router.post("/product/updateQuantity", asyncHandler(ProductController.updateQuantityProduct))
 
 
 module.exports = router;

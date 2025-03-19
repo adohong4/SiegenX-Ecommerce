@@ -64,7 +64,7 @@ const ProductDetail = () => {
   return (
     <div className="product-info-tab">
       <div className="container">
-        <div className="productinfo-images">
+        <div className="productinfo-images ">
           <div className="productinfo-main-image">
             {/* Kiểm tra nếu mainImage tồn tại mới hiển thị ảnh */}
             {mainImage && <img src={`http://localhost:9003/images/${mainImage}`} alt={product.nameProduct} />}

@@ -2,6 +2,7 @@
 
 const campaignModel = require('../models/campaign.model')
 const { BadRequestError, ConflictRequestError, AuthFailureError } = require('../core/error.response');
+const RedisService = require('./ProductRedis.service')
 
 class CampaignService {
     static createCampaign = async (
@@ -48,6 +49,9 @@ class CampaignService {
                 }
             })
 
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
+
             return {
                 metadata: newCampaign
             }
@@ -83,15 +87,18 @@ class CampaignService {
             if (type === 'fixed_amount' && value <= 0) {
                 throw new BadRequestError('Value must be greater than 0 for fixed amount type');
             }
-
             // Kiểm tra thời gian
             const now = new Date();
-            if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
-            if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
 
             //Kiểm tra trạng thái
-            if (status === 'active' && now < new Date(startDate) || status === 'active' && now > new Date(endDate))
-                throw new BadRequestError('Lỗi trạng thái Hoạt động không phù hợp với thời gian chiến dịch');
+            if (status === 'active') {
+                if (now < new Date(startDate) || now > new Date(endDate)) {
+                    throw new BadRequestError('Trạng thái "Hoạt động" không phù hợp với thời gian chiến dịch.');
+                }
+            }
+
+            // if (now > new Date(endDate)) throw new BadRequestError('Discount codes has expired');
+            if (new Date(startDate) >= new Date(endDate)) throw new BadRequestError('Start_Date must be before End_date');
 
             // Kiểm tra CODE
             const foundCampaign = await campaignModel.findOne({ code, _id: { $ne: id } });
@@ -127,6 +134,9 @@ class CampaignService {
             });
             await updatedCampaign.save();
 
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
+
             return { metadata: updatedCampaign };
         } catch (error) {
             throw error;
@@ -146,6 +156,10 @@ class CampaignService {
                 description: actionDescription
             })
             await campaign.save();
+
+            await RedisService.deleteCache('campaign:products:global');
+            await RedisService.clearCacheByPrefix('product');
+
             return { metadata: campaign }
         } catch (error) {
             throw error;

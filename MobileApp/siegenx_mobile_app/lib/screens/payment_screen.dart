@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import Provider
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Thêm import này
 import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
 import 'package:siegenx_mobile_app/controllers/payment_controller.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
@@ -29,6 +31,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   List<AddressModel> addresses = [];
   bool isLoadingAddresses = true;
+  String? defaultAddressId; // Thêm biến để lưu defaultAddressId
   final AddAddressController _addAddressController = AddAddressController();
   bool isCodSelected = true;
   bool isZaloPaySelected = false;
@@ -36,7 +39,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
+    _loadDefaultAddress(); // Load defaultAddressId từ SharedPreferences
     _fetchAddresses();
+  }
+
+  Future<void> _loadDefaultAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      defaultAddressId = prefs.getString('defaultAddressId');
+    });
   }
 
   Future<void> _fetchAddresses() async {
@@ -55,15 +66,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   AddressModel? _getDefaultAddress() {
-    if (addresses.isEmpty) return null;
-    // Nếu AuthProvider không có defaultAddressId, lấy địa chỉ đầu tiên làm mặc định
-    return addresses.first;
-    // Nếu bạn thêm defaultAddressId vào AuthProvider, thay bằng logic sau:
-    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    // return addresses.firstWhere(
-    //   (address) => address.id == authProvider.defaultAddressId,
-    //   orElse: () => addresses.first,
-    // );
+    if (addresses.isEmpty || defaultAddressId == null) return null;
+    return addresses.firstWhere(
+      (address) => address.id == defaultAddressId,
+      orElse: () => addresses.first, // Lấy địa chỉ đầu tiên nếu không tìm thấy
+    );
   }
 
   String _formatPhoneNumber(String phone) {
@@ -90,8 +97,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final Map<String, dynamic> orderData = {
       "address": {
         "fullname": defaultAddress.fullname,
-        "email": authProvider.email ??
-            "test01@gmail.com", // Sử dụng email từ AuthProvider nếu có
+        "email": authProvider.email ?? "test01@gmail.com",
         "street": defaultAddress.street,
         "precinct": defaultAddress.precinct,
         "city": defaultAddress.city,
@@ -101,19 +107,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
       "amount": widget.totalPrice + 50000,
       "items": widget.selectedProducts
           .map((product) => {
-                "itemId": product.id,
+                "_id": product.id,
                 "title": product.title,
                 "nameProduct": product.nameProduct,
                 "product_slug": product.productSlug ??
                     product.nameProduct.toLowerCase().replaceAll(' ', '-'),
                 "price": product.price,
                 "quantity": product.quantity,
+                "images": product.images,
+                "category": product.category,
               })
           .toList(),
     };
 
     try {
-      print('Token before placing order: $token'); // Debug token
+      print('Token before placing order: $token');
+      print('Order Data: ${jsonEncode(orderData)}');
 
       if (token == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -203,11 +212,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddressListScreen()))
-                                .then((_) => _fetchAddresses());
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddressListScreen())).then((_) {
+                              _loadDefaultAddress(); // Cập nhật defaultAddressId
+                              _fetchAddresses(); // Cập nhật danh sách địa chỉ
+                            });
                           },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,

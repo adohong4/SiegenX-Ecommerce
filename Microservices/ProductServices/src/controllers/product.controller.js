@@ -160,5 +160,16 @@ class ProductController {
             next(error);
         }
     }
+
+    updateQuantityProduct = async (req, res, next) => {
+        try {
+            const result = await ProductService.updateQuantityProduct(req, res);
+            new OK({
+                message: 'Cập nhật số lượng thành công',
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 module.exports = new ProductController();

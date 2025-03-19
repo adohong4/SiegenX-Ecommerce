@@ -75,7 +75,7 @@ class _CartProductGridState extends State<CartProductGrid> {
                   );
                 },
                 child: GestureDetector(
-                  onLongPress: () => showProductDialog(context, product),
+                  // onLongPress: () => showProductDialog(context, product),
                   child: Container(
                     margin: const EdgeInsets.only(top: 12),
                     padding: const EdgeInsets.all(8),

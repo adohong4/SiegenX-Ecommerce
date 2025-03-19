@@ -4,9 +4,7 @@ import 'package:siegenx_mobile_app/controllers/product_service.dart';
 import 'package:siegenx_mobile_app/models/product.dart';
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 import 'package:siegenx_mobile_app/utils/format_untils.dart';
-import 'package:siegenx_mobile_app/utils/dialog_utils.dart';
-import 'package:siegenx_mobile_app/widgets/product_detail.dart';
-import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart'; // Import widget mới
+import 'package:siegenx_mobile_app/widgets/add_to_cart_bottom_sheet.dart';
 import 'package:siegenx_mobile_app/services/api_service.dart';
 
 class ProductGrid extends StatelessWidget {
@@ -50,17 +48,9 @@ class ProductGrid extends StatelessWidget {
                   final product = products[index];
 
                   return GestureDetector(
-                    onLongPress: () {
-                      showProductDialog(context, product);
-                    },
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProductDetailScreen(product: product),
-                        ),
-                      );
+                      ProductService.fetchProductAndNavigate(
+                          context, product.productSlug!);
                     },
                     child: IntrinsicHeight(
                       child: Column(
@@ -110,7 +100,6 @@ class ProductGrid extends StatelessWidget {
                                       size: 22,
                                     ),
                                     onPressed: () {
-                                      // Gọi Bottom Sheet widget mới
                                       showModalBottomSheet(
                                         context: context,
                                         shape: RoundedRectangleBorder(
@@ -133,7 +122,6 @@ class ProductGrid extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // giá mới
                                 Text(
                                   product.newPrice != null
                                       ? formatCurrency(product.newPrice!)
@@ -152,31 +140,22 @@ class ProductGrid extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    // giá cũ
-                                    if (product.newPrice != null)
-                                      Text(
-                                        formatCurrency(product.price),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                        ),
-                                      )
-                                  ],
-                                ),
-                                const SizedBox(width: 12),
-                                // % phần trăm giảm giá
                                 if (product.newPrice != null)
-                                  Container(
-                                    child: Text(
-                                      '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: AppColors.textColorRed,
-                                      ),
+                                  Text(
+                                    formatCurrency(product.price),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                const SizedBox(width: 12),
+                                if (product.newPrice != null)
+                                  Text(
+                                    '-${calculateDiscountPercentage(product.price, product.newPrice!)}%',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.textColorRed,
                                     ),
                                   ),
                               ],

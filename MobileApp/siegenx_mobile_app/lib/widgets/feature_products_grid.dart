@@ -59,17 +59,17 @@ class FeatureProductsGrid extends StatelessWidget {
                   final product = displayedProducts[index];
 
                   return GestureDetector(
-                    onLongPress: () {
-                      showProductDialog(context, product);
-                    },
+                    // onLongPress: () {
+                    //   showProductDialog(context, product);
+                    // },
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ProductDetailScreen(product: product),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         ProductDetailScreen(product: product),
+                      //   ),
+                      // );
                     },
                     child: IntrinsicHeight(
                       child: Column(

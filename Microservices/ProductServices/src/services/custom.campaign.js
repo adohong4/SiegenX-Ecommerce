@@ -3,6 +3,7 @@
 const campaignModel = require('../models/campaign.model')
 const productModel = require('../models/product.model')
 const { BadRequestError, ConflictRequestError } = require('../core/error.response');
+const RedisService = require('./ProductRedis.service')
 
 class CampaignService {
     static paginateCampaign = async (req, res) => {
@@ -104,7 +105,20 @@ class CampaignService {
 
 
     static updateProductPricesForCampaign = async () => {
+        const CACHE_KEY = 'campaign:products:global';
         try {
+            // 1. Kiểm tra dữ liệu trong Redis trước
+            const cachedData = await RedisService.getCache(CACHE_KEY);
+            if (cachedData) {
+                console.log('Cache hit: Returning product list from Redis');
+                return {
+                    metadata: cachedData
+                };
+            }
+
+            console.log('Cache miss: Fetching product list from MongoDB');
+
+            // 2. Nếu không có trong cache, truy vấn từ MongoDB
             const campaigns = await campaignModel.find({ status: 'active' });
             let activeCampaign = null;
 
@@ -124,6 +138,7 @@ class CampaignService {
             allProducts = await productModel.find()
                 .select('title nameProduct product_slug price images category quantity')
                 .sort({ createdAt: -1 })
+                .limit(1000)
                 .exec();
 
 
@@ -132,14 +147,16 @@ class CampaignService {
                     updatedProducts.push({ ...product.toObject(), newPrice: null });
                 }
 
-                return {
-                    metadata: {
-                        updatedProducts,
-                        campaignType: null,
-                        campaignValue: null,
-                        totalProduct: allProducts.length
-                    }
+                const result = {
+                    updatedProducts,
+                    campaignType: null,
+                    campaignValue: null,
+                    totalProduct: allProducts.length
                 };
+
+                // 3. save data to Redis
+                await RedisService.setCache(CACHE_KEY, result);
+                return { metadata: result };
             }
 
             // Có chiến dịch, xử lý theo appliesTo
@@ -179,15 +196,16 @@ class CampaignService {
                 throw new BadRequestError("Giá trị 'appliesTo' không hợp lệ.");
             }
 
-
-            return {
-                metadata: {
-                    updatedProducts,
-                    campaignType: activeCampaign.type,
-                    campaignValue: activeCampaign.value,
-                    totalProduct: allProducts.length
-                }
+            const result = {
+                updatedProducts,
+                campaignType: activeCampaign.type,
+                campaignValue: activeCampaign.value,
+                totalProduct: allProducts.length
             };
+
+            // 4. Lưu dữ liệu vào Redis sau khi tính toán
+            await RedisService.setCache(CACHE_KEY, result);
+            return { metadata: result };
 
         } catch (error) {
             throw error;
@@ -195,8 +213,20 @@ class CampaignService {
     };
 
     static updateProductPricesForCampaignBySlug = async (req, res) => {
+        const { productSlug } = req.params;
+        const CACHE_KEY = `product:${productSlug}`;
         try {
-            const { productSlug } = req.params;
+            // 1. Kiểm tra dữ liệu trong Redis trước
+            const cachedData = await RedisService.getCache(CACHE_KEY);
+            if (cachedData) {
+                console.log(`Cache hit: Returning product_slug from Redis`);
+                return {
+                    metadata: cachedData
+                };
+            }
+
+            console.log(`Cache miss: Fetching product_slug from MongoDB`);
+
             const product = await productModel.findOne({ product_slug: productSlug })
                 .select('-creator')
                 .exec();
@@ -245,13 +275,16 @@ class CampaignService {
                     }
                 }
             }
-            return {
-                metadata: {
-                    updatedProduct: { ...product.toObject(), newPrice },
-                    campaignType,
-                    campaignValue,
-                }
+
+            const result = {
+                updatedProduct: { ...product.toObject(), newPrice },
+                campaignType,
+                campaignValue,
             };
+
+            // 3. Lưu dữ liệu vào Redis sau khi tính toán
+            await RedisService.setCache(CACHE_KEY, result);
+            return { metadata: result };
 
         } catch (error) {
             throw error;

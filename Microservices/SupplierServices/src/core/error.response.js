@@ -16,7 +16,6 @@ const {
     StatusCodes,
     ReasonPhrases
 } = require('../utils/httpStatusCode')
-const { INTERNAL_SERVER_ERROR } = require('../utils/statusCodes')
 
 class ErrorResponse extends Error {
     constructor(message, status) {

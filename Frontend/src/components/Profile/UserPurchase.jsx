@@ -59,94 +59,73 @@ const MyOrders = () => {
     });
 
     return (
-        <div className="My-Order" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-            <div className="container myorder-container">
-                {/* Filter */}
-                <div className="filter-buttons" style={{ display: 'flex', marginBottom: '20px', gap: '10px' }}>
-                    <button onClick={() => setFilter('Tất cả')} style={{ backgroundColor: filter === 'Tất cả' ? '#26AA99' : '#eee', color: filter === 'Tất cả' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Tất cả</button>
-                    <button onClick={() => setFilter('Chờ thanh toán')} style={{ backgroundColor: filter === 'Chờ thanh toán' ? '#26AA99' : '#eee', color: filter === 'Chờ thanh toán' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Chờ thanh toán</button>
-                    <button onClick={() => setFilter('Đợi xác nhận')} style={{ backgroundColor: filter === 'Đợi xác nhận' ? '#26AA99' : '#eee', color: filter === 'Đợi xác nhận' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Đợi xác nhận</button>
-                    <button onClick={() => setFilter('Đang chuẩn bị hàng')} style={{ backgroundColor: filter === 'Đang chuẩn bị hàng' ? '#26AA99' : '#eee', color: filter === 'Đang chuẩn bị hàng' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Đang chuẩn bị hàng</button>
-                    <button onClick={() => setFilter('Đang giao hàng')} style={{ backgroundColor: filter === 'Đang giao hàng' ? '#26AA99' : '#eee', color: filter === 'Đang giao hàng' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Đang giao hàng</button>
-                    <button onClick={() => setFilter('Giao hàng thành công')} style={{ backgroundColor: filter === 'Giao hàng thành công' ? '#26AA99' : '#eee', color: filter === 'Giao hàng thành công' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Giao hàng thành công</button>
-                    <button onClick={() => setFilter('Hoàn thành')} style={{ backgroundColor: filter === 'Hoàn thành' ? '#26AA99' : '#eee', color: filter === 'Hoàn thành' ? 'white' : 'black', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Hoàn thành</button>
-                </div>
-
-                {/* Ô tìm kiếm */}
-                <div className="search-box" style={{ marginBottom: '20px' }}>
-                    <input
-                        type="text"
-                        placeholder="Tìm kiếm theo tên sản phẩm..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
-                    />
-                </div>
-
-                {isLoading ? (
-                    <div className="loading" style={{ textAlign: 'center', padding: '20px' }}>
-                        <p>Đang tải dữ liệu...</p>
-                    </div>
-                ) : filteredOrders.length === 0 ? ( // 3. Lọc danh sách đơn hàng
-                    <div className="no-orders" style={{ textAlign: 'center', padding: '20px' }}>
-                        <p>Không có đơn hàng nào phù hợp.</p>
-                    </div>
-                ) : (
-                    <div className="orders-list">
-                        {filteredOrders.map((order) => (
-                            <div key={order._id} className="order-item" style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px', marginBottom: '20px', background: 'white' }}>
-                                <div className="order-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
-                                    <p style={{ margin: '0', flex: '0', padding: '3px 5px', marginRight: '10px', background: '#26AA99', color: 'white' }}>SIEGenX</p>
-                                    <p style={{ margin: '0', flex: '1' }}>{order.date}</p>
-                                    <p style={{ margin: '0', color: '#26AA99', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><FontAwesomeIcon icon={faTruck} style={{ marginRight: '4px' }} /> {order.status}</p>
-                                    <p style={{ margin: '0', marginLeft: '10px', whiteSpace: 'nowrap' }}>{order.payment ? 'HOÀN THÀNH' : 'CHỜ THANH TOÁN'}</p>
-                                </div>
-
-                                <div className="order-items">
-                                    {order.items.map((item) => (
-                                        <div key={item.title} className="order-item-detail" style={{ paddingBottom: '10px', marginBottom: '15px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0', }}>
-                                                <img
-                                                    src={`http://localhost:9003/images/${item.images[0]}`}
-                                                    alt={item.title}
-                                                    className="item-image"
-                                                    style={{
-                                                        width: '80px',
-                                                        height: '80px',
-                                                        objectFit: 'cover',
-                                                        border: '1px solid #e1e1e1',
-                                                        background: '#e1e1e1',
-                                                        marginRight: '15px'
-                                                    }}
-                                                />
-                                                <div className="item-info" style={{ flex: 1 }}>
-                                                    <p className="item-title" style={{ fontWeight: 'bold', marginBottom: '5px' }}>{item.title}</p>
-                                                    <p style={{ marginBottom: '5px', color: 'gray' }}>Phân loại hàng: {item.category || 'Mặc định'}</p>
-                                                    <p style={{ marginBottom: '5px' }}>x{item.quantity}</p>
-                                                </div>
-                                                <div style={{ textAlign: 'right' }}>
-                                                    <p style={{ marginBottom: '5px', color: 'red' }}>₫{formatCurrency(item.price)}</p>
-                                                </div>
-                                            </div>
-
-                                            <div style={{ borderTop: '1px solid #ddd', paddingTop: '20px', marginTop: '10px' }}>
-                                                <div style={{ textAlign: 'right', marginBottom: '20px' }}>
-                                                    <p style={{ marginBottom: '0' }}>Thành tiền: <span style={{ color: 'red' }}>₫{formatCurrency(item.quantity * item.price)}</span></p>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                                    <button onClick={() => navigate(`/san-pham/${item.product_slug}`)} style={{ backgroundColor: '#EC1313', color: 'white', border: 'none', padding: '8px 16px', cursor: 'pointer', marginRight: '10px' }}>Mua Lại</button>
-                                                    <button onClick={() => navigate(`/lien-he`)} style={{ backgroundColor: 'white', color: '#f55', border: '1px solid #f55', padding: '8px 16px', cursor: 'pointer' }}>Liên Hệ</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+        <div className="my-orders">
+        <div className="my-orders__filter">
+            {['Tất cả', 'Chờ thanh toán', 'Đợi xác nhận', 'Đang chuẩn bị hàng', 'Đang giao hàng', 'Giao hàng thành công', 'Hoàn thành'].map((status) => (
+                <button key={status} onClick={() => setFilter(status)} className={filter === status ? 'active' : ''}>
+                    {status}
+                </button>
+            ))}
         </div>
+
+        <div className="my-orders__search">
+            <input
+                type="text"
+                placeholder="Tìm kiếm theo tên sản phẩm..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+        </div>
+
+        {isLoading ? (
+            <p className="my-orders__loading">Đang tải dữ liệu...</p>
+        ) : filteredOrders.length === 0 ? (
+            <p className="my-orders__no-orders">Không có đơn hàng nào phù hợp.</p>
+        ) : (
+            <div className="my-orders__list">
+                {filteredOrders.map((order) => (
+                    <div key={order._id} className="my-orders__card">
+                        <div className="my-orders__header">
+                            <div className='my-orders__header-left'>
+                                <span className="my-orders__brand">SIEGenX</span>
+                                <span>{order.date}</span>
+                            </div>
+                            <div className='my-orders__header-right'>   
+                                <span className="my-orders__status">
+                                    <FontAwesomeIcon icon={faTruck} /> {order.status}
+                                </span>
+                                <span className="my-orders__payment">{order.payment ? 'HOÀN THÀNH' : 'CHỜ THANH TOÁN'}</span>
+                            </div> 
+                        </div>
+
+                        <div className="my-orders__items">
+                            {order.items.map((item) => (
+                                <div key={item.title} className="my-orders__item-detail">
+                                    <img src={`http://localhost:9003/images/${item.images[0]}`} alt={item.title} className="my-orders__image" />
+                                    <div className="my-orders__info">
+                                        <p className="my-orders__title">{item.title}</p>
+                                        <p>Phân loại hàng: {item.category || 'Mặc định'}</p>
+                                        <p>x{item.quantity}</p>
+                                    </div>
+                                    <p className="my-orders__price">₫{formatCurrency(item.price)}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div class="TWLNg9"><div class="MOYo7t"></div></div>
+                        <div className="my-orders__footer">
+                            <p>Thành tiền: <span className="my-orders__total">₫{formatCurrency(order.items.reduce((sum, item) => sum + item.quantity * item.price, 0))}</span></p>
+                            <div className="my-orders__actions">
+                                <button onClick={() => navigate(`/san-pham/${order.items[0].product_slug}`)} className="my-orders__buy-again">Mua Lại</button>
+                                <button onClick={() => navigate(`/lien-he`)} className="my-orders__contact">Liên Hệ</button>
+                                <button onClick={() => navigate(`${order._id}`, { state: { order } })} className="my-orders__buy-again">Xem chi tiết</button>
+                            </div>
+
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
     );
 };
 

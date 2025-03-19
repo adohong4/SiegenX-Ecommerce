@@ -101,7 +101,7 @@ const SupplierInfomation = () => {
                     </div>
                 </div>
             )}
-            <div>
+            <div className='top-tittle'>
                 <button onClick={() => navigate("/supplier")}>← Danh sách nhà cung cấp</button>
                 <p>{supplier.supplierName}</p>
             </div>

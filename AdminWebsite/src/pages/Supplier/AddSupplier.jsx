@@ -63,7 +63,7 @@ const SupplierForm = () => {
                 </div>
             )}
             <div>
-                <button className="btn-cancel" onClick={() => navigate("/supplier")}>← Quay lại</button>
+                <button className="btn-restore" onClick={() => navigate("/supplier")}>← Quay lại</button>
             </div>
             <div className="supplier-form-body">
                 <div className="supplier-form-section col-6">

@@ -2267,7 +2267,6 @@ h2 {
 
 /* CSS cho Phần Nhà Cung Cấp */
 .supplier-page-container {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background: #fff;
@@ -2285,20 +2284,27 @@ h2 {
 }
 
 .supplier-info-container p {
-    font-size: 35px;
+    font-size: 25px;
     font-weight: 500;
+}
+.supplier-info-container .top-tittle p {
+    text-align: center;
+    color: #009C72;
+    font-style: italic;
 }
 
 .supplier-info-container .supplier-info-table {
-    border: 1px solid #b5b5b5;
-    padding: 10px;
-    margin-bottom: 50px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .supplier-info-container .supplier-info-table p {
     font-size: 16px;
     font-weight: 500;
-    border-bottom: 2px solid #b5b5b5;
+    border-bottom: 2px dashed #008F6A;
     padding-bottom: 10px;
 }
 
@@ -2324,8 +2330,8 @@ h2 {
 
 .supplier-page-container h3 {
     color: #555;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
+    border-bottom: 2px dashed #009C72;
+    padding-bottom: 15px;
     margin-bottom: 15px;
 }
 
@@ -2348,36 +2354,48 @@ h2 {
 
 .supplier-page-container .form-footer {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     margin-top: 20px;
 }
 
 .supplier-page-container .btn-save,
 .supplier-page-container .btn-cancel {
-    padding: 10px 20px;
+    padding: 10px 30px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
     margin: 0 10px;
 }
 
-.supplier-page-container .btn-save {
-    background-color: #28a745;
-    color: white;
+.supplier-page-container .btn-restore {
+    border: none;
+    background-color: #FFF;
 }
-
+.supplier-page-container .btn-restore:hover {
+    color: #a71d2a;
+}
+.supplier-page-container .btn-save {
+    background-color: #009C72;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
 .supplier-page-container .btn-save:hover {
-    background-color: #218838;
+    background-color: #008F6A;
+    scale: 1.05;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .supplier-page-container .btn-cancel {
     background-color: #dc3545;
     color: white;
+    transition: all 0.3s ease-in-out;
 }
 
 .supplier-page-container .btn-cancel:hover {
     background-color: #c82333;
+    scale: 1.05;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .supplier-page-container .popup-overlay {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
-
+import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 const SupplierList = () => {
     axios.defaults.withCredentials = true;
     const { url, supplier_list, fetchSupplierList } = useContext(StoreContext);
@@ -117,10 +117,10 @@ const SupplierList = () => {
             align: 'center',
             render: (text, record) => (
                 <>
-                    <Button onClick={() => navigate(record._id)} style={{ marginRight: 8 }}>Xem</Button>
-                    <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }}>Cập nhật</Button>
+                    <Button onClick={() => navigate(record._id)} style={{ marginRight: 8 }} icon={<EyeOutlined />} />
+                    <Button onClick={() => showEditModal(record)} style={{ marginRight: 8 }} icon={<EditOutlined />} />
                     <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => handleDelete(record._id)} okText="Có" cancelText="Không">
-                        <Button danger>Xóa</Button>
+                        <Button danger icon={<DeleteOutlined />} />
                     </Popconfirm>
                 </>
             ),

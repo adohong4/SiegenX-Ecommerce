@@ -31,22 +31,37 @@ class OrderService {
     static updateStatusOrder = async (req, res) => {
         try {
             const staffName = req.staffName;
-            const orderId = req.user
+            const userId = req.user;
+            const { status, orderId } = req.body;
 
-            const order = await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status })
+            const order = await orderModel.findById(orderId);
+            if (!order) {
+                throw new Error('Order not found');
+            }
+
+            const updateData = { status: status };
+
+            if (status === 'Giao hàng thành công' &&
+                order.paymentMethod === 'Thanh toán khi nhận hàng') {
+                updateData.payment = true;
+            }
+
+            await orderModel.findByIdAndUpdate(orderId, updateData);
+
             order.creator.push({
-                createdBy: orderId,
+                createdBy: userId,
                 createdName: staffName,
-                description: `Cập nhật trạng thái ${req.body.status}`
+                description: `Cập nhật trạng thái ${status}`
             });
+
             await order.save();
 
             const CACHE_KEY = `order:user:${order.userId}`;
-            await RedisService.deleteCache(CACHE_KEY)
+            await RedisService.deleteCache(CACHE_KEY);
 
             return {
                 metadata: order
-            }
+            };
         } catch (error) {
             throw error;
         }

@@ -73,7 +73,7 @@ const CampaignInfo = () => {
             layout="vertical"
             onFinish={onFinish}
             initialValues={{ type: "percentage", value: 0, maxValue: 1000000 }}
-            style={{ maxWidth: 1000, margin: "auto" }}
+            style={{ padding:"20px", margin: "auto" }}
         >
             <Form.Item style={{ textAlign: "right" }}>
                 <Button type="primary" style={{ marginLeft: '16px' }} onClick={() => navigate('/list-campaign')}>

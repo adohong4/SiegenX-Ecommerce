@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import "../styles/styles.css";
 import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
-
+import { RollbackOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 const { Search } = Input;
 
 const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
@@ -114,10 +115,14 @@ const TrashSuppliers = ({ trashSuppliers, setTrashSuppliers }) => {
             align: 'center',
             render: (text, record) => (
                 <>
-                    <Button onClick={() => handleStore(record._id)} style={{ marginRight: 8 }}>Hồi phục</Button>
-                    <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => handleDelete(record._id)} okText="Có" cancelText="Không">
-                        <Button danger>Xóa</Button>
-                    </Popconfirm>
+                    <Tooltip title="Hồi phục">
+                        <Button onClick={() => handleStore(record._id)} style={{ marginRight: 8 }} icon={<RollbackOutlined />} />
+                    </Tooltip>
+                    <Tooltip title="Xóa">
+                        <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => handleDelete(record._id)} okText="Có" cancelText="Không">
+                            <Button danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                    </Tooltip>
                 </>
             ),
         },

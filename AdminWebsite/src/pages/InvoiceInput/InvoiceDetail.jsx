@@ -107,23 +107,24 @@ const InvoiceDetail = () => {
             </div>
 
             {invoice?.valueInvoice > 0 && (
-                <p>
+                <p className={`payment-status ${paymentStatus}`}>
                     Đơn nhập hàng
-                    {paymentStatus === 'pending' ? " chưa thanh toán"
-                        : paymentStatus === 'partial payment' ? " thanh toán một phần" : " thanh toán thành công"}
+                    {paymentStatus === 'pending'
+                        ? " chưa thanh toán"
+                        : paymentStatus === 'partial payment'
+                        ? " thanh toán một phần"
+                        : " thanh toán thành công"}
                 </p>
             )}
 
+
             {invoice?.valueInvoice > 0 && (
-                <table className="create-import-order-table">
-                    <tbody>
-                        <tr>
-                            <td>Tiền cần trả NCC: {formatCurrency(invoice.valueInvoice)}</td>
-                            <td>Đã trả: {formatCurrency(invoice.partialPayment)}</td>
-                            <td>Còn phải trả: {formatCurrency(invoice.valueInvoice - invoice.partialPayment)}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div className="create-import-order-summary col-12" style={{ display: 'flex' }}>
+                <div style={{ flex: 1 }}>Tiền cần trả NCC: {formatCurrency(invoice.valueInvoice)}</div>
+                <div style={{ flex: 1 }}>Đã trả: {formatCurrency(invoice.partialPayment)}</div>
+                <div style={{ flex: 1 }}>Còn phải trả: {formatCurrency(invoice.valueInvoice - invoice.partialPayment)}</div>
+            </div>
+            
             )}
 
             <div className="create-import-order-grid">
@@ -186,10 +187,10 @@ const InvoiceDetail = () => {
                     </div>
                 </div>
 
-                <div className="create-import-order-card col-3">
+                <div className="create-import-order-card-right col-3">
                     <h3>Nhà cung cấp</h3>
                     {selectedSupplier ? (
-                        <div>
+                        <div className='nhacungcap-info'>
                             <p><strong>ID:</strong> {selectedSupplier._id}</p>
                             <p><strong>Tên:</strong> {selectedSupplier.supplierName}</p>
                             <p><strong>Email:</strong> {selectedSupplier.email}</p>

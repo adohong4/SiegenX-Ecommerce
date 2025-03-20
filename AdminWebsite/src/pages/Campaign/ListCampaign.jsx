@@ -3,8 +3,9 @@ import axios from 'axios';
 import '../styles/styles.css'
 import { StoreContext } from '../../context/StoreContext';
 import { formatDayTime, formatCurrency } from '../../lib/utils'
-import { Table, Switch, Modal, Button, Select, Input, Popconfirm, Descriptions } from "antd";
-import { DeleteOutlined, PlusOutlined, BookFilled, EditFilled } from "@ant-design/icons";
+import { Table, Switch, Modal, Button, Select, Input, Popconfirm, Descriptions, Space } from "antd";
+import { BookFilled, EditFilled, DeleteOutlined,PlusOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
@@ -101,23 +102,23 @@ const CampaignPage = () => {
         switch (record.status) {
           case 'active':
             statusText = 'Hoạt động';
-            style = { color: '#003366', padding: '2px 8px', backgroundColor: '#CCFFFF', border: '1px solid #003366', borderRadius: '20px', display: 'inline-block' };
+            style = { color: '#003366', padding: '2px 8px', borderRadius: '10px', display: 'inline-block' };
             break;
           case 'paused':
             statusText = 'Tạm dừng';
-            style = { color: '#FF6600', padding: '2px 8px', backgroundColor: '#FFFFCC', border: '1px solid #FF6600', borderRadius: '20px', display: 'inline-block' };
+            style = { color: '#FF6600', padding: '2px 8px', borderRadius: '10px', display: 'inline-block' };
             break;
           case 'completed':
             statusText = 'Thành công';
-            style = { color: '#006600', padding: '2px 8px', backgroundColor: '#CCFF99', border: '1px solid #006600', borderRadius: '20px', display: 'inline-block' };
+            style = { color: '#006600', padding: '2px 8px', borderRadius: '10px', display: 'inline-block' };
             break;
           case 'pending':
             statusText = 'Chờ xử lý';
-            style = { color: 'black', padding: '2px 8px', border: '1px solid', borderRadius: '20px', display: 'inline-block' };
+            style = { color: 'black', padding: '2px 8px', borderRadius: '20px', display: 'inline-block' };
             break;
           case 'cancelled':
             statusText = 'Bị hủy';
-            style = { color: 'red', padding: '2px 8px', backgroundColor: '#FFFFFF', border: '1px solid red', borderRadius: '20px', display: 'inline-block' };
+            style = { color: 'red', padding: '2px 8px', borderRadius: '10px', display: 'inline-block' };
             break;
           case 'failed':
             statusText = 'Thất bại';
@@ -151,13 +152,38 @@ const CampaignPage = () => {
       key: "action",
       align: 'center',
       render: (_, record) => (
-        <>
-          <Button type="primary" icon={<BookFilled style={{ color: "orange" }} />} onClick={() => showViewModal(record)} />
-          <Button type="primary" icon={<EditFilled />} onClick={() => handleInfor(record._id)} />
-          <Popconfirm title="Xóa chiến dịch này?" onConfirm={() => handleDelete(record._id)} okText="Xóa" cancelText="Hủy">
-            <Button type="primary" icon={<DeleteOutlined />} danger></Button>
+        <Space size="middle">
+          <Tooltip title="Xem chi tiết">
+            <Button
+              shape="circle"
+              icon={<BookFilled style={{ color: "orange" }} />}
+              onClick={() => showViewModal(record)}
+            />
+          </Tooltip>
+
+          <Tooltip title="Cập nhật thông tin">
+            <Button
+              shape="circle"
+              icon={<EditFilled />}
+              onClick={() => handleInfor(record._id)}
+            />
+          </Tooltip>
+
+          <Popconfirm
+            title="Xóa chiến dịch này?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <Tooltip title="Xóa">
+              <Button
+                shape="circle"
+                icon={<DeleteOutlined />}
+                danger
+              />
+            </Tooltip>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
@@ -170,21 +196,20 @@ const CampaignPage = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+      <div style={{ display: "flex", marginBottom: 16 }}>
         <Input
           placeholder="Tìm kiếm khuyến mãi"
           style={{
             width: 200,
             marginRight: 8,
             backgroundColor: '#ffff',
-            border: '1px solid rgb(134, 134, 134)',
           }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Select
           placeholder="Loại khuyến mãi"
-          style={{ width: 150, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+          style={{ width: 150, marginRight: 8, }}
           value={selectedType}
           onChange={(value) => setSelectedType(value)}
           allowClear
@@ -194,7 +219,7 @@ const CampaignPage = () => {
         </Select>
         <Select
           placeholder="Trạng thái"
-          style={{ width: 150, marginRight: 8, border: '1px solid rgb(134, 134, 134)', }}
+          style={{ width: 150, marginRight: 8 }}
           value={selectedStatus}
           onChange={(value) => setSelectedStatus(value)}
           allowClear

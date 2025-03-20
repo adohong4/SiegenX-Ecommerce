@@ -32,12 +32,7 @@ const Login = () => {
             }
 
         } catch (error) {
-            if (error.response) {
-                console.log(error.response.data.message);
-                toast.error(error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
-            } else {
-                toast.error('Lỗi kết nối với máy chủ!');
-            }
+            toast.error(error.response.metadata.message);
         }
     }
 

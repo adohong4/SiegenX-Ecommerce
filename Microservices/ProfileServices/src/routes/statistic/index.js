@@ -9,5 +9,7 @@ const router = express.Router();
 
 //User
 router.get('/profile/statistic/get', asyncHandler(StatisticController.productStatisticTable));
+router.get('/profile/statistic/category/get', asyncHandler(StatisticController.productStatisticCategory));
+router.get('/profile/statistic/revenue', asyncHandler(StatisticController.getRevenueStats));
 
 module.exports = router;

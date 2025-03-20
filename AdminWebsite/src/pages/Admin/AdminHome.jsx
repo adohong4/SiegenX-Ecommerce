@@ -30,6 +30,7 @@ import ListCampain from '../../pages/Campaign/ListCampaign';
 import AddCampaign from '../../pages/Campaign/AddCampaign';
 import CampaignInfo from '../../pages/Campaign/CampaignInfo';
 import TrashCampain from '../../pages/Campaign/TrashCampaign';
+import Statistic from '../../pages/Statistic/Statistic';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 const Admin = () => {
@@ -103,6 +104,9 @@ const Admin = () => {
                                     <Route path="supplier" element={<Supplier />} />
                                     <Route path="trash-supplier" element={<TrashSupplier />} />
                                     <Route path="supplier/:id" element={<SupplierInfo />} />
+
+                                    {/* Statistic */}
+                                    <Route path="statistic" element={<Statistic />} />
                                 </Routes>
                             </div>
                         </div>

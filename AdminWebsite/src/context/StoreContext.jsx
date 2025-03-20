@@ -12,6 +12,7 @@ const StoreContextProvider = (props) => {
     const [product_id, setProductId] = useState(null);
     const [supplier_list, setSupplierList] = useState([]);
     const [invoice, setInvoice] = useState(null);
+    const [invoiceStatistic, setInvoiceStatistic] = useState(null);
     const [order, setOrder] = useState([]);
     const [contacts, setContact] = useState([]);
     const [users, setUsers] = useState([]);
@@ -19,56 +20,6 @@ const StoreContextProvider = (props) => {
     const url = "http://localhost:4001";  // URL backend
 
     axios.defaults.withCredentials = true;
-
-    const addToCart = async (itemId) => {
-        setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
-
-        if (token) {
-            try {
-                await axios.post(`${url}/v1/api/profile/cart/add`, { itemId });
-            } catch (error) {
-                console.error("Lỗi khi thêm vào giỏ hàng:", error);
-            }
-        }
-    };
-
-    const removeFromCart = async (itemId) => {
-        if (!cartItems[itemId] || cartItems[itemId] <= 0) return;
-
-        setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-
-        if (token) {
-            try {
-                await axios.post(`${url}/v1/api/profile/cart/remove`, { itemId });
-            } catch (error) {
-                console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
-            }
-        }
-    };
-
-    const addQuantityToCart = async (itemId, quantity) => {
-        if (quantity <= 0) {
-            console.error("Số lượng phải lớn hơn 0");
-            return;
-        }
-
-        setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + quantity }));
-
-        if (token) {
-            try {
-                await axios.post(`${url}/v1/api/profile/cart/addQuantity`, { itemId, quantity });
-            } catch (error) {
-                console.error("Lỗi khi thêm số lượng vào giỏ hàng:", error);
-            }
-        }
-    };
-
-    const getTotalCartAmount = () => {
-        return Object.entries(cartItems).reduce((total, [itemId, quantity]) => {
-            const itemInfo = product_list.find((product) => product._id === itemId);
-            return total + (itemInfo ? itemInfo.price * quantity : 0);
-        }, 0);
-    };
 
     // API Staff
     const fetchStaff = async () => {
@@ -137,7 +88,7 @@ const StoreContextProvider = (props) => {
             const response = await axios.post(`${url}/v1/api/product/updateProduct/${productId}`, data);
             setProductId(response.data.metadata);
         } catch (error) {
-            console.error("Lỗi khi cập nhật sản phẩm:", error);
+            console.error("Lỗi", error);
         }
     };
 
@@ -147,7 +98,16 @@ const StoreContextProvider = (props) => {
             const response = await axios.get(`${url}/v1/api/product/invoice/get`);
             setInvoice(response.data.metadata);
         } catch (error) {
-            console.error("Lỗi khi cập nhật sản phẩm:", error);
+            console.error("Lỗi", error);
+        }
+    }
+
+    const fectchInvoiceStatistic = async () => {
+        try {
+            const response = await axios.get(`${url}/v1/api/product/invoice/statistic`);
+            setInvoiceStatistic(response.data.metadata.products);
+        } catch (error) {
+            console.error("Lỗi:", error);
         }
     }
 
@@ -253,10 +213,9 @@ const StoreContextProvider = (props) => {
         product_list, product_id, cartItems, account_list, supplier_list, invoice, token,
         updateStaffById, deleteRestoreStaff, deleteStaff, updateStaff,
         fetchInvoiceId, deleteSoftInvoice, deleteInvoice, fetchSupplierList,
-        setCartItems, addToCart, addQuantityToCart, removeFromCart, getTotalCartAmount,
         activeCampaign, deleteCampaign,
         fetchProductId, updateProductId, setToken, url,
-        order, contacts, users
+        order, contacts, users, fectchInvoiceStatistic, invoiceStatistic,
     };
 
     return (

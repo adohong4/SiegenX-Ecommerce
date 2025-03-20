@@ -10,7 +10,8 @@ const router = express.Router();
 
 router.post('/product/invoice/create', checkTokenCookie, asyncHandler(invoiceController.createInvoiceInput))
 
-router.get('/product/invoice/get', checkTokenCookie, asyncHandler(invoiceController.getAllInvoice))
+router.get('/product/invoice/get', asyncHandler(invoiceController.getAllInvoice));
+router.get('/product/invoice/statistic', asyncHandler(invoiceController.getInvoiceStatistic));
 router.get('/product/invoice/get/:id', asyncHandler(invoiceController.getInvoiceById))
 
 router.get('/product/invoice/paginate', checkTokenCookie, asyncHandler(invoiceController.paginateInvoice))

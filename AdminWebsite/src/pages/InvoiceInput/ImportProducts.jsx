@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import { formatDayTime, formatCurrency } from '../../lib/utils'
 import { StoreContext } from '../../context/StoreContext';
@@ -15,7 +15,7 @@ const ImportOrders = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate(); // Hook để điều hướng
+  const navigate = useNavigate();
   axios.defaults.withCredentials = true;
 
   const fetchInvoiceList = async (page = 1, limit = 5) => {
@@ -53,7 +53,7 @@ const ImportOrders = () => {
     },
     {
       title: "Ngày nhập",
-      dataIndex: "inputDate", // Đổi từ createdAt thành inputDate
+      dataIndex: "inputDate",
       key: "inputDate",
       render: (inputDate, record) => formatDayTime(record.inputDate),
       sorter: (a, b) => new Date(a.inputDate) - new Date(b.inputDate),
@@ -106,7 +106,7 @@ const ImportOrders = () => {
     },
     {
       title: "Giá trị",
-      dataIndex: "valueInvoice", // Đổi từ value thành valueInvoice
+      dataIndex: "valueInvoice",
       key: "valueInvoice",
       render: (valueInvoice) => `${formatCurrency(valueInvoice)} đ`,
       sorter: (a, b) => a.valueInvoice - b.valueInvoice,

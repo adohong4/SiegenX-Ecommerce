@@ -146,6 +146,75 @@ class InvoiceInputService {
         }
     }
 
+    static getInvoiceStatistic = async () => {
+        try {
+            const invoices = await invoiceInputModel
+                .find()
+                .select('productIds')
+                .sort({ createdAt: -1 })
+                .lean();
+
+            const productStats = new Map();
+
+            invoices.forEach(invoice => {
+                invoice.productIds.forEach(product => {
+                    const productId = product.productId.toString();
+
+                    if (productStats.has(productId)) {
+                        const existingProduct = productStats.get(productId);
+                        existingProduct.totalCount += product.count;
+                        existingProduct.totalValue += product.value;
+                        existingProduct.totalTax += product.priceInput * product.count * product.tax;
+                        existingProduct.priceInputs.push({
+                            price: product.priceInput,
+                            count: product.count
+                        });
+                    } else {
+                        productStats.set(productId, {
+                            productId: product.productId,
+                            nameProduct: product.nameProduct,
+                            totalCount: product.count,
+                            totalValue: product.value,
+                            totalTax: product.priceInput * product.count * product.tax,
+                            priceInputs: [{
+                                price: product.priceInput,
+                                count: product.count
+                            }]
+                        });
+                    }
+                });
+            });
+
+            const stats = Array.from(productStats.values()).map(product => {
+                const totalUnits = product.priceInputs.reduce((sum, input) => sum + input.count, 0);
+                const weightedPriceSum = product.priceInputs.reduce(
+                    (sum, input) => sum + input.price * input.count,
+                    0
+                );
+                const avgPriceInput = weightedPriceSum / totalUnits;
+
+                return {
+                    productId: product.productId,
+                    nameProduct: product.nameProduct,
+                    totalCount: product.totalCount,
+                    // priceInputs: product.priceInputs,
+                    avgPriceInput: Math.round(avgPriceInput), //Math.round lam tron
+                    totalValue: product.totalValue,
+                    totalTax: Math.round(product.totalTax)
+                };
+            });
+
+            return {
+                metadata: {
+                    totalProducts: stats.length,
+                    products: stats
+                }
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static getInvoiceById = async (id) => {
         try {
             const invoice = await invoiceInputModel.findById(id)

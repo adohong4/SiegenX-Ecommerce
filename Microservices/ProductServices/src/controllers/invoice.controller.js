@@ -39,6 +39,18 @@ class InvoiceInputController {
         }
     }
 
+    getInvoiceStatistic = async (req, res, next) => {
+        try {
+            const result = await InvoiceInputService.getInvoiceStatistic(req, res);
+            new OK({
+                message: 'Danh sách hóa đơn nhập',
+                metadata: result.metadata
+            }).send(res);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     getInvoiceById = async (req, res, next) => {
         try {
             const { id } = req.params;

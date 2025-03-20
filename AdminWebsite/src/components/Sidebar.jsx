@@ -5,7 +5,7 @@ import { assets } from "../assets/assets";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt, faChevronDown, faPlusCircle, faListUl, faUserTie, faTruck,
-  faUser, faBoxOpen, faHeadset, faChartBar, faInbox, faBarcode,
+  faUser, faBoxOpen, faHeadset, faChartBar, faInbox, faBarcode, faChartColumn, faDisplay
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = () => {
@@ -20,7 +20,8 @@ const Sidebar = () => {
     nhapHang: false,
     chienDich: false,
     nhaCungcap: false,
-    nhanVien: false
+    nhanVien: false,
+    statistic: false
   });
 
   // Hàm toggle menu
@@ -40,10 +41,35 @@ const Sidebar = () => {
         <div className="sidebar-dropdown">
           <div className="sidebar-options">
             <NavLink to="/dashboard" className="sidebar-option">
-              <FontAwesomeIcon icon={faChartBar} />
+              <FontAwesomeIcon icon={faDisplay} />
               <p>Tổng quan</p>
             </NavLink>
           </div>
+          {/* Thống kê */}
+          <div className="sidebar-dropdown">
+            <div
+              className="sidebar-option sidebar-main"
+              onClick={() => toggleMenu("statistic")}
+            >
+              <div className="dad-menu sidebar-title">
+                <FontAwesomeIcon icon={faChartColumn} />
+                <p>Thống kê</p>
+              </div>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`sidebar-icon ${openMenus.statistic ? "rotate" : ""}`}
+              />
+            </div>
+
+            {openMenus.statistic && (
+              <ul className="sidebar-submenu">
+                <li><NavLink to="/statistic" className="submenu-item">Thống kê</NavLink></li>
+                <li><NavLink to="/product" className="submenu-item">Danh sách sản phẩm</NavLink></li>
+                <li><NavLink to="/product/trash" className="submenu-item">Thùng rác</NavLink></li>
+              </ul>
+            )}
+          </div >
+
           {/* Sản phẩm */}
           <div className="sidebar-dropdown">
             <div

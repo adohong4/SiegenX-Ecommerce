@@ -52,16 +52,24 @@ class StatisticService {
 
             orders.forEach(order => {
                 order.items.forEach(item => {
-                    const category = item.category || 'Không xác định';
+                    const category = item.category;
+
+                    if (!category || category.trim() === '' || category === 'Không xác định') {
+                        return;
+                    }
+
+                    const revenue = item.price * item.quantity;
 
                     if (categoryStats.has(category)) {
                         const existingCategory = categoryStats.get(category);
                         existingCategory.totalQuantity += item.quantity;
                         existingCategory.productCount += 1;
+                        existingCategory.totalRevenue += revenue;
                     } else {
                         categoryStats.set(category, {
                             totalQuantity: item.quantity,
-                            productCount: 1
+                            productCount: 1,
+                            totalRevenue: revenue
                         });
                     }
                 });
@@ -70,26 +78,30 @@ class StatisticService {
             const stats = Array.from(categoryStats.entries()).map(([category, data]) => ({
                 category,
                 totalQuantity: data.totalQuantity,
-                productCount: data.productCount
+                productCount: data.productCount,
+                totalRevenue: data.totalRevenue
             }));
 
             // Tính tổng số và tổng số danh mục
             const totalCategories = stats.length;
+            const overallRevenue = stats.reduce((sum, stat) => sum + stat.totalRevenue, 0);
 
             return {
                 metadata: {
                     totalCategories,
+                    overallRevenue,
                     categories: stats
                 }
             };
         } catch (error) {
             throw error;
         }
-    }
+    };
 
     static getRevenueStats = async (req) => {
         try {
-            const { time } = req.body;
+            const { time } = req.params;
+
             if (!time || !['week', 'month', 'year'].includes(time)) {
                 throw new BadRequestError('Invalid time parameter. Must be "week", "month", or "year".');
             }
@@ -131,7 +143,7 @@ class StatisticService {
                     metadata: {
                         time: 'week',
                         totalRevenue,
-                        days: stats,
+                        data: stats,
                     },
                 };
             } else if (time === 'month') {
@@ -142,14 +154,18 @@ class StatisticService {
 
                 // Khởi tạo tất cả 12 tháng với giá trị 0
                 for (let m = new Date(twelveMonthsAgo); m <= now; m.setMonth(m.getMonth() + 1)) {
-                    const monthKey = m.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+                    const month = m.getMonth() + 1; // getMonth() trả về 0-11, cộng 1 để thành 1-12
+                    const year = m.getFullYear();
+                    const monthKey = `${month}/${year}`; // Định dạng thành "MM/YYYY"
                     monthStats.set(monthKey, { totalRevenue: 0, orderCount: 0 });
                 }
 
                 orders.forEach(order => {
                     const orderDate = new Date(order.date.split(' ')[1].split('/').reverse().join('-') + ' ' + order.date.split(' ')[0]);
                     if (orderDate >= twelveMonthsAgo && orderDate <= now) {
-                        const monthKey = orderDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+                        const month = orderDate.getMonth() + 1; // getMonth() trả về 0-11, cộng 1 để thành 1-12
+                        const year = orderDate.getFullYear();
+                        const monthKey = `${month}/${year}`; // Định dạng thành "MM/YYYY"
                         const stat = monthStats.get(monthKey);
                         stat.totalRevenue += order.amount;
                         stat.orderCount += 1;
@@ -168,7 +184,7 @@ class StatisticService {
                     metadata: {
                         time: 'month',
                         totalRevenue,
-                        months: stats,
+                        data: stats,
                     },
                 };
             } else if (time === 'year') {
@@ -205,7 +221,7 @@ class StatisticService {
                     metadata: {
                         time: 'year',
                         totalRevenue,
-                        years: stats,
+                        data: stats,
                     },
                 };
             }

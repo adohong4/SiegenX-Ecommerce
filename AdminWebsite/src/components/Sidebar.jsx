@@ -45,32 +45,14 @@ const Sidebar = () => {
               <p>Tổng quan</p>
             </NavLink>
           </div>
-          {/* Thống kê */}
-          <div className="sidebar-dropdown">
-            <div
-              className="sidebar-option sidebar-main"
-              onClick={() => toggleMenu("statistic")}
-            >
-              <div className="dad-menu sidebar-title">
-                <FontAwesomeIcon icon={faChartColumn} />
-                <p>Thống kê</p>
-              </div>
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                className={`sidebar-icon ${openMenus.statistic ? "rotate" : ""}`}
-              />
-            </div>
 
-            {openMenus.statistic && (
-              <ul className="sidebar-submenu">
-                <li><NavLink to="/statistic" className="submenu-item">Thống kê</NavLink></li>
-                <li><NavLink to="/product" className="submenu-item">Danh sách sản phẩm</NavLink></li>
-                <li><NavLink to="/product/trash" className="submenu-item">Thùng rác</NavLink></li>
-              </ul>
-            )}
-          </div >
+          <div className="sidebar-options">
+            <NavLink to="/statistic" className="sidebar-option">
+              <FontAwesomeIcon icon={faChartColumn} />
+              <p>Thống kê</p>
+            </NavLink>
+          </div>
 
-          {/* Sản phẩm */}
           <div className="sidebar-dropdown">
             <div
               className="sidebar-option sidebar-main"

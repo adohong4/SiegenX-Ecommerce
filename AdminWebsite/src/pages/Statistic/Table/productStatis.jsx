@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { Table } from "antd";
-import { StoreContext } from '../../context/StoreContext';
+import { StoreContext } from '../../../context/StoreContext';
 
 const ProductStatis = ({ table }) => {
     const { invoiceStatistic, fectchInvoiceStatistic } = useContext(StoreContext);
@@ -15,7 +15,7 @@ const ProductStatis = ({ table }) => {
         );
         return productStat ? productStat.avgPriceInput : 0;
     };
-    console.log("table: ", table);
+    // console.log("table: ", table);
 
     const dataSource = table.map(item => {
         const avgPriceInput = getAvgPriceInput(item._id); // Đơn giá
@@ -114,7 +114,10 @@ const ProductStatis = ({ table }) => {
 
     return (
         <div>
-            <h2>BÁO CÁO DOANH THU THEO SẢN PHẨM</h2>
+            <div>
+                <h2>BÁO CÁO DOANH THU THEO SẢN PHẨM</h2>
+                <button>In Excel</button>
+            </div>
             <Table
                 columns={columns}
                 dataSource={dataSource}

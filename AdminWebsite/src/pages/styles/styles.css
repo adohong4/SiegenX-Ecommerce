@@ -2831,12 +2831,23 @@ h2 {
 .statistic-body,
 .statistic-top{
     display: flex;
+    margin-bottom: 30px;
 }
 .statistic .statistic-body .doanhthu-chart,
 .statistic .statistic-body .top-5-sp{
     padding: 20px;
 }
-
+.doanhthu-top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.doanhthu-top h2{
+    margin: 0;
+    font-weight: 400;
+    color: #111;
+}
 .revenue-notes {
     background-color: #fdfdfd;
     border-top: 1px solid #e0e0e0;
@@ -2862,3 +2873,43 @@ h2 {
     font-style: italic;
 }
 
+
+.custom-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    color: #555;
+}
+
+.tab-item.active {
+    color: #008F6A;
+    border-bottom: 2px solid #00A07B;
+    font-weight: bold;
+}
+
+.tab-item:hover {
+    color: #009C72;
+}
+
+
+.animated-title {
+    font-size: 28px;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: shine 3s linear infinite, fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

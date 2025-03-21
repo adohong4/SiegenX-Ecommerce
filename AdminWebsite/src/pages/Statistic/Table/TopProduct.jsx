@@ -9,38 +9,27 @@ const TopProduct = ({ table }) => {
         {
             key: "index",
             render: (text, record, index) => {
-                const starCounts = [3, 2, 1]; // Số lượng sao theo thứ hạng
+                const colors = ["#FFD700", "#C0C0C0", "#CD7F32"]; // Vàng, Bạc, Đồng
                 const isTopThree = index < 3;
-        
                 return (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: '50%',
-                            width: '30px',
-                            height: '30px',
-                            backgroundColor: isTopThree ? '#FFD700' : '#e0e0e0',
-                            color: isTopThree ? '#000' : '#555',
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                            boxShadow: isTopThree ? '0 0 5px rgba(0,0,0,0.2)' : 'none'
-                        }}>
-                            {index + 1}
-                        </span>
-                        {isTopThree && (
-                            <span>
-                                {Array.from({ length: starCounts[index] }).map((_, i) => (
-                                    <span key={i} style={{ color: '#FFD700', marginRight: '2px' }}>⭐</span>
-                                ))}
-                            </span>
-                        )}
-                    </div>
+                    <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '10px',
+                        width: '30px',
+                        height: '30px',
+                        backgroundColor: isTopThree ? colors[index] : '#e0e0e0',
+                        color: isTopThree ? '#000' : '#555',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        boxShadow: isTopThree ? '0 0 5px rgba(0,0,0,0.2)' : 'none'
+                    }}>
+                        {index + 1}
+                    </span>
                 );
             },
-        }
-        ,
+        },
         
         {
             key: "image",

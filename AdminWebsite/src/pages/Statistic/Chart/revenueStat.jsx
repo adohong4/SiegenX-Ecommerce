@@ -79,46 +79,27 @@ const RevenueStat = () => {
     return (
         <div className='doanhthu-chart col-6'>
             <h2>Biểu đồ doanh thu</h2>
-            <div style={{ marginBottom: '20px' }}>
-                <button
+            <div className="custom-tabs">
+                <div
+                    className={`tab-item ${selectedTime === 'week' ? 'active' : ''}`}
                     onClick={() => handleTimeChange('week')}
-                    style={{
-                        marginRight: '10px',
-                        padding: '10px 20px',
-                        backgroundColor: selectedTime === 'week' ? '#4CAF50' : '#ccc',
-                        color: 'white',
-                        border: 'none',
-                        cursor: 'pointer'
-                    }}
                 >
                     Tuần
-                </button>
-                <button
-                    onClick={() => handleTimeChange("month")}
-                    style={{
-                        marginRight: '10px',
-                        padding: '10px 20px',
-                        backgroundColor: selectedTime === 'month' ? '#4CAF50' : '#ccc',
-                        color: 'white',
-                        border: 'none',
-                        cursor: 'pointer'
-                    }}
+                </div>
+                <div
+                    className={`tab-item ${selectedTime === 'month' ? 'active' : ''}`}
+                    onClick={() => handleTimeChange('month')}
                 >
                     Tháng
-                </button>
-                <button
-                    onClick={() => handleTimeChange("year")}
-                    style={{
-                        padding: '10px 20px',
-                        backgroundColor: selectedTime === 'year' ? '#4CAF50' : '#ccc',
-                        color: 'white',
-                        border: 'none',
-                        cursor: 'pointer'
-                    }}
+                </div>
+                <div
+                    className={`tab-item ${selectedTime === 'year' ? 'active' : ''}`}
+                    onClick={() => handleTimeChange('year')}
                 >
                     Năm
-                </button>
+                </div>
             </div>
+    
             {revenue.data.length > 0 ? (
                 <Bar data={chartData} options={options} />
             ) : (

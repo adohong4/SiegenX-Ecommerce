@@ -142,10 +142,10 @@ const ProductStatis = ({ table }) => {
 
     return (
         <div>
-            <div>
-                <h2>BÁO CÁO DOANH THU THEO SẢN PHẨM</h2>
-                <button onClick={handleExportExcel} style={{ padding: '6px 12px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px' }}>
-                    Xuất Excel
+            <div className='doanhthu-top'>
+                <h2 className="animated-title">BÁO CÁO DOANH THU THEO SẢN PHẨM</h2>
+                <button onClick={handleExportExcel} style={{ padding: '6px 12px', background: '#009C72', color: 'white', border: 'none', borderRadius: '5px' }}>
+                    Xuất báo cáo
                 </button>
             </div>
             <Table

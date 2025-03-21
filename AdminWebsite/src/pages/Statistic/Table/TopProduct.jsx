@@ -9,19 +9,39 @@ const TopProduct = ({ table }) => {
         {
             key: "index",
             render: (text, record, index) => {
+                const starCounts = [3, 2, 1]; // Số lượng sao theo thứ hạng
                 const isTopThree = index < 3;
+        
                 return (
-                    <span style={{
-                        borderRadius: isTopThree ? '50%' : '0',
-                        backgroundColor: isTopThree ? 'black' : 'transparent',
-                        color: isTopThree ? 'white' : 'black',
-                        padding: '5px 10px',
-                    }}>
-                        {index + 1}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '50%',
+                            width: '30px',
+                            height: '30px',
+                            backgroundColor: isTopThree ? '#FFD700' : '#e0e0e0',
+                            color: isTopThree ? '#000' : '#555',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            boxShadow: isTopThree ? '0 0 5px rgba(0,0,0,0.2)' : 'none'
+                        }}>
+                            {index + 1}
+                        </span>
+                        {isTopThree && (
+                            <span>
+                                {Array.from({ length: starCounts[index] }).map((_, i) => (
+                                    <span key={i} style={{ color: '#FFD700', marginRight: '2px' }}>⭐</span>
+                                ))}
+                            </span>
+                        )}
+                    </div>
                 );
             },
-        },
+        }
+        ,
+        
         {
             key: "image",
             render: (text, record) => (
@@ -39,7 +59,7 @@ const TopProduct = ({ table }) => {
     ];
 
     return (
-        <div style={{ width: '50%' }}>
+        <div className='top-5-sp col-6'>
             <h2>Top 5 sản phẩm bán chạy</h2>
             <Table
                 columns={columns}

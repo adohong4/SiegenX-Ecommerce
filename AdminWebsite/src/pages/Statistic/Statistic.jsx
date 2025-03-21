@@ -44,17 +44,18 @@ const Statistic = () => {
 
     return (
         <div className='statistic'>
+            <div className='container'>
+                <div className='statistic-top'>
+                    <CategoryTable category={category} />
+                    <CategoryStatistic category={category} />
+                </div>
+                <div className='statistic-body'>
+                    <RevenueStat />
+                    <TopProduct table={table} />
+                </div>
 
-            <div>
-                <CategoryTable category={category} />
-                <CategoryStatistic category={category} />
+                <ProductStatis table={table} />
             </div>
-            <div>
-                <RevenueStat />
-                <TopProduct table={table} />
-            </div>
-
-            <ProductStatis table={table} />
         </div>
     )
 }

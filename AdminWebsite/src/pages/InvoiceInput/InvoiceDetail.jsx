@@ -156,11 +156,13 @@ const InvoiceDetail = () => {
                             </tbody>
                         </table>
                     )}
-                    <div className="total-import-product">
-                        <h3>Tổng giá trị đơn hàng: {formatCurrency(calculateTotal())}đ</h3>
-                    </div>
-                    <div>
-                        <button onClick={handlePushTheNumberOfProduct}>Nhập hàng</button>
+                    <div className='create-import-order-total'>
+                        <div className="total-import-product">
+                            <h3>Tổng giá trị đơn hàng: {formatCurrency(calculateTotal())}đ</h3>
+                        </div>
+                        <div>
+                            <button onClick={handlePushTheNumberOfProduct}>Nhập hàng</button>
+                        </div>
                     </div>
                     <div>
                         <h3>Lịch sử thay đổi</h3>

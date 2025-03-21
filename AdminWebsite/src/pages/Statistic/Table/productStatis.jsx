@@ -1,6 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import { Table } from "antd";
 import { StoreContext } from '../../../context/StoreContext';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const ProductStatis = ({ table }) => {
     const { invoiceStatistic, fectchInvoiceStatistic } = useContext(StoreContext);
@@ -112,11 +114,39 @@ const ProductStatis = ({ table }) => {
         },
     ];
 
+    const handleExportExcel = () => {
+        // Chuẩn bị data cho Excel
+        const exportData = dataSource.map(item => ({
+            "Mã sản phẩm": item._id,
+            "Tên sản phẩm": item.title,
+            "Giá bán": item.price,
+            "Đơn giá nhập": item.priceImport,
+            "Đơn vị đã bán": item.quantity,
+            "Doanh thu": item.revenue,
+            "Giá vốn": item.cost,
+            "Lợi nhuận đóng góp": item.contributionProfit,
+            "Biên lợi nhuận gộp": item.grossProfitMargin
+        }));
+
+        // Tạo worksheet và workbook
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Báo cáo sản phẩm");
+
+        // Xuất file
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const fileData = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(fileData, "bao_cao_doanh_thu_san_pham.xlsx");
+    };
+
+
     return (
         <div>
             <div>
                 <h2>BÁO CÁO DOANH THU THEO SẢN PHẨM</h2>
-                <button>In Excel</button>
+                <button onClick={handleExportExcel} style={{ padding: '6px 12px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px' }}>
+                    Xuất Excel
+                </button>
             </div>
             <Table
                 columns={columns}

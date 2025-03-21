@@ -142,16 +142,16 @@ const CreateImportOrder = () => {
                                     <tr key={product._id}>
                                         <td>{product.nameProduct}</td>
                                         <td><img src={`http://localhost:9003/images/${product.images[0]}`} width="50" alt={product.nameProduct} /></td>
-                                        <td style={{ display: "flex", gap: "10px", justifyContent: "center", alignItems: "center" }}>
+                                        <td style={{ display: "flex", gap: "10px", justifyContent: "center", alignItems: "center", height:"80px"}}>
                                             <button onClick={() => handleProductChange(product._id, "quantity", Math.max(1, product.quantity - 1))} style={{ color: "green" }}>-</button>
                                             <span>{product.quantity}</span>
                                             <button onClick={() => handleProductChange(product._id, "quantity", product.quantity + 1)} style={{ color: "red" }}>+</button>
                                         </td>
-                                        <td><input type="number" value={product.price} onChange={(e) => handleProductChange(product._id, "price", parseFloat(e.target.value))} style={{ width: "fit-content", padding: "0px 10px" }} /></td>
-                                        <td>
+                                        <td><input type="number" value={product.price} onChange={(e) => handleProductChange(product._id, "price", parseFloat(e.target.value))} style={{ width: "fit-content", padding: "5px" }} /></td>
+                                        <td style={{display:"flex", height:"80px", alignItems:"center"}}>
                                             <input type="number" value={product.tax} min="0" max="100"
                                                 onChange={(e) => handleProductChange(product._id, "tax", parseFloat(e.target.value))}
-                                                style={{ width: "60px", padding: "5px", textAlign: "right" }}
+                                                style={{ width: "50px", padding: "5px", textAlign: "right" }}
                                             />%
                                         </td>
                                         <td className="col-2">{formatCurrency(product.quantity * product.price + (product.quantity * product.price * (product.tax / 100)))} đ</td>

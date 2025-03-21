@@ -55,7 +55,7 @@ const categoryTable = ({ category }) => {
     ];
 
     return (
-        <div style={{ width: "50%" }}>
+        <div className='col-7'>
             <h2>BÁO CÁO DOANH THU THEO PHÂN LOẠI</h2>
             <Table
                 columns={columns}
@@ -63,6 +63,15 @@ const categoryTable = ({ category }) => {
                 pagination={false}
                 bordered
             />
+            <div className="revenue-notes">
+                <h4>Ghi chú:</h4>
+                <ul>
+                    <li>Số liệu được tổng hợp tự động từ hệ thống bán hàng.</li>
+                    <li>Phân loại sản phẩm sắp xếp theo doanh thu giảm dần.</li>
+                    <li>Chỉ tiêu chưa bao gồm thuế và các khoản giảm trừ.</li>
+                    <li>Dữ liệu phục vụ cho việc đánh giá và lập kế hoạch kinh doanh.</li>
+                </ul>
+            </div>
         </div>
     );
 };

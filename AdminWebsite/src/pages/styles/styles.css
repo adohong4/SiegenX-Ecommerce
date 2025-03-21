@@ -1618,6 +1618,84 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
+.create-import-order-container .create-import-order{
+    padding: 0px 10px;
+}
+.create-import-order-container .btn-save{
+    background-color: #009C72;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+.create-import-order-container .btn-save:hover{
+    scale: 1.05;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+.create-import-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-import-order-table thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.create-import-order-table th, 
+.create-import-order-table td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.create-import-order-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.create-import-order-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.create-import-order-table img {
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.create-import-order-table button {
+    background: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.create-import-order-table button:hover {
+    background-color: #eee;
+}
+.create-import-order-table input {
+    background-color: transparent !important;
+    border: none;
+}
+.create-import-order-table input[type="number"] {
+    border-bottom: 1px solid #ccc !important;
+    border-radius: 0px;
+    padding: 5px;
+    text-align: center;
+}
+
+.btn-delete-product-details {
+    cursor: pointer;
+    color: red;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.btn-delete-product-details:hover {
+    color: darkred;
+    transform: scale(1.1);
+}
 
 .nhap-hang-page h1 {
     padding-bottom: 10px;
@@ -1741,7 +1819,25 @@ body.popup-open {
     border: none;
     cursor: pointer;
 }
-
+.create-import-order-back-button:hover {
+    color: #008F6A !important;
+}
+.create-import-order-total{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-top: 20px;
+}
+.create-import-order-total button{
+    background-color: #008F6A;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+.create-import-order-total button:hover{
+    scale: 1.05;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
 h2 {
     font-size: 24px;
 }
@@ -2731,10 +2827,38 @@ h2 {
 }
 
 
-/* CSS Campain  */
-/* .campain-boby {
+/* CSS cho trang thống kê */
+.statistic-body,
+.statistic-top{
     display: flex;
 }
-.campain-boby :where(.css-dev-only-do-not-override-1v613y0).ant-card-bordered {
-    border: none;
-} */
+.statistic .statistic-body .doanhthu-chart,
+.statistic .statistic-body .top-5-sp{
+    padding: 20px;
+}
+
+.revenue-notes {
+    background-color: #fdfdfd;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.revenue-notes h4 {
+    margin-bottom: 15px;
+    color: red;
+}
+
+.revenue-notes ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.revenue-notes li {
+    margin-bottom: 10px;
+    font-style: italic;
+}
+

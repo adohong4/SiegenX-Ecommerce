@@ -77,7 +77,7 @@ const RevenueStat = () => {
     };
 
     return (
-        <div style={{ width: '50%', margin: '0 auto', padding: '10px' }}>
+        <div className='doanhthu-chart col-6'>
             <h2>Biểu đồ doanh thu</h2>
             <div style={{ marginBottom: '20px' }}>
                 <button

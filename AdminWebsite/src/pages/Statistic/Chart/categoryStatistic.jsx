@@ -51,7 +51,7 @@ const categoryStatistic = ({ category }) => {
     };
 
     return (
-        <div className='col-5' style={{ margin: '0 auto', padding:"0px 50px" }}>
+        <div className='col-5' style={{ margin: '0 auto', padding: "0px 50px" }}>
             <h2>Biểu đồ tròn phân bố sản phẩm theo category</h2>
             {category?.length > 0 ? (
                 <Pie data={data} options={options} />

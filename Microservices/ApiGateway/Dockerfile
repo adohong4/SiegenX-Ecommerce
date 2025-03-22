@@ -4,17 +4,17 @@ FROM node:18
 # Đặt thư mục làm việc trong container
 WORKDIR /app
 
-# Sao chép file package.json và package-lock.json (nếu có)
+# Sao chép file package.json và package-lock.json
 COPY package*.json ./
 
 # Cài đặt các dependencies
 RUN npm install
 
-# Sao chép toàn bộ mã nguồn vào container
+# Sao chép toàn bộ mã nguồn
 COPY . .
 
-# Mở port mà ApiGateway sẽ chạy (dựa trên cấu hình trước là 4001)
+# Mở port mà ApiGateway sẽ chạy
 EXPOSE 4001
 
-# Lệnh để chạy ứng dụng
-CMD ["npm", "dev"]
+# Sửa lệnh CMD để chạy script "dev" đúng cách
+CMD ["npm", "run", "dev"]

@@ -15,7 +15,9 @@ services:
       context: ../ApiGateway
       dockerfile: Dockerfile
     ports:
-      - "4001:4001" 
+      - "4002:4001" 
+    env_file:
+      - ../ApiGateway/.env
     networks:
       - backend_network
 

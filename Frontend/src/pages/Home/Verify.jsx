@@ -21,7 +21,7 @@ const Verify = () => {
             if (response.data.success) {
                 setMessage('Thanh toán Stripe thành công!');
                 toast.success("Thanh toán Stripe thành công!")
-                // navigate("/user/orders");
+                navigate("/user/orders");
             } else {
                 setMessage('Thanh toán Stripe thất bại.');
                 toast.error('Thanh toán Stripe thất bại.')
@@ -42,7 +42,7 @@ const Verify = () => {
             if (response.data.success) {
                 setMessage('Thanh toán ZaloPay thành công!');
                 toast.success("Thanh toán ZaloPay thành công!");
-                // navigate("/user/orders");
+                navigate("/user/orders");
             } else {
                 console.log("response: ", response.data.message);
                 setMessage(`Thanh toán ZaloPay thất bại: ${response.data.message}`);

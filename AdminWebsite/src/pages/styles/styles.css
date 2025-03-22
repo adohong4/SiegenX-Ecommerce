@@ -1618,18 +1618,22 @@ body.popup-open {
 .nhap-hang-page .table-container .order-table {
     width: 100%;
 }
-.create-import-order-container .create-import-order{
+
+.create-import-order-container .create-import-order {
     padding: 0px 10px;
 }
-.create-import-order-container .btn-save{
+
+.create-import-order-container .btn-save {
     background-color: #009C72;
     color: #fff;
     transition: all 0.3s ease-in-out;
 }
-.create-import-order-container .btn-save:hover{
+
+.create-import-order-container .btn-save:hover {
     scale: 1.05;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 .create-import-order-table {
     width: 100%;
     border-collapse: collapse;
@@ -1643,7 +1647,7 @@ body.popup-open {
     color: white;
 }
 
-.create-import-order-table th, 
+.create-import-order-table th,
 .create-import-order-table td {
     padding: 12px 15px;
     text-align: center;
@@ -1674,10 +1678,12 @@ body.popup-open {
 .create-import-order-table button:hover {
     background-color: #eee;
 }
+
 .create-import-order-table input {
     background-color: transparent !important;
     border: none;
 }
+
 .create-import-order-table input[type="number"] {
     border-bottom: 1px solid #ccc !important;
     border-radius: 0px;
@@ -1819,27 +1825,32 @@ body.popup-open {
     border: none;
     cursor: pointer;
 }
+
 .create-import-order-back-button:hover {
     color: #008F6A !important;
 }
-.create-import-order-total{
+
+.create-import-order-total {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
     margin-top: 20px;
 }
-.create-import-order-total button{
+
+.create-import-order-total button {
     background-color: #008F6A;
     color: #fff;
     transition: all 0.3s ease-in-out;
 }
-.create-import-order-total button:hover{
+
+.create-import-order-total button:hover {
     scale: 1.05;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 h2 {
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .create-import-order-grid {
@@ -2829,25 +2840,29 @@ h2 {
 
 /* CSS cho trang thống kê */
 .statistic-body,
-.statistic-top{
+.statistic-top {
     display: flex;
     margin-bottom: 30px;
 }
+
 .statistic .statistic-body .doanhthu-chart,
-.statistic .statistic-body .top-5-sp{
+.statistic .statistic-body .top-5-sp {
     padding: 20px;
 }
-.doanhthu-top{
+
+.doanhthu-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
 }
-.doanhthu-top h2{
+
+.doanhthu-top h2 {
     margin: 0;
     font-weight: 400;
     color: #111;
 }
+
 .revenue-notes {
     background-color: #fdfdfd;
     border-top: 1px solid #e0e0e0;

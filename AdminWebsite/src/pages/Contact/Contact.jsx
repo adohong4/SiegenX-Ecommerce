@@ -126,13 +126,13 @@ const Contact = () => {
                 <button onClick={() => handleViewToggle(record._id)} className="btn-eye">
                     {record.viewed ? (
                         <>
-                            <EyeOutlined style={{ color: "red", marginRight: 5 }} />
-                            <span style={{ color: "red", fontSize:"13px"}}>Đã liên hệ</span>
+                            <EyeOutlined style={{ color: "green", marginRight: 5 }} />
+                            <span style={{ color: "green", fontSize: "11px" }}>Đã liên hệ</span>
                         </>
                     ) : (
                         <>
-                            <EyeFilled style={{ color: "green", marginRight: 5 }} />
-                            <span style={{ color: "green", fontSize:"13px" }}>Liên hệ</span>
+                            <EyeFilled style={{ color: "red", marginRight: 5 }} />
+                            <span style={{ color: "red", fontSize: "11px" }}> Liên hệ</span>
                         </>
                     )}
                 </button>
@@ -248,7 +248,7 @@ const Contact = () => {
                                 ...item,
                                 key: `${item.createdBy || 'unknown'}-${index}`,
                             }))}
-                            pagination={{ pageSize: 4 }}
+                            pagination={{ pageSize: 3 }}
                             rowKey={(record) => record.key}
                         />
                     </div>

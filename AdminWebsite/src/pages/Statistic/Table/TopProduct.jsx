@@ -19,8 +19,8 @@ const TopProduct = ({ table }) => {
                         borderRadius: '10px',
                         width: '30px',
                         height: '30px',
-                        backgroundColor: isTopThree ? colors[index] : '#e0e0e0',
-                        color: isTopThree ? '#000' : '#555',
+                        backgroundColor: isTopThree ? colors[index] : '#fff',
+                        color: isTopThree ? '#000' : '#000',
                         fontWeight: 'bold',
                         fontSize: '14px',
                         boxShadow: isTopThree ? '0 0 5px rgba(0,0,0,0.2)' : 'none'
@@ -30,7 +30,7 @@ const TopProduct = ({ table }) => {
                 );
             },
         },
-        
+
         {
             key: "image",
             render: (text, record) => (

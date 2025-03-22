@@ -18,6 +18,17 @@ const categoryTable = ({ category }) => {
         dataIndex: `category${index}`,
         key: `category${index}`,
         align: 'center',
+        onCell: () => ({
+            style: {
+                fontSize: '13px', // Font-size cho nội dung ô
+            },
+        }),
+        onHeaderCell: () => ({
+            style: {
+                fontSize: '14px', // Font-size cho header
+                fontWeight: 'bold',
+            },
+        }),
     }));
 
     // Cột cố định: Tiêu chí (Số lượng, Doanh thu)
@@ -27,6 +38,12 @@ const categoryTable = ({ category }) => {
             dataIndex: "criteria",
             key: "criteria",
             align: 'left',
+            onCell: () => ({
+                style: {
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                },
+            }),
         },
         ...dynamicColumns,
     ];

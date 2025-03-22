@@ -59,10 +59,13 @@ class _AddAddressUserScreenState extends State<AddAddressUserScreen> {
         Uri.parse(ApiService.addAddress),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Cookie': 'jwt=$token', // Gửi token qua header Cookie đúng định dạng
         },
         body: jsonEncode(address.toJson()),
       );
+
+      print('Add Address status: ${response.statusCode}');
+      print('Add Address body: ${response.body}');
 
       if (response.statusCode == 201) {
         final addressResponse =

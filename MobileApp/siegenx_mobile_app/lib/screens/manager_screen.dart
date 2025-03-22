@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:siegenx_mobile_app/controllers/cart_controller.dart'; // Thêm import
+import 'package:siegenx_mobile_app/screens/cart/cart_main_screen.dart';
 import 'package:siegenx_mobile_app/screens/favorite_products_screen.dart';
 import 'package:siegenx_mobile_app/screens/home/home_screen.dart';
 import 'package:siegenx_mobile_app/screens/messenger_screen.dart';
-import 'package:siegenx_mobile_app/screens/profile_screen.dart';
+import 'package:siegenx_mobile_app/screens/profile/profile_screen.dart';
+import 'package:siegenx_mobile_app/utils/number_cart_product.dart'; // Thêm import
+import 'package:siegenx_mobile_app/utils/cart_badge.dart'; // Import file mới
 
 class ManagerScreen extends StatefulWidget {
   const ManagerScreen({super.key});
@@ -13,14 +17,34 @@ class ManagerScreen extends StatefulWidget {
 
 class _ManagerScreenState extends State<ManagerScreen> {
   int currentIndex = 0;
+  int _cartItemCount = 0; // Thêm biến để lưu số lượng sản phẩm
 
-  // Danh sách các màn hình tương ứng với các icon
   final List<Widget> screens = [
-    HomeScreen(),
-    FavoriteProductsScreen(),
-    MessengerScreen(),
+    const HomeScreen(),
+    const FavoriteProductsScreen(),
+    CartMainScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCartItemCount(); // Lấy số lượng sản phẩm khi khởi tạo
+  }
+
+  Future<void> _fetchCartItemCount() async {
+    try {
+      final products = await CartController.fetchCartProducts(context);
+      setState(() {
+        _cartItemCount = calculateCartItemCount(products);
+      });
+    } catch (e) {
+      print('Error fetching cart items: $e');
+      setState(() {
+        _cartItemCount = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +76,12 @@ class _ManagerScreenState extends State<ManagerScreen> {
           itemBuilder: (context, index) => InkWell(
             onTap: () {
               if (index == 2) {
-                // Kiểm tra nếu nhấn vào Messenger
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MessengerScreen()),
-                );
+                  MaterialPageRoute(builder: (context) => CartMainScreen()),
+                ).then((_) {
+                  _fetchCartItemCount(); // Cập nhật lại số lượng khi quay về
+                });
               } else {
                 setState(() {
                   currentIndex = index;
@@ -85,13 +110,22 @@ class _ManagerScreenState extends State<ManagerScreen> {
                     ),
                   ),
                 ),
-                Icon(
-                  listOfIcons[index],
-                  size: size.width * .076,
-                  color: index == currentIndex
-                      ? Color(0xff00B98E)
-                      : Colors.black38,
-                ),
+                index == 2
+                    ? buildCartBadge(
+                        cartItemCount: _cartItemCount,
+                        icon: listOfIcons[index],
+                        iconSize: size.width * .076,
+                        iconColor: index == currentIndex
+                            ? const Color(0xff00B98E)
+                            : Colors.black38,
+                      )
+                    : Icon(
+                        listOfIcons[index],
+                        size: size.width * .076,
+                        color: index == currentIndex
+                            ? const Color(0xff00B98E)
+                            : Colors.black38,
+                      ),
                 SizedBox(height: size.width * .03),
               ],
             ),
@@ -104,7 +138,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
   List<IconData> listOfIcons = [
     Icons.home_rounded,
     Icons.favorite_rounded,
-    Icons.messenger_rounded,
+    Icons.shopping_bag,
     Icons.person_rounded,
   ];
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
+import 'package:siegenx_mobile_app/controllers/logout_controller.dart'; // Thêm import LogoutController
 import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/providers/auth_provider.dart';
 import 'package:siegenx_mobile_app/controllers/view_profile_controller.dart';
@@ -43,7 +44,12 @@ class _ProfilePage1State extends State<ProfilePage1> {
               ? Center(child: CircularProgressIndicator())
               : Column(
                   children: [
-                    const Expanded(flex: 2, child: _TopPortion()),
+                    Expanded(
+                      flex: 2,
+                      child: _TopPortion(
+                          profilePic:
+                              controller.profilePic), // Truyền profilePic
+                    ),
                     Expanded(
                       flex: 3,
                       child: Padding(
@@ -53,19 +59,24 @@ class _ProfilePage1State extends State<ProfilePage1> {
                           children: [
                             Center(
                               child: Text(
-                                controller.username ?? "Không có tên",
+                                controller.username ??
+                                    "Người dùng không xác định",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
                             Expanded(
                               child: SingleChildScrollView(
-                                child: _ProfileDetails(email: controller.email),
+                                child: _ProfileDetails(
+                                  email: controller.email,
+                                  fullName: controller.fullName,
+                                  gender: controller.gender,
+                                  numberPhone: controller.numberPhone,
+                                  dateOfBirth: controller.dateOfBirth,
+                                ),
                               ),
                             ),
                           ],
@@ -82,8 +93,19 @@ class _ProfilePage1State extends State<ProfilePage1> {
 
 class _ProfileDetails extends StatefulWidget {
   final String? email;
+  final String? fullName; // Thêm fullName
+  final String? gender; // Thêm gender
+  final String? numberPhone; // Thêm numberPhone
+  final String? dateOfBirth; // Thêm dateOfBirth
 
-  const _ProfileDetails({Key? key, this.email}) : super(key: key);
+  const _ProfileDetails({
+    Key? key,
+    this.email,
+    this.fullName,
+    this.gender,
+    this.numberPhone,
+    this.dateOfBirth,
+  }) : super(key: key);
 
   @override
   _ProfileDetailsState createState() => _ProfileDetailsState();
@@ -128,8 +150,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
     if (addresses.isEmpty) return null;
     return addresses.firstWhere(
       (address) => address.id == defaultAddressId,
-      orElse: () =>
-          addresses.first, // Lấy địa chỉ đầu tiên nếu không tìm thấy mặc định
+      orElse: () => addresses.first,
     );
   }
 
@@ -146,12 +167,24 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final String? userId = authProvider.userId;
-    final String? token = authProvider.token;
     final defaultAddress = _getDefaultAddress();
 
     final List<Map<String, String>> _details = [
       {"label": "User ID", "value": userId ?? "N/A"},
       {"label": "Email", "value": widget.email ?? "N/A"},
+      {
+        "label": "Họ và tên",
+        "value": widget.fullName ?? "N/A"
+      }, // Thêm fullName
+      {"label": "Giới tính", "value": widget.gender ?? "N/A"}, // Thêm gender
+      {
+        "label": "Số điện thoại",
+        "value": widget.numberPhone ?? "N/A"
+      }, // Thêm numberPhone
+      {
+        "label": "Ngày sinh",
+        "value": widget.dateOfBirth ?? "N/A"
+      }, // Thêm dateOfBirth
     ];
 
     return Column(
@@ -167,7 +200,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                       child: Text(
                         detail["label"]!,
                         style:
-                            const TextStyle(color: Colors.grey, fontSize: 14),
+                            const TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                     ),
                     Expanded(
@@ -175,7 +208,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                       child: Text(
                         detail["value"]!,
                         style:
-                            const TextStyle(color: Colors.black, fontSize: 14),
+                            const TextStyle(color: Colors.black, fontSize: 16),
                       ),
                     ),
                   ],
@@ -198,7 +231,10 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AddressListScreen()),
-                ).then((_) => _fetchAddresses());
+                ).then((_) {
+                  _loadDefaultAddress();
+                  _fetchAddresses();
+                });
               },
               child: Row(
                 children: [
@@ -237,7 +273,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Column(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -247,7 +283,7 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(width: 10),
                                   Text(
                                     _formatPhoneNumber(defaultAddress.phone),
                                     style: TextStyle(fontSize: 14),
@@ -272,11 +308,13 @@ class _ProfileDetailsState extends State<_ProfileDetails> {
 }
 
 class _TopPortion extends StatelessWidget {
-  const _TopPortion({Key? key}) : super(key: key);
+  final String? profilePic; // Thêm profilePic làm tham số
+
+  const _TopPortion({Key? key, this.profilePic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final logoutController = LogoutController();
 
     return Stack(
       fit: StackFit.expand,
@@ -302,10 +340,7 @@ class _TopPortion extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.logout, color: Colors.white, size: 28),
                   onPressed: () async {
-                    // await authProvider.logout(context);
-                    // if (authProvider.token == null) {
-                    //   Navigator.pushReplacementNamed(context, '/login');
-                    // }
+                    await logoutController.logout(context);
                   },
                 ),
               ),
@@ -321,12 +356,15 @@ class _TopPortion extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.black,
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage('assets/avatars/cat.png'),
+                      image: profilePic != null && profilePic!.isNotEmpty
+                          ? NetworkImage(profilePic!) // Sử dụng NetworkImage
+                          : AssetImage('assets/avatars/cat.png')
+                              as ImageProvider, // Fallback
                     ),
                   ),
                 ),

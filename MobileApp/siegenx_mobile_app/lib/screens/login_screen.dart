@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:siegenx_mobile_app/controllers/auth_controller.dart';
-import 'package:siegenx_mobile_app/screens/manager_screen.dart';
 import 'package:siegenx_mobile_app/screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {

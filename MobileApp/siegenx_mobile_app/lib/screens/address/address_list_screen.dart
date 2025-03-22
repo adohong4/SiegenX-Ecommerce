@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siegenx_mobile_app/controllers/add_address_controller.dart';
-import 'package:siegenx_mobile_app/controllers/deleta_address_controller.dart';
+import 'package:siegenx_mobile_app/controllers/delete_address_controller.dart';
 import 'package:siegenx_mobile_app/models/address_model.dart';
 import 'package:siegenx_mobile_app/screens/address/add_address_user.dart';
-import 'package:siegenx_mobile_app/screens/profile_screen.dart'; // Thêm import ProfileScreen
 import 'package:siegenx_mobile_app/themes/app_colors.dart';
 
 class AddressListScreen extends StatefulWidget {
@@ -220,7 +219,6 @@ class _AddressListScreenState extends State<AddressListScreen> {
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.redAccent,
-                                                  // fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               SizedBox(width: 3),
@@ -318,9 +316,8 @@ class _EmptyAddressWidget extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddAddressUserScreen()),
-                ).then((_) => context
-                    .read<_AddressListScreenState?>()
-                    ?._fetchAddresses());
+                ).then((_) =>
+                    context.read<_AddressListScreenState>()._fetchAddresses());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

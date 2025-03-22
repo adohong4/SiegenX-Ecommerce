@@ -22,9 +22,12 @@ class DeleteAddressController {
         Uri.parse('${ApiService.deleteAddress}/$addressId'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Cookie': 'jwt=$token', // Gửi token qua header Cookie đúng định dạng
         },
       );
+
+      print('Delete Address status: ${response.statusCode}');
+      print('Delete Address body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

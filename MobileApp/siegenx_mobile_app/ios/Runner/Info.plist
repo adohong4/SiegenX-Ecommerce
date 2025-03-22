@@ -44,6 +44,8 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<!-- thêm bên dưới -->
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>

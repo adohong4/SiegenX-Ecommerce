@@ -93,7 +93,7 @@ const Cart = () => {
             printWindow.document.close();
         }
     };
-    
+
     const statusHandler = async (event, orderId) => {
         const selectedValue = event.target.value;
 
@@ -134,12 +134,19 @@ const Cart = () => {
     }, [currentPage, limit]);
 
     const filteredOrders = list.filter((order) => {
-        return (
+        const matchesSearchTerm =
+            searchTerm === '' || // Nếu không có searchTerm, bỏ qua điều kiện này
             order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.address.fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (selectedType ? order.paymentMethod === selectedType : true) &&
-            (selectedStatus ? order.status === selectedStatus : true)
-        )
+            order.address.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Điều kiện lọc theo paymentMethod (selectedType)
+        const matchesType = !selectedType || order.paymentMethod === selectedType;
+
+        // Điều kiện lọc theo status (selectedStatus)
+        const matchesStatus = !selectedStatus || order.status === selectedStatus;
+
+        // Kết hợp tất cả các điều kiện
+        return matchesSearchTerm && matchesType && matchesStatus;
     });
 
     const columns = [

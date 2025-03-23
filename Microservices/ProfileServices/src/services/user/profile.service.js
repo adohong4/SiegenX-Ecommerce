@@ -35,6 +35,9 @@ class ProfileService {
     }
 
     static uploadImageProfile = async (req, res, next) => {
+        const userId = req.user._id;
+        console.log(userId);
+        const CACHE_KEY = `profile:user:${userId}`;
         try {
             let image_filename = "";
             if (req.file) {
@@ -66,7 +69,7 @@ class ProfileService {
                 }
             });
 
-            await RedisService.deleteCache(`order:user:${userId}`)
+            await RedisService.deleteCache(CACHE_KEY)
 
             return updatedProfile;
 
@@ -76,7 +79,7 @@ class ProfileService {
     }
 
     static updateProfile = async ({ userId, password, fullName, dateOfBirth, numberPhone, gender }) => {
-        const CACHE_KEY = `order:user:${userId}`;
+        const CACHE_KEY = `profile:user:${userId}`;
         try {
             const user = await profileModel.findById(userId);
 

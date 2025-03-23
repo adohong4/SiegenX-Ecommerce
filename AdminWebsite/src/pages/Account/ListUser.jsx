@@ -54,18 +54,15 @@ const ListUser = () => {
 
     const handleEditSubmit = async () => {
         const values = await form.validateFields();
-        console.log(editingAccount._id);
-        try {
-            const response = await axios.put(`${url}/v1/api/profile/account/update/${editingAccount._id}`, values);
-            if (response.data.status) {
-                toast.success(response.data.message);
-                fetchList();
-                setIsModalOpen(false);
-                fetchStaffList();
-            }
-        } catch (error) {
-            toast.error('Xóa tài khoản thất bại');
+
+        const response = await axios.put(`${url}/v1/api/profile/account/update/${editingAccount._id}`, values);
+        if (response.data.status) {
+            toast.success(response.data.message);
+            fetchList();
+            setIsModalOpen(false);
+            fetchStaffList();
         }
+
     };
 
     const showEditModal = (account) => {
@@ -84,10 +81,10 @@ const ListUser = () => {
     );
 
     const columns = [
-        { title: "Họ và tên", dataIndex: "fullName", key: "fullName", sorter: (a, b) => a.fullName.localeCompare(b.fullName) },
+        { title: "Họ và tên", dataIndex: "fullName", key: "fullName" },
         { title: "Tài khoản", dataIndex: "username", key: "username", sorter: (a, b) => a.username.localeCompare(b.username) },
         { title: "Email", dataIndex: "email", key: "email", sorter: (a, b) => a.email.localeCompare(b.email) },
-        { title: "Giới tính", dataIndex: "gender", key: "gender", sorter: (a, b) => a.gender.localeCompare(b.gender) },
+        { title: "Giới tính", dataIndex: "gender", key: "gender" },
         { title: "Số lượng đơn hàng", align: "center", dataIndex: "cartData", key: "cartData", render: (cartData) => Object.keys(cartData).length },
         { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt", render: (createdAt) => formatDayTime(createdAt) },
         {
@@ -182,7 +179,8 @@ const ListUser = () => {
                             <Descriptions.Item label="Ngày tạo tài khoản">{formatDayTime(viewingAccount.createdAt)}</Descriptions.Item>
                             <Descriptions.Item label="Cập nhật gần nhất ">{formatDayTime(viewingAccount.updatedAt)}</Descriptions.Item>
                         </Descriptions>
-                        <h3>Lịch sử thay đổi</h3>
+
+                        {/* <h3>Lịch sử thay đổi</h3>
                         <Table
                             columns={columnsCreator}
                             dataSource={viewingAccount.creator?.map((item, index) => ({
@@ -191,7 +189,7 @@ const ListUser = () => {
                             }))}
                             pagination={{ pageSize: 4 }}
                             rowKey={(record) => record.key}
-                        />
+                        /> */}
                     </div>
                 )}
             </Modal>

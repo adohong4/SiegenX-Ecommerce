@@ -72,9 +72,9 @@ class OrderService {
             const userRole = req.role;
             const orderId = req.params.id;
             if (userRole !== "ADMIN") throw new AuthFailureError("Tài khoản bị giới hạn chức năng.")
+            const order = await orderModel.findById(orderId);
+            await RedisService.deleteCache(`order:user:${order.userId}`);
             const deleteOrder = await orderModel.findByIdAndDelete(orderId);
-
-            await RedisService.deleteCache(`order:user:${orderId.userId}`);
 
             return {
                 metadata: deleteOrder
@@ -114,7 +114,7 @@ class OrderService {
             const skip = (page - 1) * limit
 
             const order = await orderModel.find({ statusActive: true })
-                .select('userId amount address status paymentMethod payment createdAt statusActive items')
+                .select('userId amount address status paymentMethod payment createdAt statusActive items creator')
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)

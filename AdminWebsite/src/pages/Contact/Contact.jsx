@@ -80,10 +80,18 @@ const Contact = () => {
         setIsViewModalOpen(true);
     };
 
-    const filtered = list.filter((contact) =>
-        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedView ? contact.viewed === selectedView : true)
-    );
+    const filtered = list.filter((contact) => {
+        // Điều kiện tìm kiếm theo email (searchTerm)
+        const matchesSearchTerm =
+            searchTerm === '' || // Nếu không có searchTerm, bỏ qua điều kiện này
+            contact.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Điều kiện lọc theo viewed (selectedView)
+        const matchesView = selectedView === undefined || selectedView === '' || contact.viewed === selectedView;
+
+        // Kết hợp tất cả các điều kiện
+        return matchesSearchTerm && matchesView;
+    });
 
     const columns = [
         {

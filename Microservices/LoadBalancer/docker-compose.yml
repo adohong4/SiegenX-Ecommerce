@@ -1,6 +1,7 @@
 services:
   nginx:
     image: nginx:latest
+    container_name: nginx_load_balancer
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
@@ -15,11 +16,23 @@ services:
       context: ../ApiGateway
       dockerfile: Dockerfile
     ports:
-      - "4002:4001" 
+      - "4001:4001" 
     env_file:
       - ../ApiGateway/.env
     networks:
       - backend_network
+
+  identity-services:
+    build:
+      context: ../IdentityServices
+      dockerfile: Dockerfile
+    container_name: identity_services
+    ports:
+      - "9001:9001"
+    env_file:
+      - ../IdentityServices/.env
+    networks:
+     - backend_network
 
 networks:
   backend_network:

@@ -1,0 +1,81 @@
+đây là cấu trúc dự án của tôi
+siegenx_mobile_app/
+...
+|--- assets/
+|--- lib/
+    |--- controllers/
+        |--- add_address_controller.dart
+        |--- auth_controller.dart
+        |--- delete_address_controller.dart
+        |--- favorite_icon.dart
+        |--- favorites_manager.dart
+        |--- logout_controller.dart
+        |--- profile_controller.dart
+        |--- register_controller.dart
+        |--- view_profile_controller.dart
+
+    |--- models/
+        |--- address_model.dart
+        |--- product.dart
+
+    |--- providers/
+        |--- auth_provider.dart
+        |--- favorites_provider.dart
+    
+    |--- screens/
+        |--- address/
+            |--- add_address_user.dart
+            |--- address_list_screen.dart
+
+        |--- cart/
+            |--- cart_main_screen.dart
+            |--- cart_screen.dart
+            |--- delivered_screen.dart
+            |--- pending_screen.dart
+            |--- preparing_screen.dart
+            |--- shipping_screen.dart
+
+        |--- home/
+            |--- banner_widget.dart
+            |--- feature_products.dart
+            |--- home_screen.dart
+
+        |--- profile/
+            |--- logout_confirmation_dialog.dart
+            |--- profile_screen.dart
+
+        |--- all_products.dart
+        |--- enter_information_screen.dart
+        |--- favorite_products_screen.dart
+        |--- login_screen.dart
+        |--- manager_screen.dart
+        |--- messenger_screen.dart
+        |--- no_internet_screen.dart
+        |--- product_detail_screen.dart
+        |--- register_screen.dart
+    |--- services/
+        |--- api_service.dart
+        |--- connectivity_service.dart
+        |--- product_service.dart
+    |--- test
+    |--- themes/
+        |--- app_colors.dart
+    |--- utils/
+        |--- constants.dart
+        |--- dialog_utils.dart
+        |--- format_untils.dart
+        |--- helpers.dart
+    |--- widgets/
+        |--- cart_product_grid.dart
+        |--- enter_information_screen.dart
+        |--- favorite_products_screen.dart
+        |--- login_screen.dart
+        |--- manager_screen.dart
+        |--- messenger_screen.dart
+        |--- no_internet_screen.dart
+        |--- product_detail_screen.dart
+        |--- register_screen.dart
+    |--- main.dart
+...
+|--- pubspec.yaml
+|--- README.md

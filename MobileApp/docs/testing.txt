@@ -1,0 +1,3 @@
+cấu 3.
+- nêu khái niệm testcase? trình bày các bước viết testcase? sau đó thực hiện nhiệm vụ thiết kế testcase, 
+form nghiệm phương trình bậc 2: thiết kế giao diện phần mềm giải phương trình bậc 2 một ẩn ax^2 + bx + c = 0

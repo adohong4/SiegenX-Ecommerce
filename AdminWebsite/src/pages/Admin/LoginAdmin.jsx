@@ -26,6 +26,7 @@ const Login = () => {
             const response = await axios.post(newUrl, data);
             console.log(response.data);
             navigate('/dashboard');
+            window.location.reload();
             if (response.data.status) {
                 Cookies.set("token", response.data.metadata.token);
                 toast.success('Đăng nhập thành công!');

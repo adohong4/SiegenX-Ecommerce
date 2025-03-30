@@ -35,7 +35,13 @@ import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 const Admin = () => {
     const token = Cookies.get("token");
-    const navigate = useNavigate();
+    const navigate = useNavigate('/admin-login');
+    useEffect(() => {
+        if (!token) {
+            navigate('/admin-login');
+        }
+    }, [token, navigate]);
+
 
 
     return (

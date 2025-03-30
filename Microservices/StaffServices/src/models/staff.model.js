@@ -20,7 +20,7 @@ const StaffSchema = new Schema(
         HashedPassword: { type: String },
         Numberphone: { type: String },
         Tax: { type: String, required: true, unique: true },
-        Role: { type: String, enum: ['ADMIN', 'STAFF'], default: "STAFF" },
+        Role: { type: String, enum: ['ADMIN', 'STAFF', 'SHIPPER'], default: "STAFF" },
         StaffPic: { type: String },
         StatusActive: { type: Boolean, default: true },
         creator: [HistorySchema],

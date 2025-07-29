@@ -6,80 +6,88 @@ import axios from 'axios';
 
 const Verify = () => {
     const [searchParams] = useSearchParams();
-    const success = searchParams.get("success"); //Stripe
-    const orderId = searchParams.get("orderId");
-    const app_trans_id = searchParams.get("app_trans_id"); //Zalopay
-
-    const { url } = useContext(StoreContext);
     const navigate = useNavigate();
+    const { url } = useContext(StoreContext);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
 
-    const verifyStripePayment = async () => {
-        try {
-            const response = await axios.post(`${url}/v1/api/profile/stripe/verify`, { success, orderId });
-            if (response.data.success) {
-                setMessage('Thanh toán Stripe thành công!');
-                toast.success("Thanh toán Stripe thành công!")
-                navigate("/user/orders");
-            } else {
-                setMessage('Thanh toán Stripe thất bại.');
-                toast.error('Thanh toán Stripe thất bại.')
-                navigate("/");
-            }
-        } catch (error) {
-            console.error("Stripe verification error:", error);
-            setMessage('Lỗi khi xác minh thanh toán Stripe.');
-            navigate("/");
-        } finally {
-            setLoading(false);
-        }
+    // Cấu hình cho các loại thanh toán
+    const paymentConfigs = {
+        stripe: {
+            key: 'success',
+            endpoint: '/v1/api/profile/stripe/verify',
+            successMessage: 'Thanh toán Stripe thành công!',
+            errorMessage: 'Thanh toán Stripe thất bại.',
+            verifyParams: ['success', 'orderId'],
+        },
+        zalopay: {
+            key: 'app_trans_id',
+            endpoint: '/v1/api/online/zalopay/verify',
+            successMessage: 'Thanh toán ZaloPay thành công!',
+            errorMessage: 'Thanh toán ZaloPay thất bại.',
+            verifyParams: ['app_trans_id', 'orderId'],
+        },
     };
 
-    const verifyZaloPayPayment = async () => {
+    // Hàm xử lý xác minh thanh toán chung
+    const verifyPayment = async (config, params) => {
         try {
-            const response = await axios.post(`${url}/v1/api/online/zalopay/verify`, { app_trans_id, orderId });
+            const response = await axios.post(`${url}${config.endpoint}`, params);
             if (response.data.success) {
-                setMessage('Thanh toán ZaloPay thành công!');
-                toast.success("Thanh toán ZaloPay thành công!");
-                navigate("/user/orders");
+                setMessage(config.successMessage);
+                toast.success(config.successMessage);
+                navigate('/user/orders');
             } else {
-                console.log("response: ", response.data.message);
-                setMessage(`Thanh toán ZaloPay thất bại: ${response.data.message}`);
-                toast.error('Thanh toán ZaloPay thất bại.');
-                navigate("/");
+                const errorMsg = `${config.errorMessage}: ${response.data.message || 'Lỗi không xác định'}`;
+                setMessage(errorMsg);
+                toast.error(config.errorMessage);
+                navigate('/');
             }
         } catch (error) {
-            console.error("ZaloPay verification error:", error);
-            setMessage('Lỗi khi xác minh thanh toán ZaloPay.');
-            navigate("/");
+            console.error(`${config.key} verification error:`, error);
+            const errorMsg = `Lỗi khi xác minh thanh toán ${config.key}.`;
+            setMessage(errorMsg);
+            toast.error(errorMsg);
+            navigate('/');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (app_trans_id && orderId) {
-            verifyZaloPayPayment();
-        } else if (success && orderId) {
-            verifyStripePayment();
-        } else {
+        const orderId = searchParams.get('orderId');
+
+        // Tìm loại thanh toán dựa trên tham số có trong searchParams
+        const paymentType = Object.keys(paymentConfigs).find((type) =>
+            searchParams.get(paymentConfigs[type].key)
+        );
+
+        if (!paymentType || !orderId) {
             setLoading(false);
             setMessage('Không có thông tin thanh toán.');
-            navigate("/");
+            navigate('/');
+            return;
         }
-    }, [app_trans_id, success, orderId, navigate]);
+
+        // Tạo object params cho API từ searchParams
+        const params = paymentConfigs[paymentType].verifyParams.reduce((acc, param) => {
+            acc[param] = searchParams.get(param);
+            return acc;
+        }, {});
+
+        verifyPayment(paymentConfigs[paymentType], params);
+    }, [searchParams, navigate, url]);
 
     if (loading) {
         return (
-            <div className='verify'>
+            <div className="verify">
                 <div className="spinner"></div>
             </div>
         );
     }
 
     return (
-        <div className='verify'>
+        <div className="verify">
             <p>{message}</p>
         </div>
     );

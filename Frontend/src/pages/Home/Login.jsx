@@ -35,6 +35,7 @@ const Login = () => {
                 toast.success(`Chào mừng ${user.username || user.email}!`);
                 localStorage.setItem("token", response.data.metadata.token); // Nếu cần thêm token sau này
                 navigate('/');
+                window.location.reload();
             } else {
                 toast.error(response.data.message || 'Đăng nhập thất bại');
             }

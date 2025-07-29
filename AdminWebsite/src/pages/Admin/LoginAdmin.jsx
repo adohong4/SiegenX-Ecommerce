@@ -25,7 +25,8 @@ const Login = () => {
             const newUrl = `${url}/v1/api/staff/login`;
             const response = await axios.post(newUrl, data);
             console.log(response.data);
-            navigate('/dashboard');
+            navigate('/');
+            window.location.reload();
             if (response.data.status) {
                 Cookies.set("token", response.data.metadata.token);
                 toast.success('Đăng nhập thành công!');

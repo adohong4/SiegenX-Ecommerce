@@ -108,7 +108,8 @@ const EmployeeList = () => {
     {
       title: "Chức vụ", dataIndex: "Role", key: "Role",
       render: (Role) => (
-        <span>{Role == 'STAFF' ? "Nhân viên" : "Quản lý"}</span>
+        <span>{Role == 'STAFF' ? "Nhân viên" :
+          Role == 'SHIPPER' ? 'Vận chuyển' : "Quản lý"}</span>
       )
     },
     {
@@ -181,6 +182,7 @@ const EmployeeList = () => {
             <Select placeholder="Chọn chức vụ">
               <Select.Option value="STAFF">Nhân viên</Select.Option>
               <Select.Option value="ADMIN">Quản lý</Select.Option>
+              <Select.Option value="SHIPPER">Vận chuyển</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item name="Tax" label="Mã số thuế">
@@ -217,6 +219,7 @@ const EmployeeList = () => {
             <Select placeholder="Chọn chức vụ">
               <Select.Option value="STAFF">Nhân viên</Select.Option>
               <Select.Option value="ADMIN">Quản lý</Select.Option>
+              <Select.Option value="SHIPPER">Vận chuyển</Select.Option>
             </Select>
           </Form.Item>
         </Form>
